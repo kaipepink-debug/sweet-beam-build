@@ -12,7 +12,7 @@ import freepikLogo from "@/assets/tools/freepik.png";
 
 const floatingIcons = [
   { logo: higgsFieldLogo, name: "Higgsfield", x: -380, y: -120, mobileX: -120, mobileY: -160, delay: 0 },
-  { logo: grokLogo, name: "Grok", x: 400, y: -140, mobileX: 120, mobileY: -180, delay: 0.2 },
+  { logo: grokLogo, name: "Grok", x: 400, y: -140, mobileX: 120, mobileY: -220, delay: 0.2 },
   { logo: heygenLogo, name: "Heygen", x: -420, y: 30, mobileX: -140, mobileY: -60, delay: 0.4 },
   { logo: soraLogo, name: "Sora", x: 440, y: 50, mobileX: 140, mobileY: 40, delay: 0.6 },
   { logo: claudeLogo, name: "Claude", x: -360, y: 160, mobileX: -110, mobileY: 200, delay: 0.8 },
@@ -41,8 +41,8 @@ const HeroSection = () => {
                 animate={{ y: [posY - 10, posY + 10, posY - 10] }}
                 transition={{ duration: 4, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
               >
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm overflow-hidden">
-                  <img src={item.logo} alt={item.name} className="w-6 h-6 md:w-7 md:h-7 object-contain" />
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm overflow-hidden">
+                  <img src={item.logo} alt={item.name} className="w-full h-full object-cover rounded-full" />
                 </div>
               </motion.div>
             );
