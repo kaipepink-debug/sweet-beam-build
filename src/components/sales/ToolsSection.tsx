@@ -59,7 +59,7 @@ const ToolsSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {tools.map((tool, i) => (
             <motion.div
               key={tool.name}
@@ -115,24 +115,19 @@ const ToolsSection = () => {
         <motion.div
           className="mt-10 rounded-2xl p-8 text-center relative overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, rgba(180, 0, 255, 0.06) 0%, rgba(10, 10, 10, 0.8) 50%, rgba(180, 0, 255, 0.04) 100%)",
-            border: "1px solid rgba(180, 0, 255, 0.15)",
+            background: "rgba(10, 10, 10, 0.6)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
             backdropFilter: "blur(20px)",
           }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          {/* Glow effect */}
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full blur-3xl pointer-events-none"
-            style={{ background: "rgba(180, 0, 255, 0.08)" }}
-          />
           <div className="relative z-10">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Sparkles className="w-6 h-6" style={{ color: "rgba(180, 0, 255, 0.7)" }} />
+              <Sparkles className="w-6 h-6 text-white/40" />
               <span className="text-4xl md:text-5xl font-black text-white">+150</span>
-              <Sparkles className="w-6 h-6" style={{ color: "rgba(180, 0, 255, 0.7)" }} />
+              <Sparkles className="w-6 h-6 text-white/40" />
             </div>
             <h3 className="text-xl md:text-2xl font-bold text-white/90 mb-2">
               Ferramentas de IA Inclusas
@@ -142,15 +137,14 @@ const ToolsSection = () => {
             </p>
             <a
               href="#planos"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 hover:gap-3"
-              style={{
-                background: "rgba(180, 0, 255, 0.15)",
-                color: "rgba(255,255,255,0.8)",
-                border: "1px solid rgba(180, 0, 255, 0.25)",
-              }}
+              className="neon-border-btn relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-white/80 overflow-hidden transition-all duration-300 hover:gap-3"
+              style={{ border: "1px solid rgba(255,255,255,0.15)", background: "transparent" }}
             >
-              Ver todos os planos
-              <ArrowRight className="w-4 h-4" />
+              <span className="relative z-10 flex items-center gap-2">
+                Ver todos os planos
+                <ArrowRight className="w-4 h-4" />
+              </span>
+              <span className="neon-trail" />
             </a>
           </div>
         </motion.div>
