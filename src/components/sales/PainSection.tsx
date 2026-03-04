@@ -50,40 +50,45 @@ const PainSection = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8 items-stretch">
-          {/* Cost table */}
+          {/* Cost table - minimalist card style */}
           <motion.div
-            className="rounded-2xl border border-white/8 overflow-hidden flex flex-col"
-            style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(16px)" }}
+            className="relative rounded-2xl overflow-hidden flex flex-col"
+            style={{
+              background: "rgba(10, 10, 10, 0.8)",
+              backdropFilter: "blur(40px)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              boxShadow: "0 0 30px rgba(0, 0, 0, 0.3)",
+            }}
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="p-5 border-b border-white/8">
-              <h3 className="text-white/80 font-semibold">Custo Individual Mensal</h3>
-            </div>
-            <div className="divide-y divide-white/5 flex-1">
-              {tools.map((tool) => (
-                <div key={tool.name} className="flex items-center justify-between px-5 py-3 text-sm">
-                  <div className="flex items-center gap-3">
-                    <img src={tool.logo} alt={tool.name} className="w-6 h-6 rounded-md object-contain" />
-                    <span className="text-white/50">{tool.name}</span>
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(255,255,255,0.03), transparent)" }} />
+
+            <div className="relative p-8 flex-1 flex flex-col">
+              <h3 className="text-white/80 font-semibold text-center mb-6">Custo Individual Mensal</h3>
+
+              <div className="space-y-3 flex-1">
+                {tools.map((tool) => (
+                  <div key={tool.name} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-3">
+                      <img src={tool.logo} alt={tool.name} className="w-6 h-6 rounded-md object-contain" />
+                      <span className="text-white/50">{tool.name}</span>
+                    </div>
+                    <span className="text-white/40 font-medium">R$ {fmt(tool.price)}</span>
                   </div>
-                  <span className="text-white/40 font-medium">R$ {fmt(tool.price)}/mês</span>
-                </div>
-              ))}
-            </div>
-            <div className="p-5 border-t border-white/8" style={{ background: "rgba(255,255,255,0.02)" }}>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 font-semibold">Total Mensal</span>
-                <span className="text-white/80 font-bold text-lg">
-                  R$ {fmt(totalMonthly)}
-                </span>
+                ))}
               </div>
-              <div className="flex justify-between items-center mt-1">
-                <span className="text-white/40 text-sm">Total Anual</span>
-                <span className="text-white/50 font-semibold">
-                  R$ {fmt(totalMonthly * 12)}
-                </span>
+
+              <div className="mt-6 pt-5 border-t border-white/8">
+                <div className="flex justify-between items-center">
+                  <span className="text-white/70 font-semibold">Total Mensal</span>
+                  <span className="text-white/80 font-bold text-xl">R$ {fmt(totalMonthly)}</span>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-white/30 text-xs">Total Anual</span>
+                  <span className="text-white/40 text-sm font-semibold">R$ {fmt(totalMonthly * 12)}</span>
+                </div>
               </div>
             </div>
           </motion.div>
