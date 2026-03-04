@@ -144,7 +144,8 @@ const NeuralBackground = () => {
       // Mouse glow — desktop only
       if (mouseActive) {
         const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_RADIUS);
-        glow.addColorStop(0, "rgba(180,0,255,0.03)");
+        glow.addColorStop(0, "rgba(180,0,255,0.12)");
+        glow.addColorStop(0.5, "rgba(180,0,255,0.04)");
         glow.addColorStop(1, "transparent");
         ctx.fillStyle = glow;
         ctx.beginPath();
