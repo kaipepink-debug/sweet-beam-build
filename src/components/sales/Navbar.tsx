@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Instagram } from "lucide-react";
 import ratariaIcon from "@/assets/rataria-icon.png";
+import instagramIcon from "@/assets/instagram-icon.png";
 
 const navLinks = [
   { label: "Início", href: "#hero" },
@@ -47,9 +47,9 @@ const Navbar = () => {
             href="https://www.instagram.com/rataria.io/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/40 hover:text-white/70 transition-colors"
+            className="opacity-70 hover:opacity-100 transition-opacity"
           >
-            <Instagram className="w-5 h-5" />
+            <img src={instagramIcon} alt="Instagram" className="w-5 h-5 invert brightness-75" />
           </a>
         </div>
 
