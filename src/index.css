@@ -95,21 +95,24 @@ All colors MUST be HSL.
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-.neon-border-btn {
+.neon-border-btn,
+.neon-border-text {
   position: relative;
   border: none !important;
 }
 
-.neon-border-btn .neon-trail {
+.neon-border-btn .neon-trail,
+.neon-border-text .neon-trail {
   position: absolute;
   inset: 0;
-  border-radius: 9999px;
+  border-radius: inherit;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
 }
 
-.neon-border-btn .neon-trail::before {
+.neon-border-btn .neon-trail::before,
+.neon-border-text .neon-trail::before {
   content: "";
   position: absolute;
   top: 50%;
@@ -127,11 +130,12 @@ All colors MUST be HSL.
   animation: neon-spin 2.5s linear infinite;
 }
 
-.neon-border-btn .neon-trail::after {
+.neon-border-btn .neon-trail::after,
+.neon-border-text .neon-trail::after {
   content: "";
   position: absolute;
   inset: 1.5px;
-  border-radius: 9999px;
+  border-radius: inherit;
   background: #000;
 }
 
