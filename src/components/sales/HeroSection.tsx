@@ -3,15 +3,17 @@ import { Bot, Sparkles, Zap, Brain, Cpu, Globe, Layers } from "lucide-react";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
 const floatingIcons = [
-  { icon: Bot, x: -380, y: -120, delay: 0 },
-  { icon: Sparkles, x: 400, y: -140, delay: 0.2 },
-  { icon: Zap, x: -420, y: 30, delay: 0.4 },
-  { icon: Brain, x: 440, y: 50, delay: 0.6 },
-  { icon: Cpu, x: -360, y: 160, delay: 0.8 },
-  { icon: Globe, x: 380, y: 180, delay: 1 },
+  { icon: Bot, x: -380, y: -120, mobileX: -120, mobileY: -160, delay: 0 },
+  { icon: Sparkles, x: 400, y: -140, mobileX: 120, mobileY: -180, delay: 0.2 },
+  { icon: Zap, x: -420, y: 30, mobileX: -140, mobileY: -60, delay: 0.4 },
+  { icon: Brain, x: 440, y: 50, mobileX: 140, mobileY: -30, delay: 0.6 },
+  { icon: Cpu, x: -360, y: 160, mobileX: -110, mobileY: 200, delay: 0.8 },
+  { icon: Globe, x: 380, y: 180, mobileX: 110, mobileY: 230, delay: 1 },
 ];
 
 const HeroSection = () => {
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pt-24">
       {/* Radial glow */}
@@ -20,19 +22,23 @@ const HeroSection = () => {
       <div className="relative z-10 text-center max-w-5xl mx-auto">
         {/* Floating icons */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {floatingIcons.map((item, i) => (
-            <motion.div
-              key={i}
-              className="absolute"
-              style={{ x: item.x, y: item.y }}
-              animate={{ y: [item.y - 10, item.y + 10, item.y - 10] }}
-              transition={{ duration: 4, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
-            >
-              <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm">
-                <item.icon className="w-5 h-5 text-white/40" />
-              </div>
-            </motion.div>
-          ))}
+          {floatingIcons.map((item, i) => {
+            const posX = isMobile ? item.mobileX : item.x;
+            const posY = isMobile ? item.mobileY : item.y;
+            return (
+              <motion.div
+                key={i}
+                className="absolute"
+                style={{ x: posX, y: posY }}
+                animate={{ y: [posY - 10, posY + 10, posY - 10] }}
+                transition={{ duration: 4, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
+              >
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm">
+                  <item.icon className="w-4 h-4 md:w-5 md:h-5 text-white/40" />
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         <motion.div
