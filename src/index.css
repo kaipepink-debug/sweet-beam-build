@@ -163,4 +163,11 @@ All colors MUST be HSL.
   background: linear-gradient(90deg, transparent, rgba(180, 0, 255, 0.9), transparent);
   box-shadow: 0 0 8px rgba(180, 0, 255, 0.6);
   animation: neon-underline-sweep 3s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+/* Gentle float for mobile icons */
+@keyframes gentle-float {
+  0%, 100% { transform: var(--float-base) translateY(0); }
+  50% { transform: var(--float-base) translateY(-4px); }
 }
