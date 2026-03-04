@@ -70,10 +70,10 @@ const ToolsSection = () => {
                 selected === tool.name ? "border-white/15" : "border-white/5 hover:border-white/10"
               }`}
               style={{ background: selected === tool.name ? "rgba(15, 15, 15, 0.85)" : "rgba(10, 10, 10, 0.7)", backdropFilter: "blur(12px)" }}
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
+              transition={{ delay: i * 0.03, duration: 0.3 }}
               onClick={() => setSelected(selected === tool.name ? null : tool.name)}
             >
               <div

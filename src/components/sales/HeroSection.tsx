@@ -50,9 +50,9 @@ const HeroSection = () => {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.4 }}
           className="flex flex-col items-center"
         >
           <img src={ratariaLogo} alt="ratarIA" className="h-24 md:h-32 mb-6 opacity-85" />
@@ -65,9 +65,9 @@ const HeroSection = () => {
         <motion.h1
           className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight leading-tight mb-6"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.15 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
         >
           <span className="text-white">Centralize as </span>
           <span className="neon-underline-text relative inline-block">melhores IAs</span>
@@ -78,18 +78,18 @@ const HeroSection = () => {
 
         <motion.p
           className="text-lg md:text-xl text-white/40 max-w-2xl mx-auto mb-10"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
         >
           Uma biblioteca completa de ferramentas de IA, pagando apenas uma fração do preço original.
         </motion.p>
 
         <motion.div
           className="flex flex-col sm:flex-row gap-4 justify-center"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.45 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
         >
           <a href="#ferramentas" onClick={(e) => { e.preventDefault(); document.querySelector('#ferramentas')?.scrollIntoView({ behavior: 'smooth' }); }} className="group relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
             <div className="absolute inset-0 rounded-xl" style={{ background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))" }} />
