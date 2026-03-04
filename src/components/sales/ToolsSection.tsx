@@ -63,17 +63,12 @@ const ToolsSection = () => {
           {tools.map((tool, i) => (
             <motion.div
               key={tool.name}
-              className="group flex items-center gap-4 p-5 rounded-2xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(180,0,255,0.08)]"
-              style={{
-                background: "rgba(10, 10, 10, 0.6)",
-                border: "1px solid rgba(180, 0, 255, 0.12)",
-                backdropFilter: "blur(20px)",
-              }}
+              className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-300"
+              style={{ background: "rgba(10, 10, 10, 0.5)" }}
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              whileHover={{ borderColor: "rgba(180, 0, 255, 0.3)" }}
             >
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 overflow-hidden"
