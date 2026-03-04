@@ -13,7 +13,7 @@ import freepikLogo from "@/assets/tools/freepik.png";
 const floatingIcons = [
   { logo: higgsFieldLogo, name: "Higgsfield", x: -380, y: -120, mobileX: -120, mobileY: -160, delay: 0 },
   { logo: grokLogo, name: "Grok", x: 400, y: -140, mobileX: 120, mobileY: -220, delay: 0.2 },
-  { logo: heygenLogo, name: "Heygen", x: -420, y: 30, mobileX: -140, mobileY: -60, delay: 0.4 },
+  { logo: heygenLogo, name: "Heygen", x: -420, y: 60, mobileX: -140, mobileY: -60, delay: 0.4 },
   { logo: soraLogo, name: "Sora", x: 440, y: 50, mobileX: 140, mobileY: 40, delay: 0.6 },
   { logo: claudeLogo, name: "Claude", x: -360, y: 160, mobileX: -110, mobileY: 260, delay: 0.8 },
   { logo: freepikLogo, name: "Freepik", x: 380, y: 180, mobileX: 110, mobileY: 290, delay: 1 },
@@ -91,16 +91,16 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.45 }}
         >
-          <button className="group relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
+          <a href="#ferramentas" onClick={(e) => { e.preventDefault(); document.querySelector('#ferramentas')?.scrollIntoView({ behavior: 'smooth' }); }} className="group relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
             <div className="absolute inset-0 rounded-xl" style={{ background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))" }} />
             <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(135deg, rgba(80, 80, 80, 1), rgba(60, 60, 60, 1))" }} />
             <span className="relative z-10" style={{ color: "rgba(255,255,255,0.95)" }}>Conhecer Ferramentas</span>
-          </button>
+          </a>
 
-          <button className="neon-border-btn relative px-8 py-4 rounded-xl font-semibold text-white/70 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all hover:scale-105 overflow-hidden">
+          <a href="#planos" onClick={(e) => { e.preventDefault(); document.querySelector('#planos')?.scrollIntoView({ behavior: 'smooth' }); }} className="neon-border-btn relative px-8 py-4 rounded-xl font-semibold text-white/70 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all hover:scale-105 overflow-hidden">
             <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
             <span className="relative z-10">Ver Planos</span>
-          </button>
+          </a>
         </motion.div>
       </div>
 
