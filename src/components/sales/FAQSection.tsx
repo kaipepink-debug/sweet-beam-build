@@ -16,7 +16,7 @@ const faqs = [
 
 const FAQSection = () => {
   return (
-    <section className="relative py-24 px-4">
+    <section id="faq" className="relative py-24 px-4">
       <div className="max-w-3xl mx-auto">
         <motion.div
           className="text-center mb-16"
