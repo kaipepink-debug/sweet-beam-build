@@ -1,0 +1,59 @@
+import { motion } from "framer-motion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+const faqs = [
+  { q: "Como funciona o acesso às ferramentas?", a: "Após a assinatura, você recebe acesso imediato ao painel com todas as ferramentas inclusas no seu plano. Basta clicar e começar a usar." },
+  { q: "É seguro utilizar a plataforma?", a: "Sim! Utilizamos criptografia de ponta e protocolos de segurança enterprise para proteger seus dados e acessos." },
+  { q: "Posso cancelar a qualquer momento?", a: "Absolutamente. Não há fidelidade. Cancele quando quiser diretamente pelo painel, sem burocracia." },
+  { q: "As ferramentas são atualizadas?", a: "Sim, mantemos todas as ferramentas sempre nas versões mais recentes e adicionamos novas regularmente." },
+  { q: "Tenho suporte se precisar de ajuda?", a: "Sim! Oferecemos suporte personalizado via WhatsApp e e-mail para todos os planos." },
+];
+
+const FAQSection = () => {
+  return (
+    <section className="relative py-24 px-4">
+      <div className="max-w-3xl mx-auto">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Perguntas <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Frequentes</span>
+          </h2>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <Accordion type="single" collapsible className="space-y-3">
+            {faqs.map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`faq-${i}`}
+                className="border border-white/5 rounded-xl bg-white/[0.02] px-6 hover:bg-white/[0.04] transition-colors"
+              >
+                <AccordionTrigger className="text-white/90 text-sm font-medium hover:no-underline py-5">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-white/40 text-sm leading-relaxed">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default FAQSection;

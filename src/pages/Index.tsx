@@ -1,7 +1,7 @@
-import { Navigate } from "react-router-dom";
+import SalesPage from "./SalesPage";
 
 const Index = () => {
-  return <Navigate to="/login" replace />;
+  return <SalesPage />;
 };
 
 export default Index;
