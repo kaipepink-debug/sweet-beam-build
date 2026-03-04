@@ -10,8 +10,11 @@ const NeuralBackground = () => {
     if (!ctx) return;
 
     let animationId: number;
-    let particles: { x: number; y: number; vx: number; vy: number; size: number }[] = [];
+    let particles: { x: number; y: number; vx: number; vy: number; size: number; baseX: number; baseY: number }[] = [];
     let codeLines: { y: number; x: number; speed: number; text: string; opacity: number }[] = [];
+    const mouse = { x: -9999, y: -9999 };
+    const MOUSE_RADIUS = 180;
+    const PUSH_FORCE = 0.08;
 
     const codeSnippets = [
       "const model = await tf.loadModel()",
@@ -35,13 +38,19 @@ const NeuralBackground = () => {
 
     const init = () => {
       resize();
-      particles = Array.from({ length: 80 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        size: Math.random() * 2 + 0.5,
-      }));
+      particles = Array.from({ length: 80 }, () => {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        return {
+          x,
+          y,
+          baseX: x,
+          baseY: y,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          size: Math.random() * 2 + 0.5,
+        };
+      });
       codeLines = Array.from({ length: 12 }, () => ({
         y: Math.random() * canvas.height,
         x: Math.random() * canvas.width,
@@ -49,6 +58,16 @@ const NeuralBackground = () => {
         text: codeSnippets[Math.floor(Math.random() * codeSnippets.length)],
         opacity: Math.random() * 0.12 + 0.03,
       }));
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+
+    const onMouseLeave = () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
     };
 
     const draw = () => {
@@ -68,26 +87,49 @@ const NeuralBackground = () => {
         }
       });
 
-      // Draw particles
+      // Draw particles with mouse interaction
       particles.forEach((p) => {
+        // Mouse repulsion
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < MOUSE_RADIUS && dist > 0) {
+          const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
+          const angle = Math.atan2(dy, dx);
+          p.vx += Math.cos(angle) * force * PUSH_FORCE;
+          p.vy += Math.sin(angle) * force * PUSH_FORCE;
+        }
+
+        // Damping
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+
+        // Gentle return to natural drift
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Bounce off edges
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        p.x = Math.max(0, Math.min(canvas.width, p.x));
+        p.y = Math.max(0, Math.min(canvas.height, p.y));
+
+        // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(180, 180, 180, 0.5)";
         ctx.fill();
 
-        // Glow
+        // Glow - brighter when near mouse
+        const glowIntensity = dist < MOUSE_RADIUS ? 0.15 + (1 - dist / MOUSE_RADIUS) * 0.15 : 0.1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
         const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-        g.addColorStop(0, "rgba(180, 180, 180, 0.1)");
+        g.addColorStop(0, `rgba(180, 180, 180, ${glowIntensity})`);
         g.addColorStop(1, "rgba(180, 180, 180, 0)");
         ctx.fillStyle = g;
         ctx.fill();
-
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
       });
 
       // Draw connections
@@ -107,6 +149,18 @@ const NeuralBackground = () => {
         }
       }
 
+      // Draw mouse glow
+      if (mouse.x > 0 && mouse.y > 0) {
+        const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_RADIUS);
+        glow.addColorStop(0, "rgba(180, 0, 255, 0.03)");
+        glow.addColorStop(0.5, "rgba(180, 0, 255, 0.01)");
+        glow.addColorStop(1, "transparent");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, MOUSE_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
       animationId = requestAnimationFrame(draw);
     };
 
@@ -116,9 +170,13 @@ const NeuralBackground = () => {
     draw();
 
     window.addEventListener("resize", resize);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseleave", onMouseLeave);
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseleave", onMouseLeave);
     };
   }, []);
 
