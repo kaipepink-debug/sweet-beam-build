@@ -69,7 +69,7 @@ const ToolsSection = () => {
               className={`group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer sm:cursor-default ${
                 selected === tool.name ? "border-white/15" : "border-white/5 hover:border-white/10"
               }`}
-              style={{ background: selected === tool.name ? "rgba(15, 15, 15, 0.7)" : "rgba(10, 10, 10, 0.5)" }}
+              style={{ background: selected === tool.name ? "rgba(15, 15, 15, 0.85)" : "rgba(10, 10, 10, 0.7)", backdropFilter: "blur(12px)" }}
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -91,8 +91,8 @@ const ToolsSection = () => {
                         key={s}
                         className="w-3 h-3"
                         style={{
-                          color: s < Math.floor(tool.rating) ? "rgba(250, 204, 21, 0.8)" : "rgba(255,255,255,0.1)",
-                          fill: s < Math.floor(tool.rating) ? "rgba(250, 204, 21, 0.8)" : "transparent",
+                          color: s < Math.floor(tool.rating) ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.1)",
+                          fill: s < Math.floor(tool.rating) ? "rgba(255,255,255,0.45)" : "transparent",
                         }}
                       />
                     ))}

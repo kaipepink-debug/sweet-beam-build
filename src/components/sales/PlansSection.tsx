@@ -7,7 +7,7 @@ const plans = [
     price: "67",
     period: "/mês",
     highlight: false,
-    badge: null,
+    link: "https://funnel.navenaut.com/J8vSJ",
     discount: null,
     features: [
       "Acesso ilimitado a +300 ferramentas de IA",
@@ -26,6 +26,7 @@ const plans = [
     period: "/ano",
     highlight: true,
     badge: "Mais Escolhido",
+    link: "https://funnel.navenaut.com/aPEco",
     discount: "40% OFF",
     features: [
       "Acesso ilimitado a +300 ferramentas de IA",
@@ -51,6 +52,7 @@ const plans = [
     period: "/semestre",
     highlight: false,
     badge: null,
+    link: "https://funnel.navenaut.com/N8Jzj",
     discount: "30% OFF",
     features: [
       "Tudo do plano Mensal +",
@@ -241,7 +243,10 @@ const PlansSection = () => {
                   </div>
                 )}
 
-                <button
+                <a
+                  href={plan.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={`w-full py-3.5 rounded-xl font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 ${
                     plan.highlight ? "text-white/95" : "text-white/70 hover:text-white/90"
                   }`}
@@ -261,7 +266,7 @@ const PlansSection = () => {
                 >
                   Começar agora
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </a>
               </div>
             </motion.div>
           ))}
