@@ -55,13 +55,13 @@ const NeuralBackground = () => {
     };
 
     const draw = () => {
-      ctx.fillStyle = "rgba(5, 5, 15, 0.15)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Draw code lines flowing
       codeLines.forEach((line) => {
         ctx.font = "13px 'JetBrains Mono', monospace";
-        ctx.fillStyle = `rgba(100, 140, 255, ${line.opacity})`;
+        ctx.fillStyle = `rgba(150, 150, 150, ${line.opacity})`;
         ctx.fillText(line.text, line.x, line.y);
         line.y += line.speed;
         if (line.y > canvas.height + 20) {
@@ -75,15 +75,15 @@ const NeuralBackground = () => {
       particles.forEach((p) => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(120, 130, 255, 0.6)`;
+        ctx.fillStyle = `rgba(180, 180, 180, 0.5)`;
         ctx.fill();
 
         // Glow
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
         const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-        g.addColorStop(0, "rgba(100, 120, 255, 0.15)");
-        g.addColorStop(1, "rgba(100, 120, 255, 0)");
+        g.addColorStop(0, "rgba(180, 180, 180, 0.1)");
+        g.addColorStop(1, "rgba(180, 180, 180, 0)");
         ctx.fillStyle = g;
         ctx.fill();
 
@@ -103,7 +103,7 @@ const NeuralBackground = () => {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(100, 120, 255, ${0.08 * (1 - dist / 150)})`;
+            ctx.strokeStyle = `rgba(160, 160, 160, ${0.06 * (1 - dist / 150)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -115,7 +115,7 @@ const NeuralBackground = () => {
 
     init();
     // Clear canvas fully first
-    ctx.fillStyle = "#05050f";
+    ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     draw();
 
@@ -150,13 +150,13 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: "#05050f" }}>
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: "#000000" }}>
       <NeuralBackground />
 
       {/* Ambient glow effects */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-20 blur-[120px]" style={{ background: "radial-gradient(circle, rgba(80,100,255,0.4), transparent)" }} />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-15 blur-[100px]" style={{ background: "radial-gradient(circle, rgba(140,80,255,0.3), transparent)" }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-10 blur-[120px]" style={{ background: "radial-gradient(circle, rgba(255,255,255,0.15), transparent)" }} />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-8 blur-[100px]" style={{ background: "radial-gradient(circle, rgba(200,200,200,0.1), transparent)" }} />
       </div>
 
       {/* Login Card */}
@@ -169,11 +169,11 @@ const Login = () => {
         <div
           className="relative rounded-2xl p-8 md:p-10"
           style={{
-            background: "rgba(15, 15, 30, 0.7)",
+            background: "rgba(10, 10, 10, 0.8)",
             backdropFilter: "blur(40px)",
             WebkitBackdropFilter: "blur(40px)",
-            border: "1px solid rgba(100, 120, 255, 0.15)",
-            boxShadow: "0 0 60px rgba(80, 100, 255, 0.08), 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            boxShadow: "0 0 60px rgba(0, 0, 0, 0.4), 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03)",
           }}
         >
           {/* Logo */}
@@ -200,13 +200,13 @@ const Login = () => {
           >
             <h1
               className="text-xl font-light tracking-[0.2em] uppercase mb-2"
-              style={{ color: "rgba(220, 225, 255, 0.95)", fontFamily: "'Inter', sans-serif" }}
+              style={{ color: "rgba(255, 255, 255, 0.9)", fontFamily: "'Inter', sans-serif" }}
             >
               Painel Administrativo
             </h1>
             <p
               className="text-xs tracking-[0.3em] uppercase"
-              style={{ color: "rgba(140, 150, 200, 0.6)" }}
+              style={{ color: "rgba(180, 180, 180, 0.5)" }}
             >
               Acesso restrito
             </p>
@@ -221,7 +221,7 @@ const Login = () => {
             >
               <label
                 className="block text-xs uppercase tracking-widest mb-2 font-medium"
-                style={{ color: "rgba(160, 170, 220, 0.7)" }}
+                style={{ color: "rgba(200, 200, 200, 0.6)" }}
               >
                 Email
               </label>
@@ -233,13 +233,13 @@ const Login = () => {
                 onBlur={() => setFocusedField(null)}
                 className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-500"
                 style={{
-                  background: "rgba(20, 20, 45, 0.6)",
+                  background: "rgba(15, 15, 15, 0.8)",
                   border: focusedField === "email"
-                    ? "1px solid rgba(100, 130, 255, 0.5)"
-                    : "1px solid rgba(80, 90, 140, 0.2)",
-                  color: "rgba(220, 225, 255, 0.9)",
+                    ? "1px solid rgba(255, 255, 255, 0.25)"
+                    : "1px solid rgba(255, 255, 255, 0.08)",
+                  color: "rgba(255, 255, 255, 0.9)",
                   boxShadow: focusedField === "email"
-                    ? "0 0 20px rgba(80, 100, 255, 0.15), inset 0 0 20px rgba(80, 100, 255, 0.05)"
+                    ? "0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.02)"
                     : "none",
                 }}
                 placeholder="admin@rataria.com"
@@ -254,7 +254,7 @@ const Login = () => {
             >
               <label
                 className="block text-xs uppercase tracking-widest mb-2 font-medium"
-                style={{ color: "rgba(160, 170, 220, 0.7)" }}
+                style={{ color: "rgba(200, 200, 200, 0.6)" }}
               >
                 Senha
               </label>
@@ -266,13 +266,13 @@ const Login = () => {
                 onBlur={() => setFocusedField(null)}
                 className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-500"
                 style={{
-                  background: "rgba(20, 20, 45, 0.6)",
+                  background: "rgba(15, 15, 15, 0.8)",
                   border: focusedField === "password"
-                    ? "1px solid rgba(100, 130, 255, 0.5)"
-                    : "1px solid rgba(80, 90, 140, 0.2)",
-                  color: "rgba(220, 225, 255, 0.9)",
+                    ? "1px solid rgba(255, 255, 255, 0.25)"
+                    : "1px solid rgba(255, 255, 255, 0.08)",
+                  color: "rgba(255, 255, 255, 0.9)",
                   boxShadow: focusedField === "password"
-                    ? "0 0 20px rgba(80, 100, 255, 0.15), inset 0 0 20px rgba(80, 100, 255, 0.05)"
+                    ? "0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.02)"
                     : "none",
                 }}
                 placeholder="••••••••••"
@@ -291,17 +291,18 @@ const Login = () => {
                 disabled={loading}
                 className="relative w-full py-3.5 rounded-xl text-sm font-medium uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden group disabled:opacity-70"
                 style={{
-                  background: "linear-gradient(135deg, rgba(70, 90, 255, 0.9), rgba(130, 80, 255, 0.9))",
+                  background: "linear-gradient(135deg, rgba(40, 40, 40, 1), rgba(60, 60, 60, 1))",
                   color: "rgba(255, 255, 255, 0.95)",
-                  boxShadow: "0 4px 20px rgba(80, 100, 255, 0.3)",
+                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
                 }}
               >
                 {/* Hover glow overlay */}
                 <span
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                   style={{
-                    background: "linear-gradient(135deg, rgba(90, 110, 255, 1), rgba(150, 100, 255, 1))",
-                    boxShadow: "0 6px 30px rgba(80, 100, 255, 0.5)",
+                    background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(80, 80, 80, 1))",
+                    boxShadow: "0 6px 30px rgba(255, 255, 255, 0.08)",
                   }}
                 />
                 <span className="relative z-10 flex items-center justify-center gap-2">
@@ -330,7 +331,7 @@ const Login = () => {
             transition={{ delay: 0.8, duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="mt-8 h-px mx-auto w-24 origin-center"
             style={{
-              background: "linear-gradient(90deg, transparent, rgba(100, 120, 255, 0.4), transparent)",
+              background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent)",
             }}
           />
         </div>
