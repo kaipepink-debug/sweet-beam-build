@@ -9,6 +9,14 @@ import copyaiLogo from "@/assets/tools/copyai.png";
 import runwaymlLogo from "@/assets/tools/runwayml.png";
 import jasperaiLogo from "@/assets/tools/jasperai.png";
 import synthesiaLogo from "@/assets/tools/synthesia.png";
+import higgsFieldLogo from "@/assets/tools/higgsfield.png";
+import soraLogo from "@/assets/tools/sora.png";
+import veo3Logo from "@/assets/tools/veo3.png";
+import hailuoLogo from "@/assets/tools/hailuo.png";
+import grokLogo from "@/assets/tools/grok.png";
+import claudeLogo from "@/assets/tools/claude.png";
+import freepikLogo from "@/assets/tools/freepik.png";
+import heygenLogo from "@/assets/tools/heygen.png";
 
 const tools = [
   { name: "ChatGPT", desc: "Assistente de IA conversacional mais avançado do mundo.", rating: 5, logo: chatgptLogo },
@@ -19,6 +27,14 @@ const tools = [
   { name: "Copy.AI", desc: "Copywriting automatizado para marketing e vendas.", rating: 4.6, logo: copyaiLogo },
   { name: "Jasper AI", desc: "Criação de conteúdo otimizado para SEO e conversão.", rating: 4.5, logo: jasperaiLogo },
   { name: "Synthesia", desc: "Criação de vídeos com avatares de IA realistas.", rating: 4.7, logo: synthesiaLogo },
+  { name: "Higgsfield", desc: "Geração de vídeos curtos com IA de alta qualidade.", rating: 4.5, logo: higgsFieldLogo },
+  { name: "Sora", desc: "Geração de vídeos realistas a partir de texto.", rating: 4.9, logo: soraLogo },
+  { name: "Veo 3", desc: "IA de vídeo do Google com qualidade cinematográfica.", rating: 4.8, logo: veo3Logo },
+  { name: "Hailuo", desc: "Criação de vídeos com IA generativa inovadora.", rating: 4.6, logo: hailuoLogo },
+  { name: "Grok", desc: "IA conversacional avançada com acesso em tempo real.", rating: 4.7, logo: grokLogo },
+  { name: "Claude", desc: "Assistente de IA seguro e confiável da Anthropic.", rating: 4.9, logo: claudeLogo },
+  { name: "Freepik", desc: "Banco de imagens e design com geração por IA.", rating: 4.6, logo: freepikLogo },
+  { name: "Heygen", desc: "Criação de vídeos com avatares e tradução por IA.", rating: 4.7, logo: heygenLogo },
 ];
 
 const ToolsSection = () => {
