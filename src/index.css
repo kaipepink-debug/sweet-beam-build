@@ -142,9 +142,9 @@ All colors MUST be HSL.
 
 /* Neon underline text effect */
 @keyframes neon-underline-sweep {
-  0% { left: -30%; }
-  50% { left: 100%; }
-  100% { left: -30%; }
+  0% { transform: translate3d(-140%, 0, 0); }
+  50% { transform: translate3d(340%, 0, 0); }
+  100% { transform: translate3d(-140%, 0, 0); }
 }
 
 .neon-underline-text {
@@ -156,18 +156,18 @@ All colors MUST be HSL.
   content: "";
   position: absolute;
   bottom: -4px;
-  left: -30%;
+  left: 0;
   width: 30%;
   height: 2px;
   border-radius: 2px;
   background: linear-gradient(90deg, transparent, rgba(180, 0, 255, 0.9), transparent);
   box-shadow: 0 0 8px rgba(180, 0, 255, 0.6);
-  animation: neon-underline-sweep 3s ease-in-out infinite;
-  animation-delay: 0s;
+  animation: neon-underline-sweep 2.4s linear infinite;
+  will-change: transform;
 }
 
 /* Gentle float for mobile icons */
 @keyframes gentle-float {
   0%, 100% { transform: var(--float-base) translateY(0); }
-  50% { transform: var(--float-base) translateY(-4px); }
+  50% { transform: var(--float-base) translateY(-2px); }
 }

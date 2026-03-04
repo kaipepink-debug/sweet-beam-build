@@ -39,8 +39,8 @@ const HeroSection = () => {
                 style={{
                   ["--float-base" as any]: `translate(${posX}px, ${posY}px)`,
                   transform: `translate(${posX}px, ${posY}px)`,
-                  animation: `gentle-float 3s ease-in-out infinite`,
-                  animationDelay: `${i * 0.5}s`,
+                  animation: `gentle-float 2.2s ease-in-out infinite`,
+                  animationDelay: "0s",
                 }}
               >
                 <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm overflow-hidden">
