@@ -120,8 +120,8 @@ All colors MUST be HSL.
     from 0deg,
     transparent 0%,
     transparent 75%,
-    rgba(0, 255, 120, 0.9) 88%,
-    rgba(0, 255, 120, 0.4) 95%,
+    rgba(180, 0, 255, 0.9) 88%,
+    rgba(180, 0, 255, 0.4) 95%,
     transparent 100%
   );
   animation: neon-spin 2.5s linear infinite;
