@@ -32,7 +32,7 @@ const tools = [
   { name: "Sora", desc: "Geração de vídeos realistas a partir de texto.", rating: 4.9, logo: soraLogo },
   { name: "Veo 3", desc: "IA de vídeo do Google com qualidade cinematográfica.", rating: 4.8, logo: veo3Logo },
   { name: "Hailuo", desc: "Criação de vídeos com IA generativa inovadora.", rating: 4.8, logo: hailuoLogo },
-  { name: "Grok", desc: "IA conversacional avançada com acesso em tempo real.", rating: 4.9, logo: grokLogo },
+  { name: "SuperGrok", desc: "IA conversacional avançada com acesso em tempo real.", rating: 4.9, logo: grokLogo },
   { name: "Claude", desc: "Assistente de IA seguro e confiável da Anthropic.", rating: 4.9, logo: claudeLogo },
   { name: "Freepik", desc: "Banco de imagens e design com geração por IA.", rating: 4.8, logo: freepikLogo },
   { name: "Heygen", desc: "Criação de vídeos com avatares e tradução por IA.", rating: 4.8, logo: heygenLogo },
