@@ -11,7 +11,7 @@ const benefits = [
 
 const BenefitsSection = () => {
   return (
-    <section id="beneficios" className="relative py-24 px-4">
+    <section id="beneficios" className="relative py-14 md:py-24 px-3 md:px-4">
       {/* Neon orbit line CSS */}
       <style>{`
         @keyframes orbit-flow {
@@ -32,8 +32,8 @@ const BenefitsSection = () => {
       `}</style>
 
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-10 md:mb-16 animate-fade-in">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
             Benefícios <span className="text-white/70">Exclusivos</span>
           </h2>
           <p className="text-white/30 max-w-xl mx-auto">
@@ -90,11 +90,11 @@ const BenefitsSection = () => {
             </circle>
           </svg>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 relative z-10">
             {benefits.map((b) => (
               <div
                 key={b.title}
-                className="group p-6 rounded-2xl border border-white/[0.06] hover:border-purple-500/20 transition-all duration-500 purple-hover-glow"
+                className="group p-4 md:p-6 rounded-2xl border border-white/[0.06] hover:border-purple-500/20 transition-all duration-500 purple-hover-glow"
                 style={{ background: "rgba(8, 8, 12, 0.6)", backdropFilter: "blur(20px)" }}
               >
                 <div

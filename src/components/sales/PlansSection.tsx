@@ -67,10 +67,10 @@ const plans = [
 
 const PlansSection = () => {
   return (
-    <section className="relative py-24 px-4" id="planos">
+    <section className="relative py-14 md:py-24 px-3 md:px-4" id="planos">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-10 md:mb-16 animate-fade-in">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
             Escolha o plano{" "}
             <span className="relative inline-block neon-underline-text">
               perfeito
@@ -83,7 +83,7 @@ const PlansSection = () => {
           </p>
         </div>
 
-        <div className="flex flex-col md:grid md:grid-cols-3 gap-6 items-stretch md:items-center">
+        <div className="flex flex-col md:grid md:grid-cols-3 gap-4 md:gap-6 items-stretch md:items-center">
           {[plans[1], plans[0], plans[2]].map((plan, idx) => (
             <div
               key={plan.name}
@@ -122,7 +122,7 @@ const PlansSection = () => {
                 </>
               )}
 
-              <div className="relative p-8">
+              <div className="relative p-5 md:p-8">
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
                   {plan.badge && (
                     <div className="flex items-center gap-1.5">

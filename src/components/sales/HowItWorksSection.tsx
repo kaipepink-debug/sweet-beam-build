@@ -8,10 +8,10 @@ const steps = [
 
 const HowItWorksSection = () => {
   return (
-    <section className="relative py-24 px-4">
+    <section className="relative py-14 md:py-24 px-3 md:px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-10 md:mb-16 animate-fade-in">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
             Como <span className="text-white/70">funciona</span>
           </h2>
         </div>

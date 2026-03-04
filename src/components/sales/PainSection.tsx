@@ -57,11 +57,11 @@ const benefits = [
 
 const PainSection = () => {
   return (
-    <section className="relative py-24 px-4">
+    <section className="relative py-14 md:py-24 px-3 md:px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <TrendingDown className="w-10 h-10 text-white/30 mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-10 md:mb-16 animate-fade-in">
+          <TrendingDown className="w-8 h-8 md:w-10 md:h-10 text-white/30 mx-auto mb-3 md:mb-4" />
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
             Já pensou quanto você{" "}
             <span className="relative inline-block neon-underline-text">gasta por ano</span>{" "}
             com ferramentas de IA?
@@ -71,7 +71,7 @@ const PainSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 items-stretch">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-8 items-stretch">
           {/* Cost table */}
           <div
             className="relative rounded-2xl overflow-hidden flex flex-col purple-hover-glow"
@@ -84,8 +84,8 @@ const PainSection = () => {
           >
             <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(255,255,255,0.03), transparent)" }} />
 
-            <div className="relative p-8 flex-1 flex flex-col">
-              <h3 className="text-white/80 font-semibold text-center mb-6">Custo Individual Mensal</h3>
+            <div className="relative p-5 md:p-8 flex-1 flex flex-col">
+              <h3 className="text-white/80 font-semibold text-center mb-4 md:mb-6 text-sm md:text-base">Custo Individual Mensal</h3>
 
               <div className="space-y-3 flex-1">
                 {tools.map((tool) => (
@@ -137,7 +137,7 @@ const PainSection = () => {
           >
             <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(180, 0, 255, 0.08), transparent 60%), radial-gradient(circle at bottom left, rgba(140, 0, 200, 0.05), transparent 60%)" }} />
             
-            <div className="relative p-8 flex-1 flex flex-col justify-between">
+            <div className="relative p-5 md:p-8 flex-1 flex flex-col justify-between">
               <div className="text-center">
                 <span
                   className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-6 mx-auto"
@@ -154,7 +154,7 @@ const PainSection = () => {
                 <div className="mb-2">
                   <span className="text-white/30 text-sm line-through">De R$ {fmt(grandTotal)}/mês</span>
                 </div>
-                <div className="text-5xl font-bold text-white mb-1">
+                <div className="text-4xl md:text-5xl font-bold text-white mb-1">
                   R$ 67<span className="text-2xl">,00</span>
                 </div>
                 <p className="text-white/30 text-sm mb-6">/mês por tudo</p>
