@@ -31,7 +31,7 @@ const tools = [
   { name: "Sora", price: 120.00, logo: soraLogo },
   { name: "Veo 3", price: 99.00, logo: veo3Logo },
   { name: "Hailuo", price: 39.90, logo: hailuoLogo },
-  { name: "Grok", price: 79.90, logo: grokLogo },
+  { name: "SuperGrok", price: 79.90, logo: grokLogo },
   { name: "Claude", price: 119.90, logo: claudeLogo },
   { name: "Freepik", price: 44.90, logo: freepikLogo },
   { name: "Heygen", price: 89.00, logo: heygenLogo },
