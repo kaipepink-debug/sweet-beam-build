@@ -9,6 +9,14 @@ import copyaiLogo from "@/assets/tools/copyai.png";
 import runwaymlLogo from "@/assets/tools/runwayml.png";
 import jasperaiLogo from "@/assets/tools/jasperai.png";
 import synthesiaLogo from "@/assets/tools/synthesia.png";
+import higgsFieldLogo from "@/assets/tools/higgsfield.png";
+import soraLogo from "@/assets/tools/sora.png";
+import veo3Logo from "@/assets/tools/veo3.png";
+import hailuoLogo from "@/assets/tools/hailuo.png";
+import grokLogo from "@/assets/tools/grok.png";
+import claudeLogo from "@/assets/tools/claude.png";
+import freepikLogo from "@/assets/tools/freepik.png";
+import heygenLogo from "@/assets/tools/heygen.png";
 
 const tools = [
   { name: "ChatGPT Plus", price: 139.90, logo: chatgptLogo },
@@ -19,6 +27,14 @@ const tools = [
   { name: "Runway ML", price: 60.00, logo: runwaymlLogo },
   { name: "Jasper AI", price: 69.00, logo: jasperaiLogo },
   { name: "Synthesia", price: 110.00, logo: synthesiaLogo },
+  { name: "Higgsfield", price: 45.00, logo: higgsFieldLogo },
+  { name: "Sora", price: 120.00, logo: soraLogo },
+  { name: "Veo 3", price: 99.00, logo: veo3Logo },
+  { name: "Hailuo", price: 39.90, logo: hailuoLogo },
+  { name: "Grok", price: 79.90, logo: grokLogo },
+  { name: "Claude", price: 119.90, logo: claudeLogo },
+  { name: "Freepik", price: 44.90, logo: freepikLogo },
+  { name: "Heygen", price: 89.00, logo: heygenLogo },
 ];
 
 const totalMonthly = tools.reduce((acc, t) => acc + t.price, 0);
