@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { TrendingDown, Check, DollarSign } from "lucide-react";
+import { TrendingDown, Check, DollarSign, Sparkles } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
@@ -11,18 +11,22 @@ import jasperaiLogo from "@/assets/tools/jasperai.png";
 import synthesiaLogo from "@/assets/tools/synthesia.png";
 
 const tools = [
-  { name: "ChatGPT Plus", price: "R$ 139,90", logo: chatgptLogo },
-  { name: "Midjourney", price: "R$ 60,00", logo: midjourneyLogo },
-  { name: "ElevenLabs", price: "R$ 55,00", logo: elevenlabsLogo },
-  { name: "Canva Pro", price: "R$ 34,90", logo: canvaLogo },
-  { name: "Copy.AI", price: "R$ 49,00", logo: copyaiLogo },
-  { name: "Runway ML", price: "R$ 60,00", logo: runwaymlLogo },
-  { name: "Jasper AI", price: "R$ 69,00", logo: jasperaiLogo },
-  { name: "Synthesia", price: "R$ 110,00", logo: synthesiaLogo },
+  { name: "ChatGPT Plus", price: 139.90, logo: chatgptLogo },
+  { name: "Midjourney", price: 60.00, logo: midjourneyLogo },
+  { name: "ElevenLabs", price: 55.00, logo: elevenlabsLogo },
+  { name: "Canva Pro", price: 34.90, logo: canvaLogo },
+  { name: "Copy.AI", price: 49.00, logo: copyaiLogo },
+  { name: "Runway ML", price: 60.00, logo: runwaymlLogo },
+  { name: "Jasper AI", price: 69.00, logo: jasperaiLogo },
+  { name: "Synthesia", price: 110.00, logo: synthesiaLogo },
 ];
 
-const totalMonthly = tools.reduce((acc, t) => acc + parseFloat(t.price.replace("R$ ", "").replace(",", ".")), 0);
-const totalAnnual = totalMonthly * 12;
+const totalMonthly = tools.reduce((acc, t) => acc + t.price, 0);
+const ourPrice = 67.00;
+const savingsMonthly = totalMonthly - ourPrice;
+const savingsAnnual = savingsMonthly * 12;
+
+const fmt = (v: number) => v.toFixed(2).replace(".", ",");
 
 const PainSection = () => {
   return (
@@ -45,10 +49,10 @@ const PainSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 items-center">
+        <div className="grid md:grid-cols-2 gap-8 items-stretch">
           {/* Cost table */}
           <motion.div
-            className="rounded-2xl border border-white/8 overflow-hidden"
+            className="rounded-2xl border border-white/8 overflow-hidden flex flex-col"
             style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(16px)" }}
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -57,22 +61,28 @@ const PainSection = () => {
             <div className="p-5 border-b border-white/8">
               <h3 className="text-white/80 font-semibold">Custo Individual Mensal</h3>
             </div>
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-white/5 flex-1">
               {tools.map((tool) => (
                 <div key={tool.name} className="flex items-center justify-between px-5 py-3 text-sm">
                   <div className="flex items-center gap-3">
                     <img src={tool.logo} alt={tool.name} className="w-6 h-6 rounded-md object-contain" />
                     <span className="text-white/50">{tool.name}</span>
                   </div>
-                  <span className="text-white/40 font-medium">{tool.price}/mês</span>
+                  <span className="text-white/40 font-medium">R$ {fmt(tool.price)}/mês</span>
                 </div>
               ))}
             </div>
             <div className="p-5 border-t border-white/8" style={{ background: "rgba(255,255,255,0.02)" }}>
-              <div className="flex justify-between">
-                <span className="text-white/70 font-semibold">Total Anual</span>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 font-semibold">Total Mensal</span>
                 <span className="text-white/80 font-bold text-lg">
-                  R$ {totalAnnual.toFixed(2).replace(".", ",")}
+                  R$ {fmt(totalMonthly)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center mt-1">
+                <span className="text-white/40 text-sm">Total Anual</span>
+                <span className="text-white/50 font-semibold">
+                  R$ {fmt(totalMonthly * 12)}
                 </span>
               </div>
             </div>
@@ -80,49 +90,69 @@ const PainSection = () => {
 
           {/* IA Premium card */}
           <motion.div
-            className="relative rounded-2xl border border-white/10 overflow-hidden"
-            style={{ background: "rgba(10, 10, 10, 0.8)", backdropFilter: "blur(40px)" }}
+            className="relative rounded-2xl overflow-hidden flex flex-col"
+            style={{
+              background: "rgba(10, 10, 10, 0.8)",
+              backdropFilter: "blur(40px)",
+              border: "1px solid rgba(180, 0, 255, 0.25)",
+              boxShadow: "0 0 40px rgba(180, 0, 255, 0.08), inset 0 1px 0 rgba(180, 0, 255, 0.1)",
+            }}
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="absolute inset-0" style={{ background: "radial-gradient(circle at top right, rgba(255,255,255,0.03), transparent)" }} />
+            {/* Purple glow overlay */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(180, 0, 255, 0.08), transparent 60%), radial-gradient(circle at bottom left, rgba(140, 0, 200, 0.05), transparent 60%)" }} />
             
-            <div className="relative p-8 text-center">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-white/60 border border-white/10 mb-6">
+            <div className="relative p-8 text-center flex-1 flex flex-col justify-center">
+              <span
+                className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-6 mx-auto"
+                style={{
+                  background: "linear-gradient(135deg, rgba(180, 0, 255, 0.2), rgba(140, 0, 200, 0.1))",
+                  border: "1px solid rgba(180, 0, 255, 0.3)",
+                  color: "rgba(200, 140, 255, 0.9)",
+                }}
+              >
+                <Sparkles className="w-3 h-3 inline mr-1.5 -mt-0.5" />
                 IA Premium
               </span>
               
               <div className="mb-2">
-                <span className="text-white/30 text-sm line-through">De R$ {totalMonthly.toFixed(2).replace(".", ",")}/mês</span>
+                <span className="text-white/30 text-sm line-through">De R$ {fmt(totalMonthly)}/mês</span>
               </div>
               <div className="text-5xl font-bold text-white mb-1">
-                R$ 159<span className="text-2xl">,90</span>
+                R$ 67<span className="text-2xl">,00</span>
               </div>
               <p className="text-white/30 text-sm mb-6">/mês por tudo</p>
 
-              <div className="rounded-xl p-4 mb-8 border border-white/8" style={{ background: "rgba(255,255,255,0.03)" }}>
-                <p className="text-white/60 font-semibold text-sm flex items-center justify-center gap-2">
+              <div
+                className="rounded-xl p-4 mb-8"
+                style={{
+                  background: "linear-gradient(135deg, rgba(180, 0, 255, 0.1), rgba(140, 0, 200, 0.05))",
+                  border: "1px solid rgba(180, 0, 255, 0.2)",
+                }}
+              >
+                <p className="font-semibold text-sm flex items-center justify-center gap-2" style={{ color: "rgba(200, 140, 255, 0.9)" }}>
                   <DollarSign className="w-4 h-4" />
-                  Economia de até R$ {(totalAnnual - 159.90 * 12).toFixed(2).replace(".", ",")}/ano
+                  Economia de R$ {fmt(savingsMonthly)}/mês — R$ {fmt(savingsAnnual)}/ano
                 </p>
               </div>
 
               <div className="space-y-3 text-left mb-8">
-                {["Acesso a +300 ferramentas", "Atualizações constantes", "Suporte dedicado"].map((item) => (
+                {["Acesso a +300 ferramentas", "Atualizações constantes", "Suporte dedicado", "Tudo em um só lugar"].map((item) => (
                   <div key={item} className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-white/40 shrink-0" />
+                    <Check className="w-4 h-4 shrink-0" style={{ color: "rgba(180, 0, 255, 0.6)" }} />
                     <span className="text-white/50 text-sm">{item}</span>
                   </div>
                 ))}
               </div>
 
               <button
-                className="w-full py-4 rounded-xl font-semibold text-white/90 transition-all hover:scale-[1.02]"
+                className="w-full py-4 rounded-xl font-semibold text-white transition-all hover:scale-[1.02] hover:shadow-lg"
                 style={{
-                  background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)",
+                  background: "linear-gradient(135deg, rgba(180, 0, 255, 0.8), rgba(120, 0, 180, 0.9))",
+                  border: "1px solid rgba(200, 100, 255, 0.3)",
+                  boxShadow: "0 4px 25px rgba(180, 0, 255, 0.3)",
                 }}
               >
                 Comece a economizar agora
