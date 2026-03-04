@@ -12,6 +12,7 @@ const faqs = [
   { q: "Posso cancelar a qualquer momento?", a: "Absolutamente. Não há fidelidade. Cancele quando quiser diretamente pelo painel, sem burocracia." },
   { q: "As ferramentas são atualizadas?", a: "Sim, mantemos todas as ferramentas sempre nas versões mais recentes e adicionamos novas regularmente." },
   { q: "Tenho suporte se precisar de ajuda?", a: "Sim! Oferecemos suporte personalizado via WhatsApp e e-mail para todos os planos." },
+  { q: "Existe garantia?", a: "Sim! Oferecemos garantia incondicional de 7 dias. Se por qualquer motivo você não ficar satisfeito, devolvemos 100% do seu dinheiro, sem perguntas e sem burocracia." },
 ];
 
 const FAQSection = () => {

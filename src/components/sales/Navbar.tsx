@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Instagram } from "lucide-react";
 import ratariaIcon from "@/assets/rataria-icon.png";
 
 const navLinks = [
@@ -39,8 +40,18 @@ const Navbar = () => {
             : "bg-white/[0.03] backdrop-blur-md border-white/[0.06]"
         }`}
       >
-        {/* Logo */}
-        <img src={ratariaIcon} alt="ratarIA" className="h-10 w-10 opacity-70" />
+        {/* Logo + Instagram */}
+        <div className="flex items-center gap-3">
+          <img src={ratariaIcon} alt="ratarIA" className="h-10 w-10 opacity-70" />
+          <a
+            href="https://www.instagram.com/rataria.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/40 hover:text-white/70 transition-colors"
+          >
+            <Instagram className="w-5 h-5" />
+          </a>
+        </div>
 
         {/* Links */}
         <div className="hidden md:flex items-center gap-6">

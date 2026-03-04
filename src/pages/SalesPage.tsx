@@ -7,7 +7,7 @@ import ToolsSection from "@/components/sales/ToolsSection";
 import PlansSection from "@/components/sales/PlansSection";
 import HowItWorksSection from "@/components/sales/HowItWorksSection";
 import FAQSection from "@/components/sales/FAQSection";
-import SupportSection from "@/components/sales/SupportSection";
+
 
 const SalesPage = () => {
   return (
@@ -24,9 +24,15 @@ const SalesPage = () => {
         <PlansSection />
         <HowItWorksSection />
         <FAQSection />
-        <SupportSection />
-        <footer className="py-8 text-center text-white/15 text-xs border-t border-white/5">
-          © 2026 IA Premium. Todos os direitos reservados.
+        <footer className="py-10 px-4 text-center">
+          <p className="text-white/15 text-xs mb-3">
+            © 2026 ratarIA. Todos os direitos reservados.
+          </p>
+          <div className="flex items-center justify-center gap-4 text-white/15 text-[11px]">
+            <a href="#" className="hover:text-white/30 transition-colors">Termos de Uso</a>
+            <span>·</span>
+            <a href="#" className="hover:text-white/30 transition-colors">Política de Privacidade</a>
+          </div>
         </footer>
       </div>
     </div>
