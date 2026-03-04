@@ -1,15 +1,24 @@
 import { motion } from "framer-motion";
 import { TrendingDown, Check, DollarSign } from "lucide-react";
 
+import chatgptLogo from "@/assets/tools/chatgpt.png";
+import midjourneyLogo from "@/assets/tools/midjourney.png";
+import elevenlabsLogo from "@/assets/tools/elevenlabs.png";
+import canvaLogo from "@/assets/tools/canva.png";
+import copyaiLogo from "@/assets/tools/copyai.png";
+import runwaymlLogo from "@/assets/tools/runwayml.png";
+import jasperaiLogo from "@/assets/tools/jasperai.png";
+import synthesiaLogo from "@/assets/tools/synthesia.png";
+
 const tools = [
-  { name: "ChatGPT Plus", price: "R$ 139,90" },
-  { name: "Midjourney", price: "R$ 60,00" },
-  { name: "ElevenLabs", price: "R$ 55,00" },
-  { name: "Canva Pro", price: "R$ 34,90" },
-  { name: "Copy.AI", price: "R$ 49,00" },
-  { name: "Runway ML", price: "R$ 60,00" },
-  { name: "Jasper AI", price: "R$ 69,00" },
-  { name: "Synthesia", price: "R$ 110,00" },
+  { name: "ChatGPT Plus", price: "R$ 139,90", logo: chatgptLogo },
+  { name: "Midjourney", price: "R$ 60,00", logo: midjourneyLogo },
+  { name: "ElevenLabs", price: "R$ 55,00", logo: elevenlabsLogo },
+  { name: "Canva Pro", price: "R$ 34,90", logo: canvaLogo },
+  { name: "Copy.AI", price: "R$ 49,00", logo: copyaiLogo },
+  { name: "Runway ML", price: "R$ 60,00", logo: runwaymlLogo },
+  { name: "Jasper AI", price: "R$ 69,00", logo: jasperaiLogo },
+  { name: "Synthesia", price: "R$ 110,00", logo: synthesiaLogo },
 ];
 
 const totalMonthly = tools.reduce((acc, t) => acc + parseFloat(t.price.replace("R$ ", "").replace(",", ".")), 0);
@@ -40,7 +49,7 @@ const PainSection = () => {
           {/* Cost table */}
           <motion.div
             className="rounded-2xl border border-white/8 overflow-hidden"
-            style={{ background: "rgba(0, 0, 0, 0.9)", backdropFilter: "blur(20px)" }}
+            style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(16px)" }}
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -50,8 +59,11 @@ const PainSection = () => {
             </div>
             <div className="divide-y divide-white/5">
               {tools.map((tool) => (
-                <div key={tool.name} className="flex justify-between px-5 py-3 text-sm">
-                  <span className="text-white/50">{tool.name}</span>
+                <div key={tool.name} className="flex items-center justify-between px-5 py-3 text-sm">
+                  <div className="flex items-center gap-3">
+                    <img src={tool.logo} alt={tool.name} className="w-6 h-6 rounded-md object-contain" />
+                    <span className="text-white/50">{tool.name}</span>
+                  </div>
                   <span className="text-white/40 font-medium">{tool.price}/mês</span>
                 </div>
               ))}

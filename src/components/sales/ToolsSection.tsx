@@ -1,15 +1,24 @@
 import { motion } from "framer-motion";
-import { Star, ExternalLink } from "lucide-react";
+import { Star } from "lucide-react";
+
+import chatgptLogo from "@/assets/tools/chatgpt.png";
+import midjourneyLogo from "@/assets/tools/midjourney.png";
+import elevenlabsLogo from "@/assets/tools/elevenlabs.png";
+import canvaLogo from "@/assets/tools/canva.png";
+import copyaiLogo from "@/assets/tools/copyai.png";
+import runwaymlLogo from "@/assets/tools/runwayml.png";
+import jasperaiLogo from "@/assets/tools/jasperai.png";
+import synthesiaLogo from "@/assets/tools/synthesia.png";
 
 const tools = [
-  { name: "ChatGPT", desc: "Assistente de IA conversacional mais avançado do mundo.", rating: 5 },
-  { name: "Midjourney", desc: "Geração de imagens artísticas com qualidade profissional.", rating: 5 },
-  { name: "ElevenLabs", desc: "Síntese de voz ultra-realista com clonagem de voz.", rating: 4.8 },
-  { name: "Runway ML", desc: "Edição de vídeo com IA generativa de última geração.", rating: 4.7 },
-  { name: "Canva Pro", desc: "Design gráfico intuitivo com recursos premium de IA.", rating: 4.9 },
-  { name: "Copy.AI", desc: "Copywriting automatizado para marketing e vendas.", rating: 4.6 },
-  { name: "Jasper AI", desc: "Criação de conteúdo otimizado para SEO e conversão.", rating: 4.5 },
-  { name: "Synthesia", desc: "Criação de vídeos com avatares de IA realistas.", rating: 4.7 },
+  { name: "ChatGPT", desc: "Assistente de IA conversacional mais avançado do mundo.", rating: 5, logo: chatgptLogo },
+  { name: "Midjourney", desc: "Geração de imagens artísticas com qualidade profissional.", rating: 5, logo: midjourneyLogo },
+  { name: "ElevenLabs", desc: "Síntese de voz ultra-realista com clonagem de voz.", rating: 4.8, logo: elevenlabsLogo },
+  { name: "Runway ML", desc: "Edição de vídeo com IA generativa de última geração.", rating: 4.7, logo: runwaymlLogo },
+  { name: "Canva Pro", desc: "Design gráfico intuitivo com recursos premium de IA.", rating: 4.9, logo: canvaLogo },
+  { name: "Copy.AI", desc: "Copywriting automatizado para marketing e vendas.", rating: 4.6, logo: copyaiLogo },
+  { name: "Jasper AI", desc: "Criação de conteúdo otimizado para SEO e conversão.", rating: 4.5, logo: jasperaiLogo },
+  { name: "Synthesia", desc: "Criação de vídeos com avatares de IA realistas.", rating: 4.7, logo: synthesiaLogo },
 ];
 
 const ToolsSection = () => {
@@ -41,8 +50,8 @@ const ToolsSection = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
             >
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center shrink-0 text-lg font-bold text-white/40">
-                {tool.name.charAt(0)}
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center shrink-0 overflow-hidden">
+                <img src={tool.logo} alt={tool.name} className="w-8 h-8 object-contain" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
