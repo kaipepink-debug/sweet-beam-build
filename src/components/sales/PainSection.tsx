@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { TrendingDown, Check, DollarSign, Sparkles, Zap, Shield, RefreshCw, Headphones, Infinity, MoreHorizontal } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
@@ -60,12 +59,7 @@ const PainSection = () => {
   return (
     <section className="relative py-24 px-4">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
+        <div className="text-center mb-16 animate-fade-in">
           <TrendingDown className="w-10 h-10 text-white/30 mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Já pensou quanto você{" "}
@@ -75,11 +69,11 @@ const PainSection = () => {
           <p className="text-white/30 max-w-xl mx-auto">
             Veja a comparação real de custos e descubra como economizar milhares de reais.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-8 items-stretch">
           {/* Cost table */}
-          <motion.div
+          <div
             className="relative rounded-2xl overflow-hidden flex flex-col"
             style={{
               background: "rgba(10, 10, 10, 0.8)",
@@ -87,9 +81,6 @@ const PainSection = () => {
               border: "1px solid rgba(255, 255, 255, 0.1)",
               boxShadow: "0 0 30px rgba(0, 0, 0, 0.3)",
             }}
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
           >
             <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(255,255,255,0.03), transparent)" }} />
 
@@ -132,10 +123,10 @@ const PainSection = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* IA Premium card */}
-          <motion.div
+          <div
             className="relative rounded-2xl overflow-hidden flex flex-col"
             style={{
               background: "rgba(10, 10, 10, 0.8)",
@@ -143,14 +134,10 @@ const PainSection = () => {
               border: "1px solid rgba(180, 0, 255, 0.25)",
               boxShadow: "0 0 40px rgba(180, 0, 255, 0.08), inset 0 1px 0 rgba(180, 0, 255, 0.1)",
             }}
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
           >
             <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(180, 0, 255, 0.08), transparent 60%), radial-gradient(circle at bottom left, rgba(140, 0, 200, 0.05), transparent 60%)" }} />
             
             <div className="relative p-8 flex-1 flex flex-col justify-between">
-              {/* Header */}
               <div className="text-center">
                 <span
                   className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-6 mx-auto"
@@ -173,7 +160,6 @@ const PainSection = () => {
                 <p className="text-white/30 text-sm mb-6">/mês por tudo</p>
               </div>
 
-              {/* Economia */}
               <div
                 className="rounded-xl p-4 mb-6"
                 style={{
@@ -190,7 +176,6 @@ const PainSection = () => {
                 </p>
               </div>
 
-              {/* Benefits */}
               <div className="space-y-3 text-left mb-6">
                 {benefits.map((item) => (
                   <div key={item.text} className="flex items-center gap-3">
@@ -208,7 +193,6 @@ const PainSection = () => {
                 ))}
               </div>
 
-              {/* CTA */}
               <button
                 className="w-full py-4 rounded-xl font-semibold text-white transition-all hover:scale-[1.02] hover:shadow-lg"
                 style={{
@@ -220,7 +204,7 @@ const PainSection = () => {
                 Comece a economizar agora
               </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
