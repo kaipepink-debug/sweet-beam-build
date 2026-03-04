@@ -61,7 +61,8 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.15 }}
         >
           <span className="text-white">Centralize as </span>
-          <span className="neon-underline-text relative inline-block">melhores IAs</span>
+          <span className="text-white">melhores </span>
+          <span className="neon-border-text relative inline-block px-3 py-1">IAs<span className="neon-trail" /></span>
           <br />
           <span className="text-white">do mundo em um </span>
           <span className="text-white/90">único acesso</span>
@@ -82,10 +83,8 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.45 }}
         >
-          <button className="group relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
-            <div className="absolute inset-0 rounded-xl" style={{ background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))" }} />
-            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(135deg, rgba(80, 80, 80, 1), rgba(60, 60, 60, 1))" }} />
-            <div className="absolute inset-0 rounded-xl" style={{ boxShadow: "0 0 30px rgba(255,255,255,0.05)" }} />
+          <button className="neon-border-btn relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
+            <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
             <span className="relative z-10" style={{ color: "rgba(255,255,255,0.95)" }}>Conhecer Ferramentas</span>
           </button>
 
