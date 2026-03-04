@@ -40,7 +40,7 @@ const PainSection = () => {
           {/* Cost table */}
           <motion.div
             className="rounded-2xl border border-white/8 overflow-hidden"
-            style={{ background: "rgba(10, 10, 10, 0.6)", backdropFilter: "blur(20px)" }}
+            style={{ background: "rgba(0, 0, 0, 0.9)", backdropFilter: "blur(20px)" }}
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
