@@ -40,7 +40,7 @@ const Navbar = () => {
         }`}
       >
         {/* Logo */}
-        <img src={ratariaIcon} alt="ratarIA" className="h-14 w-14 opacity-80" />
+        <img src={ratariaIcon} alt="ratarIA" className="h-10 w-10 opacity-70" />
 
         {/* Links */}
         <div className="hidden md:flex items-center gap-6">

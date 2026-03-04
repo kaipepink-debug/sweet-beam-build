@@ -48,7 +48,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8 }}
           className="flex flex-col items-center"
         >
-          <img src={ratariaLogo} alt="ratarIA" className="h-16 md:h-20 mb-6 opacity-80" />
+          <img src={ratariaLogo} alt="ratarIA" className="h-24 md:h-32 mb-6 opacity-85" />
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium bg-white/5 text-white/60 border border-white/10 mb-8">
             <Layers className="w-3.5 h-3.5" />
             +300 Ferramentas de IA em um só lugar
