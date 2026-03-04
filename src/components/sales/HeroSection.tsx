@@ -33,11 +33,15 @@ const HeroSection = () => {
             const posX = isMobile ? item.mobileX : item.x;
             const posY = isMobile ? item.mobileY : item.y;
             return isMobile ? (
-              // Static on mobile — no animation
               <div
                 key={i}
                 className={`absolute ${(item.name === "Claude" || item.name === "Freepik") ? "z-30" : "z-0"}`}
-                style={{ transform: `translate(${posX}px, ${posY}px)` }}
+                style={{
+                  ["--float-base" as any]: `translate(${posX}px, ${posY}px)`,
+                  transform: `translate(${posX}px, ${posY}px)`,
+                  animation: `gentle-float 3s ease-in-out infinite`,
+                  animationDelay: `${i * 0.5}s`,
+                }}
               >
                 <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm overflow-hidden">
                   <img src={item.logo} alt={item.name} className="w-full h-full object-cover rounded-full" />
