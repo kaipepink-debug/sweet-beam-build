@@ -12,11 +12,11 @@ import freepikLogo from "@/assets/tools/freepik.png";
 
 const floatingIcons = [
   { logo: higgsFieldLogo, name: "Higgsfield", x: -380, y: -120, mobileX: -120, mobileY: -160, delay: 0 },
-  { logo: grokLogo, name: "Grok", x: 400, y: -140, mobileX: 120, mobileY: -220, delay: 0.2 },
-  { logo: heygenLogo, name: "Heygen", x: -420, y: 60, mobileX: -140, mobileY: -60, delay: 0.4 },
-  { logo: soraLogo, name: "Sora", x: 440, y: 50, mobileX: 140, mobileY: 40, delay: 0.6 },
-  { logo: claudeLogo, name: "Claude", x: -360, y: 160, mobileX: -110, mobileY: 260, delay: 0.8 },
-  { logo: freepikLogo, name: "Freepik", x: 380, y: 180, mobileX: 110, mobileY: 290, delay: 1 },
+  { logo: grokLogo, name: "Grok", x: 400, y: -140, mobileX: 120, mobileY: -220, delay: 0 },
+  { logo: heygenLogo, name: "Heygen", x: -420, y: 60, mobileX: -140, mobileY: -60, delay: 0.1 },
+  { logo: soraLogo, name: "Sora", x: 440, y: 50, mobileX: 140, mobileY: 40, delay: 0.1 },
+  { logo: claudeLogo, name: "Claude", x: -360, y: 160, mobileX: -110, mobileY: 260, delay: 0.2 },
+  { logo: freepikLogo, name: "Freepik", x: 380, y: 180, mobileX: 110, mobileY: 290, delay: 0.2 },
 ];
 
 const HeroSection = () => {
