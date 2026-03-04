@@ -3,12 +3,12 @@ import { Bot, Sparkles, Zap, Brain, Cpu, Globe, Layers } from "lucide-react";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
 const floatingIcons = [
-  { icon: Bot, x: -180, y: -60, delay: 0 },
-  { icon: Sparkles, x: 200, y: -80, delay: 0.2 },
-  { icon: Zap, x: -220, y: 40, delay: 0.4 },
-  { icon: Brain, x: 240, y: 60, delay: 0.6 },
-  { icon: Cpu, x: -140, y: 100, delay: 0.8 },
-  { icon: Globe, x: 160, y: 120, delay: 1 },
+  { icon: Bot, x: -380, y: -120, delay: 0 },
+  { icon: Sparkles, x: 400, y: -140, delay: 0.2 },
+  { icon: Zap, x: -420, y: 30, delay: 0.4 },
+  { icon: Brain, x: 440, y: 50, delay: 0.6 },
+  { icon: Cpu, x: -360, y: 160, delay: 0.8 },
+  { icon: Globe, x: 380, y: 180, delay: 1 },
 ];
 
 const HeroSection = () => {
