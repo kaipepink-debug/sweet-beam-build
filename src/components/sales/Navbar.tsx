@@ -60,8 +60,8 @@ const Navbar = () => {
           href="/login"
           className="px-5 py-2 rounded-full text-sm font-semibold text-white transition-all hover:scale-105"
           style={{
-            background: "linear-gradient(135deg, rgba(0, 180, 220, 0.9), rgba(0, 140, 255, 0.9))",
-            boxShadow: "0 0 20px rgba(0, 180, 220, 0.3)",
+            background: "linear-gradient(135deg, rgba(0, 255, 120, 0.9), rgba(0, 220, 80, 0.9))",
+            boxShadow: "0 0 20px rgba(0, 255, 120, 0.3)",
           }}
         >
           Entrar
