@@ -58,7 +58,7 @@ const Login = () => {
             <img
               src={ratariaLogo}
               alt="ratarIA"
-              className="h-14 md:h-20 w-auto rounded-lg"
+              className="h-20 md:h-20 w-auto rounded-lg"
               style={{ filter: "brightness(1.1)" }}
             />
           </motion.div>
