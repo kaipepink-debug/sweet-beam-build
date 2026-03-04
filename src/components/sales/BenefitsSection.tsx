@@ -94,7 +94,7 @@ const BenefitsSection = () => {
             {benefits.map((b) => (
               <div
                 key={b.title}
-                className="group p-6 rounded-2xl border border-white/[0.06] hover:border-purple-500/20 transition-all duration-500"
+                className="group p-6 rounded-2xl border border-white/[0.06] hover:border-purple-500/20 transition-all duration-500 purple-hover-glow"
                 style={{ background: "rgba(8, 8, 12, 0.6)", backdropFilter: "blur(20px)" }}
               >
                 <div

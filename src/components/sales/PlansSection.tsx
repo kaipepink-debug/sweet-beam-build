@@ -87,7 +87,7 @@ const PlansSection = () => {
           {[plans[1], plans[0], plans[2]].map((plan, idx) => (
             <div
               key={plan.name}
-              className={`relative rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] ${
+              className={`relative rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] purple-hover-glow ${
                 plan.highlight
                   ? "md:scale-105 md:-my-4 md:order-none order-first"
                   : ""

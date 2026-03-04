@@ -74,7 +74,7 @@ const PainSection = () => {
         <div className="grid md:grid-cols-2 gap-8 items-stretch">
           {/* Cost table */}
           <div
-            className="relative rounded-2xl overflow-hidden flex flex-col"
+            className="relative rounded-2xl overflow-hidden flex flex-col purple-hover-glow"
             style={{
               background: "rgba(10, 10, 10, 0.8)",
               backdropFilter: "blur(40px)",
@@ -127,7 +127,7 @@ const PainSection = () => {
 
           {/* IA Premium card */}
           <div
-            className="relative rounded-2xl overflow-hidden flex flex-col"
+            className="relative rounded-2xl overflow-hidden flex flex-col purple-hover-glow"
             style={{
               background: "rgba(10, 10, 10, 0.8)",
               backdropFilter: "blur(40px)",

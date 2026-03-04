@@ -60,7 +60,7 @@ const ToolsSection = () => {
           {tools.map((tool) => (
             <div
               key={tool.name}
-              className={`group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer sm:cursor-default ${
+              className={`group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer sm:cursor-default purple-hover-glow ${
                 selected === tool.name ? "border-white/15" : "border-white/5 hover:border-white/10"
               }`}
               style={{ background: selected === tool.name ? "rgba(15, 15, 15, 0.85)" : "rgba(10, 10, 10, 0.7)", backdropFilter: "blur(12px)" }}
