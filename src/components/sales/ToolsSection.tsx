@@ -28,7 +28,7 @@ const tools = [
   { name: "Copy.AI", desc: "Copywriting automatizado para marketing e vendas.", rating: 4.8, logo: copyaiLogo },
   { name: "Jasper AI", desc: "Criação de conteúdo otimizado para SEO e conversão.", rating: 4.8, logo: jasperaiLogo },
   { name: "Synthesia", desc: "Criação de vídeos com avatares de IA realistas.", rating: 4.9, logo: synthesiaLogo },
-  { name: "Higgsfield", desc: "Geração de vídeos curtos com IA de alta qualidade.", rating: 4.7, logo: higgsFieldLogo },
+  { name: "Higgsfield Creator", desc: "Geração de vídeos curtos com IA de alta qualidade.", rating: 4.7, logo: higgsFieldLogo },
   { name: "Sora", desc: "Geração de vídeos realistas a partir de texto.", rating: 4.9, logo: soraLogo },
   { name: "Veo 3", desc: "IA de vídeo do Google com qualidade cinematográfica.", rating: 4.8, logo: veo3Logo },
   { name: "Hailuo", desc: "Criação de vídeos com IA generativa inovadora.", rating: 4.8, logo: hailuoLogo },
