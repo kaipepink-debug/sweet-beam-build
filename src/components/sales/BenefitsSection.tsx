@@ -21,9 +21,9 @@ const BenefitsSection = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Benefícios <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Exclusivos</span>
+            Benefícios <span className="text-white/70">Exclusivos</span>
           </h2>
-          <p className="text-white/40 max-w-xl mx-auto">
+          <p className="text-white/30 max-w-xl mx-auto">
             Tudo o que você precisa para dominar o universo da inteligência artificial.
           </p>
         </motion.div>
@@ -32,17 +32,18 @@ const BenefitsSection = () => {
           {benefits.map((b, i) => (
             <motion.div
               key={b.title}
-              className="group p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-cyan-500/20 transition-all duration-300"
+              className="group p-6 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-300"
+              style={{ background: "rgba(10, 10, 10, 0.5)" }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:shadow-[0_0_20px_rgba(0,180,255,0.15)] transition-shadow">
-                <b.icon className="w-5 h-5 text-cyan-400" />
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center mb-4 group-hover:bg-white/8 transition-colors">
+                <b.icon className="w-5 h-5 text-white/40" />
               </div>
-              <h3 className="text-white font-semibold mb-2">{b.title}</h3>
-              <p className="text-white/40 text-sm leading-relaxed">{b.desc}</p>
+              <h3 className="text-white/80 font-semibold mb-2">{b.title}</h3>
+              <p className="text-white/30 text-sm leading-relaxed">{b.desc}</p>
             </motion.div>
           ))}
         </div>

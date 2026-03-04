@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Bot, Sparkles, Zap, Brain, Cpu, Globe } from "lucide-react";
+import { Bot, Sparkles, Zap, Brain, Cpu, Globe, Layers } from "lucide-react";
 
 const floatingIcons = [
   { icon: Bot, x: -180, y: -60, delay: 0 },
@@ -14,7 +14,7 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-[120px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px]" style={{ background: "radial-gradient(circle, rgba(255,255,255,0.03), transparent)" }} />
 
       <div className="relative z-10 text-center max-w-5xl mx-auto">
         {/* Floating icons */}
@@ -28,7 +28,7 @@ const HeroSection = () => {
               transition={{ duration: 4, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
             >
               <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm">
-                <item.icon className="w-5 h-5 text-cyan-400/70" />
+                <item.icon className="w-5 h-5 text-white/40" />
               </div>
             </motion.div>
           ))}
@@ -39,8 +39,9 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mb-8">
-            🚀 +300 Ferramentas de IA em um só lugar
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium bg-white/5 text-white/60 border border-white/10 mb-8">
+            <Layers className="w-3.5 h-3.5" />
+            +300 Ferramentas de IA em um só lugar
           </span>
         </motion.div>
 
@@ -51,18 +52,14 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.15 }}
         >
           <span className="text-white">Centralize as </span>
-          <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-            melhores IAs
-          </span>
+          <span className="text-white/90">melhores IAs</span>
           <br />
           <span className="text-white">do mundo em um </span>
-          <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            único acesso
-          </span>
+          <span className="text-white/90">único acesso</span>
         </motion.h1>
 
         <motion.p
-          className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-10"
+          className="text-lg md:text-xl text-white/40 max-w-2xl mx-auto mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -77,21 +74,21 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.45 }}
         >
           <button className="group relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl" />
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="absolute inset-0 rounded-xl shadow-[0_0_30px_rgba(0,180,255,0.3)] group-hover:shadow-[0_0_40px_rgba(0,180,255,0.5)] transition-shadow" />
-            <span className="relative z-10">Conhecer Ferramentas</span>
+            <div className="absolute inset-0 rounded-xl" style={{ background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))" }} />
+            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(135deg, rgba(80, 80, 80, 1), rgba(60, 60, 60, 1))" }} />
+            <div className="absolute inset-0 rounded-xl" style={{ boxShadow: "0 0 30px rgba(255,255,255,0.05)" }} />
+            <span className="relative z-10" style={{ color: "rgba(255,255,255,0.95)" }}>Conhecer Ferramentas</span>
           </button>
 
-          <button className="px-8 py-4 rounded-xl font-semibold text-white/80 border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/20 transition-all hover:scale-105">
+          <button className="px-8 py-4 rounded-xl font-semibold text-white/70 border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/20 transition-all hover:scale-105">
             Ver Planos
           </button>
         </motion.div>
       </div>
 
       {/* Bottom luminous curve */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-32 bg-cyan-500/5 blur-[80px] rounded-full" />
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent)" }} />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-32 blur-[80px] rounded-full" style={{ background: "rgba(255,255,255,0.02)" }} />
     </section>
   );
 };

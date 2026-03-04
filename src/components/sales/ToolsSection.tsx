@@ -23,9 +23,9 @@ const ToolsSection = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ferramentas <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Premium</span>
+            Ferramentas <span className="text-white/70">Premium</span>
           </h2>
-          <p className="text-white/40 max-w-xl mx-auto">
+          <p className="text-white/30 max-w-xl mx-auto">
             Acesse as ferramentas de IA mais poderosas do mercado, todas incluídas no seu plano.
           </p>
         </motion.div>
@@ -34,31 +34,32 @@ const ToolsSection = () => {
           {tools.map((tool, i) => (
             <motion.div
               key={tool.name}
-              className="group flex items-center gap-4 p-5 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-cyan-500/15 transition-all"
+              className="group flex items-center gap-4 p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all"
+              style={{ background: "rgba(10, 10, 10, 0.5)" }}
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
             >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 flex items-center justify-center shrink-0 text-lg font-bold text-cyan-400">
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center shrink-0 text-lg font-bold text-white/40">
                 {tool.name.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-white font-semibold text-sm">{tool.name}</h3>
+                  <h3 className="text-white/80 font-semibold text-sm">{tool.name}</h3>
                   <div className="flex gap-0.5">
                     {Array.from({ length: 5 }).map((_, s) => (
                       <Star
                         key={s}
-                        className={`w-3 h-3 ${s < Math.floor(tool.rating) ? "text-amber-400 fill-amber-400" : "text-white/20"}`}
+                        className={`w-3 h-3 ${s < Math.floor(tool.rating) ? "text-white/50 fill-white/50" : "text-white/10"}`}
                       />
                     ))}
                   </div>
                 </div>
-                <p className="text-white/40 text-xs leading-relaxed truncate">{tool.desc}</p>
+                <p className="text-white/30 text-xs leading-relaxed truncate">{tool.desc}</p>
               </div>
               <div className="shrink-0">
-                <span className="px-3 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="px-3 py-1 rounded-full text-[10px] font-semibold bg-white/5 text-white/50 border border-white/8">
                   Incluso
                 </span>
               </div>
