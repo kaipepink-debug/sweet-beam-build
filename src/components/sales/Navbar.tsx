@@ -25,12 +25,13 @@ const Navbar = () => {
   };
 
   return (
-    <motion.nav
-      initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl"
-    >
+    <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+      <motion.nav
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="w-full max-w-4xl"
+      >
       <div
         className={`flex items-center justify-between px-6 py-3 rounded-full border transition-all duration-300 ${
           scrolled
@@ -66,7 +67,8 @@ const Navbar = () => {
           Entrar
         </a>
       </div>
-    </motion.nav>
+      </motion.nav>
+    </div>
   );
 };
 
