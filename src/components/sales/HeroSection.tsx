@@ -61,8 +61,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.15 }}
         >
           <span className="text-white">Centralize as </span>
-          <span className="text-white">melhores </span>
-          <span className="neon-border-text relative inline-block px-3 py-1">IAs<span className="neon-trail" /></span>
+          <span className="neon-underline-text relative inline-block">melhores IAs</span>
           <br />
           <span className="text-white">do mundo em um </span>
           <span className="text-white/90">único acesso</span>
