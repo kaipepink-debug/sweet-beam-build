@@ -1,14 +1,18 @@
+import { lazy, Suspense } from "react";
 import instagramIcon from "@/assets/instagram-icon.png";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import Navbar from "@/components/sales/Navbar";
 import HeroSection from "@/components/sales/HeroSection";
-import PainSection from "@/components/sales/PainSection";
-import BenefitsSection from "@/components/sales/BenefitsSection";
-import ToolsSection from "@/components/sales/ToolsSection";
-import PlansSection from "@/components/sales/PlansSection";
-import HowItWorksSection from "@/components/sales/HowItWorksSection";
-import FAQSection from "@/components/sales/FAQSection";
 
+// Lazy load below-fold sections
+const PainSection = lazy(() => import("@/components/sales/PainSection"));
+const BenefitsSection = lazy(() => import("@/components/sales/BenefitsSection"));
+const ToolsSection = lazy(() => import("@/components/sales/ToolsSection"));
+const PlansSection = lazy(() => import("@/components/sales/PlansSection"));
+const HowItWorksSection = lazy(() => import("@/components/sales/HowItWorksSection"));
+const FAQSection = lazy(() => import("@/components/sales/FAQSection"));
+
+const SectionFallback = () => <div className="min-h-[200px]" />;
 
 const SalesPage = () => {
   return (
@@ -19,12 +23,24 @@ const SalesPage = () => {
       <Navbar />
       <div className="relative z-10">
         <HeroSection />
-        <PainSection />
-        <BenefitsSection />
-        <ToolsSection />
-        <PlansSection />
-        <HowItWorksSection />
-        <FAQSection />
+        <Suspense fallback={<SectionFallback />}>
+          <PainSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <BenefitsSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <ToolsSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <PlansSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <HowItWorksSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <FAQSection />
+        </Suspense>
         <footer className="py-10 px-4 text-center">
           <a
             href="https://www.instagram.com/rataria.io/"
@@ -32,7 +48,7 @@ const SalesPage = () => {
             rel="noopener noreferrer"
             className="inline-block mb-4 opacity-50 hover:opacity-80 transition-opacity"
           >
-            <img src={instagramIcon} alt="Instagram" className="w-5 h-5 invert brightness-75 mx-auto" />
+            <img src={instagramIcon} alt="Instagram" className="w-5 h-5 invert brightness-75 mx-auto" loading="lazy" />
           </a>
           <p className="text-white/15 text-xs mb-3">
             © 2026 ratarIA. Todos os direitos reservados.

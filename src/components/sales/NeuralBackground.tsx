@@ -1,20 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 const NeuralBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
+  const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
     let animationId: number;
-    let particles: { x: number; y: number; vx: number; vy: number; size: number; baseX: number; baseY: number }[] = [];
-    let codeLines: { y: number; x: number; speed: number; text: string; opacity: number }[] = [];
     const mouse = { x: -9999, y: -9999 };
     const MOUSE_RADIUS = 180;
     const PUSH_FORCE = 0.08;
+    const isMobile = window.innerWidth < 768;
+    const PARTICLE_COUNT = isMobile ? 25 : 50;
+    const CONNECTION_DIST = 120; // reduced from 150
+    const CONNECTION_DIST_SQ = CONNECTION_DIST * CONNECTION_DIST;
 
     const codeSnippets = [
       "const model = await tf.loadModel()",
@@ -25,11 +27,10 @@ const NeuralBackground = () => {
       "embedding = encoder(tokens)",
       "attention = softmax(Q @ K.T)",
       "gradient = backward(loss)",
-      "weights = layer.parameters()",
-      "batch = DataLoader(dataset)",
-      "transform = normalize(data)",
-      "accuracy = evaluate(model)",
     ];
+
+    let particles: { x: number; y: number; vx: number; vy: number; size: number }[] = [];
+    let codeLines: { y: number; x: number; speed: number; text: string; opacity: number }[] = [];
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -38,29 +39,28 @@ const NeuralBackground = () => {
 
     const init = () => {
       resize();
-      particles = Array.from({ length: 80 }, () => {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        return {
-          x,
-          y,
-          baseX: x,
-          baseY: y,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
-          size: Math.random() * 2 + 0.5,
-        };
-      });
-      codeLines = Array.from({ length: 12 }, () => ({
+      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 1.5 + 0.5,
+      }));
+      codeLines = Array.from({ length: 8 }, () => ({
         y: Math.random() * canvas.height,
         x: Math.random() * canvas.width,
         speed: Math.random() * 0.3 + 0.1,
         text: codeSnippets[Math.floor(Math.random() * codeSnippets.length)],
-        opacity: Math.random() * 0.12 + 0.03,
+        opacity: Math.random() * 0.1 + 0.03,
       }));
     };
 
+    // Throttle mouse events
+    let mouseThrottle = 0;
     const onMouseMove = (e: MouseEvent) => {
+      const now = performance.now();
+      if (now - mouseThrottle < 16) return; // ~60fps
+      mouseThrottle = now;
       mouse.x = e.clientX;
       mouse.y = e.clientY;
     };
@@ -70,107 +70,111 @@ const NeuralBackground = () => {
       mouse.y = -9999;
     };
 
-    const draw = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Frame skip for lower-end devices
+    let lastFrame = 0;
+    const TARGET_FPS = 30;
+    const FRAME_TIME = 1000 / TARGET_FPS;
 
-      // Draw code lines flowing
-      codeLines.forEach((line) => {
-        ctx.font = "13px 'JetBrains Mono', monospace";
-        ctx.fillStyle = `rgba(150, 150, 150, ${line.opacity})`;
+    const draw = (timestamp: number) => {
+      animationId = requestAnimationFrame(draw);
+
+      const delta = timestamp - lastFrame;
+      if (delta < FRAME_TIME) return;
+      lastFrame = timestamp - (delta % FRAME_TIME);
+
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+      ctx.fillRect(0, 0, w, h);
+
+      // Code lines
+      ctx.font = "13px monospace";
+      for (let i = 0; i < codeLines.length; i++) {
+        const line = codeLines[i];
+        ctx.fillStyle = `rgba(150,150,150,${line.opacity})`;
         ctx.fillText(line.text, line.x, line.y);
         line.y += line.speed;
-        if (line.y > canvas.height + 20) {
+        if (line.y > h + 20) {
           line.y = -20;
-          line.x = Math.random() * canvas.width;
+          line.x = Math.random() * w;
           line.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
         }
-      });
+      }
 
-      // Draw particles with mouse interaction
-      particles.forEach((p) => {
-        // Mouse repulsion
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+      const mouseActive = mouse.x > 0 && mouse.y > 0;
 
-        if (dist < MOUSE_RADIUS && dist > 0) {
-          const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
-          const angle = Math.atan2(dy, dx);
-          p.vx += Math.cos(angle) * force * PUSH_FORCE;
-          p.vy += Math.sin(angle) * force * PUSH_FORCE;
+      // Particles
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+
+        if (mouseActive) {
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < MOUSE_RADIUS * MOUSE_RADIUS && distSq > 0) {
+            const dist = Math.sqrt(distSq);
+            const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
+            const angle = Math.atan2(dy, dx);
+            p.vx += Math.cos(angle) * force * PUSH_FORCE;
+            p.vy += Math.sin(angle) * force * PUSH_FORCE;
+          }
         }
 
-        // Damping
         p.vx *= 0.98;
         p.vy *= 0.98;
-
-        // Gentle return to natural drift
         p.x += p.vx;
         p.y += p.vy;
 
-        // Bounce off edges
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-        p.x = Math.max(0, Math.min(canvas.width, p.x));
-        p.y = Math.max(0, Math.min(canvas.height, p.y));
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+        p.x = Math.max(0, Math.min(w, p.x));
+        p.y = Math.max(0, Math.min(h, p.y));
 
-        // Draw particle
+        // Simple dot — no radial gradient per particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(180, 180, 180, 0.5)";
+        ctx.fillStyle = "rgba(180,180,180,0.4)";
         ctx.fill();
+      }
 
-        // Glow - brighter when near mouse
-        const glowIntensity = dist < MOUSE_RADIUS ? 0.15 + (1 - dist / MOUSE_RADIUS) * 0.15 : 0.1;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-        g.addColorStop(0, `rgba(180, 180, 180, ${glowIntensity})`);
-        g.addColorStop(1, "rgba(180, 180, 180, 0)");
-        ctx.fillStyle = g;
-        ctx.fill();
-      });
-
-      // Draw connections
+      // Connections — use squared distance to avoid sqrt
+      ctx.lineWidth = 0.5;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
+          const distSq = dx * dx + dy * dy;
+          if (distSq < CONNECTION_DIST_SQ) {
+            const alpha = 0.06 * (1 - Math.sqrt(distSq) / CONNECTION_DIST);
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(160, 160, 160, ${0.06 * (1 - dist / 150)})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `rgba(160,160,160,${alpha})`;
             ctx.stroke();
           }
         }
       }
 
-      // Draw mouse glow
-      if (mouse.x > 0 && mouse.y > 0) {
+      // Mouse glow — simplified
+      if (mouseActive) {
         const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_RADIUS);
-        glow.addColorStop(0, "rgba(180, 0, 255, 0.03)");
-        glow.addColorStop(0.5, "rgba(180, 0, 255, 0.01)");
+        glow.addColorStop(0, "rgba(180,0,255,0.03)");
         glow.addColorStop(1, "transparent");
         ctx.fillStyle = glow;
         ctx.beginPath();
         ctx.arc(mouse.x, mouse.y, MOUSE_RADIUS, 0, Math.PI * 2);
         ctx.fill();
       }
-
-      animationId = requestAnimationFrame(draw);
     };
 
     init();
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    draw();
+    animationId = requestAnimationFrame(draw);
 
     window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("mouseleave", onMouseLeave);
     return () => {
       cancelAnimationFrame(animationId);
@@ -180,11 +184,16 @@ const NeuralBackground = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const cleanup = initCanvas();
+    return cleanup;
+  }, [initCanvas]);
+
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 w-full h-full"
-      style={{ zIndex: 0, background: "#000000" }}
+      style={{ zIndex: 0, background: "#000000", willChange: "auto" }}
     />
   );
 };
