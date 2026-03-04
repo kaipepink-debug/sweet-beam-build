@@ -56,7 +56,7 @@ const HeroSection = () => {
         </motion.div>
 
         <motion.h1
-          className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-tight mb-6"
+          className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight leading-tight mb-6"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
