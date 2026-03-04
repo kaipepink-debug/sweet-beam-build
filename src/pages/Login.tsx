@@ -36,10 +36,10 @@ const Login = () => {
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-md mx-4"
+        className="relative z-10 w-full max-w-[340px] md:max-w-md mx-4"
       >
         <div
-          className="relative rounded-2xl p-8 md:p-10"
+          className="relative rounded-2xl p-6 md:p-10"
           style={{
             background: "rgba(10, 10, 10, 0.8)",
             backdropFilter: "blur(40px)",
@@ -58,7 +58,7 @@ const Login = () => {
             <img
               src={ratariaLogo}
               alt="ratarIA"
-              className="h-20 w-auto rounded-lg"
+              className="h-14 md:h-20 w-auto rounded-lg"
               style={{ filter: "brightness(1.1)" }}
             />
           </motion.div>
