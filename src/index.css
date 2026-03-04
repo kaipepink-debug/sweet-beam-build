@@ -142,9 +142,9 @@ All colors MUST be HSL.
 
 /* Neon underline text effect */
 @keyframes neon-underline-sweep {
-  0% { left: -30%; }
-  50% { left: 100%; }
-  100% { left: -30%; }
+  0% { transform: translate3d(-140%, 0, 0); }
+  50% { transform: translate3d(340%, 0, 0); }
+  100% { transform: translate3d(-140%, 0, 0); }
 }
 
 .neon-underline-text {
