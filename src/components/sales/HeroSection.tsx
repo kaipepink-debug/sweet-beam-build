@@ -82,13 +82,15 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.45 }}
         >
-          <button className="neon-border-btn relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
-            <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
+          <button className="group relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
+            <div className="absolute inset-0 rounded-xl" style={{ background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))" }} />
+            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(135deg, rgba(80, 80, 80, 1), rgba(60, 60, 60, 1))" }} />
             <span className="relative z-10" style={{ color: "rgba(255,255,255,0.95)" }}>Conhecer Ferramentas</span>
           </button>
 
-          <button className="px-8 py-4 rounded-xl font-semibold text-white/70 border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/20 transition-all hover:scale-105">
-            Ver Planos
+          <button className="neon-border-btn relative px-8 py-4 rounded-xl font-semibold text-white/70 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all hover:scale-105 overflow-hidden">
+            <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
+            <span className="relative z-10">Ver Planos</span>
           </button>
         </motion.div>
       </div>
