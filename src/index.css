@@ -90,21 +90,23 @@ All colors MUST be HSL.
 }
 
 /* Neon circulating border button */
-@keyframes neon-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes neon-spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .neon-border-btn {
   position: relative;
+  border: none !important;
 }
 
 .neon-border-btn .neon-trail {
   position: absolute;
-  inset: -1px;
+  inset: 0;
   border-radius: 9999px;
   overflow: hidden;
   pointer-events: none;
+  z-index: 0;
 }
 
 .neon-border-btn .neon-trail::before {
@@ -112,24 +114,23 @@ All colors MUST be HSL.
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 150%;
-  height: 150%;
-  transform-origin: center;
+  width: 200%;
+  height: 200%;
   background: conic-gradient(
     from 0deg,
-    transparent 0deg,
-    transparent 300deg,
-    rgba(0, 255, 120, 0.8) 330deg,
-    rgba(0, 255, 120, 0) 360deg
+    transparent 0%,
+    transparent 75%,
+    rgba(0, 255, 120, 0.9) 88%,
+    rgba(0, 255, 120, 0.4) 95%,
+    transparent 100%
   );
-  animation: neon-rotate 2.5s linear infinite;
-  transform: translate(-50%, -50%);
+  animation: neon-spin 2.5s linear infinite;
 }
 
 .neon-border-btn .neon-trail::after {
   content: "";
   position: absolute;
-  inset: 1px;
+  inset: 1.5px;
   border-radius: 9999px;
   background: #000;
 }
