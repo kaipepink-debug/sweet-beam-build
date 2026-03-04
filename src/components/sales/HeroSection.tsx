@@ -1,15 +1,22 @@
 import { motion } from "framer-motion";
-import { Bot, Sparkles, Zap, Brain, Cpu, Globe, Layers } from "lucide-react";
+import { Layers } from "lucide-react";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+import higgsFieldLogo from "@/assets/tools/higgsfield.png";
+import grokLogo from "@/assets/tools/grok.png";
+import heygenLogo from "@/assets/tools/heygen.png";
+import soraLogo from "@/assets/tools/sora.png";
+import claudeLogo from "@/assets/tools/claude.png";
+import freepikLogo from "@/assets/tools/freepik.png";
+
 const floatingIcons = [
-  { icon: Bot, x: -380, y: -120, mobileX: -120, mobileY: -160, delay: 0 },
-  { icon: Sparkles, x: 400, y: -140, mobileX: 120, mobileY: -180, delay: 0.2 },
-  { icon: Zap, x: -420, y: 30, mobileX: -140, mobileY: -60, delay: 0.4 },
-  { icon: Brain, x: 440, y: 50, mobileX: 140, mobileY: 40, delay: 0.6 },
-  { icon: Cpu, x: -360, y: 160, mobileX: -110, mobileY: 200, delay: 0.8 },
-  { icon: Globe, x: 380, y: 180, mobileX: 110, mobileY: 230, delay: 1 },
+  { logo: higgsFieldLogo, name: "Higgsfield", x: -380, y: -120, mobileX: -120, mobileY: -160, delay: 0 },
+  { logo: grokLogo, name: "Grok", x: 400, y: -140, mobileX: 120, mobileY: -180, delay: 0.2 },
+  { logo: heygenLogo, name: "Heygen", x: -420, y: 30, mobileX: -140, mobileY: -60, delay: 0.4 },
+  { logo: soraLogo, name: "Sora", x: 440, y: 50, mobileX: 140, mobileY: 40, delay: 0.6 },
+  { logo: claudeLogo, name: "Claude", x: -360, y: 160, mobileX: -110, mobileY: 200, delay: 0.8 },
+  { logo: freepikLogo, name: "Freepik", x: 380, y: 180, mobileX: 110, mobileY: 230, delay: 1 },
 ];
 
 const HeroSection = () => {
@@ -34,8 +41,8 @@ const HeroSection = () => {
                 animate={{ y: [posY - 10, posY + 10, posY - 10] }}
                 transition={{ duration: 4, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
               >
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm">
-                  <item.icon className="w-4 h-4 md:w-5 md:h-5 text-white/40" />
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm overflow-hidden">
+                  <img src={item.logo} alt={item.name} className="w-6 h-6 md:w-7 md:h-7 object-contain" />
                 </div>
               </motion.div>
             );

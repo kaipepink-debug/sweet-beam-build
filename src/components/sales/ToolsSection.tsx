@@ -133,7 +133,7 @@ const ToolsSection = () => {
         >
           <div className="relative z-10">
             <div className="mb-4">
-              <span className="text-4xl md:text-5xl font-light tracking-tight" style={{ color: "rgba(180, 0, 255, 0.8)" }}>+150</span>
+              <span className="text-4xl md:text-5xl font-light tracking-tight text-white/40">+150</span>
             </div>
             <h3 className="text-xl md:text-2xl font-bold text-white/90 mb-2">
               Ferramentas de IA Inclusas
