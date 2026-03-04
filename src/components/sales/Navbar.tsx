@@ -58,14 +58,11 @@ const Navbar = () => {
         {/* CTA */}
         <a
           href="/login"
-          className="px-5 py-2 rounded-full text-sm font-semibold transition-colors"
-          style={{
-            color: "rgba(0, 255, 120, 0.9)",
-            border: "1px solid rgba(0, 255, 120, 0.5)",
-            background: "transparent",
-          }}
+          className="neon-border-btn relative px-5 py-2 rounded-full text-sm font-semibold text-white/80 overflow-hidden"
+          style={{ border: "1px solid rgba(255,255,255,0.15)", background: "transparent" }}
         >
-          Entrar
+          <span className="relative z-10">Entrar</span>
+          <span className="neon-trail" />
         </a>
       </div>
       </motion.nav>

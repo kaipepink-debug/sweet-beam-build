@@ -88,3 +88,48 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Neon circulating border button */
+@keyframes neon-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.neon-border-btn {
+  position: relative;
+}
+
+.neon-border-btn .neon-trail {
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.neon-border-btn .neon-trail::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  transform-origin: center;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 300deg,
+    rgba(0, 255, 120, 0.8) 330deg,
+    rgba(0, 255, 120, 0) 360deg
+  );
+  animation: neon-rotate 2.5s linear infinite;
+  transform: translate(-50%, -50%);
+}
+
+.neon-border-btn .neon-trail::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 9999px;
+  background: #000;
+}
