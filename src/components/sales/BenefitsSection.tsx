@@ -12,7 +12,7 @@ const benefits = [
 
 const BenefitsSection = () => {
   return (
-    <section className="relative py-24 px-4">
+    <section id="beneficios" className="relative py-24 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
           className="text-center mb-16"

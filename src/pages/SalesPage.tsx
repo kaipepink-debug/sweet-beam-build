@@ -1,4 +1,5 @@
 import NeuralBackground from "@/components/sales/NeuralBackground";
+import Navbar from "@/components/sales/Navbar";
 import HeroSection from "@/components/sales/HeroSection";
 import PainSection from "@/components/sales/PainSection";
 import BenefitsSection from "@/components/sales/BenefitsSection";
@@ -12,6 +13,9 @@ const SalesPage = () => {
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ background: "#000000" }}>
       <NeuralBackground />
+      {/* Gradient overlay */}
+      <div className="fixed inset-0 z-[1] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(0, 120, 180, 0.06) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(0, 80, 160, 0.04) 0%, transparent 50%)" }} />
+      <Navbar />
       <div className="relative z-10">
         <HeroSection />
         <PainSection />

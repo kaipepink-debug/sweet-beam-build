@@ -14,7 +14,7 @@ const tools = [
 
 const ToolsSection = () => {
   return (
-    <section className="relative py-24 px-4">
+    <section id="ferramentas" className="relative py-24 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
           className="text-center mb-16"

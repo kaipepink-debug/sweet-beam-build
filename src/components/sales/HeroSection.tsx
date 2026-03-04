@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Bot, Sparkles, Zap, Brain, Cpu, Globe, Layers } from "lucide-react";
+import ratariaLogo from "@/assets/rataria-logo-full.png";
 
 const floatingIcons = [
   { icon: Bot, x: -180, y: -60, delay: 0 },
@@ -12,7 +13,7 @@ const floatingIcons = [
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pt-24">
       {/* Radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px]" style={{ background: "radial-gradient(circle, rgba(255,255,255,0.03), transparent)" }} />
 
@@ -38,7 +39,9 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="flex flex-col items-center"
         >
+          <img src={ratariaLogo} alt="ratarIA" className="h-16 md:h-20 mb-6 opacity-80" />
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium bg-white/5 text-white/60 border border-white/10 mb-8">
             <Layers className="w-3.5 h-3.5" />
             +300 Ferramentas de IA em um só lugar
