@@ -27,7 +27,7 @@ const tools = [
   { name: "Runway ML", price: 60.00, logo: runwaymlLogo },
   { name: "Jasper AI", price: 69.00, logo: jasperaiLogo },
   { name: "Synthesia", price: 110.00, logo: synthesiaLogo },
-  { name: "Higgsfield", price: 45.00, logo: higgsFieldLogo },
+  { name: "Higgsfield", price: 1200.00, logo: higgsFieldLogo },
   { name: "Sora", price: 120.00, logo: soraLogo },
   { name: "Veo 3", price: 99.00, logo: veo3Logo },
   { name: "Hailuo", price: 39.90, logo: hailuoLogo },
