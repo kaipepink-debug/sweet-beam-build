@@ -110,10 +110,10 @@ const BenefitsSection = () => {
                 key={b.title}
                 className="group p-6 rounded-2xl border border-white/[0.06] hover:border-purple-500/20 transition-all duration-500"
                 style={{ background: "rgba(8, 8, 12, 0.6)", backdropFilter: "blur(20px)" }}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.05, duration: 0.3 }}
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(180,0,255,0.15)]"
