@@ -3,10 +3,10 @@ import { MessageCircle } from "lucide-react";
 
 const SupportSection = () => {
   return (
-    <section className="relative py-24 px-4">
+    <section className="relative py-14 md:py-24 px-3 md:px-4">
       <div className="max-w-xl mx-auto text-center">
         <motion.div
-          className="relative rounded-2xl border border-white/8 p-10 overflow-hidden"
+          className="relative rounded-2xl border border-white/8 p-6 md:p-10 overflow-hidden"
           style={{ background: "rgba(10, 10, 10, 0.8)", backdropFilter: "blur(40px)" }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

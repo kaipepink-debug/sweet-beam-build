@@ -23,7 +23,7 @@ const HeroSection = () => {
   const isMobile = useIsMobile();
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pt-24">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center px-3 md:px-4 overflow-hidden pt-20 md:pt-24">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px]" style={{ background: "radial-gradient(circle, rgba(255,255,255,0.03), transparent)" }} />
 
       <div className="relative z-10 text-center max-w-5xl mx-auto">
@@ -72,7 +72,7 @@ const HeroSection = () => {
         </div>
 
         <h1
-          className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight leading-tight mb-6 animate-fade-in"
+          className="text-3xl md:text-6xl lg:text-7xl font-light tracking-tight leading-tight mb-4 md:mb-6 animate-fade-in"
           style={{ fontFamily: "'Montserrat', sans-serif", animationDelay: "0.05s", animationFillMode: "both" }}
         >
           <span className="text-white">Centralize as </span>
@@ -83,7 +83,7 @@ const HeroSection = () => {
         </h1>
 
         <p
-          className="text-lg md:text-xl text-white/40 max-w-2xl mx-auto mb-10 animate-fade-in"
+          className="text-base md:text-xl text-white/40 max-w-2xl mx-auto mb-8 md:mb-10 animate-fade-in"
           style={{ animationDelay: "0.1s", animationFillMode: "both" }}
         >
           Uma biblioteca completa de ferramentas de IA, pagando apenas uma fração do preço original.

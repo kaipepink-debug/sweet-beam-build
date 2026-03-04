@@ -41,10 +41,10 @@ const ToolsSection = () => {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <section id="ferramentas" className="relative py-24 px-4">
+    <section id="ferramentas" className="relative py-14 md:py-24 px-3 md:px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-10 md:mb-16 animate-fade-in">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
             Ferramentas{" "}
             <span className="relative inline-block neon-underline-text">
               Premium
@@ -56,18 +56,18 @@ const ToolsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
           {tools.map((tool) => (
             <div
               key={tool.name}
-              className={`group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer sm:cursor-default purple-hover-glow ${
+              className={`group flex items-center gap-2.5 sm:gap-4 p-3 sm:p-5 rounded-xl md:rounded-2xl border transition-all duration-300 cursor-pointer sm:cursor-default purple-hover-glow ${
                 selected === tool.name ? "border-white/15" : "border-white/5 hover:border-white/10"
               }`}
               style={{ background: selected === tool.name ? "rgba(15, 15, 15, 0.85)" : "rgba(10, 10, 10, 0.7)", backdropFilter: "blur(12px)" }}
               onClick={() => setSelected(selected === tool.name ? null : tool.name)}
             >
               <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 overflow-hidden"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center shrink-0 overflow-hidden"
                 style={{ background: "rgba(180, 0, 255, 0.05)", border: "1px solid rgba(180, 0, 255, 0.1)" }}
               >
                 <img src={tool.logo} alt={tool.name} className="w-8 h-8 object-contain" loading="lazy" decoding="async" />

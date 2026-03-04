@@ -90,6 +90,19 @@ All colors MUST be HSL.
   }
 }
 
+/* Mobile compact: reduce overall scale */
+@media (max-width: 767px) {
+  html {
+    font-size: 13.5px;
+  }
+  .mobile-compact-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
 /* Purple hover glow for cards */
 .purple-hover-glow {
   transition: box-shadow 0.4s ease, border-color 0.4s ease;
