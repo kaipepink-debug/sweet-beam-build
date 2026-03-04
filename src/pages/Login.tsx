@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import NeuralBackground from "@/components/sales/NeuralBackground";
-import ratariaLogo from "@/assets/rataria-logo.jpeg";
+import ratariaLogo from "@/assets/rataria-logo-full.png";
 
 
 const Login = () => {
