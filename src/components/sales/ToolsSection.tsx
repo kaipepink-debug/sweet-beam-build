@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Star, Sparkles, ArrowRight } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
@@ -38,6 +39,8 @@ const tools = [
 ];
 
 const ToolsSection = () => {
+  const [selected, setSelected] = useState<string | null>(null);
+
   return (
     <section id="ferramentas" className="relative py-24 px-4">
       <div className="max-w-6xl mx-auto">
@@ -63,12 +66,15 @@ const ToolsSection = () => {
           {tools.map((tool, i) => (
             <motion.div
               key={tool.name}
-              className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-300"
-              style={{ background: "rgba(10, 10, 10, 0.5)" }}
+              className={`group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer sm:cursor-default ${
+                selected === tool.name ? "border-white/15" : "border-white/5 hover:border-white/10"
+              }`}
+              style={{ background: selected === tool.name ? "rgba(15, 15, 15, 0.7)" : "rgba(10, 10, 10, 0.5)" }}
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
+              onClick={() => setSelected(selected === tool.name ? null : tool.name)}
             >
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 overflow-hidden"
@@ -93,7 +99,9 @@ const ToolsSection = () => {
                     <span className="text-white/30 text-[10px] ml-1">{tool.rating}</span>
                   </div>
                 </div>
-                <p className="text-white/30 text-xs leading-relaxed truncate">{tool.desc}</p>
+                <p className={`text-white/30 text-xs leading-relaxed ${
+                  selected === tool.name ? "whitespace-normal" : "truncate"
+                }`}>{tool.desc}</p>
               </div>
               <div className="shrink-0">
                 <span
