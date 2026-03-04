@@ -80,7 +80,7 @@ const ToolsSection = () => {
                 className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 overflow-hidden"
                 style={{ background: "rgba(180, 0, 255, 0.05)", border: "1px solid rgba(180, 0, 255, 0.1)" }}
               >
-                <img src={tool.logo} alt={tool.name} className="w-8 h-8 object-contain" />
+                <img src={tool.logo} alt={tool.name} className="w-8 h-8 object-contain" loading="lazy" decoding="async" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
