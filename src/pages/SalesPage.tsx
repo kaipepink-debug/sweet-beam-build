@@ -14,7 +14,7 @@ const SalesPage = () => {
     <div className="relative min-h-screen overflow-x-hidden" style={{ background: "#000000" }}>
       <NeuralBackground />
       {/* Gradient overlay */}
-      <div className="fixed inset-0 z-[1] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(0, 255, 120, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(0, 200, 80, 0.03) 0%, transparent 50%)" }} />
+      <div className="fixed inset-0 z-[1] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.03) 0%, transparent 50%)" }} />
       <Navbar />
       <div className="relative z-10">
         <HeroSection />
