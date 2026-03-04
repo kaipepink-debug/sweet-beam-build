@@ -1,3 +1,4 @@
+import instagramIcon from "@/assets/instagram-icon.png";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import Navbar from "@/components/sales/Navbar";
 import HeroSection from "@/components/sales/HeroSection";
@@ -25,6 +26,14 @@ const SalesPage = () => {
         <HowItWorksSection />
         <FAQSection />
         <footer className="py-10 px-4 text-center">
+          <a
+            href="https://www.instagram.com/rataria.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mb-4 opacity-50 hover:opacity-80 transition-opacity"
+          >
+            <img src={instagramIcon} alt="Instagram" className="w-5 h-5 invert brightness-75 mx-auto" />
+          </a>
           <p className="text-white/15 text-xs mb-3">
             © 2026 ratarIA. Todos os direitos reservados.
           </p>

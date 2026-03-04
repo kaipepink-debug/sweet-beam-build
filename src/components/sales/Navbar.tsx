@@ -40,18 +40,8 @@ const Navbar = () => {
             : "bg-white/[0.03] backdrop-blur-md border-white/[0.06]"
         }`}
       >
-        {/* Logo + Instagram */}
-        <div className="flex items-center gap-3">
-          <img src={ratariaIcon} alt="ratarIA" className="h-10 w-10 opacity-70" />
-          <a
-            href="https://www.instagram.com/rataria.io/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="opacity-70 hover:opacity-100 transition-opacity"
-          >
-            <img src={instagramIcon} alt="Instagram" className="w-5 h-5 invert brightness-75" />
-          </a>
-        </div>
+        {/* Logo */}
+        <img src={ratariaIcon} alt="ratarIA" className="h-10 w-10 opacity-70" />
 
         {/* Links */}
         <div className="hidden md:flex items-center gap-6">
