@@ -1,6 +1,5 @@
-import { motion } from "framer-motion";
 import { useState } from "react";
-import { Star, Sparkles, ArrowRight } from "lucide-react";
+import { Star, ArrowRight } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
@@ -44,12 +43,7 @@ const ToolsSection = () => {
   return (
     <section id="ferramentas" className="relative py-24 px-4">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
+        <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ferramentas{" "}
             <span className="relative inline-block neon-underline-text">
@@ -60,20 +54,16 @@ const ToolsSection = () => {
           <p className="text-white/30 max-w-xl mx-auto">
             Acesse as ferramentas de IA mais poderosas do mercado, todas incluídas no seu plano.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {tools.map((tool, i) => (
-            <motion.div
+          {tools.map((tool) => (
+            <div
               key={tool.name}
               className={`group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer sm:cursor-default ${
                 selected === tool.name ? "border-white/15" : "border-white/5 hover:border-white/10"
               }`}
               style={{ background: selected === tool.name ? "rgba(15, 15, 15, 0.85)" : "rgba(10, 10, 10, 0.7)", backdropFilter: "blur(12px)" }}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.03, duration: 0.3 }}
               onClick={() => setSelected(selected === tool.name ? null : tool.name)}
             >
               <div
@@ -115,21 +105,18 @@ const ToolsSection = () => {
                   Ativa
                 </span>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* +150 ferramentas banner */}
-        <motion.div
+        <div
           className="mt-10 rounded-2xl p-8 text-center relative overflow-hidden"
           style={{
             background: "rgba(10, 10, 10, 0.6)",
             border: "1px solid rgba(255, 255, 255, 0.08)",
             backdropFilter: "blur(20px)",
           }}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
         >
           <div className="relative z-10">
             <div className="mb-4">
@@ -153,7 +140,7 @@ const ToolsSection = () => {
               <span className="neon-trail" />
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

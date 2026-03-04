@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Check, Crown, Shield, ArrowRight } from "lucide-react";
 
 const plans = [
@@ -70,12 +69,7 @@ const PlansSection = () => {
   return (
     <section className="relative py-24 px-4" id="planos">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
+        <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Escolha o plano{" "}
             <span className="relative inline-block neon-underline-text">
@@ -87,13 +81,11 @@ const PlansSection = () => {
           <p className="text-white/30 max-w-xl mx-auto">
             Todos os planos incluem acesso completo às ferramentas de IA mais poderosas do mercado.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Mobile: stack with annual first. Desktop: 3 cols with annual center */}
         <div className="flex flex-col md:grid md:grid-cols-3 gap-6 items-stretch md:items-center">
-          {/* On mobile, reorder: Annual first */}
           {[plans[1], plans[0], plans[2]].map((plan, idx) => (
-            <motion.div
+            <div
               key={plan.name}
               className={`relative rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] ${
                 plan.highlight
@@ -108,15 +100,9 @@ const PlansSection = () => {
                   ? "1px solid rgba(180, 0, 255, 0.3)"
                   : "1px solid rgba(255, 255, 255, 0.06)",
                 backdropFilter: "blur(20px)",
-                // Reorder for desktop grid
                 order: idx === 0 ? 2 : idx === 1 ? 1 : 3,
               }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
             >
-              {/* Purple glow for highlighted */}
               {plan.highlight && (
                 <>
                   <div
@@ -137,7 +123,6 @@ const PlansSection = () => {
               )}
 
               <div className="relative p-8">
-                {/* Badge & Discount row */}
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
                   {plan.badge && (
                     <div className="flex items-center gap-1.5">
@@ -213,7 +198,6 @@ const PlansSection = () => {
                   ))}
                 </div>
 
-                {/* Guarantee */}
                 {plan.guarantee && (
                   <div
                     className="mb-6 p-4 rounded-xl text-center"
@@ -268,7 +252,7 @@ const PlansSection = () => {
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
