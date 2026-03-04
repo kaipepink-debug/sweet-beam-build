@@ -27,7 +27,9 @@ const PainSection = () => {
         >
           <TrendingDown className="w-10 h-10 text-white/30 mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Já pensou quanto você <span className="text-white/60">gasta por ano</span> com ferramentas de IA?
+            Já pensou quanto você{" "}
+            <span className="relative inline-block neon-underline-text">gasta por ano</span>{" "}
+            com ferramentas de IA?
           </h2>
           <p className="text-white/30 max-w-xl mx-auto">
             Veja a comparação real de custos e descubra como economizar milhares de reais.
