@@ -7,7 +7,7 @@ const floatingIcons = [
   { icon: Bot, x: -380, y: -120, mobileX: -120, mobileY: -160, delay: 0 },
   { icon: Sparkles, x: 400, y: -140, mobileX: 120, mobileY: -180, delay: 0.2 },
   { icon: Zap, x: -420, y: 30, mobileX: -140, mobileY: -60, delay: 0.4 },
-  { icon: Brain, x: 440, y: 50, mobileX: 140, mobileY: -30, delay: 0.6 },
+  { icon: Brain, x: 440, y: 50, mobileX: 140, mobileY: 40, delay: 0.6 },
   { icon: Cpu, x: -360, y: 160, mobileX: -110, mobileY: 200, delay: 0.8 },
   { icon: Globe, x: 380, y: 180, mobileX: 110, mobileY: 230, delay: 1 },
 ];
