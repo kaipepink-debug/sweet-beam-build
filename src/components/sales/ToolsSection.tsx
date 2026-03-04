@@ -124,10 +124,8 @@ const ToolsSection = () => {
           viewport={{ once: true }}
         >
           <div className="relative z-10">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Sparkles className="w-6 h-6 text-white/40" />
+            <div className="mb-4">
               <span className="text-4xl md:text-5xl font-black text-white">+150</span>
-              <Sparkles className="w-6 h-6 text-white/40" />
             </div>
             <h3 className="text-xl md:text-2xl font-bold text-white/90 mb-2">
               Ferramentas de IA Inclusas
