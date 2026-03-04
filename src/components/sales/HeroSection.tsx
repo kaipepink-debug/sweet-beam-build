@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Bot, Sparkles, Zap, Brain, Cpu, Globe, Layers } from "lucide-react";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const floatingIcons = [
   { icon: Bot, x: -380, y: -120, mobileX: -120, mobileY: -160, delay: 0 },
@@ -12,7 +13,7 @@ const floatingIcons = [
 ];
 
 const HeroSection = () => {
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const isMobile = useIsMobile();
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pt-24">
@@ -56,6 +57,7 @@ const HeroSection = () => {
 
         <motion.h1
           className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.15 }}
