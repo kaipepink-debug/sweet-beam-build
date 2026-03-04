@@ -15,8 +15,8 @@ const floatingIcons = [
   { logo: grokLogo, name: "Grok", x: 400, y: -140, mobileX: 120, mobileY: -220, delay: 0.2 },
   { logo: heygenLogo, name: "Heygen", x: -420, y: 30, mobileX: -140, mobileY: -60, delay: 0.4 },
   { logo: soraLogo, name: "Sora", x: 440, y: 50, mobileX: 140, mobileY: 40, delay: 0.6 },
-  { logo: claudeLogo, name: "Claude", x: -360, y: 160, mobileX: -110, mobileY: 200, delay: 0.8 },
-  { logo: freepikLogo, name: "Freepik", x: 380, y: 180, mobileX: 110, mobileY: 230, delay: 1 },
+  { logo: claudeLogo, name: "Claude", x: -360, y: 160, mobileX: -110, mobileY: 260, delay: 0.8 },
+  { logo: freepikLogo, name: "Freepik", x: 380, y: 180, mobileX: 110, mobileY: 290, delay: 1 },
 ];
 
 const HeroSection = () => {
