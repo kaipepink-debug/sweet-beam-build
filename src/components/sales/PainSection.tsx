@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { TrendingDown, Check } from "lucide-react";
+import { TrendingDown, Check, DollarSign } from "lucide-react";
 
 const tools = [
   { name: "ChatGPT Plus", price: "R$ 139,90" },
@@ -25,11 +25,11 @@ const PainSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <TrendingDown className="w-10 h-10 text-red-400 mx-auto mb-4" />
+          <TrendingDown className="w-10 h-10 text-white/30 mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Já pensou quanto você <span className="text-red-400">gasta por ano</span> com ferramentas de IA?
+            Já pensou quanto você <span className="text-white/60">gasta por ano</span> com ferramentas de IA?
           </h2>
-          <p className="text-white/40 max-w-xl mx-auto">
+          <p className="text-white/30 max-w-xl mx-auto">
             Veja a comparação real de custos e descubra como economizar milhares de reais.
           </p>
         </motion.div>
@@ -37,26 +37,27 @@ const PainSection = () => {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Cost table */}
           <motion.div
-            className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm overflow-hidden"
+            className="rounded-2xl border border-white/8 overflow-hidden"
+            style={{ background: "rgba(10, 10, 10, 0.6)", backdropFilter: "blur(20px)" }}
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="p-5 border-b border-white/10">
-              <h3 className="text-white font-semibold">Custo Individual Mensal</h3>
+            <div className="p-5 border-b border-white/8">
+              <h3 className="text-white/80 font-semibold">Custo Individual Mensal</h3>
             </div>
             <div className="divide-y divide-white/5">
               {tools.map((tool) => (
                 <div key={tool.name} className="flex justify-between px-5 py-3 text-sm">
-                  <span className="text-white/70">{tool.name}</span>
-                  <span className="text-red-400 font-medium">{tool.price}/mês</span>
+                  <span className="text-white/50">{tool.name}</span>
+                  <span className="text-white/40 font-medium">{tool.price}/mês</span>
                 </div>
               ))}
             </div>
-            <div className="p-5 border-t border-white/10 bg-red-500/5">
+            <div className="p-5 border-t border-white/8" style={{ background: "rgba(255,255,255,0.02)" }}>
               <div className="flex justify-between">
-                <span className="text-white font-semibold">Total Anual</span>
-                <span className="text-red-400 font-bold text-lg">
+                <span className="text-white/70 font-semibold">Total Anual</span>
+                <span className="text-white/80 font-bold text-lg">
                   R$ {totalAnnual.toFixed(2).replace(".", ",")}
                 </span>
               </div>
@@ -65,43 +66,51 @@ const PainSection = () => {
 
           {/* IA Premium card */}
           <motion.div
-            className="relative rounded-2xl border border-cyan-500/20 bg-white/[0.03] backdrop-blur-sm overflow-hidden"
+            className="relative rounded-2xl border border-white/10 overflow-hidden"
+            style={{ background: "rgba(10, 10, 10, 0.8)", backdropFilter: "blur(40px)" }}
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-500/5" />
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-cyan-500/10 rounded-full blur-[60px]" />
+            <div className="absolute inset-0" style={{ background: "radial-gradient(circle at top right, rgba(255,255,255,0.03), transparent)" }} />
             
             <div className="relative p-8 text-center">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mb-6">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-white/60 border border-white/10 mb-6">
                 IA Premium
               </span>
               
               <div className="mb-2">
-                <span className="text-white/40 text-sm line-through">De R$ {totalMonthly.toFixed(2).replace(".", ",")}/mês</span>
+                <span className="text-white/30 text-sm line-through">De R$ {totalMonthly.toFixed(2).replace(".", ",")}/mês</span>
               </div>
               <div className="text-5xl font-bold text-white mb-1">
                 R$ 159<span className="text-2xl">,90</span>
               </div>
-              <p className="text-white/40 text-sm mb-6">/mês por tudo</p>
+              <p className="text-white/30 text-sm mb-6">/mês por tudo</p>
 
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 mb-8">
-                <p className="text-emerald-400 font-semibold text-sm">
-                  💰 Economia de até R$ {(totalAnnual - 159.90 * 12).toFixed(2).replace(".", ",")}/ano
+              <div className="rounded-xl p-4 mb-8 border border-white/8" style={{ background: "rgba(255,255,255,0.03)" }}>
+                <p className="text-white/60 font-semibold text-sm flex items-center justify-center gap-2">
+                  <DollarSign className="w-4 h-4" />
+                  Economia de até R$ {(totalAnnual - 159.90 * 12).toFixed(2).replace(".", ",")}/ano
                 </p>
               </div>
 
               <div className="space-y-3 text-left mb-8">
                 {["Acesso a +300 ferramentas", "Atualizações constantes", "Suporte dedicado"].map((item) => (
                   <div key={item} className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span className="text-white/70 text-sm">{item}</span>
+                    <Check className="w-4 h-4 text-white/40 shrink-0" />
+                    <span className="text-white/50 text-sm">{item}</span>
                   </div>
                 ))}
               </div>
 
-              <button className="w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(0,180,255,0.2)]">
+              <button
+                className="w-full py-4 rounded-xl font-semibold text-white/90 transition-all hover:scale-[1.02]"
+                style={{
+                  background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)",
+                }}
+              >
                 Comece a economizar agora
               </button>
             </div>

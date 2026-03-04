@@ -52,7 +52,7 @@ const PlansSection = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Escolha o plano <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">perfeito</span> para você
+            Escolha o plano <span className="text-white/70">perfeito</span> para você
           </h2>
         </motion.div>
 
@@ -62,42 +62,45 @@ const PlansSection = () => {
               key={plan.name}
               className={`relative rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] ${
                 plan.highlight
-                  ? "border-2 border-purple-500/40 bg-white/[0.04] md:scale-105 md:-my-4"
-                  : "border border-white/10 bg-white/[0.02]"
+                  ? "border border-white/20 md:scale-105 md:-my-4"
+                  : "border border-white/8"
               }`}
+              style={{
+                background: plan.highlight
+                  ? "rgba(15, 15, 15, 0.9)"
+                  : "rgba(10, 10, 10, 0.6)",
+                backdropFilter: "blur(20px)",
+              }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
               {plan.highlight && (
-                <>
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5" />
-                  <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/10 rounded-full blur-[60px]" />
-                </>
+                <div className="absolute inset-0" style={{ background: "radial-gradient(circle at top, rgba(255,255,255,0.04), transparent)" }} />
               )}
 
               <div className="relative p-8">
                 {plan.badge && (
                   <div className="flex items-center gap-1.5 mb-4">
-                    <Crown className="w-4 h-4 text-purple-400" />
-                    <span className="text-xs font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    <Crown className="w-4 h-4 text-white/50" />
+                    <span className="text-xs font-semibold text-white/50 uppercase tracking-widest">
                       {plan.badge}
                     </span>
                   </div>
                 )}
 
-                <h3 className="text-white font-semibold text-lg mb-2">{plan.name}</h3>
+                <h3 className="text-white/80 font-semibold text-lg mb-2">{plan.name}</h3>
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-white">R$ {plan.price}</span>
-                  <span className="text-white/40 text-sm">/mês</span>
+                  <span className="text-white/30 text-sm">/mês</span>
                 </div>
 
                 <div className="space-y-3 mb-8">
                   {plan.features.map((f) => (
                     <div key={f} className="flex items-center gap-3">
-                      <Check className={`w-4 h-4 shrink-0 ${plan.highlight ? "text-purple-400" : "text-cyan-400"}`} />
-                      <span className="text-white/60 text-sm">{f}</span>
+                      <Check className="w-4 h-4 shrink-0 text-white/40" />
+                      <span className="text-white/50 text-sm">{f}</span>
                     </div>
                   ))}
                 </div>
@@ -105,9 +108,21 @@ const PlansSection = () => {
                 <button
                   className={`w-full py-3.5 rounded-xl font-semibold transition-all hover:scale-[1.02] ${
                     plan.highlight
-                      ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-[0_0_30px_rgba(168,85,247,0.25)]"
-                      : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                      ? "text-white/95"
+                      : "text-white/70 hover:text-white/90"
                   }`}
+                  style={
+                    plan.highlight
+                      ? {
+                          background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))",
+                          border: "1px solid rgba(255, 255, 255, 0.15)",
+                          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)",
+                        }
+                      : {
+                          background: "rgba(255, 255, 255, 0.03)",
+                          border: "1px solid rgba(255, 255, 255, 0.08)",
+                        }
+                  }
                 >
                   Começar agora
                 </button>

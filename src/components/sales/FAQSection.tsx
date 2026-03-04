@@ -25,7 +25,7 @@ const FAQSection = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Perguntas <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Frequentes</span>
+            Perguntas <span className="text-white/70">Frequentes</span>
           </h2>
         </motion.div>
 
@@ -39,12 +39,13 @@ const FAQSection = () => {
               <AccordionItem
                 key={i}
                 value={`faq-${i}`}
-                className="border border-white/5 rounded-xl bg-white/[0.02] px-6 hover:bg-white/[0.04] transition-colors"
+                className="border border-white/5 rounded-xl px-6 hover:border-white/10 transition-colors"
+                style={{ background: "rgba(10, 10, 10, 0.5)" }}
               >
-                <AccordionTrigger className="text-white/90 text-sm font-medium hover:no-underline py-5">
+                <AccordionTrigger className="text-white/70 text-sm font-medium hover:no-underline py-5">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-white/40 text-sm leading-relaxed">
+                <AccordionContent className="text-white/30 text-sm leading-relaxed">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>
