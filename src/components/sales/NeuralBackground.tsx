@@ -41,8 +41,8 @@ const NeuralBackground = () => {
         return {
           x: cellW * (col + 0.2 + Math.random() * 0.6),
           y: cellH * (row + 0.2 + Math.random() * 0.6),
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: (Math.random() - 0.5) * 0.8,
           size: Math.random() * 1.5 + 0.5,
         };
       });
@@ -97,8 +97,18 @@ const NeuralBackground = () => {
           }
         }
 
-        p.vx *= 0.98;
-        p.vy *= 0.98;
+        p.vx *= 0.995;
+        p.vy *= 0.995;
+
+        // Keep minimum velocity on desktop so particles never stop
+        if (!isMobile) {
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (speed < 0.3) {
+            const angle = Math.atan2(p.vy, p.vx);
+            p.vx = Math.cos(angle) * 0.3;
+            p.vy = Math.sin(angle) * 0.3;
+          }
+        }
         p.x += p.vx;
         p.y += p.vy;
 
