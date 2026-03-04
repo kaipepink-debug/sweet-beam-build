@@ -36,7 +36,7 @@ const HeroSection = () => {
             return (
               <motion.div
                 key={i}
-                className="absolute"
+                className={`absolute ${isMobile && (item.name === "Claude" || item.name === "Freepik") ? "z-30" : "z-0"}`}
                 style={{ x: posX, y: posY }}
                 animate={{ y: [posY - 10, posY + 10, posY - 10] }}
                 transition={{ duration: 4, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
