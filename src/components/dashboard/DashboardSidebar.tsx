@@ -26,17 +26,23 @@ const menuItems = [
 ];
 
 export function DashboardSidebar() {
-  const { state } = useSidebar();
+  const { state, setOpen } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader className="p-4 border-b border-border">
+    <Sidebar
+      collapsible="icon"
+      className="border-r-0"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-sidebar/95 via-sidebar/85 to-sidebar/90 backdrop-blur-xl -z-10" />
+      <SidebarHeader className="p-4 border-b border-sidebar-border/50">
         <div className="flex items-center gap-3">
-          <img src={ratariaLogo} alt="Ratar.ia" className="w-8 h-8 rounded-lg" />
+          <img src={ratariaLogo} alt="Ratar.ia" className="w-8 h-8 rounded-lg shrink-0" />
           {!collapsed && (
-            <span className="text-sm font-semibold text-foreground tracking-tight">
+            <span className="text-sm font-semibold text-foreground tracking-tight whitespace-nowrap">
               Ratar.ia Admin
             </span>
           )}
@@ -59,7 +65,7 @@ export function DashboardSidebar() {
                       className="hover:bg-sidebar-accent/50"
                       activeClassName="bg-sidebar-accent text-foreground font-medium"
                     >
-                      <item.icon className="h-4 w-4" />
+                      <item.icon className="h-4 w-4 shrink-0" />
                       {!collapsed && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
