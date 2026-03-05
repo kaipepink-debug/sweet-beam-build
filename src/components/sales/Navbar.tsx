@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import ratariaIcon from "@/assets/rataria-icon.png";
-import instagramIcon from "@/assets/instagram-icon.png";
 
 const navLinks = [
   { label: "Início", href: "#hero" },
@@ -26,30 +25,30 @@ const Navbar = () => {
   };
 
   return (
-    <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+    <div className="fixed top-3 left-0 right-0 z-50 flex justify-center px-4">
       <motion.nav
         initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.05 }}
-        className="w-full max-w-4xl"
+        className="w-full max-w-3xl"
       >
       <div
-        className={`flex items-center justify-between px-6 py-3 rounded-full border transition-all duration-300 ${
+        className={`flex items-center justify-between px-5 py-2.5 rounded-full border transition-all duration-300 ${
           scrolled
             ? "bg-black/80 backdrop-blur-xl border-white/10 shadow-lg shadow-black/30"
             : "bg-white/[0.03] backdrop-blur-md border-white/[0.06]"
         }`}
       >
         {/* Logo */}
-        <img src={ratariaIcon} alt="ratarIA" className="h-10 w-10 opacity-70" />
+        <img src={ratariaIcon} alt="ratarIA" className="h-8 w-8 opacity-70" />
 
         {/* Links */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-5">
           {navLinks.map((link) => (
             <button
               key={link.href}
               onClick={() => handleClick(link.href)}
-              className="text-sm text-white/50 hover:text-white/90 transition-colors font-medium"
+              className="text-xs text-white/50 hover:text-white/90 transition-colors font-medium"
             >
               {link.label}
             </button>
@@ -59,7 +58,7 @@ const Navbar = () => {
         {/* CTA */}
         <a
           href="/login"
-          className="neon-border-btn relative px-5 py-2 rounded-full text-sm font-semibold text-white/80 overflow-hidden"
+          className="neon-border-btn relative px-4 py-1.5 rounded-full text-xs font-semibold text-white/80 overflow-hidden"
           style={{ border: "1px solid rgba(255,255,255,0.15)", background: "transparent" }}
         >
           <span className="relative z-10">Entrar</span>
