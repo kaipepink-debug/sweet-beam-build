@@ -67,10 +67,10 @@ const plans = [
 
 const PlansSection = () => {
   return (
-    <section className="relative py-14 md:py-24 px-3 md:px-4" id="planos">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10 md:mb-16 animate-fade-in">
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
+    <section className="relative py-12 md:py-16 px-3 md:px-4" id="planos">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-8 md:mb-12 animate-fade-in">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Escolha o plano{" "}
             <span className="relative inline-block neon-underline-text">
               perfeito
@@ -78,18 +78,18 @@ const PlansSection = () => {
             </span>{" "}
             para você
           </h2>
-          <p className="text-white/30 max-w-xl mx-auto">
+          <p className="text-white/30 max-w-lg mx-auto text-sm">
             Todos os planos incluem acesso completo às ferramentas de IA mais poderosas do mercado.
           </p>
         </div>
 
-        <div className="flex flex-col md:grid md:grid-cols-3 gap-4 md:gap-6 items-stretch md:items-center">
+        <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-4 items-stretch md:items-center">
           {[plans[1], plans[0], plans[2]].map((plan, idx) => (
             <div
               key={plan.name}
-              className={`relative rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] purple-hover-glow ${
+              className={`relative rounded-xl overflow-hidden transition-transform hover:scale-[1.02] purple-hover-glow ${
                 plan.highlight
-                  ? "md:scale-105 md:-my-4 md:order-none order-first"
+                  ? "md:scale-105 md:-my-3 md:order-none order-first"
                   : ""
               }`}
               style={{
@@ -122,16 +122,16 @@ const PlansSection = () => {
                 </>
               )}
 
-              <div className="relative p-5 md:p-8">
-                <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <div className="relative p-4 md:p-6">
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
                   {plan.badge && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1">
                       <Crown
-                        className="w-4 h-4"
+                        className="w-3.5 h-3.5"
                         style={{ color: "rgba(180, 0, 255, 0.8)" }}
                       />
                       <span
-                        className="text-xs font-bold uppercase tracking-widest"
+                        className="text-[11px] font-bold uppercase tracking-widest"
                         style={{ color: "rgba(180, 0, 255, 0.8)" }}
                       >
                         {plan.badge}
@@ -140,7 +140,7 @@ const PlansSection = () => {
                   )}
                   {plan.discount && (
                     <span
-                      className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide"
+                      className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide"
                       style={{
                         background: plan.highlight
                           ? "rgba(180, 0, 255, 0.15)"
@@ -159,28 +159,28 @@ const PlansSection = () => {
                 </div>
 
                 <h3
-                  className={`font-semibold text-lg mb-2 ${
+                  className={`font-semibold text-base mb-1.5 ${
                     plan.highlight ? "text-white/90" : "text-white/70"
                   }`}
                 >
                   {plan.name}
                 </h3>
-                <div className="mb-6">
+                <div className="mb-4">
                   <span
-                    className={`text-4xl font-black ${
+                    className={`text-3xl font-black ${
                       plan.highlight ? "text-white" : "text-white/90"
                     }`}
                   >
                     R$ {plan.price}
                   </span>
-                  <span className="text-white/30 text-sm">{plan.period}</span>
+                  <span className="text-white/30 text-xs">{plan.period}</span>
                 </div>
 
-                <div className="space-y-3 mb-8">
+                <div className="space-y-2 mb-6">
                   {plan.features.map((f) => (
-                    <div key={f} className="flex items-start gap-3">
+                    <div key={f} className="flex items-start gap-2">
                       <Check
-                        className="w-4 h-4 shrink-0 mt-0.5"
+                        className="w-3.5 h-3.5 shrink-0 mt-0.5"
                         style={{
                           color: plan.highlight
                             ? "rgba(180, 0, 255, 0.7)"
@@ -188,7 +188,7 @@ const PlansSection = () => {
                         }}
                       />
                       <span
-                        className={`text-sm leading-relaxed ${
+                        className={`text-xs leading-relaxed ${
                           plan.highlight ? "text-white/60" : "text-white/40"
                         }`}
                       >
@@ -200,26 +200,26 @@ const PlansSection = () => {
 
                 {plan.guarantee && (
                   <div
-                    className="mb-6 p-4 rounded-xl text-center"
+                    className="mb-4 p-3 rounded-lg text-center"
                     style={{
                       background: "rgba(34, 197, 94, 0.06)",
                       border: "1px solid rgba(34, 197, 94, 0.15)",
                     }}
                   >
-                    <div className="flex items-center justify-center gap-2 mb-1">
+                    <div className="flex items-center justify-center gap-1.5 mb-1">
                       <Shield
-                        className="w-4 h-4"
+                        className="w-3.5 h-3.5"
                         style={{ color: "rgba(34, 197, 94, 0.8)" }}
                       />
                       <span
-                        className="text-xs font-bold uppercase tracking-wide"
+                        className="text-[10px] font-bold uppercase tracking-wide"
                         style={{ color: "rgba(34, 197, 94, 0.8)" }}
                       >
                         Garantia
                       </span>
                     </div>
                     <p
-                      className="text-xs leading-relaxed"
+                      className="text-[11px] leading-relaxed"
                       style={{ color: "rgba(34, 197, 94, 0.7)" }}
                     >
                       {plan.guarantee}
@@ -231,7 +231,7 @@ const PlansSection = () => {
                   href={plan.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-full py-3.5 rounded-xl font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 ${
+                  className={`w-full py-3 rounded-lg font-semibold text-sm transition-all hover:scale-[1.02] flex items-center justify-center gap-2 ${
                     plan.highlight ? "text-white/95" : "text-white/70 hover:text-white/90"
                   }`}
                   style={
@@ -249,7 +249,7 @@ const PlansSection = () => {
                   }
                 >
                   Começar agora
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>

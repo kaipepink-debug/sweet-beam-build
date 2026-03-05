@@ -11,7 +11,7 @@ const benefits = [
 
 const BenefitsSection = () => {
   return (
-    <section id="beneficios" className="relative py-14 md:py-24 px-3 md:px-4">
+    <section id="beneficios" className="relative py-12 md:py-16 px-3 md:px-4">
       {/* Neon orbit line CSS */}
       <style>{`
         @keyframes orbit-flow {
@@ -31,12 +31,12 @@ const BenefitsSection = () => {
         }
       `}</style>
 
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10 md:mb-16 animate-fade-in">
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-8 md:mb-12 animate-fade-in">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Benefícios <span className="text-white/70">Exclusivos</span>
           </h2>
-          <p className="text-white/30 max-w-xl mx-auto">
+          <p className="text-white/30 max-w-lg mx-auto text-sm">
             Tudo o que você precisa para dominar o universo da inteligência artificial.
           </p>
         </div>
@@ -90,21 +90,21 @@ const BenefitsSection = () => {
             </circle>
           </svg>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 relative z-10">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 relative z-10">
             {benefits.map((b) => (
               <div
                 key={b.title}
-                className="group p-4 md:p-6 rounded-2xl border border-white/[0.06] hover:border-purple-500/20 transition-all duration-500 purple-hover-glow"
+                className="group p-4 md:p-5 rounded-xl border border-white/[0.06] hover:border-purple-500/20 transition-all duration-500 purple-hover-glow"
                 style={{ background: "rgba(8, 8, 12, 0.6)", backdropFilter: "blur(20px)" }}
               >
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(180,0,255,0.15)]"
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(180,0,255,0.15)]"
                   style={{ background: "rgba(180, 0, 255, 0.06)", border: "1px solid rgba(180, 0, 255, 0.1)" }}
                 >
-                  <b.icon className="w-5 h-5" style={{ color: "rgba(180, 0, 255, 0.6)" }} />
+                  <b.icon className="w-4 h-4" style={{ color: "rgba(180, 0, 255, 0.6)" }} />
                 </div>
-                <h3 className="text-white/90 font-semibold mb-2 text-[15px]">{b.title}</h3>
-                <p className="text-white/35 text-sm leading-relaxed">{b.desc}</p>
+                <h3 className="text-white/90 font-semibold mb-1.5 text-sm">{b.title}</h3>
+                <p className="text-white/35 text-xs leading-relaxed">{b.desc}</p>
               </div>
             ))}
           </div>
