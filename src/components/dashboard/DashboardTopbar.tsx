@@ -1,14 +1,11 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Search, Bell } from "lucide-react";
-import ratariaLogo from "@/assets/rataria-icon.png";
 
 export function DashboardTopbar() {
   return (
     <header className="h-14 border-b border-border bg-background sticky top-0 z-20 flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-3">
-        <img src={ratariaLogo} alt="Ratar.ia" className="w-7 h-7 rounded-lg" />
-        <span className="text-sm font-bold text-foreground tracking-tight">Ratar.ia</span>
-        <nav className="hidden md:flex items-center gap-1 ml-4">
+        <nav className="hidden md:flex items-center gap-1">
           {["Dashboard", "Financeiro", "Analytics", "Configurações"].map((tab, i) => (
             <button
               key={tab}
