@@ -69,7 +69,7 @@ export function RevenueChart() {
                 <stop offset="100%" stopColor="hsl(217, 91%, 60%)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 10%)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 6%)" vertical={false} />
             <XAxis
               dataKey="day"
               tick={{ fill: "hsl(0, 0%, 40%)", fontSize: 11 }}

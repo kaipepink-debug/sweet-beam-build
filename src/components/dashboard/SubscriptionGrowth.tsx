@@ -26,7 +26,7 @@ export function SubscriptionGrowth() {
       <div className="h-[180px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 10%)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 6%)" vertical={false} horizontal={true} />
             <XAxis
               dataKey="day"
               tick={{ fill: "hsl(0, 0%, 40%)", fontSize: 10 }}
