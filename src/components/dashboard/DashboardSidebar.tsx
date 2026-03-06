@@ -1,17 +1,6 @@
 import { BarChart3, CreditCard, Eye, LayoutDashboard, Settings, ShoppingCart, Users, Wrench } from "lucide-react";
-import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarHeader,
-  useSidebar,
-} from "@/components/ui/sidebar";
+import { useLocation, Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
 
 const menuItems = [
@@ -26,55 +15,51 @@ const menuItems = [
 ];
 
 export function DashboardSidebar() {
-  const { state, setOpen } = useSidebar();
-  const collapsed = state === "collapsed";
   const location = useLocation();
 
   return (
-    <Sidebar
-      collapsible="icon"
-      className="border-r-0"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+    <aside className="fixed left-0 top-0 bottom-0 w-[60px] z-40 flex flex-col items-center py-4 gap-1"
+      style={{
+        background: "linear-gradient(180deg, hsl(240 50% 5% / 0.95) 0%, hsl(260 60% 8% / 0.9) 100%)",
+        backdropFilter: "blur(20px)",
+      }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-sidebar/95 via-sidebar/85 to-sidebar/90 backdrop-blur-xl -z-10" />
-      <SidebarHeader className="p-4 border-b border-sidebar-border/50">
-        <div className="flex items-center gap-3">
-          <img src={ratariaLogo} alt="Ratar.ia" className="w-8 h-8 rounded-lg shrink-0" />
-          {!collapsed && (
-            <span className="text-sm font-semibold text-foreground tracking-tight whitespace-nowrap">
-              Ratar.ia
-            </span>
-          )}
-        </div>
-      </SidebarHeader>
-      <SidebarContent className="pt-2">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={location.pathname === item.url}
-                    tooltip={item.title}
-                  >
-                    <NavLink
-                      to={item.url}
-                      end={item.url === "/dashboard"}
-                      className="hover:bg-sidebar-accent/50"
-                      activeClassName="bg-sidebar-accent text-foreground font-medium"
-                    >
-                      <item.icon className="h-4 w-4 shrink-0" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+      {/* Logo */}
+      <div className="mb-4">
+        <img src={ratariaLogo} alt="Ratar.ia" className="w-9 h-9 rounded-xl" />
+      </div>
+
+      {/* Menu items */}
+      <nav className="flex-1 flex flex-col items-center gap-1 w-full px-2">
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.url;
+          return (
+            <Link
+              key={item.title}
+              to={item.url}
+              title={item.title}
+              className={cn(
+                "w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 group relative",
+                isActive
+                  ? "bg-foreground text-background shadow-lg"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              )}
+            >
+              <item.icon className="h-4 w-4" />
+              {/* Tooltip */}
+              <span className="absolute left-full ml-3 px-2.5 py-1 rounded-lg bg-card border border-border text-xs text-foreground font-medium whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl z-50">
+                {item.title}
+              </span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Bottom glow */}
+      <div
+        className="w-10 h-10 rounded-full blur-2xl opacity-40 mt-auto"
+        style={{ background: "radial-gradient(circle, hsl(270 100% 55%), transparent)" }}
+      />
+    </aside>
   );
 }
