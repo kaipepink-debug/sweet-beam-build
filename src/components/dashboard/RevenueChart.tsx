@@ -1,43 +1,73 @@
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Bar, BarChart, ComposedChart } from "recharts";
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { MoreHorizontal } from "lucide-react";
 
 const data = [
-  { quarter: "Q1", thisYear: 3200000, lastYear: 2800000 },
-  { quarter: "Q2", thisYear: 4500000, lastYear: 3100000 },
-  { quarter: "Q3", thisYear: 5800000, lastYear: 4200000 },
-  { quarter: "Q4", thisYear: 8100000, lastYear: 5500000 },
-  { quarter: "Q1'", thisYear: 6200000, lastYear: 4800000 },
-  { quarter: "Q2'", thisYear: 7400000, lastYear: 5100000 },
-  { quarter: "Q3'", thisYear: 9200000, lastYear: 6300000 },
-  { quarter: "Q4'", thisYear: 11800000, lastYear: 7200000 },
+  { day: "Mon", revenue: 42000, target: 38000 },
+  { day: "Tue", revenue: 55000, target: 40000 },
+  { day: "Wed", revenue: 48000, target: 42000 },
+  { day: "Thu", revenue: 62000, target: 45000 },
+  { day: "Fri", revenue: 78000, target: 48000 },
+  { day: "Sat", revenue: 58000, target: 50000 },
+  { day: "Sun", revenue: 85000, target: 52000 },
 ];
 
 export function RevenueChart() {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5">
-      <div className="flex items-center justify-between mb-4">
+    <div className="rounded-2xl border border-border bg-card p-5 h-full purple-hover-glow">
+      <div className="flex items-center justify-between mb-1">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">Analítico</h3>
+          <h3 className="text-sm font-semibold text-foreground">Faturamento da Plataforma</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">Período semanal</p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground px-3 py-1 border border-border rounded-lg">Estimativa de Vendas</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4 text-[11px]">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-primary" />
+              <span className="text-muted-foreground">Receita</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "hsl(270, 100%, 65%)" }} />
+              <span className="text-muted-foreground">Meta</span>
+            </div>
+          </div>
           <button className="text-muted-foreground hover:text-foreground">
             <MoreHorizontal className="h-4 w-4" />
           </button>
         </div>
       </div>
-      <div className="h-[280px]">
+
+      {/* Summary metrics */}
+      <div className="flex items-center gap-6 mb-4 mt-3">
+        <div>
+          <p className="text-[10px] text-muted-foreground">Receita Mensal</p>
+          <p className="text-lg font-bold text-foreground">R$ 428.000</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-muted-foreground">Crescimento</p>
+          <p className="text-lg font-bold text-emerald-400">+12,4%</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-muted-foreground">Meta Mensal</p>
+          <p className="text-lg font-bold text-foreground">R$ 500.000</p>
+        </div>
+      </div>
+
+      <div className="h-[220px]">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data}>
+          <AreaChart data={data}>
             <defs>
-              <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(270, 100%, 50%)" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="hsl(270, 100%, 50%)" stopOpacity={0} />
+              <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(270, 100%, 55%)" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="hsl(270, 100%, 55%)" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="targetGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(240, 70%, 60%)" stopOpacity={0.1} />
+                <stop offset="100%" stopColor="hsl(240, 70%, 60%)" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 20%, 12%)" vertical={false} />
             <XAxis
-              dataKey="quarter"
+              dataKey="day"
               tick={{ fill: "hsl(230, 15%, 45%)", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
@@ -46,7 +76,7 @@ export function RevenueChart() {
               tick={{ fill: "hsl(230, 15%, 45%)", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
-              tickFormatter={(v) => `R$${(v / 1000000).toFixed(0)}M`}
+              tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
             />
             <Tooltip
               contentStyle={{
@@ -56,17 +86,26 @@ export function RevenueChart() {
                 color: "hsl(230, 30%, 92%)",
                 fontSize: 12,
               }}
-              formatter={(value: number) => [`R$ ${(value / 1000).toLocaleString("pt-BR")}k`, ""]}
+              formatter={(value: number) => [`R$ ${value.toLocaleString("pt-BR")}`, ""]}
             />
-            <Bar dataKey="lastYear" fill="hsl(240, 20%, 18%)" radius={[4, 4, 0, 0]} barSize={20} />
             <Area
               type="monotone"
-              dataKey="thisYear"
+              dataKey="target"
+              stroke="hsl(240, 70%, 60%)"
+              strokeWidth={1.5}
+              strokeDasharray="4 4"
+              fill="url(#targetGradient)"
+            />
+            <Area
+              type="monotone"
+              dataKey="revenue"
               stroke="hsl(270, 100%, 55%)"
               strokeWidth={2.5}
-              fill="url(#areaGradient)"
+              fill="url(#revenueGradient)"
+              dot={false}
+              activeDot={{ r: 4, fill: "hsl(270, 100%, 65%)", stroke: "hsl(270, 100%, 80%)", strokeWidth: 2 }}
             />
-          </ComposedChart>
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>

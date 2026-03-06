@@ -15,12 +15,12 @@ import {
 import ratariaLogo from "@/assets/rataria-icon.png";
 
 const menuItems = [
-  { title: "Visão Geral", url: "/dashboard", icon: Eye },
+  { title: "Dashboard", url: "/dashboard", icon: Eye },
   { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard },
   { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingCart },
   { title: "Assinaturas", url: "/dashboard/assinaturas", icon: LayoutDashboard },
   { title: "Clientes", url: "/dashboard/clientes", icon: Users },
-  { title: "Ferramentas", url: "/dashboard/ferramentas", icon: Wrench },
+  { title: "Ferramentas IA", url: "/dashboard/ferramentas", icon: Wrench },
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings },
 ];
@@ -43,7 +43,7 @@ export function DashboardSidebar() {
           <img src={ratariaLogo} alt="Ratar.ia" className="w-8 h-8 rounded-lg shrink-0" />
           {!collapsed && (
             <span className="text-sm font-semibold text-foreground tracking-tight whitespace-nowrap">
-              Ratar.ia Admin
+              Ratar.ia
             </span>
           )}
         </div>
