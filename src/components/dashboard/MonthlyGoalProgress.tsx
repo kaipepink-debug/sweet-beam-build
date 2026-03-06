@@ -15,39 +15,31 @@ export function MonthlyGoalProgress() {
         </button>
       </div>
 
-      {/* Donut Chart */}
       <div className="relative w-44 h-44 mb-4">
         <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
           <circle
-            cx="80"
-            cy="80"
-            r={radius}
-            fill="none"
-            stroke="hsl(240, 20%, 12%)"
-            strokeWidth="10"
+            cx="80" cy="80" r={radius}
+            fill="none" stroke="hsl(0, 0%, 8%)" strokeWidth="10"
           />
           <circle
-            cx="80"
-            cy="80"
-            r={radius}
-            fill="none"
-            stroke="url(#donutGradient)"
-            strokeWidth="10"
+            cx="80" cy="80" r={radius}
+            fill="none" stroke="url(#donutGrad)" strokeWidth="10"
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             className="transition-all duration-1000 ease-out"
           />
           <defs>
-            <linearGradient id="donutGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(270, 100%, 55%)" />
-              <stop offset="100%" stopColor="hsl(240, 70%, 60%)" />
+            <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="hsl(270, 100%, 60%)" />
+              <stop offset="50%" stopColor="hsl(250, 90%, 55%)" />
+              <stop offset="100%" stopColor="hsl(217, 91%, 60%)" />
             </linearGradient>
           </defs>
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-3xl font-bold text-foreground">{percentage}%</span>
-          <span className="text-[10px] text-muted-foreground mt-1">Monthly Goal</span>
+          <span className="text-[10px] text-muted-foreground mt-1">Meta Mensal</span>
         </div>
       </div>
 
@@ -56,7 +48,6 @@ export function MonthlyGoalProgress() {
         <p className="text-[11px] text-muted-foreground">Faltam R$ 110.000 para a meta</p>
       </div>
 
-      {/* Mini stats */}
       <div className="flex items-center gap-6 mt-4 pt-4 border-t border-border w-full">
         <div className="flex-1 text-center">
           <p className="text-xs text-muted-foreground">Receita</p>

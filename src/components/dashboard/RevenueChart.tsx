@@ -26,7 +26,7 @@ export function RevenueChart() {
               <span className="text-muted-foreground">Receita</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "hsl(270, 100%, 65%)" }} />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "hsl(217, 91%, 60%)" }} />
               <span className="text-muted-foreground">Meta</span>
             </div>
           </div>
@@ -36,7 +36,6 @@ export function RevenueChart() {
         </div>
       </div>
 
-      {/* Summary metrics */}
       <div className="flex items-center gap-6 mb-4 mt-3">
         <div>
           <p className="text-[10px] text-muted-foreground">Receita Mensal</p>
@@ -57,33 +56,38 @@ export function RevenueChart() {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(270, 100%, 55%)" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="hsl(270, 100%, 55%)" stopOpacity={0} />
+                <stop offset="0%" stopColor="hsl(270, 100%, 60%)" stopOpacity={0.35} />
+                <stop offset="50%" stopColor="hsl(240, 80%, 55%)" stopOpacity={0.15} />
+                <stop offset="100%" stopColor="hsl(270, 100%, 50%)" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="revenueStroke" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="hsl(270, 100%, 60%)" />
+                <stop offset="100%" stopColor="hsl(217, 91%, 65%)" />
               </linearGradient>
               <linearGradient id="targetGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(240, 70%, 60%)" stopOpacity={0.1} />
-                <stop offset="100%" stopColor="hsl(240, 70%, 60%)" stopOpacity={0} />
+                <stop offset="0%" stopColor="hsl(217, 91%, 60%)" stopOpacity={0.1} />
+                <stop offset="100%" stopColor="hsl(217, 91%, 60%)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 20%, 12%)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 10%)" vertical={false} />
             <XAxis
               dataKey="day"
-              tick={{ fill: "hsl(230, 15%, 45%)", fontSize: 11 }}
+              tick={{ fill: "hsl(0, 0%, 40%)", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "hsl(230, 15%, 45%)", fontSize: 11 }}
+              tick={{ fill: "hsl(0, 0%, 40%)", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(240, 50%, 8%)",
-                border: "1px solid hsl(240, 20%, 18%)",
+                backgroundColor: "hsl(0, 0%, 6%)",
+                border: "1px solid hsl(0, 0%, 15%)",
                 borderRadius: "10px",
-                color: "hsl(230, 30%, 92%)",
+                color: "hsl(0, 0%, 90%)",
                 fontSize: 12,
               }}
               formatter={(value: number) => [`R$ ${value.toLocaleString("pt-BR")}`, ""]}
@@ -91,7 +95,7 @@ export function RevenueChart() {
             <Area
               type="monotone"
               dataKey="target"
-              stroke="hsl(240, 70%, 60%)"
+              stroke="hsl(217, 91%, 55%)"
               strokeWidth={1.5}
               strokeDasharray="4 4"
               fill="url(#targetGradient)"
@@ -99,7 +103,7 @@ export function RevenueChart() {
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="hsl(270, 100%, 55%)"
+              stroke="url(#revenueStroke)"
               strokeWidth={2.5}
               fill="url(#revenueGradient)"
               dot={false}
