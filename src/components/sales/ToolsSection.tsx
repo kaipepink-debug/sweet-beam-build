@@ -7,7 +7,7 @@ import elevenlabsLogo from "@/assets/tools/elevenlabs.png";
 import canvaLogo from "@/assets/tools/canva.png";
 import copyaiLogo from "@/assets/tools/copyai.png";
 import runwaymlLogo from "@/assets/tools/runwayml.png";
-import jasperaiLogo from "@/assets/tools/jasperai.png";
+import klingLogo from "@/assets/tools/kling.png";
 import synthesiaLogo from "@/assets/tools/synthesia.png";
 import higgsFieldLogo from "@/assets/tools/higgsfield.png";
 import soraLogo from "@/assets/tools/sora.png";
@@ -25,7 +25,7 @@ const tools = [
   { name: "Runway ML", desc: "Edição de vídeo com IA generativa de última geração.", rating: 4.9, logo: runwaymlLogo },
   { name: "Canva Pro", desc: "Design gráfico intuitivo com recursos premium de IA.", rating: 4.9, logo: canvaLogo },
   { name: "Copy.AI", desc: "Copywriting automatizado para marketing e vendas.", rating: 4.8, logo: copyaiLogo },
-  { name: "Jasper AI", desc: "Criação de conteúdo otimizado para SEO e conversão.", rating: 4.8, logo: jasperaiLogo },
+  { name: "Kling", desc: "Geração de vídeos com IA de alta qualidade e realismo.", rating: 4.8, logo: klingLogo },
   { name: "Synthesia", desc: "Criação de vídeos com avatares de IA realistas.", rating: 4.9, logo: synthesiaLogo },
   { name: "Higgsfield Creator", desc: "Geração de vídeos curtos com IA de alta qualidade.", rating: 4.7, logo: higgsFieldLogo },
   { name: "Sora", desc: "Geração de vídeos realistas a partir de texto.", rating: 4.9, logo: soraLogo },
