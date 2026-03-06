@@ -1,41 +1,54 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Copy, Eye, EyeOff, ExternalLink, AlertTriangle, KeyRound } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaIcon from "@/assets/rataria-icon.png";
 import { toast } from "@/hooks/use-toast";
+import * as OTPAuth from "otpauth";
 
-const TOTP_DURATION = 30;
-
-const generateCode = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
+const TOTP_PERIOD = 30;
+const TOTP_SECRET = "JBSWY3DPEHPK3PXP"; // Base32 secret key
 
 const Cod = () => {
+  const totp = useMemo(() => new OTPAuth.TOTP({
+    issuer: "app",
+    label: "user",
+    algorithm: "SHA1",
+    digits: 6,
+    period: TOTP_PERIOD,
+    secret: OTPAuth.Secret.fromBase32(TOTP_SECRET),
+  }), []);
+
+  const generateCode = useCallback(() => totp.generate(), [totp]);
+
+  const getTimeLeft = useCallback(() => {
+    return TOTP_PERIOD - (Math.floor(Date.now() / 1000) % TOTP_PERIOD);
+  }, []);
+
   const [code, setCode] = useState(generateCode());
-  const [timeLeft, setTimeLeft] = useState(TOTP_DURATION);
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          setCode(generateCode());
-          setRevealed(false);
-          return TOTP_DURATION;
-        }
-        return prev - 1;
-      });
+      const remaining = getTimeLeft();
+      setTimeLeft(remaining);
+      
+      // When a new period starts, regenerate code
+      if (remaining === TOTP_PERIOD) {
+        setCode(generateCode());
+        setRevealed(false);
+      }
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [generateCode, getTimeLeft]);
 
   const copyToClipboard = useCallback((text: string, label: string) => {
     navigator.clipboard.writeText(text);
     toast({ title: `${label} copiado!`, duration: 2000 });
   }, []);
 
-  const progressPercent = (timeLeft / TOTP_DURATION) * 100;
+  const progressPercent = (timeLeft / TOTP_PERIOD) * 100;
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
