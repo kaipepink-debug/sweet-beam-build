@@ -83,6 +83,7 @@ export function RevenueChart() {
               tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
             />
             <Tooltip
+              cursor={{ fill: "hsl(0, 0%, 8%)" }}
               contentStyle={{
                 backgroundColor: "hsl(0, 0%, 6%)",
                 border: "1px solid hsl(0, 0%, 15%)",
