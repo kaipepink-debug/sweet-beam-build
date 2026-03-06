@@ -26,31 +26,32 @@ export function SubscriptionGrowth() {
       <div className="h-[180px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 20%, 12%)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 10%)" vertical={false} />
             <XAxis
               dataKey="day"
-              tick={{ fill: "hsl(230, 15%, 45%)", fontSize: 10 }}
+              tick={{ fill: "hsl(0, 0%, 40%)", fontSize: 10 }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "hsl(230, 15%, 45%)", fontSize: 10 }}
+              tick={{ fill: "hsl(0, 0%, 40%)", fontSize: 10 }}
               axisLine={false}
               tickLine={false}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(240, 50%, 8%)",
-                border: "1px solid hsl(240, 20%, 18%)",
+                backgroundColor: "hsl(0, 0%, 6%)",
+                border: "1px solid hsl(0, 0%, 15%)",
                 borderRadius: "10px",
-                color: "hsl(230, 30%, 92%)",
+                color: "hsl(0, 0%, 90%)",
                 fontSize: 12,
               }}
             />
             <defs>
               <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(270, 100%, 55%)" />
-                <stop offset="100%" stopColor="hsl(240, 70%, 60%)" />
+                <stop offset="0%" stopColor="hsl(270, 100%, 60%)" />
+                <stop offset="50%" stopColor="hsl(250, 90%, 55%)" />
+                <stop offset="100%" stopColor="hsl(217, 91%, 55%)" />
               </linearGradient>
             </defs>
             <Bar dataKey="subs" fill="url(#barGradient)" radius={[6, 6, 0, 0]} barSize={24} />
