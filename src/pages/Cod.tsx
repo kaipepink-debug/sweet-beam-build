@@ -155,16 +155,20 @@ const Cod = () => {
           {/* Reveal button */}
           <button
             onClick={() => {
-              setRevealed(!revealed);
-              if (!revealed) copyToClipboard(code, "Código");
+              if (!revealed) {
+                setRevealed(true);
+                copyToClipboard(code, "Código");
+              } else {
+                copyToClipboard(code, "Código");
+              }
             }}
             className="neon-border-btn relative w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest transition-all duration-300 overflow-hidden"
             style={{ background: "transparent" }}
           >
             <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
             <span className="relative z-10 flex items-center justify-center gap-2 text-foreground">
-              {revealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              {revealed ? "Ocultar código" : "Revelar código"}
+              {revealed ? <Copy className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {revealed ? "Copiar código" : "Revelar código"}
             </span>
           </button>
         </div>
