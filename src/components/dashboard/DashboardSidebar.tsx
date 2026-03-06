@@ -43,14 +43,14 @@ export function DashboardSidebar() {
               key={item.title}
               to={item.url}
               className={cn(
-                "h-10 rounded-xl flex items-center gap-3 px-[10px] transition-all duration-200 whitespace-nowrap",
+                "h-10 rounded-xl flex items-center gap-3 px-[10px] transition-all duration-300 whitespace-nowrap relative",
                 isActive
-                  ? "bg-primary/15 text-primary shadow-lg shadow-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                  ? "bg-primary/20 text-primary shadow-[0_0_18px_hsl(270_100%_55%/0.3)]"
+                  : "text-muted-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
               )}
             >
-              <item.icon className="h-[18px] w-[18px] shrink-0" />
-              <span className="text-[13px] font-medium opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
+              <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2.5} />
+              <span className="text-[13px] font-bold opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
                 {item.title}
               </span>
               {isActive && (
