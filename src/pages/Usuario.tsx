@@ -70,55 +70,7 @@ const Usuario = () => {
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-8 blur-[100px]" style={{ background: "radial-gradient(circle, rgba(200,200,200,0.1), transparent)" }} />
       </div>
 
-      {/* Light mode: animated purple & black gradient background */}
-      {!isDark && (
-        <div className="fixed inset-0 z-0">
-          {/* Base dark background */}
-          <div className="absolute inset-0" style={{ background: "#0d0d0d" }} />
-          
-          {/* Animated purple orb 1 */}
-          <motion.div
-            animate={{
-              x: [0, 80, -40, 60, 0],
-              y: [0, -60, 40, -30, 0],
-              scale: [1, 1.2, 0.9, 1.1, 1],
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[10%] left-[15%] w-[500px] h-[500px] rounded-full blur-[150px]"
-            style={{ background: "rgba(180, 0, 255, 0.15)" }}
-          />
-          
-          {/* Animated purple orb 2 */}
-          <motion.div
-            animate={{
-              x: [0, -60, 50, -30, 0],
-              y: [0, 50, -40, 60, 0],
-              scale: [1, 0.9, 1.15, 0.95, 1],
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-[10%] right-[10%] w-[450px] h-[450px] rounded-full blur-[140px]"
-            style={{ background: "rgba(140, 0, 220, 0.12)" }}
-          />
 
-          {/* Animated purple orb 3 - center */}
-          <motion.div
-            animate={{
-              x: [0, 40, -60, 20, 0],
-              y: [0, -30, 50, -50, 0],
-              scale: [1, 1.1, 0.85, 1.05, 1],
-            }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[40%] left-[40%] w-[400px] h-[400px] rounded-full blur-[130px]"
-            style={{ background: "rgba(160, 0, 240, 0.1)" }}
-          />
-
-          {/* Subtle grid overlay */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: "linear-gradient(rgba(180, 0, 255, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(180, 0, 255, 0.3) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }} />
-        </div>
-      )}
 
       {/* Theme toggle button */}
       <motion.button
