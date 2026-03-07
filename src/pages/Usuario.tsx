@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
 const Usuario = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,6 +18,7 @@ const Usuario = () => {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 2000));
     setLoading(false);
+    navigate("/painel");
   };
 
   const theme = isDark
