@@ -20,7 +20,6 @@ const Usuario = () => {
 
   const theme = isDark
     ? {
-        bg: "#000000",
         cardBg: "rgba(10, 10, 10, 0.8)",
         cardBorder: "rgba(255, 255, 255, 0.08)",
         cardShadow: "0 0 60px rgba(0, 0, 0, 0.4), 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03)",
@@ -41,31 +40,30 @@ const Usuario = () => {
         logoFilter: "brightness(1.1)",
       }
     : {
-        bg: "#f5f5f5",
-        cardBg: "rgba(255, 255, 255, 0.9)",
-        cardBorder: "rgba(0, 0, 0, 0.1)",
-        cardShadow: "0 0 60px rgba(0, 0, 0, 0.08), 0 25px 50px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8)",
-        title: "rgba(0, 0, 0, 0.85)",
+        cardBg: "rgba(255, 255, 255, 0.85)",
+        cardBorder: "rgba(180, 0, 255, 0.12)",
+        cardShadow: "0 0 60px rgba(180, 0, 255, 0.06), 0 25px 50px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
+        title: "rgba(0, 0, 0, 0.88)",
         subtitle: "rgba(100, 100, 100, 0.7)",
-        label: "rgba(80, 80, 80, 0.8)",
-        inputBg: "rgba(245, 245, 245, 0.9)",
-        inputBorder: "rgba(0, 0, 0, 0.12)",
-        inputBorderFocus: "rgba(180, 0, 255, 0.4)",
-        inputText: "rgba(0, 0, 0, 0.85)",
-        inputShadowFocus: "0 0 20px rgba(180, 0, 255, 0.08), inset 0 0 20px rgba(180, 0, 255, 0.02)",
-        btnText: "rgba(0, 0, 0, 0.85)",
-        btnSpinnerBorder: "rgba(0,0,0,0.2)",
-        btnSpinnerTop: "rgba(0,0,0,0.8)",
-        accent: "rgba(0, 0, 0, 0.1)",
+        label: "rgba(60, 60, 60, 0.8)",
+        inputBg: "rgba(250, 248, 255, 0.9)",
+        inputBorder: "rgba(180, 0, 255, 0.1)",
+        inputBorderFocus: "rgba(180, 0, 255, 0.45)",
+        inputText: "rgba(0, 0, 0, 0.88)",
+        inputShadowFocus: "0 0 20px rgba(180, 0, 255, 0.1), inset 0 0 20px rgba(180, 0, 255, 0.03)",
+        btnText: "rgba(255, 255, 255, 0.95)",
+        btnSpinnerBorder: "rgba(255,255,255,0.3)",
+        btnSpinnerTop: "rgba(255,255,255,0.95)",
+        accent: "rgba(180, 0, 255, 0.2)",
         toggleBg: "rgba(0, 0, 0, 0.06)",
-        toggleIcon: "rgba(0, 0, 0, 0.6)",
-        logoFilter: "brightness(1)",
+        toggleIcon: "rgba(60, 60, 60, 0.8)",
+        logoFilter: "brightness(0) saturate(100%)",
       };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden transition-colors duration-700" style={{ background: theme.bg }}>
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden transition-all duration-700" style={{ background: isDark ? "#000000" : "#0a0a0a" }}>
+      {/* Dark mode: neural background */}
       {isDark && <NeuralBackground />}
-
       {isDark && (
         <>
           <div className="fixed inset-0 z-[1] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.03) 0%, transparent 50%)" }} />
@@ -76,6 +74,56 @@ const Usuario = () => {
         </>
       )}
 
+      {/* Light mode: animated purple & black gradient background */}
+      {!isDark && (
+        <div className="fixed inset-0 z-0">
+          {/* Base dark background */}
+          <div className="absolute inset-0" style={{ background: "#0d0d0d" }} />
+          
+          {/* Animated purple orb 1 */}
+          <motion.div
+            animate={{
+              x: [0, 80, -40, 60, 0],
+              y: [0, -60, 40, -30, 0],
+              scale: [1, 1.2, 0.9, 1.1, 1],
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[10%] left-[15%] w-[500px] h-[500px] rounded-full blur-[150px]"
+            style={{ background: "rgba(180, 0, 255, 0.15)" }}
+          />
+          
+          {/* Animated purple orb 2 */}
+          <motion.div
+            animate={{
+              x: [0, -60, 50, -30, 0],
+              y: [0, 50, -40, 60, 0],
+              scale: [1, 0.9, 1.15, 0.95, 1],
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[10%] right-[10%] w-[450px] h-[450px] rounded-full blur-[140px]"
+            style={{ background: "rgba(140, 0, 220, 0.12)" }}
+          />
+
+          {/* Animated purple orb 3 - center */}
+          <motion.div
+            animate={{
+              x: [0, 40, -60, 20, 0],
+              y: [0, -30, 50, -50, 0],
+              scale: [1, 1.1, 0.85, 1.05, 1],
+            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[40%] left-[40%] w-[400px] h-[400px] rounded-full blur-[130px]"
+            style={{ background: "rgba(160, 0, 240, 0.1)" }}
+          />
+
+          {/* Subtle grid overlay */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{
+            backgroundImage: "linear-gradient(rgba(180, 0, 255, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(180, 0, 255, 0.3) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }} />
+        </div>
+      )}
+
       {/* Theme toggle button */}
       <motion.button
         initial={{ opacity: 0 }}
@@ -84,8 +132,8 @@ const Usuario = () => {
         onClick={() => setIsDark(!isDark)}
         className="fixed top-6 right-6 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110"
         style={{
-          background: theme.toggleBg,
-          border: `1px solid ${theme.cardBorder}`,
+          background: isDark ? theme.toggleBg : "rgba(255, 255, 255, 0.1)",
+          border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.15)"}`,
           backdropFilter: "blur(20px)",
         }}
         title={isDark ? "Modo claro" : "Modo escuro"}
@@ -100,7 +148,7 @@ const Usuario = () => {
           {isDark ? (
             <Moon className="w-4 h-4" style={{ color: theme.toggleIcon }} />
           ) : (
-            <Sun className="w-4 h-4" style={{ color: theme.toggleIcon }} />
+            <Sun className="w-4 h-4" style={{ color: "rgba(255, 255, 255, 0.7)" }} />
           )}
         </motion.div>
       </motion.button>
@@ -224,8 +272,9 @@ const Usuario = () => {
                 disabled={loading}
                 className={`relative w-full py-3.5 rounded-xl text-sm font-medium uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden disabled:opacity-70 ${isDark ? "neon-border-btn" : ""}`}
                 style={{
-                  background: isDark ? "transparent" : "rgba(0, 0, 0, 0.05)",
-                  border: isDark ? undefined : "1px solid rgba(0, 0, 0, 0.15)",
+                  background: isDark ? "transparent" : "linear-gradient(135deg, rgba(180, 0, 255, 0.8), rgba(120, 0, 200, 0.9))",
+                  border: isDark ? undefined : "1px solid rgba(180, 0, 255, 0.3)",
+                  boxShadow: isDark ? undefined : "0 0 30px rgba(180, 0, 255, 0.2)",
                 }}
               >
                 {isDark && <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />}
