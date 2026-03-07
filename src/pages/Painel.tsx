@@ -125,7 +125,7 @@ export default function Painel() {
       </motion.button>
 
       {/* Scrollable content */}
-      <div className="relative z-10 flex-1 flex flex-col items-center px-5 pt-12 pb-28 overflow-y-auto">
+      <div className="relative z-10 flex-1 flex flex-col items-center px-5 md:px-8 pt-12 md:pt-16 pb-28 overflow-y-auto">
         <motion.div
           initial="initial"
           animate="animate"
@@ -134,37 +134,37 @@ export default function Painel() {
         >
           {/* Logo */}
           <motion.div variants={stagger.item} className="flex justify-center">
-            <img src={ratariaLogo} alt="ratarIA" className="h-20 w-auto transition-all duration-500" style={{ filter: t.logoFilter }} />
+            <img src={ratariaLogo} alt="ratarIA" className="h-20 md:h-28 w-auto transition-all duration-500" style={{ filter: t.logoFilter }} />
           </motion.div>
 
           {/* Greeting */}
           <motion.div variants={stagger.item} className="text-center">
-            <h1 className="text-xl font-bold tracking-tight transition-colors duration-500" style={{ color: t.greeting }}>
+             <h1 className="text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500" style={{ color: t.greeting }}>
               {getGreeting()}, {userName}
             </h1>
-            <p className="text-xs mt-1 italic transition-colors duration-500" style={{ color: t.phrase }}>{phrase}</p>
+            <p className="text-xs md:text-sm mt-1 italic transition-colors duration-500" style={{ color: t.phrase }}>{phrase}</p>
           </motion.div>
 
           {/* Stats row */}
-          <motion.div variants={stagger.item} className="flex gap-3">
+          <motion.div variants={stagger.item} className="flex gap-3 md:gap-4">
             {stats.map((stat) => (
               <motion.div
                 key={stat.label}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="flex-1 flex items-center gap-3 rounded-2xl px-4 py-3.5"
+                className="flex-1 flex items-center gap-3 md:gap-4 rounded-2xl px-4 md:px-5 py-3.5 md:py-5"
                 style={{
                   background: `rgba(${stat.color}, 0.08)`,
                   border: `1px solid rgba(${stat.color}, 0.15)`,
                   backdropFilter: "blur(20px)",
                 }}
               >
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: `rgba(${stat.color}, 0.12)` }}>
-                  <stat.icon className="w-6 h-6" style={{ color: `rgba(${stat.color}, 0.85)` }} />
+                <div className="w-11 h-11 md:w-14 md:h-14 rounded-xl flex items-center justify-center" style={{ background: `rgba(${stat.color}, 0.12)` }}>
+                  <stat.icon className="w-6 h-6 md:w-7 md:h-7" style={{ color: `rgba(${stat.color}, 0.85)` }} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold" style={{ color: `rgba(${stat.color}, 0.95)` }}>{stat.value}</p>
-                  <p className="text-[10px] uppercase tracking-wider font-medium transition-colors duration-500" style={{ color: t.statLabel }}>{stat.label}</p>
+                  <p className="text-sm md:text-base font-bold" style={{ color: `rgba(${stat.color}, 0.95)` }}>{stat.value}</p>
+                  <p className="text-[10px] md:text-xs uppercase tracking-wider font-medium transition-colors duration-500" style={{ color: t.statLabel }}>{stat.label}</p>
                 </div>
               </motion.div>
             ))}
@@ -176,7 +176,7 @@ export default function Painel() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className="flex-1 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-300"
+                className="flex-1 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold uppercase tracking-wider transition-all duration-300"
                 style={{
                   background: activeTab === tab ? "rgba(139, 92, 246, 0.12)" : "transparent",
                   color: activeTab === tab ? "rgba(139, 92, 246, 0.9)" : t.tabInactive,
@@ -207,7 +207,7 @@ export default function Painel() {
                     transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 24 }}
                     whileHover={{ x: 4 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center gap-4 rounded-2xl px-4 py-4 group transition-all duration-200"
+                    className="w-full flex items-center gap-4 rounded-2xl px-4 md:px-5 py-4 md:py-5 group transition-all duration-200"
                     style={{
                       background: t.cardBg,
                       border: `1px solid ${t.cardBorder}`,
@@ -221,12 +221,12 @@ export default function Painel() {
                       e.currentTarget.style.borderColor = t.cardBorder;
                     }}
                   >
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ background: `rgba(${item.color}, 0.1)` }}>
-                      <item.icon className="w-5 h-5" style={{ color: `rgba(${item.color}, 0.8)` }} />
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ background: `rgba(${item.color}, 0.1)` }}>
+                      <item.icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: `rgba(${item.color}, 0.8)` }} />
                     </div>
                     <div className="flex-1 text-left">
-                      <p className="text-sm font-semibold transition-colors duration-500" style={{ color: t.menuLabel }}>{item.label}</p>
-                      <p className="text-[11px] transition-colors duration-500" style={{ color: t.menuDesc }}>{item.desc}</p>
+                      <p className="text-sm md:text-base font-semibold transition-colors duration-500" style={{ color: t.menuLabel }}>{item.label}</p>
+                      <p className="text-[11px] md:text-sm transition-colors duration-500" style={{ color: t.menuDesc }}>{item.desc}</p>
                     </div>
                     <ChevronRight className="w-4 h-4 transition-colors" style={{ color: t.chevron }} />
                   </motion.button>
@@ -239,7 +239,7 @@ export default function Painel() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.2 }}
-                className="rounded-2xl px-5 py-5 space-y-4"
+                className="rounded-2xl px-5 md:px-7 py-5 md:py-6 space-y-4"
                 style={{
                   background: t.cardBg,
                   border: `1px solid ${t.cardBorder}`,
@@ -248,16 +248,16 @@ export default function Painel() {
               >
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4" style={{ color: "rgba(139, 92, 246, 0.7)" }} />
-                  <h3 className="text-sm font-bold transition-colors duration-500" style={{ color: t.infoTitle }}>Área do Cliente</h3>
+                  <h3 className="text-sm md:text-base font-bold transition-colors duration-500" style={{ color: t.infoTitle }}>Área do Cliente</h3>
                 </div>
-                <p className="text-xs leading-relaxed transition-colors duration-500" style={{ color: t.infoText }}>
+                <p className="text-xs md:text-sm leading-relaxed transition-colors duration-500" style={{ color: t.infoText }}>
                   Olá, <strong style={{ color: t.infoStrong }}>{userName}</strong>. A partir deste painel você pode gerenciar suas ferramentas, acompanhar sua assinatura e acessar materiais exclusivos.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {["Compras recentes", "Endereços", "Senha e conta"].map((link) => (
                     <button
                       key={link}
-                      className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors duration-200"
+                      className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[11px] md:text-xs font-medium transition-colors duration-200"
                       style={{
                         background: "rgba(139, 92, 246, 0.08)",
                         border: "1px solid rgba(139, 92, 246, 0.12)",
