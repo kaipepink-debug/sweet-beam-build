@@ -1,6 +1,10 @@
 import { useEffect, useRef, useCallback } from "react";
 
-const NeuralBackground = () => {
+interface NeuralBackgroundProps {
+  variant?: "dark" | "light";
+}
+
+const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const initCanvas = useCallback(() => {
@@ -8,6 +12,16 @@ const NeuralBackground = () => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
+
+    const isLight = variant === "light";
+    const bgColor = isLight ? "#f5f5f5" : "#000000";
+    const fadeColor = isLight ? "rgba(245, 245, 245, 0.15)" : "rgba(0, 0, 0, 0.15)";
+    const particleColor = isLight ? "rgba(180, 0, 255, 0.5)" : "rgba(180,180,180,0.4)";
+    const connectionColor = isLight
+      ? (alpha: number) => `rgba(180, 0, 255, ${alpha})`
+      : (alpha: number) => `rgba(160,160,160,${alpha})`;
+    const glowColor1 = isLight ? "rgba(180,0,255,0.18)" : "rgba(180,0,255,0.12)";
+    const glowColor2 = isLight ? "rgba(180,0,255,0.06)" : "rgba(180,0,255,0.04)";
 
     let animationId: number;
     const mouse = { x: -9999, y: -9999 };
@@ -29,7 +43,6 @@ const NeuralBackground = () => {
 
     const init = () => {
       resize();
-      // Spread particles evenly using grid-based placement with jitter
       const cols = Math.ceil(Math.sqrt(PARTICLE_COUNT * (canvas.width / canvas.height)));
       const rows = Math.ceil(PARTICLE_COUNT / cols);
       const cellW = canvas.width / cols;
@@ -48,7 +61,6 @@ const NeuralBackground = () => {
       });
     };
 
-    // Throttle mouse events
     let mouseThrottle = 0;
     const onMouseMove = (e: MouseEvent) => {
       const now = performance.now();
@@ -75,12 +87,11 @@ const NeuralBackground = () => {
       const w = canvas.width;
       const h = canvas.height;
 
-      ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+      ctx.fillStyle = fadeColor;
       ctx.fillRect(0, 0, w, h);
 
       const mouseActive = !isMobile && mouse.x > 0 && mouse.y > 0;
 
-      // Particles
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
@@ -100,7 +111,6 @@ const NeuralBackground = () => {
         p.vx *= 0.995;
         p.vy *= 0.995;
 
-        // Keep minimum velocity on desktop so particles never stop
         if (!isMobile) {
           const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
           if (speed < 0.3) {
@@ -119,11 +129,10 @@ const NeuralBackground = () => {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(180,180,180,0.4)";
+        ctx.fillStyle = particleColor;
         ctx.fill();
       }
 
-      // Connections
       ctx.lineWidth = 0.5;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -131,21 +140,20 @@ const NeuralBackground = () => {
           const dy = particles[i].y - particles[j].y;
           const distSq = dx * dx + dy * dy;
           if (distSq < CONNECTION_DIST_SQ) {
-            const alpha = 0.06 * (1 - Math.sqrt(distSq) / CONNECTION_DIST);
+            const alpha = (isLight ? 0.12 : 0.06) * (1 - Math.sqrt(distSq) / CONNECTION_DIST);
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(160,160,160,${alpha})`;
+            ctx.strokeStyle = connectionColor(alpha);
             ctx.stroke();
           }
         }
       }
 
-      // Mouse glow — desktop only
       if (mouseActive) {
         const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_RADIUS);
-        glow.addColorStop(0, "rgba(180,0,255,0.12)");
-        glow.addColorStop(0.5, "rgba(180,0,255,0.04)");
+        glow.addColorStop(0, glowColor1);
+        glow.addColorStop(0.5, glowColor2);
         glow.addColorStop(1, "transparent");
         ctx.fillStyle = glow;
         ctx.beginPath();
@@ -155,7 +163,7 @@ const NeuralBackground = () => {
     };
 
     init();
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     animationId = requestAnimationFrame(draw);
 
@@ -170,7 +178,7 @@ const NeuralBackground = () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseleave", onMouseLeave);
     };
-  }, []);
+  }, [variant]);
 
   useEffect(() => {
     const cleanup = initCanvas();
@@ -181,7 +189,7 @@ const NeuralBackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 w-full h-full"
-      style={{ zIndex: 0, background: "#000000", willChange: "auto" }}
+      style={{ zIndex: 0, background: variant === "light" ? "#f5f5f5" : "#000000", willChange: "auto" }}
     />
   );
 };
