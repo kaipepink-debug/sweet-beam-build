@@ -56,7 +56,7 @@ export default function Painel() {
         >
           {/* Logo */}
           <motion.div variants={stagger.item} className="flex justify-center">
-            <img src={ratariaLogo} alt="ratarIA" className="h-10 w-auto" style={{ filter: "brightness(1.15)" }} />
+            <img src={ratariaLogo} alt="ratarIA" className="h-20 w-auto" style={{ filter: "brightness(1.15)" }} />
           </motion.div>
 
           {/* Greeting */}
@@ -205,17 +205,13 @@ export default function Painel() {
         style={{ background: "linear-gradient(to top, rgba(0,0,0,0.9) 40%, transparent)" }}
       >
         <motion.button
-          whileHover={{ scale: 1.08 }}
+          whileHover={{ scale: 1.08, opacity: 0.8 }}
           whileTap={{ scale: 0.92 }}
           onClick={() => navigate("/usuario")}
-          className="flex flex-col items-center gap-1 px-8 py-3 rounded-2xl transition-all duration-300"
-          style={{
-            background: "rgba(239, 68, 68, 0.08)",
-            border: "1px solid rgba(239, 68, 68, 0.15)",
-          }}
+          className="flex flex-col items-center gap-1 px-6 py-2"
         >
-          <Power className="w-5 h-5" style={{ color: "rgba(239, 68, 68, 0.7)" }} />
-          <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "rgba(239, 68, 68, 0.6)" }}>Deslogar</span>
+          <Power className="w-5 h-5 text-white/30" />
+          <span className="text-[10px] font-medium text-white/25">Deslogar</span>
         </motion.button>
       </motion.div>
     </div>
