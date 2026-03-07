@@ -42,7 +42,7 @@ const Usuario = () => {
       }
     : {
         cardBg: "rgba(255, 255, 255, 0.85)",
-        cardBorder: "rgba(180, 0, 255, 0.12)",
+        cardBorder: "rgba(0, 0, 0, 0.25)",
         cardShadow: "0 0 60px rgba(180, 0, 255, 0.06), 0 25px 50px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
         title: "rgba(0, 0, 0, 0.88)",
         subtitle: "rgba(100, 100, 100, 0.6)",
@@ -147,13 +147,13 @@ const Usuario = () => {
             className="text-center mb-8"
           >
             <h1
-              className="text-xl font-light tracking-[0.2em] uppercase mb-2 transition-colors duration-500"
+              className="text-xl font-bold tracking-[0.2em] uppercase mb-2 transition-colors duration-500"
               style={{ color: theme.title, fontFamily: "'Inter', sans-serif" }}
             >
               Área do Usuário
             </h1>
             <p
-              className="text-xs tracking-[0.3em] uppercase transition-colors duration-500"
+              className="text-xs font-semibold tracking-[0.3em] uppercase transition-colors duration-500"
               style={{ color: theme.subtitle }}
             >
               Acesse sua conta
