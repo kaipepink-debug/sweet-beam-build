@@ -88,7 +88,7 @@ export default function Painel() {
 
   const stats = [
     { icon: Clock, label: "Dias restantes", value: "28", color: "59, 130, 246" },
-    { icon: Shield, label: "Status", value: "Ativo", color: "59, 130, 246" },
+    { icon: Shield, label: "Status", value: "Ativo", color: "34, 197, 94" },
   ];
 
   return (
