@@ -49,7 +49,7 @@ const Usuario = () => {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="flex justify-center mb-8"
           >
-            <img src={ratariaLogo} alt="ratarIA" className="h-20 md:h-20 w-auto rounded-lg" style={{ filter: "brightness(1.1)" }} />
+            <img src={ratariaLogo} alt="ratarIA" className="h-24 md:h-28 w-auto rounded-lg" style={{ filter: "brightness(1.1)" }} />
           </motion.div>
 
           <motion.div
