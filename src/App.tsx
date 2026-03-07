@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Cod from "./pages/Cod";
 import Usuario from "./pages/Usuario";
+import Painel from "./pages/Painel";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/cod" element={<Cod />} />
           <Route path="/usuario" element={<Usuario />} />
+          <Route path="/painel" element={<Painel />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
