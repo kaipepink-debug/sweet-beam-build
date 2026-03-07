@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles } from "lucide-react";
+import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Sun, Moon } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
@@ -24,11 +24,60 @@ const stagger = {
   item: { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { type: "spring", stiffness: 300, damping: 24 } },
 };
 
+const darkTheme = {
+  greeting: "rgba(255,255,255,0.95)",
+  phrase: "rgba(255,255,255,0.4)",
+  statLabel: "rgba(255,255,255,0.3)",
+  tabBg: "rgba(255,255,255,0.04)",
+  tabInactive: "rgba(255,255,255,0.3)",
+  cardBg: "rgba(255,255,255,0.03)",
+  cardBorder: "rgba(255,255,255,0.06)",
+  menuLabel: "rgba(255,255,255,0.85)",
+  menuDesc: "rgba(255,255,255,0.3)",
+  chevron: "rgba(255,255,255,0.15)",
+  chevronHover: "rgba(255,255,255,0.4)",
+  infoTitle: "rgba(255,255,255,0.8)",
+  infoText: "rgba(255,255,255,0.4)",
+  infoStrong: "rgba(255,255,255,0.7)",
+  bottomGradient: "rgba(0,0,0,0.9)",
+  logoutColor: "rgba(255,255,255,0.3)",
+  toggleBg: "rgba(255,255,255,0.08)",
+  toggleBorder: "rgba(255,255,255,0.08)",
+  toggleIcon: "rgba(255,255,255,0.6)",
+  logoFilter: "brightness(1.15)",
+};
+
+const lightTheme = {
+  greeting: "rgba(0,0,0,0.85)",
+  phrase: "rgba(0,0,0,0.35)",
+  statLabel: "rgba(0,0,0,0.4)",
+  tabBg: "rgba(0,0,0,0.04)",
+  tabInactive: "rgba(0,0,0,0.35)",
+  cardBg: "rgba(255,255,255,0.7)",
+  cardBorder: "rgba(0,0,0,0.06)",
+  menuLabel: "rgba(0,0,0,0.8)",
+  menuDesc: "rgba(0,0,0,0.4)",
+  chevron: "rgba(0,0,0,0.15)",
+  chevronHover: "rgba(0,0,0,0.4)",
+  infoTitle: "rgba(0,0,0,0.8)",
+  infoText: "rgba(0,0,0,0.5)",
+  infoStrong: "rgba(0,0,0,0.7)",
+  bottomGradient: "rgba(245,245,245,0.95)",
+  logoutColor: "rgba(0,0,0,0.35)",
+  toggleBg: "rgba(0,0,0,0.06)",
+  toggleBorder: "rgba(0,0,0,0.1)",
+  toggleIcon: "rgba(60,60,60,0.8)",
+  logoFilter: "brightness(0) saturate(100%)",
+};
+
 export default function Painel() {
   const navigate = useNavigate();
   const [userName] = useState("Usuário");
   const [phrase] = useState(() => phrases[Math.floor(Math.random() * phrases.length)]);
   const [activeTab, setActiveTab] = useState<"menu" | "info">("menu");
+  const [isDark, setIsDark] = useState(true);
+
+  const t = isDark ? darkTheme : lightTheme;
 
   const menuItems = [
     { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246" },
@@ -44,7 +93,36 @@ export default function Painel() {
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
-      <NeuralBackground variant="light" />
+      <NeuralBackground key={isDark ? "dark" : "light"} variant={isDark ? "dark" : "light"} />
+
+      {/* Theme toggle */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
+        onClick={() => setIsDark(!isDark)}
+        className="fixed top-6 right-6 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110"
+        style={{
+          background: t.toggleBg,
+          border: `1px solid ${t.toggleBorder}`,
+          backdropFilter: "blur(20px)",
+        }}
+        title={isDark ? "Modo claro" : "Modo escuro"}
+      >
+        <motion.div
+          key={isDark ? "moon" : "sun"}
+          initial={{ rotate: -90, opacity: 0 }}
+          animate={{ rotate: 0, opacity: 1 }}
+          exit={{ rotate: 90, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {isDark ? (
+            <Moon className="w-4 h-4" style={{ color: t.toggleIcon }} />
+          ) : (
+            <Sun className="w-4 h-4" style={{ color: t.toggleIcon }} />
+          )}
+        </motion.div>
+      </motion.button>
 
       {/* Scrollable content */}
       <div className="relative z-10 flex-1 flex flex-col items-center px-5 pt-12 pb-28 overflow-y-auto">
@@ -56,15 +134,15 @@ export default function Painel() {
         >
           {/* Logo */}
           <motion.div variants={stagger.item} className="flex justify-center">
-            <img src={ratariaLogo} alt="ratarIA" className="h-20 w-auto" style={{ filter: "brightness(1.15)" }} />
+            <img src={ratariaLogo} alt="ratarIA" className="h-20 w-auto transition-all duration-500" style={{ filter: t.logoFilter }} />
           </motion.div>
 
           {/* Greeting */}
           <motion.div variants={stagger.item} className="text-center">
-            <h1 className="text-xl font-bold tracking-tight text-gray-800">
+            <h1 className="text-xl font-bold tracking-tight transition-colors duration-500" style={{ color: t.greeting }}>
               {getGreeting()}, {userName}
             </h1>
-            <p className="text-xs mt-1 text-gray-400 italic">{phrase}</p>
+            <p className="text-xs mt-1 italic transition-colors duration-500" style={{ color: t.phrase }}>{phrase}</p>
           </motion.div>
 
           {/* Stats row */}
@@ -86,14 +164,14 @@ export default function Painel() {
                 </div>
                 <div>
                   <p className="text-sm font-bold" style={{ color: `rgba(${stat.color}, 0.95)` }}>{stat.value}</p>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-medium">{stat.label}</p>
+                  <p className="text-[10px] uppercase tracking-wider font-medium transition-colors duration-500" style={{ color: t.statLabel }}>{stat.label}</p>
                 </div>
               </motion.div>
             ))}
           </motion.div>
 
           {/* Tab switcher */}
-          <motion.div variants={stagger.item} className="flex gap-1 p-1 rounded-xl" style={{ background: "rgba(0,0,0,0.04)" }}>
+          <motion.div variants={stagger.item} className="flex gap-1 p-1 rounded-xl transition-colors duration-500" style={{ background: t.tabBg }}>
             {(["menu", "info"] as const).map((tab) => (
               <button
                 key={tab}
@@ -101,7 +179,7 @@ export default function Painel() {
                 className="flex-1 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-300"
                 style={{
                   background: activeTab === tab ? "rgba(139, 92, 246, 0.12)" : "transparent",
-                  color: activeTab === tab ? "rgba(139, 92, 246, 0.9)" : "rgba(0,0,0,0.35)",
+                  color: activeTab === tab ? "rgba(139, 92, 246, 0.9)" : t.tabInactive,
                   border: activeTab === tab ? "1px solid rgba(139, 92, 246, 0.2)" : "1px solid transparent",
                 }}
               >
@@ -131,26 +209,26 @@ export default function Painel() {
                     whileTap={{ scale: 0.98 }}
                     className="w-full flex items-center gap-4 rounded-2xl px-4 py-4 group transition-all duration-200"
                     style={{
-                      background: "rgba(255,255,255,0.7)",
-                      border: "1px solid rgba(0,0,0,0.06)",
+                      background: t.cardBg,
+                      border: `1px solid ${t.cardBorder}`,
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.background = `rgba(${item.color}, 0.08)`;
                       e.currentTarget.style.borderColor = `rgba(${item.color}, 0.15)`;
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.7)";
-                      e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)";
+                      e.currentTarget.style.background = t.cardBg;
+                      e.currentTarget.style.borderColor = t.cardBorder;
                     }}
                   >
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ background: `rgba(${item.color}, 0.1)` }}>
                       <item.icon className="w-5 h-5" style={{ color: `rgba(${item.color}, 0.8)` }} />
                     </div>
                     <div className="flex-1 text-left">
-                      <p className="text-sm font-semibold text-gray-800">{item.label}</p>
-                      <p className="text-[11px] text-gray-400">{item.desc}</p>
+                      <p className="text-sm font-semibold transition-colors duration-500" style={{ color: t.menuLabel }}>{item.label}</p>
+                      <p className="text-[11px] transition-colors duration-500" style={{ color: t.menuDesc }}>{item.desc}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
+                    <ChevronRight className="w-4 h-4 transition-colors" style={{ color: t.chevron }} />
                   </motion.button>
                 ))}
               </motion.div>
@@ -163,17 +241,17 @@ export default function Painel() {
                 transition={{ duration: 0.2 }}
                 className="rounded-2xl px-5 py-5 space-y-4"
                 style={{
-                  background: "rgba(255,255,255,0.7)",
-                  border: "1px solid rgba(0,0,0,0.06)",
+                  background: t.cardBg,
+                  border: `1px solid ${t.cardBorder}`,
                   backdropFilter: "blur(30px)",
                 }}
               >
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4" style={{ color: "rgba(139, 92, 246, 0.7)" }} />
-                  <h3 className="text-sm font-bold text-gray-800">Área do Cliente</h3>
+                  <h3 className="text-sm font-bold transition-colors duration-500" style={{ color: t.infoTitle }}>Área do Cliente</h3>
                 </div>
-                <p className="text-xs leading-relaxed text-gray-500">
-                  Olá, <strong className="text-gray-700">{userName}</strong>. A partir deste painel você pode gerenciar suas ferramentas, acompanhar sua assinatura e acessar materiais exclusivos.
+                <p className="text-xs leading-relaxed transition-colors duration-500" style={{ color: t.infoText }}>
+                  Olá, <strong style={{ color: t.infoStrong }}>{userName}</strong>. A partir deste painel você pode gerenciar suas ferramentas, acompanhar sua assinatura e acessar materiais exclusivos.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {["Compras recentes", "Endereços", "Senha e conta"].map((link) => (
@@ -202,7 +280,7 @@ export default function Painel() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
         className="fixed bottom-0 left-0 right-0 z-20 flex justify-center pb-6 pt-10"
-        style={{ background: "linear-gradient(to top, rgba(245,245,245,0.95) 40%, transparent)" }}
+        style={{ background: `linear-gradient(to top, ${t.bottomGradient} 40%, transparent)` }}
       >
         <motion.button
           whileHover={{ scale: 1.08, opacity: 0.8 }}
@@ -210,8 +288,8 @@ export default function Painel() {
           onClick={() => navigate("/usuario")}
           className="flex flex-col items-center gap-1 px-6 py-2"
         >
-          <Power className="w-5 h-5 text-gray-400" />
-          <span className="text-[10px] font-medium text-gray-400">Deslogar</span>
+          <Power className="w-5 h-5 transition-colors duration-500" style={{ color: t.logoutColor }} />
+          <span className="text-[10px] font-medium transition-colors duration-500" style={{ color: t.logoutColor }}>Deslogar</span>
         </motion.button>
       </motion.div>
     </div>
