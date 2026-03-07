@@ -130,7 +130,7 @@ export default function Painel() {
           initial="initial"
           animate="animate"
           variants={stagger.container}
-          className="w-full max-w-md space-y-5"
+          className="w-full max-w-md md:max-w-2xl space-y-5 md:space-y-7"
         >
           {/* Logo */}
           <motion.div variants={stagger.item} className="flex justify-center">
