@@ -93,7 +93,7 @@ All colors MUST be HSL.
 /* Mobile compact: reduce overall scale */
 @media (max-width: 767px) {
   html {
-    font-size: 13.5px;
+    font-size: 14.5px;
   }
   .mobile-compact-section {
     padding-top: 3.5rem;
