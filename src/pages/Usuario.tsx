@@ -42,7 +42,7 @@ const Usuario = () => {
       }
     : {
         cardBg: "rgba(255, 255, 255, 0.85)",
-        cardBorder: "rgba(180, 0, 255, 0.12)",
+        cardBorder: "rgba(0, 0, 0, 0.25)",
         cardShadow: "0 0 60px rgba(180, 0, 255, 0.06), 0 25px 50px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
         title: "rgba(0, 0, 0, 0.88)",
         subtitle: "rgba(100, 100, 100, 0.6)",
