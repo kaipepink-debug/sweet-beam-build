@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Wrench, User, Power, MessageCircle, GraduationCap, AlertTriangle, Clock, Shield } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
@@ -19,225 +19,204 @@ const phrases = [
   "Hoje é o melhor dia para evoluir.",
 ];
 
+const stagger = {
+  container: { transition: { staggerChildren: 0.06, delayChildren: 0.15 } },
+  item: { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { type: "spring", stiffness: 300, damping: 24 } },
+};
+
 export default function Painel() {
   const navigate = useNavigate();
   const [userName] = useState("Usuário");
   const [phrase] = useState(() => phrases[Math.floor(Math.random() * phrases.length)]);
-  const [subscriptionExpired] = useState(true);
+  const [activeTab, setActiveTab] = useState<"menu" | "info">("menu");
 
-  const menuCards = [
-    { icon: Wrench, label: "Acessar\nferramentas", id: "ferramentas" },
-    { icon: User, label: "Configurações\nde usuário", id: "config" },
+  const menuItems = [
+    { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246" },
+    { icon: User, label: "Minha conta", desc: "Configurações e perfil", id: "config", color: "59, 130, 246" },
+    { icon: GraduationCap, label: "eBook Monetizando com IA", desc: "Material exclusivo", id: "ebook", color: "16, 185, 129" },
+    { icon: MessageCircle, label: "Fale conosco", desc: "Suporte via WhatsApp", id: "suporte", color: "34, 197, 94" },
   ];
 
-  const quickStats = [
-    { icon: Clock, label: "Dias restantes", value: "28", color: "0, 200, 120" },
-    { icon: Shield, label: "Status", value: "Ativo", color: "100, 180, 255" },
+  const stats = [
+    { icon: Clock, label: "Dias restantes", value: "28", color: "16, 185, 129" },
+    { icon: Shield, label: "Status", value: "Ativo", color: "59, 130, 246" },
   ];
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen flex flex-col overflow-hidden">
       <NeuralBackground />
-      <div className="fixed inset-0 z-[1] pointer-events-none" style={{
-        background: "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.03) 0%, transparent 60%)"
-      }} />
 
+      {/* Scrollable content */}
+      <div className="relative z-10 flex-1 flex flex-col items-center px-5 pt-12 pb-28 overflow-y-auto">
+        <motion.div
+          initial="initial"
+          animate="animate"
+          variants={stagger.container}
+          className="w-full max-w-md space-y-5"
+        >
+          {/* Logo */}
+          <motion.div variants={stagger.item} className="flex justify-center">
+            <img src={ratariaLogo} alt="ratarIA" className="h-10 w-auto" style={{ filter: "brightness(1.15)" }} />
+          </motion.div>
+
+          {/* Greeting */}
+          <motion.div variants={stagger.item} className="text-center">
+            <h1 className="text-xl font-bold tracking-tight text-white/95">
+              {getGreeting()}, {userName}
+            </h1>
+            <p className="text-xs mt-1 text-white/40 italic">{phrase}</p>
+          </motion.div>
+
+          {/* Stats row */}
+          <motion.div variants={stagger.item} className="flex gap-3">
+            {stats.map((stat) => (
+              <motion.div
+                key={stat.label}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex-1 flex items-center gap-3 rounded-2xl px-4 py-3.5"
+                style={{
+                  background: `rgba(${stat.color}, 0.08)`,
+                  border: `1px solid rgba(${stat.color}, 0.15)`,
+                  backdropFilter: "blur(20px)",
+                }}
+              >
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `rgba(${stat.color}, 0.12)` }}>
+                  <stat.icon className="w-4 h-4" style={{ color: `rgba(${stat.color}, 0.85)` }} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold" style={{ color: `rgba(${stat.color}, 0.95)` }}>{stat.value}</p>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider font-medium">{stat.label}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Tab switcher */}
+          <motion.div variants={stagger.item} className="flex gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.04)" }}>
+            {(["menu", "info"] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className="flex-1 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-300"
+                style={{
+                  background: activeTab === tab ? "rgba(139, 92, 246, 0.15)" : "transparent",
+                  color: activeTab === tab ? "rgba(139, 92, 246, 0.9)" : "rgba(255,255,255,0.3)",
+                  border: activeTab === tab ? "1px solid rgba(139, 92, 246, 0.2)" : "1px solid transparent",
+                }}
+              >
+                {tab === "menu" ? "Menu" : "Informações"}
+              </button>
+            ))}
+          </motion.div>
+
+          {/* Tab content */}
+          <AnimatePresence mode="wait">
+            {activeTab === "menu" ? (
+              <motion.div
+                key="menu"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+                className="space-y-2"
+              >
+                {menuItems.map((item, i) => (
+                  <motion.button
+                    key={item.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 24 }}
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center gap-4 rounded-2xl px-4 py-4 group transition-all duration-200"
+                    style={{
+                      background: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.06)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = `rgba(${item.color}, 0.08)`;
+                      e.currentTarget.style.borderColor = `rgba(${item.color}, 0.15)`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+                    }}
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ background: `rgba(${item.color}, 0.1)` }}>
+                      <item.icon className="w-5 h-5" style={{ color: `rgba(${item.color}, 0.8)` }} />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <p className="text-sm font-semibold text-white/85">{item.label}</p>
+                      <p className="text-[11px] text-white/30">{item.desc}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-white/15 group-hover:text-white/40 transition-colors" />
+                  </motion.button>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="info"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-2xl px-5 py-5 space-y-4"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  backdropFilter: "blur(30px)",
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" style={{ color: "rgba(139, 92, 246, 0.7)" }} />
+                  <h3 className="text-sm font-bold text-white/80">Área do Cliente</h3>
+                </div>
+                <p className="text-xs leading-relaxed text-white/40">
+                  Olá, <strong className="text-white/70">{userName}</strong>. A partir deste painel você pode gerenciar suas ferramentas, acompanhar sua assinatura e acessar materiais exclusivos.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {["Compras recentes", "Endereços", "Senha e conta"].map((link) => (
+                    <button
+                      key={link}
+                      className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors duration-200"
+                      style={{
+                        background: "rgba(139, 92, 246, 0.08)",
+                        border: "1px solid rgba(139, 92, 246, 0.12)",
+                        color: "rgba(139, 92, 246, 0.7)",
+                      }}
+                    >
+                      {link}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
+      {/* Fixed bottom bar */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-lg mx-4 space-y-5"
+        transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
+        className="fixed bottom-0 left-0 right-0 z-20 flex justify-center pb-6 pt-10"
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.9) 40%, transparent)" }}
       >
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="flex justify-center"
-        >
-          <img src={ratariaLogo} alt="ratarIA" className="h-14 w-auto" style={{ filter: "brightness(1.1)" }} />
-        </motion.div>
-
-        {/* Greeting Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="rounded-2xl px-6 py-5 text-center mx-auto max-w-sm"
+        <motion.button
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => navigate("/usuario")}
+          className="flex flex-col items-center gap-1 px-8 py-3 rounded-2xl transition-all duration-300"
           style={{
-            background: "rgba(40, 100, 220, 0.15)",
-            border: "1px solid rgba(40, 100, 220, 0.25)",
-            backdropFilter: "blur(30px)",
+            background: "rgba(239, 68, 68, 0.08)",
+            border: "1px solid rgba(239, 68, 68, 0.15)",
           }}
         >
-          <h1 className="text-lg font-bold tracking-tight" style={{ color: "rgba(255,255,255,0.95)" }}>
-            {getGreeting()}, {userName} 👋
-          </h1>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.45)" }}>
-            {phrase}
-          </p>
-        </motion.div>
-
-        {/* Quick Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-2 gap-3 max-w-sm mx-auto"
-        >
-          {quickStats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 + i * 0.08 }}
-              whileHover={{ scale: 1.03, y: -1 }}
-              className="flex flex-col items-center gap-1.5 py-3 px-3 rounded-xl cursor-default"
-              style={{
-                background: `rgba(${stat.color}, 0.06)`,
-                border: `1px solid rgba(${stat.color}, 0.12)`,
-              }}
-            >
-              <stat.icon className="w-3.5 h-3.5" style={{ color: `rgba(${stat.color}, 0.7)` }} />
-              <span className="text-base font-bold" style={{ color: `rgba(${stat.color}, 0.9)` }}>{stat.value}</span>
-              <span className="text-[10px] font-medium uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.25)" }}>{stat.label}</span>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Subscription Warning */}
-        {subscriptionExpired && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.28 }}
-            className="flex items-center justify-center gap-3"
-          >
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-3.5 h-3.5" style={{ color: "rgba(255, 200, 50, 0.8)" }} />
-              <span className="text-xs font-medium" style={{ color: "rgba(255, 200, 50, 0.8)" }}>Sua assinatura expirou.</span>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider"
-              style={{ background: "rgba(40, 100, 220, 0.9)", color: "#fff" }}
-            >
-              Renovar agora
-            </motion.button>
-          </motion.div>
-        )}
-
-        {/* Action Cards Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.32 }}
-          className="grid grid-cols-2 gap-3"
-        >
-          {menuCards.map((item, i) => (
-            <motion.button
-              key={item.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 + i * 0.08 }}
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => {}}
-              className="flex flex-col items-center justify-center gap-3 py-7 px-4 rounded-2xl transition-all duration-300"
-              style={{
-                background: "rgba(40, 100, 220, 0.12)",
-                border: "1px solid rgba(40, 100, 220, 0.2)",
-                backdropFilter: "blur(20px)",
-              }}
-            >
-              <item.icon className="w-7 h-7" style={{ color: "rgba(255,255,255,0.85)" }} />
-              <span className="text-xs font-semibold text-center leading-tight whitespace-pre-line" style={{ color: "rgba(255,255,255,0.85)" }}>
-                {item.label}
-              </span>
-            </motion.button>
-          ))}
-        </motion.div>
-
-        {/* Info Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-          className="rounded-2xl px-5 py-4"
-          style={{
-            background: "rgba(10, 10, 10, 0.6)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            backdropFilter: "blur(30px)",
-          }}
-        >
-          <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
-            Olá, <strong style={{ color: "rgba(255,255,255,0.8)" }}>{userName}</strong> (não é {userName}?{" "}
-            <span className="underline cursor-pointer" style={{ color: "rgba(100, 160, 255, 0.8)" }}>Sair</span>)
-          </p>
-          <p className="text-[11px] mt-2 leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
-            A partir do painel de controle, você pode ver suas{" "}
-            <span className="underline cursor-pointer" style={{ color: "rgba(100, 160, 255, 0.7)" }}>compras recentes</span>, gerenciar seus{" "}
-            <span className="underline cursor-pointer" style={{ color: "rgba(100, 160, 255, 0.7)" }}>endereços de entrega e cobrança</span>, e{" "}
-            <span className="underline cursor-pointer" style={{ color: "rgba(100, 160, 255, 0.7)" }}>editar sua senha e detalhes da conta</span>.
-          </p>
-        </motion.div>
-
-        {/* Bottom Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="grid grid-cols-2 gap-3"
-        >
-          <motion.button
-            whileHover={{ scale: 1.03, y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex flex-col items-center justify-center gap-2 py-5 rounded-2xl transition-all duration-300"
-            style={{
-              background: "rgba(0, 180, 70, 0.15)",
-              border: "1px solid rgba(0, 180, 70, 0.25)",
-            }}
-          >
-            <MessageCircle className="w-6 h-6" style={{ color: "rgba(255,255,255,0.9)" }} />
-            <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.9)" }}>Fale conosco</span>
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.03, y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex flex-col items-center justify-center gap-2 py-5 rounded-2xl transition-all duration-300"
-            style={{
-              background: "rgba(40, 80, 180, 0.15)",
-              border: "1px solid rgba(40, 80, 180, 0.25)",
-            }}
-          >
-            <GraduationCap className="w-6 h-6" style={{ color: "rgba(255,255,255,0.9)" }} />
-            <span className="text-xs font-semibold text-center leading-tight" style={{ color: "rgba(255,255,255,0.9)" }}>eBook Monetizando<br />com IA</span>
-          </motion.button>
-        </motion.div>
-
-        {/* Logout Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="flex justify-center pt-2 pb-4"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => navigate("/usuario")}
-            className="flex flex-col items-center gap-1.5 px-6 py-3 rounded-xl transition-all duration-300"
-            style={{
-              background: "rgba(255, 80, 80, 0.06)",
-              border: "1px solid rgba(255, 80, 80, 0.12)",
-            }}
-          >
-            <Power className="w-5 h-5" style={{ color: "rgba(255, 100, 100, 0.7)" }} />
-            <span className="text-[11px] font-medium" style={{ color: "rgba(255, 100, 100, 0.6)" }}>Deslogar</span>
-          </motion.button>
-        </motion.div>
+          <Power className="w-5 h-5" style={{ color: "rgba(239, 68, 68, 0.7)" }} />
+          <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "rgba(239, 68, 68, 0.6)" }}>Deslogar</span>
+        </motion.button>
       </motion.div>
     </div>
   );
