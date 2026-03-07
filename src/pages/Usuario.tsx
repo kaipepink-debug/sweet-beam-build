@@ -147,13 +147,13 @@ const Usuario = () => {
             className="text-center mb-8"
           >
             <h1
-              className="text-xl font-light tracking-[0.2em] uppercase mb-2 transition-colors duration-500"
+              className="text-xl font-bold tracking-[0.2em] uppercase mb-2 transition-colors duration-500"
               style={{ color: theme.title, fontFamily: "'Inter', sans-serif" }}
             >
               Área do Usuário
             </h1>
             <p
-              className="text-xs tracking-[0.3em] uppercase transition-colors duration-500"
+              className="text-xs font-semibold tracking-[0.3em] uppercase transition-colors duration-500"
               style={{ color: theme.subtitle }}
             >
               Acesse sua conta
