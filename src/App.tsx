@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import Cod from "./pages/Cod";
 import Usuario from "./pages/Usuario";
 import Painel from "./pages/Painel";
+import Ferramentas from "./pages/Ferramentas";
 
 const queryClient = new QueryClient();
 
