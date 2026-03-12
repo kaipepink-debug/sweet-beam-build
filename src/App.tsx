@@ -11,6 +11,7 @@ import Cod from "./pages/Cod";
 import Usuario from "./pages/Usuario";
 import Painel from "./pages/Painel";
 import Ferramentas from "./pages/Ferramentas";
+import Cursos from "./pages/Cursos";
 
 const queryClient = new QueryClient();
 
