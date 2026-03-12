@@ -12,6 +12,7 @@ import Usuario from "./pages/Usuario";
 import Painel from "./pages/Painel";
 import Ferramentas from "./pages/Ferramentas";
 import Cursos from "./pages/Cursos";
+import CursoPlayer from "./pages/CursoPlayer";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/painel" element={<Painel />} />
           <Route path="/ferramentas" element={<Ferramentas />} />
           <Route path="/cursos" element={<Cursos />} />
+          <Route path="/cursos/:courseId" element={<CursoPlayer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
