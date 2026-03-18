@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Mail, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
@@ -11,6 +11,7 @@ const menuItems = [
   { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, permKey: "assinaturas" },
   { title: "Clientes", url: "/dashboard/clientes", icon: Users2, permKey: "clientes" },
   { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, permKey: "ferramentas_ia" },
+  { title: "Gmail", url: "/dashboard/gmail", icon: Mail, permKey: "ferramentas_ia" },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
   { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
   { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, permKey: "configuracoes" },
