@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import DashboardFerramentas from "./pages/DashboardFerramentas";
 import DashboardEquipe from "./pages/DashboardEquipe";
 import GrokGerenciamento from "./pages/GrokGerenciamento";
+import FerramentaGerenciamento from "./pages/FerramentaGerenciamento";
 import NotFound from "./pages/NotFound";
 import Cod from "./pages/Cod";
 import Usuario from "./pages/Usuario";
