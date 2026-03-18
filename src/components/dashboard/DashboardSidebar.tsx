@@ -2,20 +2,22 @@ import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Settings, ShoppingBa
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
+import { useRole } from "@/hooks/useRole";
 
 const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, locked: true },
-  { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard, locked: true },
-  { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, locked: true },
-  { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, locked: true },
-  { title: "Clientes", url: "/dashboard/clientes", icon: Users2, locked: true },
-  { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, locked: false },
-  { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, locked: true },
-  { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, locked: true },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
+  { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard },
+  { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag },
+  { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity },
+  { title: "Clientes", url: "/dashboard/clientes", icon: Users2 },
+  { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles },
+  { title: "Analytics", url: "/dashboard/analytics", icon: LineChart },
+  { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings },
 ];
 
 export function DashboardSidebar() {
   const location = useLocation();
+  const { isAdmin } = useRole();
 
   return (
     <aside
@@ -38,8 +40,10 @@ export function DashboardSidebar() {
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.url;
+          const isFerramentas = item.url === "/dashboard-ferramentas";
+          const isUnlocked = isAdmin || isFerramentas;
 
-          if (item.locked) {
+          if (!isUnlocked) {
             return (
               <div
                 key={item.title}
