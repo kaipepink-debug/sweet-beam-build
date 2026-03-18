@@ -133,16 +133,9 @@ export default function DashboardFerramentas() {
                       </div>
                       <div className="shrink-0 flex items-center gap-2">
                         <button
-                          onClick={() => {
-                            if (tool.route) navigate(tool.route);
-                          }}
-                          disabled={!tool.route}
-                          className={`p-1.5 rounded-lg transition-colors ${
-                            tool.route
-                              ? "hover:bg-muted cursor-pointer text-muted-foreground hover:text-foreground"
-                              : "text-muted-foreground/30 cursor-not-allowed"
-                          }`}
-                          title={tool.route ? "Gerenciar acessos" : "Em breve"}
+                          onClick={() => navigate(`/dashboard-ferramentas/${tool.ferramenta}`)}
+                          className="p-1.5 rounded-lg transition-colors hover:bg-muted cursor-pointer text-muted-foreground hover:text-foreground"
+                          title="Gerenciar acessos"
                         >
                           <Settings className="w-4 h-4" />
                         </button>
