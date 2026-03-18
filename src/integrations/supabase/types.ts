@@ -22,6 +22,7 @@ export type Database = {
           data_expiracao: string
           email_cliente: string
           ferramenta: string
+          gmail_id: string | null
           id: string
           login: string
           senha: string
@@ -35,6 +36,7 @@ export type Database = {
           data_expiracao: string
           email_cliente: string
           ferramenta?: string
+          gmail_id?: string | null
           id?: string
           login: string
           senha: string
@@ -48,11 +50,50 @@ export type Database = {
           data_expiracao?: string
           email_cliente?: string
           ferramenta?: string
+          gmail_id?: string | null
           id?: string
           login?: string
           senha?: string
           updated_at?: string
           video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "acessos_gmail_id_fkey"
+            columns: ["gmail_id"]
+            isOneToOne: false
+            referencedRelation: "gmails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gmails: {
+        Row: {
+          created_at: string
+          created_by: string
+          email_recuperacao: string | null
+          gmail: string
+          id: string
+          senha: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          email_recuperacao?: string | null
+          gmail: string
+          id?: string
+          senha: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          email_recuperacao?: string | null
+          gmail?: string
+          id?: string
+          senha?: string
+          updated_at?: string
         }
         Relationships: []
       }

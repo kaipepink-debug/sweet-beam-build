@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, isPast } from "date-fns";
@@ -69,6 +70,7 @@ type Acesso = {
   data_criacao: string;
   data_expiracao: string;
   video_url: string | null;
+  gmail_id: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;
@@ -81,6 +83,12 @@ type AcessoForm = {
   data_criacao: Date;
   data_expiracao: Date;
   video_url: string;
+  gmail_id: string;
+};
+
+type Gmail = {
+  id: string;
+  gmail: string;
 };
 
 const emptyForm: AcessoForm = {
@@ -90,6 +98,7 @@ const emptyForm: AcessoForm = {
   data_criacao: new Date(),
   data_expiracao: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   video_url: "",
+  gmail_id: "",
 };
 
 function getStatus(dataExpiracao: string) {
@@ -122,6 +131,18 @@ export default function FerramentaGerenciamento() {
   const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
+  const { data: gmailsList = [] } = useQuery({
+    queryKey: ["gmails-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("gmails")
+        .select("id, gmail")
+        .order("gmail", { ascending: true });
+      if (error) throw error;
+      return data as Gmail[];
+    },
+  });
+
   const { data: acessos = [], isLoading } = useQuery({
     queryKey: ["acessos", toolId],
     queryFn: async () => {
@@ -149,6 +170,7 @@ export default function FerramentaGerenciamento() {
         data_criacao: payload.data_criacao.toISOString(),
         data_expiracao: payload.data_expiracao.toISOString(),
         video_url: payload.video_url || null,
+        gmail_id: payload.gmail_id || null,
         created_by: user.id,
       };
 
@@ -215,6 +237,7 @@ export default function FerramentaGerenciamento() {
       data_criacao: new Date(a.data_criacao),
       data_expiracao: new Date(a.data_expiracao),
       video_url: a.video_url || "",
+      gmail_id: a.gmail_id || "",
     });
     setDialogOpen(true);
   }
@@ -474,6 +497,20 @@ export default function FerramentaGerenciamento() {
                   </PopoverContent>
                 </Popover>
               </div>
+            </div>
+            <div className="grid gap-2">
+              <Label>Gmail vinculado (opcional)</Label>
+              <Select value={form.gmail_id} onValueChange={v => setForm(f => ({ ...f, gmail_id: v === "none" ? "" : v }))}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue placeholder="Selecione um Gmail" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Nenhum</SelectItem>
+                  {gmailsList.map(g => (
+                    <SelectItem key={g.id} value={g.id}>{g.gmail}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid gap-2">
               <Label>URL do vídeo (opcional)</Label>
