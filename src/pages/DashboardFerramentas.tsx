@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { useNavigate } from "react-router-dom";
-import { Settings, Star, Clock, AlertTriangle } from "lucide-react";
+import { Settings, Clock, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { differenceInDays, differenceInHours, isPast } from "date-fns";
 
@@ -24,22 +24,22 @@ import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
 
 const tools = [
-  { name: "SuperGrok", ferramenta: "grok", logo: grokLogo, rating: 4.9, route: "/dashboard-ferramentas/grok", expiracaoDias: 3 },
-  { name: "ChatGPT", ferramenta: "chatgpt", logo: chatgptLogo, rating: 4.9, route: null, expiracaoDias: 30 },
-  { name: "Claude", ferramenta: "claude", logo: claudeLogo, rating: 4.9, route: null, expiracaoDias: 30 },
-  { name: "Midjourney", ferramenta: "midjourney", logo: midjourneyLogo, rating: 4.9, route: null, expiracaoDias: 30 },
-  { name: "ElevenLabs", ferramenta: "elevenlabs", logo: elevenlabsLogo, rating: 4.8, route: null, expiracaoDias: 30 },
-  { name: "Runway ML", ferramenta: "runwayml", logo: runwaymlLogo, rating: 4.9, route: null, expiracaoDias: 30 },
-  { name: "Canva Pro", ferramenta: "canva", logo: canvaLogo, rating: 4.9, route: null, expiracaoDias: 7 },
-  { name: "Copy.AI", ferramenta: "copyai", logo: copyaiLogo, rating: 4.8, route: null, expiracaoDias: 30 },
-  { name: "Kling", ferramenta: "kling", logo: klingLogo, rating: 4.8, route: null, expiracaoDias: 30 },
-  { name: "Synthesia", ferramenta: "synthesia", logo: synthesiaLogo, rating: 4.9, route: null, expiracaoDias: 30 },
-  { name: "Higgsfield Creator", ferramenta: "higgsfield", logo: higgsFieldLogo, rating: 4.7, route: null, expiracaoDias: 30 },
-  { name: "Sora", ferramenta: "sora", logo: soraLogo, rating: 4.9, route: null, expiracaoDias: 30 },
-  { name: "Veo 3", ferramenta: "veo3", logo: veo3Logo, rating: 4.8, route: null, expiracaoDias: 30 },
-  { name: "Hailuo", ferramenta: "hailuo", logo: hailuoLogo, rating: 4.8, route: null, expiracaoDias: 30 },
-  { name: "Freepik", ferramenta: "freepik", logo: freepikLogo, rating: 4.8, route: null, expiracaoDias: 30 },
-  { name: "Heygen", ferramenta: "heygen", logo: heygenLogo, rating: 4.8, route: null, expiracaoDias: 30 },
+  { name: "SuperGrok", ferramenta: "grok", logo: grokLogo, route: "/dashboard-ferramentas/grok", expiracaoDias: 3 },
+  { name: "ChatGPT", ferramenta: "chatgpt", logo: chatgptLogo, route: null, expiracaoDias: 30 },
+  { name: "Claude", ferramenta: "claude", logo: claudeLogo, route: null, expiracaoDias: 30 },
+  { name: "Midjourney", ferramenta: "midjourney", logo: midjourneyLogo, route: null, expiracaoDias: 30 },
+  { name: "ElevenLabs", ferramenta: "elevenlabs", logo: elevenlabsLogo, route: null, expiracaoDias: 30 },
+  { name: "Runway ML", ferramenta: "runwayml", logo: runwaymlLogo, route: null, expiracaoDias: 30 },
+  { name: "Canva Pro", ferramenta: "canva", logo: canvaLogo, route: null, expiracaoDias: 7 },
+  { name: "Copy.AI", ferramenta: "copyai", logo: copyaiLogo, route: null, expiracaoDias: 30 },
+  { name: "Kling", ferramenta: "kling", logo: klingLogo, route: null, expiracaoDias: 30 },
+  { name: "Synthesia", ferramenta: "synthesia", logo: synthesiaLogo, route: null, expiracaoDias: 30 },
+  { name: "Higgsfield Creator", ferramenta: "higgsfield", logo: higgsFieldLogo, route: null, expiracaoDias: 30 },
+  { name: "Sora", ferramenta: "sora", logo: soraLogo, route: null, expiracaoDias: 30 },
+  { name: "Veo 3", ferramenta: "veo3", logo: veo3Logo, route: null, expiracaoDias: 30 },
+  { name: "Hailuo", ferramenta: "hailuo", logo: hailuoLogo, route: null, expiracaoDias: 30 },
+  { name: "Freepik", ferramenta: "freepik", logo: freepikLogo, route: null, expiracaoDias: 30 },
+  { name: "Heygen", ferramenta: "heygen", logo: heygenLogo, route: null, expiracaoDias: 30 },
 ];
 
 interface ToolExpiration {
@@ -126,19 +126,6 @@ export default function DashboardFerramentas() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
-                        <div className="flex items-center gap-0.5 mt-0.5">
-                          {Array.from({ length: 5 }).map((_, s) => (
-                            <Star
-                              key={s}
-                              className="w-2.5 h-2.5"
-                              style={{
-                                color: s < Math.floor(tool.rating) ? "hsl(var(--muted-foreground))" : "hsl(var(--muted))",
-                                fill: s < Math.floor(tool.rating) ? "hsl(var(--muted-foreground))" : "transparent",
-                              }}
-                            />
-                          ))}
-                          <span className="text-muted-foreground text-[10px] ml-1">{tool.rating}</span>
-                        </div>
                       </div>
                       <div className="shrink-0 flex items-center gap-2">
                         <button
