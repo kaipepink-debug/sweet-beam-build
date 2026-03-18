@@ -2,22 +2,23 @@ import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Settings, ShoppingBa
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
-import { useRole } from "@/hooks/useRole";
+import { usePermissions } from "@/hooks/usePermissions";
 
 const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-  { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard },
-  { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag },
-  { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity },
-  { title: "Clientes", url: "/dashboard/clientes", icon: Users2 },
-  { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles },
-  { title: "Analytics", url: "/dashboard/analytics", icon: LineChart },
-  { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, permKey: "dashboard" },
+  { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard, permKey: "financeiro" },
+  { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, permKey: "vendas" },
+  { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, permKey: "assinaturas" },
+  { title: "Clientes", url: "/dashboard/clientes", icon: Users2, permKey: "clientes" },
+  { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, permKey: "ferramentas_ia" },
+  { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
+  { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
+  { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, permKey: "configuracoes" },
 ];
 
 export function DashboardSidebar() {
   const location = useLocation();
-  const { isAdmin } = useRole();
+  const { permissions } = usePermissions();
 
   return (
     <aside
@@ -40,10 +41,9 @@ export function DashboardSidebar() {
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.url;
-          const isFerramentas = item.url === "/dashboard-ferramentas";
-          const isUnlocked = isAdmin || isFerramentas;
+          const hasPermission = permissions[item.permKey as keyof typeof permissions];
 
-          if (!isUnlocked) {
+          if (!hasPermission) {
             return (
               <div
                 key={item.title}
