@@ -1,21 +1,30 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
-
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { signIn } = useAuth();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate loading
-    await new Promise((r) => setTimeout(r, 2000));
+    const { error } = await signIn(email, password);
     setLoading(false);
+    if (error) {
+      toast({ title: "Erro ao entrar", description: error.message, variant: "destructive" });
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
