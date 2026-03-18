@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Mail, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
