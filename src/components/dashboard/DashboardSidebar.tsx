@@ -9,7 +9,7 @@ const menuItems = [
   { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, locked: true },
   { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, locked: true },
   { title: "Clientes", url: "/dashboard/clientes", icon: Users2, locked: true },
-  { title: "Ferramentas IA", url: "/dashboard/ferramentas", icon: Sparkles, locked: false },
+  { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, locked: false },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, locked: true },
   { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, locked: true },
 ];
