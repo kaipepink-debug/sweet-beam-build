@@ -55,14 +55,20 @@ function getExpirationLabel(expDate: string) {
   const now = new Date();
   const exp = new Date(expDate);
 
-  if (isPast(exp)) return { text: "Expirado", color: "text-red-400", bg: "bg-red-500/10 border-red-500/20" };
+  if (isPast(exp)) return { text: "Expirado", color: "text-red-400", bg: "bg-red-500/10 border-red-500/20", dot: "bg-red-500" };
 
   const days = differenceInDays(exp, now);
   const hours = differenceInHours(exp, now);
 
-  if (days < 1) return { text: `${hours}h restantes`, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/20" };
-  if (days <= 3) return { text: `${days}d restantes`, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/20" };
-  return { text: `${days}d restantes`, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" };
+  if (days <= 1) return { text: days < 1 ? `${hours}h restantes` : `${days}d restante`, color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/20", dot: "bg-orange-500" };
+  return { text: `${days}d restantes`, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20", dot: "bg-emerald-500" };
+}
+
+function getToolDotColor(info: ToolExpiration | undefined) {
+  if (!info || info.totalActive === 0) return "bg-red-500";
+  if (!info.nearestExpiration) return "bg-red-500";
+  const label = getExpirationLabel(info.nearestExpiration);
+  return label.dot;
 }
 
 export default function DashboardFerramentas() {
