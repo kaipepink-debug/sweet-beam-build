@@ -1,17 +1,17 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
 
 const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-  { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard },
-  { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag },
-  { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity },
-  { title: "Clientes", url: "/dashboard/clientes", icon: Users2 },
-  { title: "Ferramentas IA", url: "/dashboard/ferramentas", icon: Sparkles },
-  { title: "Analytics", url: "/dashboard/analytics", icon: LineChart },
-  { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, locked: true },
+  { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard, locked: true },
+  { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, locked: true },
+  { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, locked: true },
+  { title: "Clientes", url: "/dashboard/clientes", icon: Users2, locked: true },
+  { title: "Ferramentas IA", url: "/dashboard/ferramentas", icon: Sparkles, locked: false },
+  { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, locked: true },
+  { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, locked: true },
 ];
 
 export function DashboardSidebar() {
