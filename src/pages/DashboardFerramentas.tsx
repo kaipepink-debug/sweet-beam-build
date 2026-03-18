@@ -122,7 +122,8 @@ export default function DashboardFerramentas() {
                 return (
                   <div
                     key={tool.name}
-                    className="group flex flex-col gap-2.5 p-3.5 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200"
+                    onClick={() => navigate(`/dashboard-ferramentas/${tool.ferramenta}`)}
+                    className="group flex flex-col gap-2.5 p-3.5 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200 cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
@@ -131,15 +132,7 @@ export default function DashboardFerramentas() {
                       <div className="flex-1 min-w-0">
                         <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
                       </div>
-                      <div className="shrink-0 flex items-center gap-2">
-                        <button
-                          onClick={() => navigate(`/dashboard-ferramentas/${tool.ferramenta}`)}
-                          className="p-1.5 rounded-lg transition-colors hover:bg-muted cursor-pointer text-muted-foreground hover:text-foreground"
-                          title="Gerenciar acessos"
-                        >
-                          <Settings className="w-4 h-4" />
-                        </button>
-                      </div>
+                      <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
 
                     {/* Expiration info */}
