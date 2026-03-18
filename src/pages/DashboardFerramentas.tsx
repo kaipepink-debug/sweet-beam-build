@@ -55,14 +55,20 @@ function getExpirationLabel(expDate: string) {
   const now = new Date();
   const exp = new Date(expDate);
 
-  if (isPast(exp)) return { text: "Expirado", color: "text-red-400", bg: "bg-red-500/10 border-red-500/20" };
+  if (isPast(exp)) return { text: "Expirado", color: "text-red-400", bg: "bg-red-500/10 border-red-500/20", dot: "bg-red-500" };
 
   const days = differenceInDays(exp, now);
   const hours = differenceInHours(exp, now);
 
-  if (days < 1) return { text: `${hours}h restantes`, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/20" };
-  if (days <= 3) return { text: `${days}d restantes`, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/20" };
-  return { text: `${days}d restantes`, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" };
+  if (days <= 1) return { text: days < 1 ? `${hours}h restantes` : `${days}d restante`, color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/20", dot: "bg-orange-500" };
+  return { text: `${days}d restantes`, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20", dot: "bg-emerald-500" };
+}
+
+function getToolDotColor(info: ToolExpiration | undefined) {
+  if (!info || info.totalActive === 0) return "bg-red-500";
+  if (!info.nearestExpiration) return "bg-red-500";
+  const label = getExpirationLabel(info.nearestExpiration);
+  return label.dot;
 }
 
 export default function DashboardFerramentas() {
@@ -126,8 +132,9 @@ export default function DashboardFerramentas() {
                     className="group flex flex-col gap-2.5 p-3.5 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200 cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
+                      <div className="relative w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
                         <img src={tool.logo} alt={tool.name} className="w-7 h-7 object-contain" loading="lazy" />
+                        <span className={`absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-card ${getToolDotColor(info)}`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
