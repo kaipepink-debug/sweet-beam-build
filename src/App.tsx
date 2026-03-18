@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import DashboardFerramentas from "./pages/DashboardFerramentas";
+import DashboardEquipe from "./pages/DashboardEquipe";
 import NotFound from "./pages/NotFound";
 import Cod from "./pages/Cod";
 import Usuario from "./pages/Usuario";
