@@ -80,10 +80,10 @@ export default function Painel() {
   const t = isDark ? darkTheme : lightTheme;
 
   const menuItems = [
-    { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246" },
-    { icon: User, label: "Minha conta", desc: "Configurações e perfil", id: "config", color: "59, 130, 246" },
-    { icon: GraduationCap, label: "eBook Monetizando com IA", desc: "Material exclusivo", id: "ebook", color: "16, 185, 129" },
-    { icon: MessageCircle, label: "Fale conosco", desc: "Suporte via WhatsApp", id: "suporte", color: "34, 197, 94" },
+    { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
+    { icon: User, label: "Minha conta", desc: "Em breve", id: "config", color: "59, 130, 246", locked: true },
+    { icon: GraduationCap, label: "eBook Monetizando com IA", desc: "Em breve", id: "ebook", color: "16, 185, 129", locked: true },
+    { icon: MessageCircle, label: "Fale conosco", desc: "Em breve", id: "suporte", color: "34, 197, 94", locked: true },
   ];
 
   const stats = [
