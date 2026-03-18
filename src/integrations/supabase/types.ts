@@ -41,6 +41,54 @@ export type Database = {
         }
         Relationships: []
       }
+      team_permissions: {
+        Row: {
+          analytics: boolean
+          assinaturas: boolean
+          clientes: boolean
+          configuracoes: boolean
+          created_at: string
+          dashboard: boolean
+          equipe: boolean
+          ferramentas_ia: boolean
+          financeiro: boolean
+          id: string
+          updated_at: string
+          user_id: string
+          vendas: boolean
+        }
+        Insert: {
+          analytics?: boolean
+          assinaturas?: boolean
+          clientes?: boolean
+          configuracoes?: boolean
+          created_at?: string
+          dashboard?: boolean
+          equipe?: boolean
+          ferramentas_ia?: boolean
+          financeiro?: boolean
+          id?: string
+          updated_at?: string
+          user_id: string
+          vendas?: boolean
+        }
+        Update: {
+          analytics?: boolean
+          assinaturas?: boolean
+          clientes?: boolean
+          configuracoes?: boolean
+          created_at?: string
+          dashboard?: boolean
+          equipe?: boolean
+          ferramentas_ia?: boolean
+          financeiro?: boolean
+          id?: string
+          updated_at?: string
+          user_id?: string
+          vendas?: boolean
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
