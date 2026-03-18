@@ -170,6 +170,7 @@ export default function FerramentaGerenciamento() {
         data_criacao: payload.data_criacao.toISOString(),
         data_expiracao: payload.data_expiracao.toISOString(),
         video_url: payload.video_url || null,
+        gmail_id: payload.gmail_id || null,
         created_by: user.id,
       };
 
