@@ -499,6 +499,20 @@ export default function FerramentaGerenciamento() {
               </div>
             </div>
             <div className="grid gap-2">
+              <Label>Gmail vinculado (opcional)</Label>
+              <Select value={form.gmail_id} onValueChange={v => setForm(f => ({ ...f, gmail_id: v === "none" ? "" : v }))}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue placeholder="Selecione um Gmail" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Nenhum</SelectItem>
+                  {gmailsList.map(g => (
+                    <SelectItem key={g.id} value={g.id}>{g.gmail}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
               <Label>URL do vídeo (opcional)</Label>
               <Input placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={e => setForm(f => ({ ...f, video_url: e.target.value }))} className="rounded-xl" />
             </div>
