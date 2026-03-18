@@ -139,10 +139,7 @@ export default function DashboardFerramentas() {
                         <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
                         <span className={`w-2 h-2 rounded-full shrink-0 ${getToolDotColor(info)}`} />
                       </div>
-                      <div className="relative shrink-0">
-                        <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-                        <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-card ${getToolDotColor(info)}`} />
-                      </div>
+                      <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
                     </div>
 
                     {/* Expiration info */}
