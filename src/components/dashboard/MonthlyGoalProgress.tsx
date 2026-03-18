@@ -44,8 +44,8 @@ export function MonthlyGoalProgress() {
       </div>
 
       <div className="text-center space-y-1">
-        <p className="text-sm text-foreground font-medium">R$ 390.000 <span className="text-muted-foreground font-normal">/ R$ 500.000</span></p>
-        <p className="text-[11px] text-muted-foreground">Faltam R$ 110.000 para a meta</p>
+        <p className="text-sm text-foreground font-medium">R$ 0 <span className="text-muted-foreground font-normal">/ R$ 0</span></p>
+        <p className="text-[11px] text-muted-foreground">Nenhuma meta definida</p>
       </div>
 
       <div className="flex items-center gap-6 mt-4 pt-4 border-t border-border w-full">
