@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Star, ArrowRight } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Star, ArrowRight, Settings } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
@@ -39,6 +40,9 @@ const tools = [
 
 const ToolsSection = () => {
   const [selected, setSelected] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith("/dashboard");
 
   return (
     <section id="ferramentas" className="relative py-12 md:py-16 px-3 md:px-4">
@@ -93,7 +97,7 @@ const ToolsSection = () => {
                   selected === tool.name ? "whitespace-normal" : "truncate"
                 }`}>{tool.desc}</p>
               </div>
-              <div className="shrink-0">
+              <div className="shrink-0 flex items-center gap-1.5">
                 <span
                   className="px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wide"
                   style={{
@@ -104,6 +108,15 @@ const ToolsSection = () => {
                 >
                   Ativa
                 </span>
+                {isDashboard && tool.name === "SuperGrok" && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); navigate("/dashboard-ferramentas/grok"); }}
+                    className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
+                    title="Gerenciar acessos"
+                  >
+                    <Settings className="w-3.5 h-3.5 text-white/40 hover:text-white/70" />
+                  </button>
+                )}
               </div>
             </div>
           ))}

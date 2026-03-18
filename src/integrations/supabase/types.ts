@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      acessos: {
+        Row: {
+          created_at: string
+          created_by: string
+          data_criacao: string
+          data_expiracao: string
+          email_cliente: string
+          ferramenta: string
+          id: string
+          login: string
+          senha: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          data_criacao?: string
+          data_expiracao: string
+          email_cliente: string
+          ferramenta?: string
+          id?: string
+          login: string
+          senha: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          data_criacao?: string
+          data_expiracao?: string
+          email_cliente?: string
+          ferramenta?: string
+          id?: string
+          login?: string
+          senha?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
