@@ -40,6 +40,9 @@ const tools = [
 
 const ToolsSection = () => {
   const [selected, setSelected] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith("/dashboard");
 
   return (
     <section id="ferramentas" className="relative py-12 md:py-16 px-3 md:px-4">
