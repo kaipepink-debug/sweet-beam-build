@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Sun, Moon } from "lucide-react";
+import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Sun, Moon, Lock } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
@@ -80,10 +80,10 @@ export default function Painel() {
   const t = isDark ? darkTheme : lightTheme;
 
   const menuItems = [
-    { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246" },
-    { icon: User, label: "Minha conta", desc: "Configurações e perfil", id: "config", color: "59, 130, 246" },
-    { icon: GraduationCap, label: "eBook Monetizando com IA", desc: "Material exclusivo", id: "ebook", color: "16, 185, 129" },
-    { icon: MessageCircle, label: "Fale conosco", desc: "Suporte via WhatsApp", id: "suporte", color: "34, 197, 94" },
+    { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
+    { icon: User, label: "Minha conta", desc: "Em breve", id: "config", color: "59, 130, 246", locked: true },
+    { icon: GraduationCap, label: "eBook Monetizando com IA", desc: "Em breve", id: "ebook", color: "16, 185, 129", locked: true },
+    { icon: MessageCircle, label: "Fale conosco", desc: "Em breve", id: "suporte", color: "34, 197, 94", locked: true },
   ];
 
   const stats = [
@@ -205,20 +205,26 @@ export default function Painel() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 24 }}
-                    whileHover={{ x: 4 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center gap-4 rounded-2xl px-4 md:px-5 py-4 md:py-5 group transition-all duration-200"
+                    whileHover={!item.locked ? { x: 4 } : {}}
+                    whileTap={!item.locked ? { scale: 0.98 } : {}}
+                    className={`w-full flex items-center gap-4 rounded-2xl px-4 md:px-5 py-4 md:py-5 group transition-all duration-200 ${item.locked ? "cursor-not-allowed" : ""}`}
                     style={{
                       background: t.cardBg,
                       border: `1px solid ${t.cardBorder}`,
+                      opacity: item.locked ? 0.45 : 1,
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = `rgba(${item.color}, 0.08)`;
-                      e.currentTarget.style.borderColor = `rgba(${item.color}, 0.15)`;
+                      if (!item.locked) {
+                        e.currentTarget.style.background = `rgba(${item.color}, 0.08)`;
+                        e.currentTarget.style.borderColor = `rgba(${item.color}, 0.15)`;
+                      }
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = t.cardBg;
                       e.currentTarget.style.borderColor = t.cardBorder;
+                    }}
+                    onClick={() => {
+                      if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
                     }}
                   >
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ background: `rgba(${item.color}, 0.1)` }}>
@@ -228,7 +234,11 @@ export default function Painel() {
                       <p className="text-sm md:text-base font-semibold transition-colors duration-500" style={{ color: t.menuLabel }}>{item.label}</p>
                       <p className="text-[11px] md:text-sm transition-colors duration-500" style={{ color: t.menuDesc }}>{item.desc}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 transition-colors" style={{ color: t.chevron }} />
+                    {item.locked ? (
+                      <Lock className="w-4 h-4" style={{ color: t.chevron }} />
+                    ) : (
+                      <ChevronRight className="w-4 h-4" style={{ color: t.chevron }} />
+                    )}
                   </motion.button>
                 ))}
               </motion.div>
