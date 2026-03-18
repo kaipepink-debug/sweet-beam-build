@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { useNavigate } from "react-router-dom";
-import { Settings, Star, Clock, AlertTriangle } from "lucide-react";
+import { Settings, Clock, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { differenceInDays, differenceInHours, isPast } from "date-fns";
 
