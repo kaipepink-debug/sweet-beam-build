@@ -22,6 +22,8 @@ import grokLogo from "@/assets/tools/grok.png";
 import claudeLogo from "@/assets/tools/claude.png";
 import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
+import inneraiLogo from "@/assets/tools/innerai.png";
+import tessLogo from "@/assets/tools/tess.png";
 
 const tools = [
   { name: "SuperGrok", ferramenta: "grok", logo: grokLogo, route: "/dashboard-ferramentas/grok", expiracaoDias: 3 },
@@ -31,6 +33,8 @@ const tools = [
   { name: "ElevenLabs", ferramenta: "elevenlabs", logo: elevenlabsLogo, route: null, expiracaoDias: 30 },
   { name: "Runway ML", ferramenta: "runwayml", logo: runwaymlLogo, route: null, expiracaoDias: 30 },
   { name: "Canva Pro", ferramenta: "canva", logo: canvaLogo, route: null, expiracaoDias: 7 },
+  { name: "Inner AI", ferramenta: "innerai", logo: inneraiLogo, route: null, expiracaoDias: 7 },
+  { name: "Tess", ferramenta: "tess", logo: tessLogo, route: null, expiracaoDias: 7 },
   { name: "Copy.AI", ferramenta: "copyai", logo: copyaiLogo, route: null, expiracaoDias: 30 },
   { name: "Kling", ferramenta: "kling", logo: klingLogo, route: null, expiracaoDias: 30 },
   { name: "Synthesia", ferramenta: "synthesia", logo: synthesiaLogo, route: null, expiracaoDias: 30 },
