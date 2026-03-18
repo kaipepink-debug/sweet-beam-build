@@ -18,7 +18,7 @@ const menuItems = [
 
 export function DashboardSidebar() {
   const location = useLocation();
-  const { permissions } = usePermissions();
+  const { permissions, loading } = usePermissions();
 
   return (
     <aside
