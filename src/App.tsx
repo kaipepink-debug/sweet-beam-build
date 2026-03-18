@@ -58,6 +58,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/dashboard/gmail"
+              element={
+                <ProtectedRoute>
+                  <DashboardGmail />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/cod" element={<Cod />} />
             <Route path="/usuario" element={<Usuario />} />
             <Route path="/painel" element={<Painel />} />

@@ -69,6 +69,7 @@ type Acesso = {
   data_criacao: string;
   data_expiracao: string;
   video_url: string | null;
+  gmail_id: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;
@@ -81,6 +82,12 @@ type AcessoForm = {
   data_criacao: Date;
   data_expiracao: Date;
   video_url: string;
+  gmail_id: string;
+};
+
+type Gmail = {
+  id: string;
+  gmail: string;
 };
 
 const emptyForm: AcessoForm = {
@@ -90,6 +97,7 @@ const emptyForm: AcessoForm = {
   data_criacao: new Date(),
   data_expiracao: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   video_url: "",
+  gmail_id: "",
 };
 
 function getStatus(dataExpiracao: string) {
