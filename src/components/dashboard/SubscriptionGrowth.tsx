@@ -2,13 +2,13 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGri
 import { TrendingUp } from "lucide-react";
 
 const data = [
-  { day: "Mon", subs: 42 },
-  { day: "Tue", subs: 58 },
-  { day: "Wed", subs: 35 },
-  { day: "Thu", subs: 72 },
-  { day: "Fri", subs: 85 },
-  { day: "Sat", subs: 48 },
-  { day: "Sun", subs: 63 },
+  { day: "Mon", subs: 0 },
+  { day: "Tue", subs: 0 },
+  { day: "Wed", subs: 0 },
+  { day: "Thu", subs: 0 },
+  { day: "Fri", subs: 0 },
+  { day: "Sat", subs: 0 },
+  { day: "Sun", subs: 0 },
 ];
 
 export function SubscriptionGrowth() {
