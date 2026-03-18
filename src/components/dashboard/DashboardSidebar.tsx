@@ -1,17 +1,17 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
 
 const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-  { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard },
-  { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag },
-  { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity },
-  { title: "Clientes", url: "/dashboard/clientes", icon: Users2 },
-  { title: "Ferramentas IA", url: "/dashboard/ferramentas", icon: Sparkles },
-  { title: "Analytics", url: "/dashboard/analytics", icon: LineChart },
-  { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, locked: true },
+  { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard, locked: true },
+  { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, locked: true },
+  { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, locked: true },
+  { title: "Clientes", url: "/dashboard/clientes", icon: Users2, locked: true },
+  { title: "Ferramentas IA", url: "/dashboard/ferramentas", icon: Sparkles, locked: false },
+  { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, locked: true },
+  { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, locked: true },
 ];
 
 export function DashboardSidebar() {
@@ -38,6 +38,22 @@ export function DashboardSidebar() {
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.url;
+
+          if (item.locked) {
+            return (
+              <div
+                key={item.title}
+                className="h-10 rounded-xl flex items-center gap-3 px-[10px] whitespace-nowrap cursor-not-allowed opacity-30"
+              >
+                <item.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" strokeWidth={2.5} />
+                <span className="text-[13px] font-bold opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 text-muted-foreground">
+                  {item.title}
+                </span>
+                <Lock className="h-3 w-3 ml-auto shrink-0 text-muted-foreground opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300" />
+              </div>
+            );
+          }
+
           return (
             <Link
               key={item.title}
@@ -46,7 +62,7 @@ export function DashboardSidebar() {
                 "h-10 rounded-xl flex items-center gap-3 px-[10px] transition-all duration-300 whitespace-nowrap relative",
                 isActive
                   ? "bg-primary/20 text-primary shadow-[0_0_18px_hsl(270_100%_55%/0.3)]"
-                  : "text-muted-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
+                  : "text-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
               )}
             >
               <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2.5} />
