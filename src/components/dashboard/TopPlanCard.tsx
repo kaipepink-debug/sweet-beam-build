@@ -1,9 +1,9 @@
 import { Crown } from "lucide-react";
 
 const plans = [
-  { name: "Plano Anual", percentage: 40, color: "hsl(270, 100%, 55%)" },
-  { name: "Plano Semestral", percentage: 32, color: "hsl(240, 70%, 60%)" },
-  { name: "Plano Mensal", percentage: 28, color: "hsl(217, 91%, 60%)" },
+  { name: "Plano Anual", percentage: 0, color: "hsl(270, 100%, 55%)" },
+  { name: "Plano Semestral", percentage: 0, color: "hsl(240, 70%, 60%)" },
+  { name: "Plano Mensal", percentage: 0, color: "hsl(217, 91%, 60%)" },
 ];
 
 export function TopPlanCard() {
