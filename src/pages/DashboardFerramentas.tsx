@@ -126,19 +126,6 @@ export default function DashboardFerramentas() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
-                        <div className="flex items-center gap-0.5 mt-0.5">
-                          {Array.from({ length: 5 }).map((_, s) => (
-                            <Star
-                              key={s}
-                              className="w-2.5 h-2.5"
-                              style={{
-                                color: s < Math.floor(tool.rating) ? "hsl(var(--muted-foreground))" : "hsl(var(--muted))",
-                                fill: s < Math.floor(tool.rating) ? "hsl(var(--muted-foreground))" : "transparent",
-                              }}
-                            />
-                          ))}
-                          <span className="text-muted-foreground text-[10px] ml-1">{tool.rating}</span>
-                        </div>
                       </div>
                       <div className="shrink-0 flex items-center gap-2">
                         <button
