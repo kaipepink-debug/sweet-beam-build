@@ -1,7 +1,7 @@
 import { MoreHorizontal } from "lucide-react";
 
 export function MonthlyGoalProgress() {
-  const percentage = 78;
+  const percentage = 0;
   const radius = 70;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
