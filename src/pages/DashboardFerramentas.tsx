@@ -135,8 +135,9 @@ export default function DashboardFerramentas() {
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
                         <img src={tool.logo} alt={tool.name} className="w-7 h-7 object-contain" loading="lazy" />
                       </div>
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 flex items-center gap-2">
                         <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
+                        <span className={`w-2 h-2 rounded-full shrink-0 ${getToolDotColor(info)}`} />
                       </div>
                       <div className="relative shrink-0">
                         <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
