@@ -48,6 +48,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/dashboard-ferramentas/grok"
+              element={
+                <ProtectedRoute>
+                  <GrokGerenciamento />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/cod" element={<Cod />} />
             <Route path="/usuario" element={<Usuario />} />
             <Route path="/painel" element={<Painel />} />
