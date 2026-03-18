@@ -2,10 +2,10 @@ import { DollarSign, TrendingUp, Users, Wrench, ArrowUp, ArrowDown } from "lucid
 import { cn } from "@/lib/utils";
 
 const metrics = [
-  { title: "Total de Vendas", value: "R$ 348.261", change: 10.05, icon: DollarSign, color: "hsl(142, 71%, 45%)" },
-  { title: "Assinaturas Ativas", value: "2.847", change: 8.15, icon: TrendingUp, color: "hsl(270, 100%, 65%)" },
-  { title: "Clientes Totais", value: "7.415", change: 3.98, icon: Users, color: "hsl(217, 91%, 60%)" },
-  { title: "Ferramentas IA Ativas", value: "1.247", change: -2.3, icon: Wrench, color: "hsl(24, 95%, 53%)" },
+  { title: "Total de Vendas", value: "R$ 0", change: 0, icon: DollarSign, color: "hsl(142, 71%, 45%)" },
+  { title: "Assinaturas Ativas", value: "0", change: 0, icon: TrendingUp, color: "hsl(270, 100%, 65%)" },
+  { title: "Clientes Totais", value: "0", change: 0, icon: Users, color: "hsl(217, 91%, 60%)" },
+  { title: "Ferramentas IA Ativas", value: "0", change: 0, icon: Wrench, color: "hsl(24, 95%, 53%)" },
 ];
 
 export function QuickMetrics() {

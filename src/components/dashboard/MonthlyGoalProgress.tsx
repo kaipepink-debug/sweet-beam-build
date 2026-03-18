@@ -1,7 +1,7 @@
 import { MoreHorizontal } from "lucide-react";
 
 export function MonthlyGoalProgress() {
-  const percentage = 78;
+  const percentage = 0;
   const radius = 70;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -44,18 +44,18 @@ export function MonthlyGoalProgress() {
       </div>
 
       <div className="text-center space-y-1">
-        <p className="text-sm text-foreground font-medium">R$ 390.000 <span className="text-muted-foreground font-normal">/ R$ 500.000</span></p>
-        <p className="text-[11px] text-muted-foreground">Faltam R$ 110.000 para a meta</p>
+        <p className="text-sm text-foreground font-medium">R$ 0 <span className="text-muted-foreground font-normal">/ R$ 0</span></p>
+        <p className="text-[11px] text-muted-foreground">Nenhuma meta definida</p>
       </div>
 
       <div className="flex items-center gap-6 mt-4 pt-4 border-t border-border w-full">
         <div className="flex-1 text-center">
           <p className="text-xs text-muted-foreground">Receita</p>
-          <p className="text-sm font-semibold text-foreground">R$ 390k</p>
+          <p className="text-sm font-semibold text-foreground">R$ 0</p>
         </div>
         <div className="flex-1 text-center">
           <p className="text-xs text-muted-foreground">Crescimento</p>
-          <p className="text-sm font-semibold text-emerald-400">+12%</p>
+          <p className="text-sm font-semibold text-muted-foreground">0%</p>
         </div>
       </div>
     </div>

@@ -2,13 +2,13 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tool
 import { MoreHorizontal } from "lucide-react";
 
 const data = [
-  { day: "Mon", revenue: 42000, target: 38000 },
-  { day: "Tue", revenue: 55000, target: 40000 },
-  { day: "Wed", revenue: 48000, target: 42000 },
-  { day: "Thu", revenue: 62000, target: 45000 },
-  { day: "Fri", revenue: 78000, target: 48000 },
-  { day: "Sat", revenue: 58000, target: 50000 },
-  { day: "Sun", revenue: 85000, target: 52000 },
+  { day: "Mon", revenue: 0, target: 0 },
+  { day: "Tue", revenue: 0, target: 0 },
+  { day: "Wed", revenue: 0, target: 0 },
+  { day: "Thu", revenue: 0, target: 0 },
+  { day: "Fri", revenue: 0, target: 0 },
+  { day: "Sat", revenue: 0, target: 0 },
+  { day: "Sun", revenue: 0, target: 0 },
 ];
 
 export function RevenueChart() {
@@ -39,15 +39,15 @@ export function RevenueChart() {
       <div className="flex items-center gap-6 mb-4 mt-3">
         <div>
           <p className="text-[10px] text-muted-foreground">Receita Mensal</p>
-          <p className="text-lg font-bold text-foreground">R$ 428.000</p>
+          <p className="text-lg font-bold text-foreground">R$ 0</p>
         </div>
         <div>
           <p className="text-[10px] text-muted-foreground">Crescimento</p>
-          <p className="text-lg font-bold text-emerald-400">+12,4%</p>
+          <p className="text-lg font-bold text-emerald-400">0%</p>
         </div>
         <div>
           <p className="text-[10px] text-muted-foreground">Meta Mensal</p>
-          <p className="text-lg font-bold text-foreground">R$ 500.000</p>
+          <p className="text-lg font-bold text-foreground">R$ 0</p>
         </div>
       </div>
 

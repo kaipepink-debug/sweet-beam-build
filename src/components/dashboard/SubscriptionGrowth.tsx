@@ -2,13 +2,13 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGri
 import { TrendingUp } from "lucide-react";
 
 const data = [
-  { day: "Mon", subs: 42 },
-  { day: "Tue", subs: 58 },
-  { day: "Wed", subs: 35 },
-  { day: "Thu", subs: 72 },
-  { day: "Fri", subs: 85 },
-  { day: "Sat", subs: 48 },
-  { day: "Sun", subs: 63 },
+  { day: "Mon", subs: 0 },
+  { day: "Tue", subs: 0 },
+  { day: "Wed", subs: 0 },
+  { day: "Thu", subs: 0 },
+  { day: "Fri", subs: 0 },
+  { day: "Sat", subs: 0 },
+  { day: "Sun", subs: 0 },
 ];
 
 export function SubscriptionGrowth() {
@@ -19,7 +19,7 @@ export function SubscriptionGrowth() {
           <TrendingUp className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold text-foreground">Crescimento de Assinaturas</h3>
         </div>
-        <span className="text-[11px] text-emerald-400 font-medium">+18.2%</span>
+        <span className="text-[11px] text-muted-foreground font-medium">0%</span>
       </div>
       <p className="text-xs text-muted-foreground mb-4">Novas assinaturas por dia</p>
 

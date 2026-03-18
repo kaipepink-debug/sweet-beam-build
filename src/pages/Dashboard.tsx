@@ -27,7 +27,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
                 <Zap className="h-4 w-4 text-primary" />
-                <span className="text-foreground font-semibold">1.247</span>
+                <span className="text-foreground font-semibold">0</span>
                 <span>ferramentas ativas</span>
               </div>
               <button className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity">
