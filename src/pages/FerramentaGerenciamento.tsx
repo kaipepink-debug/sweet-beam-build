@@ -131,6 +131,18 @@ export default function FerramentaGerenciamento() {
   const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
+  const { data: gmailsList = [] } = useQuery({
+    queryKey: ["gmails-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("gmails")
+        .select("id, gmail")
+        .order("gmail", { ascending: true });
+      if (error) throw error;
+      return data as Gmail[];
+    },
+  });
+
   const { data: acessos = [], isLoading } = useQuery({
     queryKey: ["acessos", toolId],
     queryFn: async () => {
