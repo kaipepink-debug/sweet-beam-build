@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Star, ArrowRight } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Star, ArrowRight, Settings } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
