@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { useNavigate } from "react-router-dom";
-import { Settings, Star } from "lucide-react";
+import { Settings, Star, Clock, AlertTriangle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { differenceInDays, differenceInHours, isPast } from "date-fns";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
@@ -21,26 +24,77 @@ import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
 
 const tools = [
-  { name: "SuperGrok", logo: grokLogo, rating: 4.9, route: "/dashboard-ferramentas/grok" },
-  { name: "ChatGPT", logo: chatgptLogo, rating: 4.9, route: null },
-  { name: "Claude", logo: claudeLogo, rating: 4.9, route: null },
-  { name: "Midjourney", logo: midjourneyLogo, rating: 4.9, route: null },
-  { name: "ElevenLabs", logo: elevenlabsLogo, rating: 4.8, route: null },
-  { name: "Runway ML", logo: runwaymlLogo, rating: 4.9, route: null },
-  { name: "Canva Pro", logo: canvaLogo, rating: 4.9, route: null },
-  { name: "Copy.AI", logo: copyaiLogo, rating: 4.8, route: null },
-  { name: "Kling", logo: klingLogo, rating: 4.8, route: null },
-  { name: "Synthesia", logo: synthesiaLogo, rating: 4.9, route: null },
-  { name: "Higgsfield Creator", logo: higgsFieldLogo, rating: 4.7, route: null },
-  { name: "Sora", logo: soraLogo, rating: 4.9, route: null },
-  { name: "Veo 3", logo: veo3Logo, rating: 4.8, route: null },
-  { name: "Hailuo", logo: hailuoLogo, rating: 4.8, route: null },
-  { name: "Freepik", logo: freepikLogo, rating: 4.8, route: null },
-  { name: "Heygen", logo: heygenLogo, rating: 4.8, route: null },
+  { name: "SuperGrok", ferramenta: "grok", logo: grokLogo, rating: 4.9, route: "/dashboard-ferramentas/grok", expiracaoDias: 3 },
+  { name: "ChatGPT", ferramenta: "chatgpt", logo: chatgptLogo, rating: 4.9, route: null, expiracaoDias: 30 },
+  { name: "Claude", ferramenta: "claude", logo: claudeLogo, rating: 4.9, route: null, expiracaoDias: 30 },
+  { name: "Midjourney", ferramenta: "midjourney", logo: midjourneyLogo, rating: 4.9, route: null, expiracaoDias: 30 },
+  { name: "ElevenLabs", ferramenta: "elevenlabs", logo: elevenlabsLogo, rating: 4.8, route: null, expiracaoDias: 30 },
+  { name: "Runway ML", ferramenta: "runwayml", logo: runwaymlLogo, rating: 4.9, route: null, expiracaoDias: 30 },
+  { name: "Canva Pro", ferramenta: "canva", logo: canvaLogo, rating: 4.9, route: null, expiracaoDias: 7 },
+  { name: "Copy.AI", ferramenta: "copyai", logo: copyaiLogo, rating: 4.8, route: null, expiracaoDias: 30 },
+  { name: "Kling", ferramenta: "kling", logo: klingLogo, rating: 4.8, route: null, expiracaoDias: 30 },
+  { name: "Synthesia", ferramenta: "synthesia", logo: synthesiaLogo, rating: 4.9, route: null, expiracaoDias: 30 },
+  { name: "Higgsfield Creator", ferramenta: "higgsfield", logo: higgsFieldLogo, rating: 4.7, route: null, expiracaoDias: 30 },
+  { name: "Sora", ferramenta: "sora", logo: soraLogo, rating: 4.9, route: null, expiracaoDias: 30 },
+  { name: "Veo 3", ferramenta: "veo3", logo: veo3Logo, rating: 4.8, route: null, expiracaoDias: 30 },
+  { name: "Hailuo", ferramenta: "hailuo", logo: hailuoLogo, rating: 4.8, route: null, expiracaoDias: 30 },
+  { name: "Freepik", ferramenta: "freepik", logo: freepikLogo, rating: 4.8, route: null, expiracaoDias: 30 },
+  { name: "Heygen", ferramenta: "heygen", logo: heygenLogo, rating: 4.8, route: null, expiracaoDias: 30 },
 ];
+
+interface ToolExpiration {
+  nearestExpiration: string | null;
+  totalActive: number;
+}
+
+function getExpirationLabel(expDate: string) {
+  const now = new Date();
+  const exp = new Date(expDate);
+
+  if (isPast(exp)) return { text: "Expirado", color: "text-red-400", bg: "bg-red-500/10 border-red-500/20" };
+
+  const days = differenceInDays(exp, now);
+  const hours = differenceInHours(exp, now);
+
+  if (days < 1) return { text: `${hours}h restantes`, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/20" };
+  if (days <= 3) return { text: `${days}d restantes`, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/20" };
+  return { text: `${days}d restantes`, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" };
+}
 
 export default function DashboardFerramentas() {
   const navigate = useNavigate();
+  const [expirations, setExpirations] = useState<Record<string, ToolExpiration>>({});
+
+  useEffect(() => {
+    async function fetchExpirations() {
+      const { data } = await supabase
+        .from("acessos")
+        .select("ferramenta, data_expiracao")
+        .order("data_expiracao", { ascending: true });
+
+      if (!data) return;
+
+      const map: Record<string, ToolExpiration> = {};
+      const now = new Date();
+
+      for (const row of data) {
+        const key = row.ferramenta;
+        if (!map[key]) map[key] = { nearestExpiration: null, totalActive: 0 };
+
+        const exp = new Date(row.data_expiracao);
+        if (!isPast(exp)) {
+          map[key].totalActive++;
+          if (!map[key].nearestExpiration || exp < new Date(map[key].nearestExpiration!)) {
+            map[key].nearestExpiration = row.data_expiracao;
+          }
+        }
+      }
+
+      setExpirations(map);
+    }
+
+    fetchExpirations();
+  }, []);
 
   return (
     <div className="min-h-screen flex w-full bg-background">
@@ -52,56 +106,78 @@ export default function DashboardFerramentas() {
             <div className="mb-6">
               <h1 className="text-xl font-bold text-foreground">Ferramentas de IA</h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Gerencie os acessos de cada ferramenta clicando no ícone de configuração.
+                Gerencie os acessos de cada ferramenta. O tempo de expiração é exibido automaticamente.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {tools.map((tool) => (
-                <div
-                  key={tool.name}
-                  className="group flex items-center gap-3 p-3.5 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200"
-                >
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
-                    <img src={tool.logo} alt={tool.name} className="w-7 h-7 object-contain" loading="lazy" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
-                    <div className="flex items-center gap-0.5 mt-0.5">
-                      {Array.from({ length: 5 }).map((_, s) => (
-                        <Star
-                          key={s}
-                          className="w-2.5 h-2.5"
-                          style={{
-                            color: s < Math.floor(tool.rating) ? "hsl(var(--muted-foreground))" : "hsl(var(--muted))",
-                            fill: s < Math.floor(tool.rating) ? "hsl(var(--muted-foreground))" : "transparent",
+              {tools.map((tool) => {
+                const info = expirations[tool.ferramenta];
+                const expLabel = info?.nearestExpiration ? getExpirationLabel(info.nearestExpiration) : null;
+
+                return (
+                  <div
+                    key={tool.name}
+                    className="group flex flex-col gap-2.5 p-3.5 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
+                        <img src={tool.logo} alt={tool.name} className="w-7 h-7 object-contain" loading="lazy" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
+                        <div className="flex items-center gap-0.5 mt-0.5">
+                          {Array.from({ length: 5 }).map((_, s) => (
+                            <Star
+                              key={s}
+                              className="w-2.5 h-2.5"
+                              style={{
+                                color: s < Math.floor(tool.rating) ? "hsl(var(--muted-foreground))" : "hsl(var(--muted))",
+                                fill: s < Math.floor(tool.rating) ? "hsl(var(--muted-foreground))" : "transparent",
+                              }}
+                            />
+                          ))}
+                          <span className="text-muted-foreground text-[10px] ml-1">{tool.rating}</span>
+                        </div>
+                      </div>
+                      <div className="shrink-0 flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            if (tool.route) navigate(tool.route);
                           }}
-                        />
-                      ))}
-                      <span className="text-muted-foreground text-[10px] ml-1">{tool.rating}</span>
+                          disabled={!tool.route}
+                          className={`p-1.5 rounded-lg transition-colors ${
+                            tool.route
+                              ? "hover:bg-muted cursor-pointer text-muted-foreground hover:text-foreground"
+                              : "text-muted-foreground/30 cursor-not-allowed"
+                          }`}
+                          title={tool.route ? "Gerenciar acessos" : "Em breve"}
+                        >
+                          <Settings className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Expiration info */}
+                    <div className="flex items-center justify-between gap-2 pt-1 border-t border-border/30">
+                      <div className="flex items-center gap-1.5 text-muted-foreground text-[11px]">
+                        <Clock className="w-3 h-3" />
+                        <span>Ciclo: {tool.expiracaoDias} dias</span>
+                      </div>
+                      {expLabel ? (
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${expLabel.bg} ${expLabel.color}`}>
+                          {expLabel.color.includes("yellow") || expLabel.color.includes("red") ? (
+                            <AlertTriangle className="w-2.5 h-2.5" />
+                          ) : null}
+                          {expLabel.text}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground/50 text-[10px]">Sem acessos</span>
+                      )}
                     </div>
                   </div>
-                  <div className="shrink-0 flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-500/10 text-green-500 border border-green-500/20">
-                      Ativa
-                    </span>
-                    <button
-                      onClick={() => {
-                        if (tool.route) navigate(tool.route);
-                      }}
-                      disabled={!tool.route}
-                      className={`p-1.5 rounded-lg transition-colors ${
-                        tool.route
-                          ? "hover:bg-muted cursor-pointer text-muted-foreground hover:text-foreground"
-                          : "text-muted-foreground/30 cursor-not-allowed"
-                      }`}
-                      title={tool.route ? "Gerenciar acessos" : "Em breve"}
-                    >
-                      <Settings className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </main>
