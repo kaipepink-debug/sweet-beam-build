@@ -50,10 +50,10 @@ const App = () => (
               }
             />
             <Route
-              path="/dashboard-ferramentas/grok"
+              path="/dashboard-ferramentas/:toolId"
               element={
                 <ProtectedRoute>
-                  <GrokGerenciamento />
+                  <FerramentaGerenciamento />
                 </ProtectedRoute>
               }
             />
