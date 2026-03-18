@@ -39,15 +39,15 @@ export function RevenueChart() {
       <div className="flex items-center gap-6 mb-4 mt-3">
         <div>
           <p className="text-[10px] text-muted-foreground">Receita Mensal</p>
-          <p className="text-lg font-bold text-foreground">R$ 428.000</p>
+          <p className="text-lg font-bold text-foreground">R$ 0</p>
         </div>
         <div>
           <p className="text-[10px] text-muted-foreground">Crescimento</p>
-          <p className="text-lg font-bold text-emerald-400">+12,4%</p>
+          <p className="text-lg font-bold text-emerald-400">0%</p>
         </div>
         <div>
           <p className="text-[10px] text-muted-foreground">Meta Mensal</p>
-          <p className="text-lg font-bold text-foreground">R$ 500.000</p>
+          <p className="text-lg font-bold text-foreground">R$ 0</p>
         </div>
       </div>
 

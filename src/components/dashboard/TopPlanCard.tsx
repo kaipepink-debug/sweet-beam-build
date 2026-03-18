@@ -15,8 +15,8 @@ export function TopPlanCard() {
       </div>
 
       <div className="mb-4">
-        <p className="text-xl font-bold text-foreground">Plano Anual</p>
-        <p className="text-xs text-muted-foreground mt-1">40% das vendas totais</p>
+        <p className="text-xl font-bold text-foreground">—</p>
+        <p className="text-xs text-muted-foreground mt-1">Sem dados de vendas</p>
       </div>
 
       <div className="space-y-3">

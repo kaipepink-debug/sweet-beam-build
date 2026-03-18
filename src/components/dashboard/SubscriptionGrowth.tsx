@@ -19,7 +19,7 @@ export function SubscriptionGrowth() {
           <TrendingUp className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold text-foreground">Crescimento de Assinaturas</h3>
         </div>
-        <span className="text-[11px] text-emerald-400 font-medium">+18.2%</span>
+        <span className="text-[11px] text-muted-foreground font-medium">0%</span>
       </div>
       <p className="text-xs text-muted-foreground mb-4">Novas assinaturas por dia</p>
 

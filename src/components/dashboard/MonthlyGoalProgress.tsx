@@ -51,11 +51,11 @@ export function MonthlyGoalProgress() {
       <div className="flex items-center gap-6 mt-4 pt-4 border-t border-border w-full">
         <div className="flex-1 text-center">
           <p className="text-xs text-muted-foreground">Receita</p>
-          <p className="text-sm font-semibold text-foreground">R$ 390k</p>
+          <p className="text-sm font-semibold text-foreground">R$ 0</p>
         </div>
         <div className="flex-1 text-center">
           <p className="text-xs text-muted-foreground">Crescimento</p>
-          <p className="text-sm font-semibold text-emerald-400">+12%</p>
+          <p className="text-sm font-semibold text-muted-foreground">0%</p>
         </div>
       </div>
     </div>
