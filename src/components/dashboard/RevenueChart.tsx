@@ -2,13 +2,13 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tool
 import { MoreHorizontal } from "lucide-react";
 
 const data = [
-  { day: "Mon", revenue: 42000, target: 38000 },
-  { day: "Tue", revenue: 55000, target: 40000 },
-  { day: "Wed", revenue: 48000, target: 42000 },
-  { day: "Thu", revenue: 62000, target: 45000 },
-  { day: "Fri", revenue: 78000, target: 48000 },
-  { day: "Sat", revenue: 58000, target: 50000 },
-  { day: "Sun", revenue: 85000, target: 52000 },
+  { day: "Mon", revenue: 0, target: 0 },
+  { day: "Tue", revenue: 0, target: 0 },
+  { day: "Wed", revenue: 0, target: 0 },
+  { day: "Thu", revenue: 0, target: 0 },
+  { day: "Fri", revenue: 0, target: 0 },
+  { day: "Sat", revenue: 0, target: 0 },
+  { day: "Sun", revenue: 0, target: 0 },
 ];
 
 export function RevenueChart() {
