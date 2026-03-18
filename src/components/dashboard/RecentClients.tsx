@@ -1,12 +1,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { MoreHorizontal } from "lucide-react";
 
-const clients = [
-  { name: "Ana Silva", plan: "Anual", value: "R$ 2.400", initials: "AS", date: "21 Mar, 2026" },
-  { name: "Carlos Mendes", plan: "Semestral", value: "R$ 1.200", initials: "CM", date: "15 Mar, 2026" },
-  { name: "Juliana Costa", plan: "Mensal", value: "R$ 199", initials: "JC", date: "13 Mar, 2026" },
-  { name: "Pedro Souza", plan: "Anual", value: "R$ 2.400", initials: "PS", date: "10 Mar, 2026" },
-];
+const clients: { name: string; plan: string; value: string; initials: string; date: string }[] = [];
 
 export function RecentClients() {
   return (
