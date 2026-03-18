@@ -41,7 +41,7 @@ export function DashboardSidebar() {
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.url;
-          const hasPermission = permissions[item.permKey as keyof typeof permissions];
+          const hasPermission = loading ? true : permissions[item.permKey as keyof typeof permissions];
 
           if (!hasPermission) {
             return (
