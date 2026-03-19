@@ -13,6 +13,7 @@ import { Plus, Search, Pencil, Trash2, Copy, Check, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import googleIcon from "@/assets/google-icon.png";
+import outlookIcon from "@/assets/outlook-icon.png";
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
 import elevenlabsLogo from "@/assets/tools/elevenlabs.png";
