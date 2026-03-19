@@ -91,7 +91,7 @@ export function DashboardSidebar() {
               )}
             >
               <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
-              <span className="text-[13px] font-medium" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <span className="text-[13px] font-medium">
                 {item.title}
               </span>
               {isActive && (
