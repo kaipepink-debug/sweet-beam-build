@@ -10,7 +10,7 @@ const menuItems = [
   { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, permKey: "vendas" },
   { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, permKey: "assinaturas" },
   { title: "Clientes", url: "/dashboard/clientes", icon: Users2, permKey: "clientes" },
-  { title: "E-mail - Acesso", url: "/dashboard/gmail", icon: Mail, permKey: "ferramentas_ia" },
+  { title: "E-mail - Acesso", url: "/dashboard/gmail", icon: Mail, permKey: "email_acesso" },
   { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, permKey: "ferramentas_ia" },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
   { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
