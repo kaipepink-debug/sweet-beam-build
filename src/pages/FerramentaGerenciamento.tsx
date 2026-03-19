@@ -356,66 +356,63 @@ export default function FerramentaGerenciamento() {
                   <div
                     key={a.id}
                     className={cn(
-                      "rounded-2xl border p-4 md:p-5 bg-card transition-all hover:border-border/80",
+                      "rounded-2xl border border-border p-4 md:p-5 bg-card transition-all hover:border-border/80",
                       status === "proximo" && "border-amber-500/20",
                       status === "expirado" && "border-red-500/15 opacity-75"
                     )}
                   >
-                    <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                      <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                        <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">E-mail principal</p>
-                          <p className="text-sm font-medium text-foreground truncate">{a.email_cliente}</p>
+                    <div className="flex items-start gap-4">
+                      {/* Tool Icon */}
+                      <img src={toolConfig.logo} alt={toolConfig.name} className="w-10 h-10 rounded-xl shrink-0 mt-1 object-contain" />
+
+                      {/* Main content */}
+                      <div className="flex-1 min-w-0">
+                        {/* Top row: E-mail principal | Status */}
+                        <div className="flex items-center gap-3 flex-wrap mb-2">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <p className="text-xs text-muted-foreground shrink-0">Principal:</p>
+                            <p className="text-sm font-semibold text-foreground truncate">{a.email_cliente}</p>
+                            <button onClick={() => handleCopy(a.email_cliente, `email-${a.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                              {copiedField === `email-${a.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                          <Badge variant="outline" className={cn("rounded-full text-[10px] px-2.5 py-0.5 border", cfg.color)}>
+                            {cfg.label}
+                          </Badge>
                         </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">Usuário</p>
-                          <div className="flex items-center gap-1.5">
-                            <p className="text-sm font-medium text-foreground truncate">{a.login}</p>
-                            <button
-                              onClick={() => handleCopy(a.login, `login-${a.id}`)}
-                              className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                            >
+
+                        {/* Senha */}
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <p className="text-xs text-muted-foreground">Senha:</p>
+                          <p className="text-sm font-mono text-foreground">{showPass ? a.senha : "••••••••"}</p>
+                          <button onClick={() => togglePassword(a.id)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                            {showPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                          <button onClick={() => handleCopy(a.senha, `senha-${a.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                            {copiedField === `senha-${a.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+
+                        {/* Usuário */}
+                        {a.login && (
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <p className="text-xs text-muted-foreground">Usuário:</p>
+                            <p className="text-sm text-foreground truncate">{a.login}</p>
+                            <button onClick={() => handleCopy(a.login, `login-${a.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
                               {copiedField === `login-${a.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                             </button>
                           </div>
-                        </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">Senha</p>
-                          <div className="flex items-center gap-1.5">
-                            <p className="text-sm font-medium text-foreground font-mono">
-                              {showPass ? a.senha : "••••••••"}
-                            </p>
-                            <button
-                              onClick={() => togglePassword(a.id)}
-                              className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                            >
-                              {showPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                            </button>
-                            <button
-                              onClick={() => handleCopy(a.senha, `senha-${a.id}`)}
-                              className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                            >
-                              {copiedField === `senha-${a.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                            </button>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">Expira em</p>
-                          <p className="text-sm font-medium text-foreground">
-                            {format(new Date(a.data_expiracao), "dd/MM/yyyy", { locale: ptBR })}
-                          </p>
+                        )}
+
+                        {/* Expiração */}
+                        <div className="flex items-center gap-1.5 pt-1 border-t border-border/50">
+                          <p className="text-xs text-muted-foreground py-1.5">Expira em:</p>
+                          <p className="text-xs text-foreground py-1.5">{format(new Date(a.data_expiracao), "dd/MM/yyyy", { locale: ptBR })}</p>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0">
-                        <Badge variant="outline" className={cn("rounded-full text-[10px] px-2.5 py-0.5 border", cfg.color)}>
-                          {cfg.label}
-                        </Badge>
-                        {a.video_url && (
-                          <Button variant="ghost" size="icon" onClick={() => setVideoModal(a.video_url!)} className="rounded-full h-8 w-8">
-                            <Play className="w-3.5 h-3.5" />
-                          </Button>
-                        )}
+                      {/* Actions */}
+                      <div className="flex items-center gap-1 shrink-0">
                         <Button variant="ghost" size="icon" onClick={() => openEdit(a)} className="rounded-full h-8 w-8">
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
