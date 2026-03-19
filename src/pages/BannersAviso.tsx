@@ -27,6 +27,7 @@ const bannerTypes = [
   { value: "restabelecida" as BannerType, label: "Ferramenta Restabelecida", icon: "✅", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
   { value: "manutencao" as BannerType, label: "Em Manutenção", icon: "🔴", color: "bg-red-500/20 text-red-400 border-red-500/30" },
   { value: "geral" as BannerType, label: "Aviso Geral", icon: "📢", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
+  { value: "senha_alterada" as BannerType, label: "Senha Alterada", icon: "🔑", color: "bg-orange-500/20 text-orange-400 border-orange-500/30" },
 ];
 
 export default function BannersAviso() {
