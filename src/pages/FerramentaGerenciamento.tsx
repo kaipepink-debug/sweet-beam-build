@@ -80,6 +80,7 @@ type AcessoForm = {
   email_cliente: string;
   login: string;
   senha: string;
+  video_url: string;
 };
 
 type Gmail = {
@@ -87,10 +88,13 @@ type Gmail = {
   gmail: string;
 };
 
+type AcessoMode = "gmail" | "fornecedor" | null;
+
 const emptyForm: AcessoForm = {
   email_cliente: "",
   login: "",
   senha: "",
+  video_url: "",
 };
 
 function getStatus(dataExpiracao: string) {
