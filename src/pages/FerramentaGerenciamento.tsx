@@ -376,7 +376,7 @@ export default function FerramentaGerenciamento() {
                     <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                       <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">E-mail cliente</p>
+                          <p className="text-[11px] text-muted-foreground mb-0.5">E-mail principal</p>
                           <p className="text-sm font-medium text-foreground truncate">{a.email_cliente}</p>
                         </div>
                         <div>
