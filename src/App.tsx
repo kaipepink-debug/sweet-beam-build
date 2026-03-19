@@ -41,7 +41,7 @@ const App = () => (
             <Route element={<ProtectedRoute><div className="desktop-zoom"><DashboardLayout /></div></ProtectedRoute>}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard-ferramentas" element={<DashboardFerramentas />} />
-              <Route path="/dashboard-ferramentas/banners" element={<BannersAviso />} />
+              <Route path="/dashboard/gerar-avisos" element={<BannersAviso />} />
               <Route path="/dashboard-ferramentas/:toolId" element={<FerramentaGerenciamento />} />
               <Route path="/dashboard-equipe" element={<DashboardEquipe />} />
               <Route path="/dashboard/gmail" element={<DashboardGmail />} />
