@@ -203,7 +203,7 @@ export default function FerramentaGerenciamento() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["acessos"] });
-      setDeleteConfirm(null);
+      queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
       toast.success("Acesso removido!");
     },
     onError: (err: Error) => toast.error(err.message),
