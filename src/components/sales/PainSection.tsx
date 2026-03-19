@@ -6,7 +6,7 @@ import elevenlabsLogo from "@/assets/tools/elevenlabs.png";
 import canvaLogo from "@/assets/tools/canva.png";
 import copyaiLogo from "@/assets/tools/copyai.png";
 import runwaymlLogo from "@/assets/tools/runwayml.png";
-import jasperaiLogo from "@/assets/tools/jasperai.png";
+import klingLogo from "@/assets/tools/kling.png";
 import synthesiaLogo from "@/assets/tools/synthesia.png";
 import higgsFieldLogo from "@/assets/tools/higgsfield.png";
 import soraLogo from "@/assets/tools/sora.png";
