@@ -137,6 +137,8 @@ export default function FerramentaGerenciamento() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [customDateEnabled, setCustomDateEnabled] = useState(false);
+  const [customDate, setCustomDate] = useState("");
 
   const { data: gmailsList = [] } = useQuery({
     queryKey: ["gmails-list"],
