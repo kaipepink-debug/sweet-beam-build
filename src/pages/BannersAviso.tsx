@@ -138,6 +138,18 @@ This is a "GENERAL ANNOUNCEMENT" banner for the platform.
 - Make it look official and attention-grabbing
 - ${textoDestaque ? `Highlight: "${textoDestaque}"` : ""}`;
 
+      case "senha_alterada":
+        return `${baseBanner}
+
+This is a "PASSWORD CHANGED" notice banner for the AI tool "${selectedFerramenta?.nome || ""}".
+- Show the tool name "${selectedFerramenta?.nome || ""}" prominently with a glow effect in color ${selectedFerramenta?.cor_tema || "#7C3AED"}
+- Main highlight text: "SENHA ALTERADA 🔑"
+- Include a key or lock icon element with orange/amber accent color
+- ${descricao ? `New instructions or message: "${descricao}"` : ""}
+- ${textoDestaque ? `Highlight: "${textoDestaque}"` : ""}
+- Make it look important and attention-grabbing, professional password change notice
+- Include visual cues like a key icon, lock symbol, or shield to represent security`;
+
       default:
         return baseBanner;
     }
