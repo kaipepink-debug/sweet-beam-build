@@ -6,7 +6,7 @@ import elevenlabsLogo from "@/assets/tools/elevenlabs.png";
 import canvaLogo from "@/assets/tools/canva.png";
 import copyaiLogo from "@/assets/tools/copyai.png";
 import runwaymlLogo from "@/assets/tools/runwayml.png";
-import jasperaiLogo from "@/assets/tools/jasperai.png";
+import klingLogo from "@/assets/tools/kling.png";
 import synthesiaLogo from "@/assets/tools/synthesia.png";
 import higgsFieldLogo from "@/assets/tools/higgsfield.png";
 import soraLogo from "@/assets/tools/sora.png";
@@ -16,21 +16,23 @@ import grokLogo from "@/assets/tools/grok.png";
 import claudeLogo from "@/assets/tools/claude.png";
 import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
+import geminiLogo from "@/assets/tools/gemini.png";
 
 const tools = [
-  { name: "ChatGPT Plus", price: 139.90, logo: chatgptLogo },
-  { name: "Midjourney", price: 60.00, logo: midjourneyLogo },
-  { name: "ElevenLabs", price: 55.00, logo: elevenlabsLogo },
-  { name: "Canva Pro", price: 34.90, logo: canvaLogo },
-  { name: "Copy.AI", price: 49.00, logo: copyaiLogo },
-  { name: "Runway ML", price: 60.00, logo: runwaymlLogo },
-  { name: "Jasper AI", price: 69.00, logo: jasperaiLogo },
-  { name: "Synthesia", price: 110.00, logo: synthesiaLogo },
-  { name: "Higgsfield Creator", price: 1200.00, logo: higgsFieldLogo },
-  { name: "Sora", price: 120.00, logo: soraLogo },
-  { name: "Veo 3", price: 99.00, logo: veo3Logo },
-  { name: "Hailuo", price: 39.90, logo: hailuoLogo },
-  { name: "SuperGrok", price: 79.90, logo: grokLogo },
+  { name: "ChatGPT", price: 119.90, logo: chatgptLogo },
+  { name: "Gemini", price: 99.90, logo: geminiLogo },
+  { name: "Midjourney", price: 179.90, logo: midjourneyLogo },
+  { name: "ElevenLabs", price: 129.90, logo: elevenlabsLogo },
+  { name: "Runway ML", price: 89.90, logo: runwaymlLogo },
+  { name: "Canva Pro", price: 54.90, logo: canvaLogo },
+  { name: "Copy.AI", price: 249.90, logo: copyaiLogo },
+  { name: "Kling", price: 179.90, logo: klingLogo },
+  { name: "Synthesia", price: 159.90, logo: synthesiaLogo },
+  { name: "Higgsfield", price: 89.90, logo: higgsFieldLogo },
+  { name: "Sora", price: 119.90, logo: soraLogo },
+  { name: "Veo 3", price: 99.90, logo: veo3Logo },
+  { name: "Hailuo", price: 69.90, logo: hailuoLogo },
+  { name: "SuperGrok", price: 159.90, logo: grokLogo },
   { name: "Claude", price: 119.90, logo: claudeLogo },
   { name: "Freepik", price: 44.90, logo: freepikLogo },
   { name: "Heygen", price: 89.00, logo: heygenLogo },
