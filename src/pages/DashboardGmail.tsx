@@ -323,9 +323,15 @@ export default function DashboardGmail() {
                         <Button variant="ghost" size="icon" onClick={() => openEdit(g)} className="rounded-full h-8 w-8">
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => setDeleteConfirm(g.id)} className="rounded-full h-8 w-8 text-destructive hover:text-destructive">
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
+                        {linkedTools.length === 0 ? (
+                          <Button variant="ghost" size="icon" onClick={() => setDeleteConfirm(g.id)} className="rounded-full h-8 w-8 text-destructive hover:text-destructive">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        ) : (
+                          <Button variant="ghost" size="icon" disabled className="rounded-full h-8 w-8 opacity-30 cursor-not-allowed" title="Desvincule as ferramentas antes de excluir">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
