@@ -147,7 +147,7 @@ export function DashboardSidebar() {
             {isLight ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
 
-          <button className="relative text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50">
+          <button className="relative text-sidebar-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50">
             <Bell className="h-4 w-4" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
           </button>
