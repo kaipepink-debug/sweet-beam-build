@@ -132,6 +132,14 @@ export function DashboardSidebar() {
       <div className="mt-auto px-3 pt-2 border-t border-border/40">
         <div className="flex items-center justify-between">
           <button
+            onClick={handleLogout}
+            className="text-muted-foreground hover:text-destructive transition-colors p-2 rounded-lg hover:bg-muted/50"
+            title="Sair"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
+
+          <button
             onClick={toggleTheme}
             className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50"
             title={isLight ? "Modo escuro" : "Modo claro"}
@@ -144,21 +152,9 @@ export function DashboardSidebar() {
             <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
           </button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="outline-none">
-                <Avatar className="h-7 w-7 cursor-pointer">
-                  <AvatarFallback className="bg-primary/20 text-primary text-[10px] font-semibold">{initials}</AvatarFallback>
-                </Avatar>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" side="top" className="w-40">
-              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
-                <LogOut className="h-4 w-4 mr-2" />
-                Sair
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-primary/20 text-primary text-[10px] font-semibold">{initials}</AvatarFallback>
+          </Avatar>
         </div>
       </div>
     </aside>
