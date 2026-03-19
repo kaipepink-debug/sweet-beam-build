@@ -9,15 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, isPast } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import {
-  Plus, Search, Copy, Pencil, Trash2, Play, CalendarIcon,
+  Plus, Search, Copy, Pencil, Trash2, Play,
   ArrowUpDown, Check, Eye, EyeOff, ArrowLeft
 } from "lucide-react";
 
@@ -40,25 +38,25 @@ import heygenLogo from "@/assets/tools/heygen.png";
 import inneraiLogo from "@/assets/tools/innerai.png";
 import tessLogo from "@/assets/tools/tess.png";
 
-const toolsConfig: Record<string, { name: string; logo: string }> = {
-  grok: { name: "SuperGrok", logo: grokLogo },
-  chatgpt: { name: "ChatGPT", logo: chatgptLogo },
-  claude: { name: "Claude", logo: claudeLogo },
-  midjourney: { name: "Midjourney", logo: midjourneyLogo },
-  elevenlabs: { name: "ElevenLabs", logo: elevenlabsLogo },
-  runwayml: { name: "Runway ML", logo: runwaymlLogo },
-  canva: { name: "Canva Pro", logo: canvaLogo },
-  innerai: { name: "Inner AI", logo: inneraiLogo },
-  tess: { name: "Tess", logo: tessLogo },
-  copyai: { name: "Copy.AI", logo: copyaiLogo },
-  kling: { name: "Kling", logo: klingLogo },
-  synthesia: { name: "Synthesia", logo: synthesiaLogo },
-  higgsfield: { name: "Higgsfield Creator", logo: higgsFieldLogo },
-  sora: { name: "Sora", logo: soraLogo },
-  veo3: { name: "Veo 3", logo: veo3Logo },
-  hailuo: { name: "Hailuo", logo: hailuoLogo },
-  freepik: { name: "Freepik", logo: freepikLogo },
-  heygen: { name: "Heygen", logo: heygenLogo },
+const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: number }> = {
+  grok: { name: "SuperGrok", logo: grokLogo, expiracaoDias: 3 },
+  chatgpt: { name: "ChatGPT", logo: chatgptLogo, expiracaoDias: 30 },
+  claude: { name: "Claude", logo: claudeLogo, expiracaoDias: 30 },
+  midjourney: { name: "Midjourney", logo: midjourneyLogo, expiracaoDias: 30 },
+  elevenlabs: { name: "ElevenLabs", logo: elevenlabsLogo, expiracaoDias: 30 },
+  runwayml: { name: "Runway ML", logo: runwaymlLogo, expiracaoDias: 30 },
+  canva: { name: "Canva Pro", logo: canvaLogo, expiracaoDias: 7 },
+  innerai: { name: "Inner AI", logo: inneraiLogo, expiracaoDias: 7 },
+  tess: { name: "Tess", logo: tessLogo, expiracaoDias: 7 },
+  copyai: { name: "Copy.AI", logo: copyaiLogo, expiracaoDias: 30 },
+  kling: { name: "Kling", logo: klingLogo, expiracaoDias: 30 },
+  synthesia: { name: "Synthesia", logo: synthesiaLogo, expiracaoDias: 30 },
+  higgsfield: { name: "Higgsfield Creator", logo: higgsFieldLogo, expiracaoDias: 30 },
+  sora: { name: "Sora", logo: soraLogo, expiracaoDias: 30 },
+  veo3: { name: "Veo 3", logo: veo3Logo, expiracaoDias: 30 },
+  hailuo: { name: "Hailuo", logo: hailuoLogo, expiracaoDias: 30 },
+  freepik: { name: "Freepik", logo: freepikLogo, expiracaoDias: 30 },
+  heygen: { name: "Heygen", logo: heygenLogo, expiracaoDias: 30 },
 };
 
 type Acesso = {
@@ -80,10 +78,6 @@ type AcessoForm = {
   email_cliente: string;
   login: string;
   senha: string;
-  data_criacao: Date;
-  data_expiracao: Date;
-  video_url: string;
-  gmail_id: string;
 };
 
 type Gmail = {
@@ -95,10 +89,6 @@ const emptyForm: AcessoForm = {
   email_cliente: "",
   login: "",
   senha: "",
-  data_criacao: new Date(),
-  data_expiracao: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  video_url: "",
-  gmail_id: "",
 };
 
 function getStatus(dataExpiracao: string) {
@@ -162,15 +152,17 @@ export default function FerramentaGerenciamento() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
 
+      const now = new Date();
+      const dias = toolConfig?.expiracaoDias || 30;
+      const expDate = new Date(now.getTime() + dias * 24 * 60 * 60 * 1000);
+
       const record = {
         ferramenta: toolId!,
         email_cliente: payload.email_cliente.trim(),
         login: payload.login.trim(),
         senha: payload.senha,
-        data_criacao: payload.data_criacao.toISOString(),
-        data_expiracao: payload.data_expiracao.toISOString(),
-        video_url: payload.video_url || null,
-        gmail_id: payload.gmail_id || null,
+        data_criacao: payload.id ? undefined : now.toISOString(),
+        data_expiracao: payload.id ? undefined : expDate.toISOString(),
         created_by: user.id,
       };
 
@@ -234,10 +226,6 @@ export default function FerramentaGerenciamento() {
       email_cliente: a.email_cliente,
       login: a.login,
       senha: a.senha,
-      data_criacao: new Date(a.data_criacao),
-      data_expiracao: new Date(a.data_expiracao),
-      video_url: a.video_url || "",
-      gmail_id: a.gmail_id || "",
     });
     setDialogOpen(true);
   }
@@ -480,36 +468,6 @@ export default function FerramentaGerenciamento() {
               <div className="grid gap-2">
                 <Label>Senha</Label>
                 <Input placeholder="••••••••" value={form.senha} onChange={e => setForm(f => ({ ...f, senha: e.target.value }))} className="rounded-xl" />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-2">
-                <Label>Data de criação</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className={cn("justify-start text-left font-normal rounded-xl", !form.data_criacao && "text-muted-foreground")}>
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {format(form.data_criacao, "dd/MM/yyyy")}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={form.data_criacao} onSelect={d => d && setForm(f => ({ ...f, data_criacao: d }))} className="p-3 pointer-events-auto" locale={ptBR} />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="grid gap-2">
-                <Label>Data de expiração</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className={cn("justify-start text-left font-normal rounded-xl", !form.data_expiracao && "text-muted-foreground")}>
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {format(form.data_expiracao, "dd/MM/yyyy")}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={form.data_expiracao} onSelect={d => d && setForm(f => ({ ...f, data_expiracao: d }))} className="p-3 pointer-events-auto" locale={ptBR} />
-                  </PopoverContent>
-                </Popover>
               </div>
             </div>
           </div>
