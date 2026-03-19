@@ -153,25 +153,35 @@ export default function DashboardEquipe() {
     }
   };
 
-  const handleRemove = async (userId: string) => {
+  const handleRemove = async (userId: string, memberName: string) => {
+    if (!confirm(`Tem certeza que deseja remover "${memberName}" da equipe? Todos os acessos e dados serão excluídos.`)) return;
+
     const { data: { session } } = await supabase.auth.getSession();
 
-    const response = await fetch(
-      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=remove`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${session!.access_token}`,
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_id: userId }),
-      }
-    );
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=remove`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${session!.access_token}`,
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user_id: userId }),
+        }
+      );
 
-    if (response.ok) {
-      toast({ title: "Membro removido" });
-      fetchTeam();
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({ title: "Membro removido com sucesso" });
+        fetchTeam();
+      } else {
+        toast({ title: "Erro ao remover", description: data.error || "Erro desconhecido", variant: "destructive" });
+      }
+    } catch (err) {
+      toast({ title: "Erro de conexão", description: "Não foi possível conectar ao servidor", variant: "destructive" });
     }
   };
 
