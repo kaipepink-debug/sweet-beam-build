@@ -46,6 +46,7 @@ export default function DashboardEquipe() {
     vendas: false,
     assinaturas: false,
     clientes: false,
+    email_acesso: true,
     ferramentas_ia: true,
     analytics: false,
     configuracoes: false,
