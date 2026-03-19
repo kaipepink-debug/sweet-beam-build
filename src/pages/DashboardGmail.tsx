@@ -262,18 +262,34 @@ export default function DashboardGmail() {
                       {/* Google Icon */}
                       <img src={googleIcon} alt="Google" className="w-10 h-10 rounded-xl shrink-0 mt-1" />
 
-                      {/* Fields */}
-                      <div className="flex-1 min-w-0 space-y-2">
-                        {/* Gmail */}
-                        <div className="flex items-center gap-1.5">
-                          <p className="text-sm font-semibold text-foreground truncate">{g.gmail}</p>
-                          <button onClick={() => handleCopy(g.gmail, `gmail-${g.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
-                            {copiedField === `gmail-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
+                      {/* Main content */}
+                      <div className="flex-1 min-w-0">
+                        {/* Top row: Recovery | Gmail */}
+                        <div className="flex items-center gap-3 flex-wrap mb-2">
+                          {/* Recovery email first */}
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <p className="text-xs text-muted-foreground shrink-0">Recuperação:</p>
+                            <p className="text-sm text-foreground truncate">{g.email_recuperacao || "—"}</p>
+                            {g.email_recuperacao && (
+                              <button onClick={() => handleCopy(g.email_recuperacao!, `rec-${g.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                                {copiedField === `rec-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                              </button>
+                            )}
+                          </div>
+
+                          <span className="text-border">|</span>
+
+                          {/* Gmail principal */}
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <p className="text-sm font-semibold text-foreground truncate">{g.gmail}</p>
+                            <button onClick={() => handleCopy(g.gmail, `gmail-${g.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                              {copiedField === `gmail-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
                         </div>
 
-                        {/* Senha - always visible */}
-                        <div className="flex items-center gap-1.5">
+                        {/* Senha */}
+                        <div className="flex items-center gap-1.5 mb-3">
                           <p className="text-xs text-muted-foreground">Senha:</p>
                           <p className="text-sm font-mono text-foreground">{g.senha}</p>
                           <button onClick={() => handleCopy(g.senha, `senha-${g.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
@@ -281,23 +297,22 @@ export default function DashboardGmail() {
                           </button>
                         </div>
 
-                        {/* Email de recuperação */}
-                        <div className="flex items-center gap-1.5">
-                          <p className="text-xs text-muted-foreground">Recuperação:</p>
-                          <p className="text-sm text-foreground truncate">{g.email_recuperacao || "—"}</p>
+                        {/* Ferramentas vinculadas */}
+                        <div className="flex items-center gap-2 pt-1 border-t border-border/50">
+                          <p className="text-xs text-muted-foreground shrink-0 py-1.5">Ferramentas:</p>
+                          {linkedTools.length > 0 ? (
+                            <div className="flex items-center gap-1.5 flex-wrap py-1.5">
+                              {linkedTools.map(toolKey => {
+                                const tool = toolsConfig[toolKey];
+                                return tool ? (
+                                  <img key={toolKey} src={tool.logo} alt={tool.name} title={tool.name} className="w-6 h-6 rounded-md object-contain" />
+                                ) : null;
+                              })}
+                            </div>
+                          ) : (
+                            <p className="text-xs text-muted-foreground/60 py-1.5">Nenhuma ferramenta vinculada</p>
+                          )}
                         </div>
-
-                        {/* Linked tools */}
-                        {linkedTools.length > 0 && (
-                          <div className="flex items-center gap-1.5 pt-1">
-                            {linkedTools.map(toolKey => {
-                              const tool = toolsConfig[toolKey];
-                              return tool ? (
-                                <img key={toolKey} src={tool.logo} alt={tool.name} title={tool.name} className="w-5 h-5 rounded object-contain" />
-                              ) : null;
-                            })}
-                          </div>
-                        )}
                       </div>
 
                       {/* Actions */}
