@@ -149,7 +149,7 @@ export default function DashboardEquipe() {
             : m
         )
       );
-      toast({ title: "Permissão atualizada" });
+      toast({ title: "Permissão atualizada", className: "bg-green-600 text-white border-green-600" });
     }
   };
 
