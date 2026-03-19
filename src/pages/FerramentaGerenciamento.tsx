@@ -458,15 +458,13 @@ export default function FerramentaGerenciamento() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-2">
-                <Label>Usuário (opcional)</Label>
-                <Input placeholder="nome de usuário" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
-              </div>
-              <div className="grid gap-2">
-                <Label>Senha</Label>
-                <Input placeholder="••••••••" value={form.senha} onChange={e => setForm(f => ({ ...f, senha: e.target.value }))} className="rounded-xl" />
-              </div>
+            <div className="grid gap-2">
+              <Label>Usuário (opcional)</Label>
+              <Input placeholder="nome de usuário" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
+            </div>
+            <div className="grid gap-2">
+              <Label>Senha</Label>
+              <Input placeholder="••••••••" value={form.senha} onChange={e => setForm(f => ({ ...f, senha: e.target.value }))} className="rounded-xl" />
             </div>
           </div>
           <DialogFooter>
