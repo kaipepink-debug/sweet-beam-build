@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -33,39 +34,16 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<div className="desktop-zoom"><Login /></div>} />
-            <Route path="/dashboard" element={<ProtectedRoute><div className="desktop-zoom"><Dashboard /></div></ProtectedRoute>} />
-            <Route
-              path="/dashboard-ferramentas"
-              element={
-                <ProtectedRoute>
-                  <div className="desktop-zoom"><DashboardFerramentas /></div>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard-equipe"
-              element={
-                <ProtectedRoute>
-                  <div className="desktop-zoom"><DashboardEquipe /></div>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard-ferramentas/:toolId"
-              element={
-                <ProtectedRoute>
-                  <div className="desktop-zoom"><FerramentaGerenciamento /></div>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/gmail"
-              element={
-                <ProtectedRoute>
-                  <div className="desktop-zoom"><DashboardGmail /></div>
-                </ProtectedRoute>
-              }
-            />
+
+            {/* Dashboard routes with shared layout */}
+            <Route element={<ProtectedRoute><div className="desktop-zoom"><DashboardLayout /></div></ProtectedRoute>}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard-ferramentas" element={<DashboardFerramentas />} />
+              <Route path="/dashboard-ferramentas/:toolId" element={<FerramentaGerenciamento />} />
+              <Route path="/dashboard-equipe" element={<DashboardEquipe />} />
+              <Route path="/dashboard/gmail" element={<DashboardGmail />} />
+            </Route>
+
             <Route path="/cod" element={<Cod />} />
             <Route path="/usuario" element={<Usuario />} />
             <Route path="/painel" element={<Painel />} />
