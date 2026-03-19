@@ -193,11 +193,7 @@ export default function DashboardGmail() {
 
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      <DashboardSidebar />
-      <div className="flex-1 flex flex-col min-w-0 ml-[220px]">
-        <DashboardTopbar />
-        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+    <div>
           {/* Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-4">
