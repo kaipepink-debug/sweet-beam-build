@@ -27,10 +27,11 @@ const PERMISSION_LABELS: Record<string, string> = {
   vendas: "Vendas",
   assinaturas: "Assinaturas",
   clientes: "Clientes",
+  email_acesso: "E-mail - Acesso",
   ferramentas_ia: "Ferramentas IA",
   analytics: "Analytics",
-  configuracoes: "Configurações",
   equipe: "Equipe",
+  configuracoes: "Configurações",
 };
 
 export default function DashboardEquipe() {
@@ -45,6 +46,7 @@ export default function DashboardEquipe() {
     vendas: false,
     assinaturas: false,
     clientes: false,
+    email_acesso: true,
     ferramentas_ia: true,
     analytics: false,
     configuracoes: false,
@@ -116,7 +118,7 @@ export default function DashboardEquipe() {
     setShowForm(false);
     setNewPermissions({
       dashboard: false, financeiro: false, vendas: false, assinaturas: false,
-      clientes: false, ferramentas_ia: true, analytics: false, configuracoes: false, equipe: false,
+      clientes: false, email_acesso: true, ferramentas_ia: true, analytics: false, configuracoes: false, equipe: false,
     });
     fetchTeam();
   };

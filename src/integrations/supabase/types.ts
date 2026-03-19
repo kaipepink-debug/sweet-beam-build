@@ -132,6 +132,7 @@ export type Database = {
           configuracoes: boolean
           created_at: string
           dashboard: boolean
+          email_acesso: boolean
           equipe: boolean
           ferramentas_ia: boolean
           financeiro: boolean
@@ -147,6 +148,7 @@ export type Database = {
           configuracoes?: boolean
           created_at?: string
           dashboard?: boolean
+          email_acesso?: boolean
           equipe?: boolean
           ferramentas_ia?: boolean
           financeiro?: boolean
@@ -162,6 +164,7 @@ export type Database = {
           configuracoes?: boolean
           created_at?: string
           dashboard?: boolean
+          email_acesso?: boolean
           equipe?: boolean
           ferramentas_ia?: boolean
           financeiro?: boolean
