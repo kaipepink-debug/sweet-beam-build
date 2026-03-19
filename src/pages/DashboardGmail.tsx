@@ -207,8 +207,8 @@ export default function DashboardGmail() {
                 <Mail className="w-7 h-7 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Gmail</h1>
-                <p className="text-muted-foreground text-sm">Gerenciamento de contas Gmail</p>
+                <h1 className="text-2xl font-bold text-foreground">E-mail - Acesso</h1>
+                <p className="text-muted-foreground text-sm">Gerenciamento de contas de e-mail</p>
               </div>
             </div>
             <Button onClick={openNew} className="rounded-2xl gap-2 shadow-lg">
