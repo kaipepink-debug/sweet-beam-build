@@ -121,6 +121,8 @@ export default function FerramentaGerenciamento() {
   const [filterStatus, setFilterStatus] = useState<string>("todos");
   const [sortAsc, setSortAsc] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [modeSelect, setModeSelect] = useState(false);
+  const [acessoMode, setAcessoMode] = useState<AcessoMode>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<AcessoForm>(emptyForm);
   const [videoModal, setVideoModal] = useState<string | null>(null);
