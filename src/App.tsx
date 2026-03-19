@@ -38,7 +38,7 @@ const App = () => (
               path="/dashboard-ferramentas"
               element={
                 <ProtectedRoute>
-                  <DashboardFerramentas />
+                  <div className="desktop-zoom"><DashboardFerramentas /></div>
                 </ProtectedRoute>
               }
             />
@@ -46,7 +46,7 @@ const App = () => (
               path="/dashboard-equipe"
               element={
                 <ProtectedRoute>
-                  <DashboardEquipe />
+                  <div className="desktop-zoom"><DashboardEquipe /></div>
                 </ProtectedRoute>
               }
             />
@@ -54,7 +54,7 @@ const App = () => (
               path="/dashboard-ferramentas/:toolId"
               element={
                 <ProtectedRoute>
-                  <FerramentaGerenciamento />
+                  <div className="desktop-zoom"><FerramentaGerenciamento /></div>
                 </ProtectedRoute>
               }
             />
@@ -62,7 +62,7 @@ const App = () => (
               path="/dashboard/gmail"
               element={
                 <ProtectedRoute>
-                  <DashboardGmail />
+                  <div className="desktop-zoom"><DashboardGmail /></div>
                 </ProtectedRoute>
               }
             />
