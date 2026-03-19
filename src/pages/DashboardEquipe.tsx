@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
+import { supabase } from "@/integrations/supabase/client";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Users2, Plus, Trash2, Shield, UserCheck, X, Pencil } from "lucide-react";
