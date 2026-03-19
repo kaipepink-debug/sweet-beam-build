@@ -112,6 +112,13 @@ Deno.serve(async (req) => {
     if (req.method === "DELETE" && action === "remove") {
       const { user_id } = await req.json();
 
+      // Clean up related data before deleting the user
+      await supabaseAdmin.from("acessos").delete().eq("created_by", user_id);
+      await supabaseAdmin.from("gmails").delete().eq("created_by", user_id);
+      await supabaseAdmin.from("team_permissions").delete().eq("user_id", user_id);
+      await supabaseAdmin.from("user_roles").delete().eq("user_id", user_id);
+      await supabaseAdmin.from("profiles").delete().eq("user_id", user_id);
+
       const { error } = await supabaseAdmin.auth.admin.deleteUser(user_id);
       if (error) {
         return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: corsHeaders });
