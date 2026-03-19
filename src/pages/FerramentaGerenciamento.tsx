@@ -6,15 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { format, differenceInDays, isPast } from "date-fns";
+import { format, differenceInDays, isPast, addDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import {
   Plus, Search, Copy, Pencil, Trash2,
-  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon, Video
+  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon, Video, CalendarIcon
 } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
@@ -137,6 +138,8 @@ export default function FerramentaGerenciamento() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [customDateEnabled, setCustomDateEnabled] = useState(false);
+  const [customDate, setCustomDate] = useState("");
 
   const { data: gmailsList = [] } = useQuery({
     queryKey: ["gmails-list"],
@@ -169,9 +172,9 @@ export default function FerramentaGerenciamento() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
 
-      const now = new Date();
       const dias = toolConfig?.expiracaoDias || 30;
-      const expDate = new Date(now.getTime() + dias * 24 * 60 * 60 * 1000);
+      const baseDate = customDateEnabled && customDate ? new Date(customDate + "T00:00:00") : new Date();
+      const expDate = addDays(baseDate, dias);
 
       // Find the gmail_id from the selected email (only for gmail mode)
       const matchedGmail = gmailsList.find(g => g.gmail === payload.email_cliente.trim());
@@ -196,7 +199,7 @@ export default function FerramentaGerenciamento() {
           video_url: payload.video_url.trim() || null,
           gmail_id: matchedGmail?.id || null,
           created_by: user.id,
-          data_criacao: now.toISOString(),
+          data_criacao: baseDate.toISOString(),
           data_expiracao: expDate.toISOString(),
         });
         if (error) throw error;
@@ -209,6 +212,8 @@ export default function FerramentaGerenciamento() {
       setEditingId(null);
       setAcessoMode(null);
       setForm(emptyForm);
+      setCustomDateEnabled(false);
+      setCustomDate("");
       toast.success(editingId ? "Acesso atualizado!" : "Acesso criado!");
     },
     onError: (err: Error) => toast.error(err.message),
@@ -580,6 +585,40 @@ export default function FerramentaGerenciamento() {
               <Label>Senha</Label>
               <Input placeholder="••••••••" value={form.senha} onChange={e => setForm(f => ({ ...f, senha: e.target.value }))} className="rounded-xl" />
             </div>
+
+            {/* Custom creation date */}
+            {!editingId && (
+              <div className="grid gap-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="custom-date"
+                    checked={customDateEnabled}
+                    onCheckedChange={(checked) => {
+                      setCustomDateEnabled(!!checked);
+                      if (!checked) setCustomDate("");
+                    }}
+                  />
+                  <Label htmlFor="custom-date" className="text-sm cursor-pointer">Data de criação personalizada</Label>
+                </div>
+                {customDateEnabled && (
+                  <div className="space-y-2">
+                    <Input
+                      type="date"
+                      value={customDate}
+                      onChange={e => setCustomDate(e.target.value)}
+                      className="rounded-xl"
+                    />
+                    {customDate && (
+                      <p className="text-xs text-muted-foreground">
+                        <CalendarIcon className="w-3 h-3 inline mr-1" />
+                        Expira em: <span className="text-foreground font-medium">{format(addDays(new Date(customDate + "T00:00:00"), toolConfig?.expiracaoDias || 30), "dd/MM/yyyy", { locale: ptBR })}</span>
+                        {" "}({toolConfig?.expiracaoDias} dias)
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)} className="rounded-xl">Cancelar</Button>
