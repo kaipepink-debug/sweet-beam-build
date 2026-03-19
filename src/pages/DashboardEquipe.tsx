@@ -57,12 +57,6 @@ export default function DashboardEquipe() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
-    const res = await supabase.functions.invoke("manage-team", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      body: undefined,
-    });
-
     // Use fetch directly for GET with query params
     const response = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=list`,
