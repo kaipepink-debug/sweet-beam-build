@@ -328,7 +328,7 @@ export default function DashboardGmail() {
                             <Trash2 className="w-3.5 h-3.5" />
                           </Button>
                         ) : (
-                          <Button variant="ghost" size="icon" disabled className="rounded-full h-8 w-8 opacity-30 cursor-not-allowed" title="Desvincule as ferramentas antes de excluir">
+                          <Button variant="ghost" size="icon" onClick={() => toast.error("Desvincule as ferramentas antes de excluir este Gmail")} className="rounded-full h-8 w-8 text-destructive/30 hover:text-destructive/50">
                             <Trash2 className="w-3.5 h-3.5" />
                           </Button>
                         )}
