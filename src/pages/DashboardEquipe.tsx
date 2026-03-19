@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Users2, Plus, Trash2, Shield, UserCheck, X, Pencil } from "lucide-react";
@@ -178,25 +176,21 @@ export default function DashboardEquipe() {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      <DashboardSidebar />
-      <div className="flex-1 flex flex-col min-w-0 ml-[220px]">
-        <DashboardTopbar />
-        <main className="flex-1 p-4 md:p-6 space-y-5 overflow-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-muted-foreground mb-1">Gerencie os membros da sua equipe</p>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Equipe</h1>
-            </div>
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
-            >
-              {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-              {showForm ? "Cancelar" : "Novo Membro"}
-            </button>
-          </div>
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs text-muted-foreground mb-1">Gerencie os membros da sua equipe</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Equipe</h1>
+        </div>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+          {showForm ? "Cancelar" : "Novo Membro"}
+        </button>
+      </div>
 
           {/* Add Member Form */}
           {showForm && (
@@ -375,8 +369,6 @@ export default function DashboardEquipe() {
                 </div>
               ))
             )}
-          </div>
-        </main>
       </div>
     </div>
   );

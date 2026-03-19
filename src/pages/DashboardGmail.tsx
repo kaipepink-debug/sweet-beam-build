@@ -1,8 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -195,11 +193,7 @@ export default function DashboardGmail() {
 
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      <DashboardSidebar />
-      <div className="flex-1 flex flex-col min-w-0 ml-[220px]">
-        <DashboardTopbar />
-        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+    <div>
           {/* Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-4">
@@ -343,8 +337,6 @@ export default function DashboardGmail() {
               })}
             </div>
           )}
-        </main>
-      </div>
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

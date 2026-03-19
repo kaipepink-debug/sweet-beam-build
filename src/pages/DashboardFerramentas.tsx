@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { useNavigate } from "react-router-dom";
 import { Settings, Clock, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -109,67 +107,61 @@ export default function DashboardFerramentas() {
   }, []);
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      <DashboardSidebar />
-      <div className="flex-1 flex flex-col min-w-0 ml-[220px]">
-        <DashboardTopbar />
-        <main className="flex-1 overflow-auto p-4 md:p-6">
-          <div className="mb-6">
-            <h1 className="text-xl font-bold text-foreground">Ferramentas de IA</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Gerencie os acessos de cada ferramenta. O tempo de expiração é exibido automaticamente.
-            </p>
-          </div>
+    <div>
+      <div className="mb-6">
+        <h1 className="text-xl font-bold text-foreground">Ferramentas de IA</h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Gerencie os acessos de cada ferramenta. O tempo de expiração é exibido automaticamente.
+        </p>
+      </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {tools.map((tool) => {
-                const info = expirations[tool.ferramenta];
-                const expLabel = info?.nearestExpiration ? getExpirationLabel(info.nearestExpiration) : null;
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {tools.map((tool) => {
+            const info = expirations[tool.ferramenta];
+            const expLabel = info?.nearestExpiration ? getExpirationLabel(info.nearestExpiration) : null;
 
-                return (
-                  <div
-                    key={tool.name}
-                    onClick={() => navigate(`/dashboard-ferramentas/${tool.ferramenta}`)}
-                    className="group flex flex-col gap-3 p-4 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
-                        <img src={tool.logo} alt={tool.name} className="w-8 h-8 object-contain" loading="lazy" />
-                      </div>
-                      <div className="flex-1 min-w-0 flex items-center gap-2">
-                        <h3 className="text-foreground font-semibold text-base">{tool.name}</h3>
-                        <span className={`w-2 h-2 rounded-full shrink-0 ${getToolDotColor(info)}`} />
-                      </div>
-                      <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
-                    </div>
-
-                    {/* Expiration info */}
-                    <div className="flex items-center justify-between gap-2 pt-1 border-t border-border/30">
-                      <div className="flex items-center gap-1.5 text-muted-foreground text-[11px]">
-                        <Clock className="w-3 h-3" />
-                        <span>Ciclo: {tool.expiracaoDias} dias</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border bg-blue-500/10 border-blue-500/20 text-blue-400">
-                          {info?.totalActive ?? 0} {info?.totalActive === 1 ? "login" : "logins"}
-                        </span>
-                        {expLabel ? (
-                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${expLabel.bg} ${expLabel.color}`}>
-                            {expLabel.color.includes("yellow") || expLabel.color.includes("red") ? (
-                              <AlertTriangle className="w-2.5 h-2.5" />
-                            ) : null}
-                            {expLabel.text}
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground/50 text-[10px]">Sem acessos</span>
-                        )}
-                      </div>
-                    </div>
+            return (
+              <div
+                key={tool.name}
+                onClick={() => navigate(`/dashboard-ferramentas/${tool.ferramenta}`)}
+                className="group flex flex-col gap-3 p-4 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
+                    <img src={tool.logo} alt={tool.name} className="w-8 h-8 object-contain" loading="lazy" />
                   </div>
-                );
-              })}
-          </div>
-        </main>
+                  <div className="flex-1 min-w-0 flex items-center gap-2">
+                    <h3 className="text-foreground font-semibold text-base">{tool.name}</h3>
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${getToolDotColor(info)}`} />
+                  </div>
+                  <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+                </div>
+
+                {/* Expiration info */}
+                <div className="flex items-center justify-between gap-2 pt-1 border-t border-border/30">
+                  <div className="flex items-center gap-1.5 text-muted-foreground text-[11px]">
+                    <Clock className="w-3 h-3" />
+                    <span>Ciclo: {tool.expiracaoDias} dias</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border bg-blue-500/10 border-blue-500/20 text-blue-400">
+                      {info?.totalActive ?? 0} {info?.totalActive === 1 ? "login" : "logins"}
+                    </span>
+                    {expLabel ? (
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${expLabel.bg} ${expLabel.color}`}>
+                        {expLabel.color.includes("yellow") || expLabel.color.includes("red") ? (
+                          <AlertTriangle className="w-2.5 h-2.5" />
+                        ) : null}
+                        {expLabel.text}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground/50 text-[10px]">Sem acessos</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
