@@ -31,11 +31,13 @@ import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
 import inneraiLogo from "@/assets/tools/innerai.png";
 import tessLogo from "@/assets/tools/tess.png";
+import geminiLogo from "@/assets/tools/gemini.png";
 
 const toolsConfig: Record<string, { name: string; logo: string }> = {
   grok: { name: "SuperGrok", logo: grokLogo },
   chatgpt: { name: "ChatGPT", logo: chatgptLogo },
   claude: { name: "Claude", logo: claudeLogo },
+  gemini: { name: "Gemini", logo: geminiLogo },
   midjourney: { name: "Midjourney", logo: midjourneyLogo },
   elevenlabs: { name: "ElevenLabs", logo: elevenlabsLogo },
   runwayml: { name: "Runway ML", logo: runwaymlLogo },

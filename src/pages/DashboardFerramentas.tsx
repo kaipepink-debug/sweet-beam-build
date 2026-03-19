@@ -24,11 +24,13 @@ import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
 import inneraiLogo from "@/assets/tools/innerai.png";
 import tessLogo from "@/assets/tools/tess.png";
+import geminiLogo from "@/assets/tools/gemini.png";
 
 const tools = [
   { name: "SuperGrok", ferramenta: "grok", logo: grokLogo, expiracaoDias: 3 },
   { name: "ChatGPT", ferramenta: "chatgpt", logo: chatgptLogo, expiracaoDias: 30 },
   { name: "Claude", ferramenta: "claude", logo: claudeLogo, expiracaoDias: 30 },
+  { name: "Gemini", ferramenta: "gemini", logo: geminiLogo, expiracaoDias: 30 },
   { name: "Midjourney", ferramenta: "midjourney", logo: midjourneyLogo, expiracaoDias: 30 },
   { name: "ElevenLabs", ferramenta: "elevenlabs", logo: elevenlabsLogo, expiracaoDias: 30 },
   { name: "Runway ML", ferramenta: "runwayml", logo: runwaymlLogo, expiracaoDias: 30 },
