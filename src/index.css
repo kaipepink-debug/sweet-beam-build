@@ -79,37 +79,6 @@ All colors MUST be HSL.
   }
 }
 
-/* Light theme for dashboard pages */
-.dashboard-light {
-  --background: 0 0% 97%;
-  --foreground: 0 0% 10%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 10%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 10%;
-  --primary: 270 100% 50%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 260 30% 94%;
-  --secondary-foreground: 260 20% 25%;
-  --muted: 0 0% 93%;
-  --muted-foreground: 0 0% 40%;
-  --accent: 260 30% 94%;
-  --accent-foreground: 260 20% 25%;
-  --destructive: 0 84% 55%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 87%;
-  --input: 0 0% 87%;
-  --ring: 270 100% 50%;
-  --sidebar-background: 0 0% 100%;
-  --sidebar-foreground: 0 0% 25%;
-  --sidebar-primary: 270 100% 50%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 260 30% 96%;
-  --sidebar-accent-foreground: 0 0% 25%;
-  --sidebar-border: 0 0% 90%;
-  --sidebar-ring: 270 100% 50%;
-}
-
 @layer base {
   * {
     @apply border-border;
