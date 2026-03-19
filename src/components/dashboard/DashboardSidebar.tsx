@@ -113,7 +113,7 @@ export function DashboardSidebar() {
                 "h-10 rounded-xl flex items-center gap-3 px-[10px] transition-all duration-300 whitespace-nowrap relative",
                 isActive
                   ? "bg-primary/20 text-primary shadow-[0_0_18px_hsl(270_100%_55%/0.3)]"
-                  : "text-muted-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
+                  : "text-sidebar-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
               )}
             >
               <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
@@ -133,7 +133,7 @@ export function DashboardSidebar() {
         <div className="flex items-center justify-between">
           <button
             onClick={handleLogout}
-            className="text-muted-foreground hover:text-destructive transition-colors p-2 rounded-lg hover:bg-muted/50"
+            className="text-sidebar-foreground hover:text-destructive transition-colors p-2 rounded-lg hover:bg-muted/50"
             title="Sair"
           >
             <LogOut className="h-4 w-4" />
@@ -141,13 +141,13 @@ export function DashboardSidebar() {
 
           <button
             onClick={toggleTheme}
-            className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50"
+            className="text-sidebar-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50"
             title={isLight ? "Modo escuro" : "Modo claro"}
           >
             {isLight ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
 
-          <button className="relative text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50">
+          <button className="relative text-sidebar-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50">
             <Bell className="h-4 w-4" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
           </button>
