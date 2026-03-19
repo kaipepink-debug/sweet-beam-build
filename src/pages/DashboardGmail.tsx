@@ -190,13 +190,6 @@ export default function DashboardGmail() {
     setTimeout(() => setCopiedField(null), 2000);
   }
 
-  function togglePassword(id: string) {
-    setVisiblePasswords(prev => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }
 
   return (
     <div className="min-h-screen flex w-full bg-background">
