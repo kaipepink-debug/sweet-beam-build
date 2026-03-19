@@ -154,15 +154,17 @@ export default function DashboardFerramentas() {
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border bg-blue-500/10 border-blue-500/20 text-blue-400">
                           {info?.totalActive ?? 0} {info?.totalActive === 1 ? "login" : "logins"}
                         </span>
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${expLabel.bg} ${expLabel.color}`}>
-                          {expLabel.color.includes("yellow") || expLabel.color.includes("red") ? (
-                            <AlertTriangle className="w-2.5 h-2.5" />
-                          ) : null}
-                          {expLabel.text}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground/50 text-[10px]">Sem acessos</span>
-                      )}
+                        {expLabel ? (
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${expLabel.bg} ${expLabel.color}`}>
+                            {expLabel.color.includes("yellow") || expLabel.color.includes("red") ? (
+                              <AlertTriangle className="w-2.5 h-2.5" />
+                            ) : null}
+                            {expLabel.text}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground/50 text-[10px]">Sem acessos</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
