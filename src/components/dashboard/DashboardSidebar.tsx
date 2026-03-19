@@ -42,6 +42,16 @@ export function DashboardSidebar() {
   const { permissions, loading } = usePermissions();
   const { displayName } = useProfile();
   const [isLight, setIsLight] = useState(document.documentElement.classList.contains("light"));
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+
+  // Auto-expand if on a child route
+  useEffect(() => {
+    menuItems.forEach((item) => {
+      if (item.children?.some((child) => location.pathname === child.url)) {
+        setExpandedMenus((prev) => prev.includes(item.title) ? prev : [...prev, item.title]);
+      }
+    });
+  }, [location.pathname]);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
