@@ -111,20 +111,47 @@ Deno.serve(async (req) => {
 
     if (req.method === "DELETE" && action === "remove") {
       const { user_id } = await req.json();
+      console.log("Removing user:", user_id);
 
-      // Clean up related data before deleting the user
-      await supabaseAdmin.from("acessos").delete().eq("created_by", user_id);
-      await supabaseAdmin.from("gmails").delete().eq("created_by", user_id);
-      await supabaseAdmin.from("team_permissions").delete().eq("user_id", user_id);
-      await supabaseAdmin.from("user_roles").delete().eq("user_id", user_id);
-      await supabaseAdmin.from("profiles").delete().eq("user_id", user_id);
+      // First, get all gmail IDs owned by this user
+      const { data: userGmails } = await supabaseAdmin
+        .from("gmails")
+        .select("id")
+        .eq("created_by", user_id);
+
+      const gmailIds = userGmails?.map((g) => g.id) || [];
+
+      // Delete acessos created by the user
+      const r1 = await supabaseAdmin.from("acessos").delete().eq("created_by", user_id);
+      console.log("Delete acessos by created_by:", r1.error?.message || "ok");
+
+      // Delete acessos that reference this user's gmails (created by others)
+      if (gmailIds.length > 0) {
+        const r1b = await supabaseAdmin.from("acessos").delete().in("gmail_id", gmailIds);
+        console.log("Delete acessos by gmail_id:", r1b.error?.message || "ok");
+      }
+
+      // Now delete gmails
+      const r2 = await supabaseAdmin.from("gmails").delete().eq("created_by", user_id);
+      console.log("Delete gmails:", r2.error?.message || "ok");
+
+      const r3 = await supabaseAdmin.from("team_permissions").delete().eq("user_id", user_id);
+      console.log("Delete team_permissions:", r3.error?.message || "ok");
+
+      const r4 = await supabaseAdmin.from("user_roles").delete().eq("user_id", user_id);
+      console.log("Delete user_roles:", r4.error?.message || "ok");
+
+      const r5 = await supabaseAdmin.from("profiles").delete().eq("user_id", user_id);
+      console.log("Delete profiles:", r5.error?.message || "ok");
 
       const { error } = await supabaseAdmin.auth.admin.deleteUser(user_id);
       if (error) {
-        return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: corsHeaders });
+        console.log("Delete user error:", error.message);
+        return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
+      console.log("User removed successfully");
+      return new Response(JSON.stringify({ success: true }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     return new Response(JSON.stringify({ error: "Ação inválida" }), { status: 400, headers: corsHeaders });
