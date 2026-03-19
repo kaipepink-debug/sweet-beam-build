@@ -117,7 +117,7 @@ export default function DashboardEquipe() {
       return;
     }
 
-    toast({ title: "Membro adicionado!" });
+    toast({ title: "Membro adicionado!", className: "bg-green-600 text-white border-green-600" });
     setEmail("");
     setPassword("");
     setDisplayName("");
@@ -149,7 +149,7 @@ export default function DashboardEquipe() {
             : m
         )
       );
-      toast({ title: "Permissão atualizada" });
+      toast({ title: "Permissão atualizada", className: "bg-green-600 text-white border-green-600" });
     }
   };
 
@@ -189,7 +189,7 @@ export default function DashboardEquipe() {
       const data = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        toast({ title: "Membro removido com sucesso" });
+        toast({ title: "Membro removido com sucesso", className: "bg-green-600 text-white border-green-600" });
         fetchTeam();
       } else {
         toast({
