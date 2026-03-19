@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, ChevronDown, Image } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
@@ -10,14 +10,27 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 
-const menuItems = [
+interface MenuItem {
+  title: string;
+  url: string;
+  icon: any;
+  permKey: string;
+  children?: MenuItem[];
+}
+
+const menuItems: MenuItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, permKey: "dashboard" },
   { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard, permKey: "financeiro" },
   { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, permKey: "vendas" },
   { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, permKey: "assinaturas" },
   { title: "Clientes", url: "/dashboard/clientes", icon: Users2, permKey: "clientes" },
   { title: "E-mail - Acesso", url: "/dashboard/gmail", icon: Mail, permKey: "email_acesso" },
-  { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, permKey: "ferramentas_ia" },
+  {
+    title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, permKey: "ferramentas_ia",
+    children: [
+      { title: "Banners Aviso", url: "/dashboard-ferramentas/banners", icon: Image, permKey: "ferramentas_ia" },
+    ],
+  },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
   { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
   { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, permKey: "configuracoes" },
