@@ -23,12 +23,7 @@ export function DashboardSidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 bottom-0 w-[60px] hover:w-[220px] z-40 flex flex-col py-4 gap-1 transition-all duration-300 overflow-hidden group/sidebar border-r border-border/20 hover:border-border/40"
-      style={{
-        background: "linear-gradient(180deg, hsl(240 50% 5% / 0.45) 0%, hsl(260 60% 8% / 0.4) 100%)",
-        backdropFilter: "blur(24px)",
-        WebkitBackdropFilter: "blur(24px)",
-      }}
+      className="fixed left-0 top-0 bottom-0 w-[60px] hover:w-[220px] z-40 flex flex-col py-4 gap-1 transition-all duration-300 overflow-hidden group/sidebar border-r border-border/20 hover:border-border/40 bg-sidebar-background/95 backdrop-blur-xl"
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-[14px] mb-4 min-h-[36px]">

@@ -1,11 +1,26 @@
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Search, Bell, LogOut } from "lucide-react";
+import { Search, Bell, LogOut, Sun, Moon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 
 export function DashboardTopbar() {
   const navigate = useNavigate();
+  const [isLight, setIsLight] = useState(() => {
+    return localStorage.getItem("dashboard-theme") === "light";
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isLight) {
+      root.classList.add("light");
+      localStorage.setItem("dashboard-theme", "light");
+    } else {
+      root.classList.remove("light");
+      localStorage.setItem("dashboard-theme", "dark");
+    }
+  }, [isLight]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -36,6 +51,13 @@ export function DashboardTopbar() {
           <Search className="h-3.5 w-3.5" />
           <span>Buscar...</span>
         </div>
+        <button
+          onClick={() => setIsLight(!isLight)}
+          className="text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-muted"
+          title={isLight ? "Modo escuro" : "Modo claro"}
+        >
+          {isLight ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+        </button>
         <button className="relative text-muted-foreground hover:text-foreground transition-colors">
           <Bell className="h-4 w-4" />
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full" />
