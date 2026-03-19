@@ -4,9 +4,11 @@ import { Search, Bell, LogOut, Sun, Moon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { useProfile } from "@/hooks/useProfile";
 
 export function DashboardTopbar() {
   const navigate = useNavigate();
+  const { displayName } = useProfile();
   const [isLight, setIsLight] = useState(() => {
     return localStorage.getItem("dashboard-theme") === "light";
   });
@@ -27,23 +29,14 @@ export function DashboardTopbar() {
     navigate("/login");
   };
 
+  const initials = displayName
+    ? displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
+    : "AD";
+
   return (
     <header className="h-14 border-b border-border bg-background sticky top-0 z-20 flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-3">
-        <nav className="hidden md:flex items-center gap-1">
-          {["Dashboard", "Financeiro", "Analytics", "Configurações"].map((tab, i) => (
-            <button
-              key={tab}
-              className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
-                i === 0
-                  ? "bg-primary/15 text-primary font-medium"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
+        <h2 className="text-sm font-semibold text-foreground">Dashboard Admin</h2>
       </div>
 
       <div className="flex items-center gap-3">
@@ -66,7 +59,7 @@ export function DashboardTopbar() {
           <DropdownMenuTrigger asChild>
             <button className="outline-none">
               <Avatar className="h-8 w-8 cursor-pointer">
-                <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">AD</AvatarFallback>
+                <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">{initials}</AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>

@@ -2,7 +2,9 @@ import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Mail, Settings, Shop
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
+import ratariaLogoBlack from "@/assets/rataria-icon-black.png";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useProfile } from "@/hooks/useProfile";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, permKey: "dashboard" },
@@ -20,17 +22,31 @@ const menuItems = [
 export function DashboardSidebar() {
   const location = useLocation();
   const { permissions, loading } = usePermissions();
+  const { displayName } = useProfile();
+  const isLight = document.documentElement.classList.contains("light");
 
   return (
     <aside
-      className="fixed left-0 top-0 bottom-0 w-[60px] hover:w-[220px] z-40 flex flex-col py-4 gap-1 transition-all duration-300 overflow-hidden group/sidebar border-r border-border/20 hover:border-border/40 bg-sidebar-background/95 backdrop-blur-xl"
+      className="fixed left-0 top-0 bottom-0 w-[220px] z-40 flex flex-col py-4 gap-1 border-r border-border/20 bg-sidebar-background/95 backdrop-blur-xl"
     >
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-[14px] mb-4 min-h-[36px]">
-        <img src={ratariaLogo} alt="Ratar.ia" className="w-8 h-8 rounded-xl shrink-0" />
-        <span className="text-sm font-bold text-foreground whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
-          Ratar.ia
+      {/* Logo + Title */}
+      <div className="flex items-center gap-3 px-4 mb-1 min-h-[36px]">
+        <img
+          src={isLight ? ratariaLogoBlack : ratariaLogo}
+          alt="Ratar.ia"
+          className="w-8 h-8 rounded-xl shrink-0"
+        />
+        <span className="text-sm font-bold text-foreground whitespace-nowrap">
+          Dashboard Admin
         </span>
+      </div>
+
+      {/* Admin greeting */}
+      <div className="px-4 mb-4">
+        <p className="text-[11px] text-muted-foreground font-medium">Painel Administrador</p>
+        <p className="text-[12px] text-foreground font-semibold truncate">
+          Olá, {displayName || "Admin"}
+        </p>
       </div>
 
       {/* Menu items */}
@@ -46,10 +62,10 @@ export function DashboardSidebar() {
                 className="h-10 rounded-xl flex items-center gap-3 px-[10px] whitespace-nowrap cursor-not-allowed opacity-30"
               >
                 <item.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" strokeWidth={2.5} />
-                <span className="text-[13px] font-bold opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 text-muted-foreground">
+                <span className="text-[13px] font-bold text-muted-foreground">
                   {item.title}
                 </span>
-                <Lock className="h-3 w-3 ml-auto shrink-0 text-muted-foreground opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300" />
+                <Lock className="h-3 w-3 ml-auto shrink-0 text-muted-foreground" />
               </div>
             );
           }
@@ -66,7 +82,7 @@ export function DashboardSidebar() {
               )}
             >
               <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2.5} />
-              <span className="text-[13px] font-bold opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">
+              <span className="text-[13px] font-bold">
                 {item.title}
               </span>
               {isActive && (

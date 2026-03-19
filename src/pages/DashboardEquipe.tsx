@@ -173,7 +173,7 @@ export default function DashboardEquipe() {
   return (
     <div className="min-h-screen flex w-full bg-background">
       <DashboardSidebar />
-      <div className="flex-1 flex flex-col min-w-0 ml-[60px]">
+      <div className="flex-1 flex flex-col min-w-0 ml-[220px]">
         <DashboardTopbar />
         <main className="flex-1 p-4 md:p-6 space-y-5 overflow-auto">
           {/* Header */}
