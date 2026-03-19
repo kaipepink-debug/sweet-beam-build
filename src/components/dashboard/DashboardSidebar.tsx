@@ -48,12 +48,15 @@ export function DashboardSidebar() {
       </div>
 
       {/* Admin greeting */}
-      <div className="px-4 mb-4 text-center">
+      <div className="px-4 mb-3 text-center">
         <p className="text-[11px] text-muted-foreground font-medium">Painel Administrador</p>
         <p className="text-[12px] text-foreground font-semibold truncate">
           Olá, {displayName || "Admin"}
         </p>
       </div>
+
+      {/* Separator */}
+      <div className="mx-4 mb-2 border-t border-border/40" />
 
       {/* Menu items */}
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2">
