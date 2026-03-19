@@ -1,0 +1,1 @@
+ALTER TABLE public.team_permissions ADD COLUMN email_acesso boolean NOT NULL DEFAULT true;
