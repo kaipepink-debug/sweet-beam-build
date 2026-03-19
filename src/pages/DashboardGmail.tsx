@@ -263,7 +263,10 @@ export default function DashboardGmail() {
                   <div key={g.id} className="rounded-2xl border border-border p-4 md:p-5 bg-card transition-all hover:border-border/80">
                     <div className="flex items-start gap-4">
                       {/* Google Icon */}
-                      <img src={googleIcon} alt="Google" className="w-10 h-10 rounded-xl shrink-0 mt-1" />
+                      {(() => {
+                        const isOutlook = /outlook|hotmail|live\.com/i.test(g.gmail);
+                        return <img src={isOutlook ? outlookIcon : googleIcon} alt={isOutlook ? "Outlook" : "Google"} className="w-10 h-10 rounded-xl shrink-0 mt-1" />;
+                      })()}
 
                       {/* Main content */}
                       <div className="flex-1 min-w-0">
