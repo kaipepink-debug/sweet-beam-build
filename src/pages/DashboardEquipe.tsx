@@ -3,7 +3,7 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Users2, Plus, Trash2, Shield, UserCheck, X } from "lucide-react";
+import { Users2, Plus, Trash2, Shield, UserCheck, X, Pencil } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { z } from "zod";
 
@@ -53,6 +53,7 @@ export default function DashboardEquipe() {
     equipe: false,
   });
   const [submitting, setSubmitting] = useState(false);
+  const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const fetchTeam = useCallback(async () => {
@@ -290,18 +291,46 @@ export default function DashboardEquipe() {
                             </div>
                           </div>
                           {!isMaster && member.role !== "admin" && (
-                            <button
-                              onClick={() => handleRemove(member.id)}
-                              className="text-red-400/60 hover:text-red-400 transition-colors p-2"
-                              title="Remover membro"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => setEditingMemberId(editingMemberId === member.id ? null : member.id)}
+                                className="text-muted-foreground hover:text-primary transition-colors p-2"
+                                title="Editar permissões"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleRemove(member.id)}
+                                className="text-destructive/60 hover:text-destructive transition-colors p-2"
+                                title="Remover membro"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
                           )}
                         </div>
 
-                        {/* Permission toggles */}
-                        {!isMaster && (
+                        {/* Compact: show only active permissions as badges */}
+                        {!isMaster && editingMemberId !== member.id && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {Object.entries(PERMISSION_LABELS)
+                              .filter(([key]) => member.permissions?.[key])
+                              .map(([, label]) => (
+                                <span
+                                  key={label}
+                                  className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary/15 text-primary"
+                                >
+                                  {label}
+                                </span>
+                              ))}
+                            {Object.entries(PERMISSION_LABELS).filter(([key]) => member.permissions?.[key]).length === 0 && (
+                              <span className="text-[10px] text-muted-foreground">Nenhuma permissão</span>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Expanded: permission toggles */}
+                        {!isMaster && editingMemberId === member.id && (
                           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                             {Object.entries(PERMISSION_LABELS).map(([key, label]) => (
                               <div
@@ -312,7 +341,6 @@ export default function DashboardEquipe() {
                                 <Switch
                                   checked={member.permissions?.[key] ?? false}
                                   onCheckedChange={(v) => handleUpdatePermission(member.id, key, v)}
-                                  disabled={member.role === "admin"}
                                 />
                               </div>
                             ))}
