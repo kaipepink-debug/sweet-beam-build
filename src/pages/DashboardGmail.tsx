@@ -78,7 +78,6 @@ export default function DashboardGmail() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<GmailForm>(emptyForm);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const { data: gmails = [], isLoading } = useQuery({
