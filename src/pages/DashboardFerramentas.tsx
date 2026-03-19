@@ -130,14 +130,14 @@ export default function DashboardFerramentas() {
                   <div
                     key={tool.name}
                     onClick={() => navigate(`/dashboard-ferramentas/${tool.ferramenta}`)}
-                    className="group flex flex-col gap-2.5 p-3.5 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200 cursor-pointer"
+                    className="group flex flex-col gap-3 p-4 rounded-xl border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all duration-200 cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
-                        <img src={tool.logo} alt={tool.name} className="w-7 h-7 object-contain" loading="lazy" />
+                      <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-muted/30 border border-border/30">
+                        <img src={tool.logo} alt={tool.name} className="w-8 h-8 object-contain" loading="lazy" />
                       </div>
                       <div className="flex-1 min-w-0 flex items-center gap-2">
-                        <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
+                        <h3 className="text-foreground font-semibold text-base">{tool.name}</h3>
                         <span className={`w-2 h-2 rounded-full shrink-0 ${getToolDotColor(info)}`} />
                       </div>
                       <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
