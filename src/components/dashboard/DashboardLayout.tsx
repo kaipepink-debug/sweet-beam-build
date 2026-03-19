@@ -5,10 +5,11 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 export default function DashboardLayout() {
   useEffect(() => {
     const saved = localStorage.getItem("dashboard-theme");
-    if (saved === "light") {
-      document.documentElement.classList.add("light");
-    } else {
+    if (saved === "dark") {
       document.documentElement.classList.remove("light");
+    } else {
+      document.documentElement.classList.add("light");
+      if (!saved) localStorage.setItem("dashboard-theme", "light");
     }
   }, []);
   return (
