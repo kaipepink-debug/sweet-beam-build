@@ -117,7 +117,7 @@ export default function DashboardEquipe() {
       return;
     }
 
-    toast({ title: "Membro adicionado!" });
+    toast({ title: "Membro adicionado!", className: "bg-green-600 text-white border-green-600" });
     setEmail("");
     setPassword("");
     setDisplayName("");
