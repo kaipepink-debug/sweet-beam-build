@@ -322,7 +322,7 @@ export default function DashboardEquipe() {
                               .map(([, label]) => (
                                 <span
                                   key={label}
-                                  className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary/15 text-primary"
+                                  className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-green-500/15 text-green-400"
                                 >
                                   {label}
                                 </span>
