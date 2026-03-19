@@ -162,22 +162,27 @@ export default function FerramentaGerenciamento() {
       // Find the gmail_id from the selected email
       const matchedGmail = gmailsList.find(g => g.gmail === payload.email_cliente.trim());
 
-      const record: Record<string, unknown> = {
-        ferramenta: toolId!,
-        email_cliente: payload.email_cliente.trim(),
-        login: payload.login.trim(),
-        senha: payload.senha,
-        gmail_id: matchedGmail?.id || null,
-        created_by: user.id,
-      };
-
       if (payload.id) {
-        const { error } = await supabase.from("acessos").update(record).eq("id", payload.id);
+        const { error } = await supabase.from("acessos").update({
+          ferramenta: toolId!,
+          email_cliente: payload.email_cliente.trim(),
+          login: payload.login.trim(),
+          senha: payload.senha,
+          gmail_id: matchedGmail?.id || null,
+          created_by: user.id,
+        }).eq("id", payload.id);
         if (error) throw error;
       } else {
-        (record as Record<string, unknown>).data_criacao = now.toISOString();
-        (record as Record<string, unknown>).data_expiracao = expDate.toISOString();
-        const { error } = await supabase.from("acessos").insert(record);
+        const { error } = await supabase.from("acessos").insert({
+          ferramenta: toolId!,
+          email_cliente: payload.email_cliente.trim(),
+          login: payload.login.trim(),
+          senha: payload.senha,
+          gmail_id: matchedGmail?.id || null,
+          created_by: user.id,
+          data_criacao: now.toISOString(),
+          data_expiracao: expDate.toISOString(),
+        });
         if (error) throw error;
       }
     },
