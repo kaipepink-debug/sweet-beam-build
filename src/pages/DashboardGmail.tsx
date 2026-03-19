@@ -337,8 +337,6 @@ export default function DashboardGmail() {
               })}
             </div>
           )}
-        </main>
-      </div>
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

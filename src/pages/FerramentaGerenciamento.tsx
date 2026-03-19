@@ -492,8 +492,6 @@ export default function FerramentaGerenciamento() {
               })}
             </div>
           )}
-        </main>
-      </div>
 
       {/* Mode Selection Dialog */}
       <Dialog open={modeSelect} onOpenChange={setModeSelect}>
