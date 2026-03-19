@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
+import { useNavigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Settings, Clock, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
