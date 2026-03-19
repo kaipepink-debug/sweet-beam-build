@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
@@ -90,20 +90,7 @@ export function DashboardSidebar() {
           const isActive = location.pathname === item.url;
           const hasPermission = loading ? true : permissions[item.permKey as keyof typeof permissions];
 
-          if (!hasPermission) {
-            return (
-              <div
-                key={item.title}
-                className="h-10 rounded-xl flex items-center gap-3 px-[10px] whitespace-nowrap cursor-not-allowed opacity-30"
-              >
-                <item.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" strokeWidth={1.8} />
-                <span className="text-[13px] font-medium text-muted-foreground">
-                  {item.title}
-                </span>
-                <Lock className="h-3 w-3 ml-auto shrink-0 text-muted-foreground" />
-              </div>
-            );
-          }
+          if (!hasPermission) return null;
 
           return (
             <Link
