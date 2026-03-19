@@ -42,17 +42,26 @@ Deno.serve(async (req) => {
     const action = url.searchParams.get("action");
 
     if (req.method === "POST" && action === "create") {
-      const { email, password, permissions } = await req.json();
+      const { email, password, display_name, permissions } = await req.json();
 
-      // Create user
+      // Create user with display_name in metadata
       const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
+        user_metadata: { display_name: display_name || email },
       });
 
       if (createError) {
         return new Response(JSON.stringify({ error: createError.message }), { status: 400, headers: corsHeaders });
+      }
+
+      // Update the profile display_name if provided
+      if (display_name && newUser.user) {
+        await supabaseAdmin
+          .from("profiles")
+          .update({ display_name })
+          .eq("user_id", newUser.user.id);
       }
 
       // Update permissions if provided

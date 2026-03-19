@@ -10,6 +10,7 @@ import { z } from "zod";
 const createMemberSchema = z.object({
   email: z.string().trim().email("Email inválido").max(255),
   password: z.string().min(8, "Mínimo 8 caracteres").max(72),
+  displayName: z.string().trim().min(1, "Nome é obrigatório").max(100),
 });
 
 interface TeamMember {
@@ -40,6 +41,7 @@ export default function DashboardEquipe() {
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [newPermissions, setNewPermissions] = useState<Record<string, boolean>>({
     dashboard: false,
     financeiro: false,
@@ -60,7 +62,6 @@ export default function DashboardEquipe() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
-    // Use fetch directly for GET with query params
     const response = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=list`,
       {
@@ -83,7 +84,7 @@ export default function DashboardEquipe() {
   }, [fetchTeam]);
 
   const handleCreate = async () => {
-    const result = createMemberSchema.safeParse({ email, password });
+    const result = createMemberSchema.safeParse({ email, password, displayName });
     if (!result.success) {
       toast({ title: "Erro", description: result.error.errors[0].message, variant: "destructive" });
       return;
@@ -101,7 +102,12 @@ export default function DashboardEquipe() {
           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: result.data.email, password: result.data.password, permissions: newPermissions }),
+        body: JSON.stringify({
+          email: result.data.email,
+          password: result.data.password,
+          display_name: result.data.displayName,
+          permissions: newPermissions,
+        }),
       }
     );
 
@@ -116,6 +122,7 @@ export default function DashboardEquipe() {
     toast({ title: "Membro adicionado!" });
     setEmail("");
     setPassword("");
+    setDisplayName("");
     setShowForm(false);
     fetchTeam();
   };
@@ -199,7 +206,17 @@ export default function DashboardEquipe() {
                 Adicionar Membro
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1.5">Nome</label>
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors"
+                    placeholder="Nome do membro"
+                  />
+                </div>
                 <div>
                   <label className="block text-xs text-muted-foreground mb-1.5">Email</label>
                   <input
@@ -274,21 +291,23 @@ export default function DashboardEquipe() {
                 >
                   {(() => {
                     const isMaster = member.email === "mandarrari@rataria.io";
+                    const memberName = isMaster ? "Mandarrari" : member.display_name || member.email;
                     return (
                       <>
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center">
-                              {isMaster ? (
-                                <Shield className="h-4 w-4 text-primary" />
-                              ) : member.role === "admin" ? (
+                              {isMaster || member.role === "admin" ? (
                                 <Shield className="h-4 w-4 text-primary" />
                               ) : (
                                 <Users2 className="h-4 w-4 text-primary" />
                               )}
                             </div>
                             <div>
-                              <p className="text-sm font-semibold text-foreground">{member.email}</p>
+                              <p className="text-sm font-semibold text-foreground">{memberName}</p>
+                              <p className="text-[10px] text-muted-foreground">
+                                {member.email}
+                              </p>
                               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                                 {isMaster ? "Master" : member.role === "admin" ? "Administrador" : "Membro"}
                               </p>
