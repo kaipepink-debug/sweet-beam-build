@@ -397,6 +397,19 @@ This is a "PASSWORD CHANGED" notice banner for the AI tool "${selectedFerramenta
             </>
           )}
 
+          {selectedType === "senha_alterada" && (
+            <>
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">Texto de destaque</Label>
+                <Input value={textoDestaque || "SENHA ALTERADA 🔑"} onChange={(e) => setTextoDestaque(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">Mensagem / Instruções (opcional)</Label>
+                <Textarea value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Ex: A nova senha foi enviada no canal..." rows={3} />
+              </div>
+            </>
+          )}
+
           {selectedType === "geral" && (
             <>
               <div className="space-y-2">
