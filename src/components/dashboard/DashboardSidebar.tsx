@@ -71,7 +71,7 @@ export function DashboardSidebar() {
                 className="h-10 rounded-xl flex items-center gap-3 px-[10px] whitespace-nowrap cursor-not-allowed opacity-30"
               >
                 <item.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" strokeWidth={1.8} />
-                <span className="text-[13px] font-medium text-muted-foreground" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                <span className="text-[13px] font-medium text-muted-foreground">
                   {item.title}
                 </span>
                 <Lock className="h-3 w-3 ml-auto shrink-0 text-muted-foreground" />
