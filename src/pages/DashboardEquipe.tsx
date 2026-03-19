@@ -53,6 +53,7 @@ export default function DashboardEquipe() {
     equipe: false,
   });
   const [submitting, setSubmitting] = useState(false);
+  const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const fetchTeam = useCallback(async () => {
