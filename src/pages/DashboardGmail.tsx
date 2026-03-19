@@ -9,9 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Search, Pencil, Trash2, Copy, Check, Eye, EyeOff, Mail } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Copy, Check, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import googleIcon from "@/assets/google-icon.png";
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
 import elevenlabsLogo from "@/assets/tools/elevenlabs.png";
@@ -77,7 +78,6 @@ export default function DashboardGmail() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<GmailForm>(emptyForm);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const { data: gmails = [], isLoading } = useQuery({
@@ -190,13 +190,6 @@ export default function DashboardGmail() {
     setTimeout(() => setCopiedField(null), 2000);
   }
 
-  function togglePassword(id: string) {
-    setVisiblePasswords(prev => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }
 
   return (
     <div className="min-h-screen flex w-full bg-background">
@@ -261,71 +254,54 @@ export default function DashboardGmail() {
           ) : (
             <div className="grid gap-3">
               {filtered.map(g => {
-                const showPass = visiblePasswords.has(g.id);
                 const linkedTools = gmailToolsMap[g.id] || [];
 
                 return (
                   <div key={g.id} className="rounded-2xl border border-border p-4 md:p-5 bg-card transition-all hover:border-border/80">
-                    <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                      <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">Gmail</p>
-                          <div className="flex items-center gap-1.5">
-                            <p className="text-sm font-medium text-foreground truncate">{g.gmail}</p>
-                            <button
-                              onClick={() => handleCopy(g.gmail, `gmail-${g.id}`)}
-                              className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                            >
-                              {copiedField === `gmail-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                            </button>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">Senha</p>
-                          <div className="flex items-center gap-1.5">
-                            <p className="text-sm font-medium text-foreground font-mono">
-                              {showPass ? g.senha : "••••••••"}
-                            </p>
-                            <button
-                              onClick={() => togglePassword(g.id)}
-                              className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                            >
-                              {showPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                            </button>
-                            <button
-                              onClick={() => handleCopy(g.senha, `senha-${g.id}`)}
-                              className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                            >
-                              {copiedField === `senha-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                            </button>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">E-mail de recuperação</p>
-                          <p className="text-sm font-medium text-foreground truncate">
-                            {g.email_recuperacao || "—"}
-                          </p>
-                        </div>
-                      </div>
+                    <div className="flex items-start gap-4">
+                      {/* Google Icon */}
+                      <img src={googleIcon} alt="Google" className="w-10 h-10 rounded-xl shrink-0 mt-1" />
 
-                      <div className="flex items-center gap-2 shrink-0">
-                        {/* Linked tools badges */}
+                      {/* Fields */}
+                      <div className="flex-1 min-w-0 space-y-2">
+                        {/* Gmail */}
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-semibold text-foreground truncate">{g.gmail}</p>
+                          <button onClick={() => handleCopy(g.gmail, `gmail-${g.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                            {copiedField === `gmail-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+
+                        {/* Senha - always visible */}
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-xs text-muted-foreground">Senha:</p>
+                          <p className="text-sm font-mono text-foreground">{g.senha}</p>
+                          <button onClick={() => handleCopy(g.senha, `senha-${g.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                            {copiedField === `senha-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+
+                        {/* Email de recuperação */}
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-xs text-muted-foreground">Recuperação:</p>
+                          <p className="text-sm text-foreground truncate">{g.email_recuperacao || "—"}</p>
+                        </div>
+
+                        {/* Linked tools */}
                         {linkedTools.length > 0 && (
-                          <div className="flex items-center gap-1 mr-2">
+                          <div className="flex items-center gap-1.5 pt-1">
                             {linkedTools.map(toolKey => {
                               const tool = toolsConfig[toolKey];
                               return tool ? (
-                                <img
-                                  key={toolKey}
-                                  src={tool.logo}
-                                  alt={tool.name}
-                                  title={tool.name}
-                                  className="w-5 h-5 rounded object-contain"
-                                />
+                                <img key={toolKey} src={tool.logo} alt={tool.name} title={tool.name} className="w-5 h-5 rounded object-contain" />
                               ) : null;
                             })}
                           </div>
                         )}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1 shrink-0">
                         <Button variant="ghost" size="icon" onClick={() => openEdit(g)} className="rounded-full h-8 w-8">
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
