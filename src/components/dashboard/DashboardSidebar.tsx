@@ -87,11 +87,11 @@ export function DashboardSidebar() {
                 "h-10 rounded-xl flex items-center gap-3 px-[10px] transition-all duration-300 whitespace-nowrap relative",
                 isActive
                   ? "bg-primary/20 text-primary shadow-[0_0_18px_hsl(270_100%_55%/0.3)]"
-                  : "text-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
+                  : "text-muted-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
               )}
             >
-              <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2.5} />
-              <span className="text-[13px] font-bold">
+              <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
+              <span className="text-[13px] font-medium" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 {item.title}
               </span>
               {isActive && (
