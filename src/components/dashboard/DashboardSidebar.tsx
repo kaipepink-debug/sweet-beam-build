@@ -77,11 +77,6 @@ export function DashboardSidebar() {
         })}
       </nav>
 
-      {/* Bottom glow */}
-      <div
-        className="w-10 h-10 rounded-full blur-2xl opacity-40 mt-auto self-center"
-        style={{ background: "radial-gradient(circle, hsl(270 100% 55%), transparent)" }}
-      />
     </aside>
   );
 }
