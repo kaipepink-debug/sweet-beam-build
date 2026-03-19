@@ -27,10 +27,11 @@ const PERMISSION_LABELS: Record<string, string> = {
   vendas: "Vendas",
   assinaturas: "Assinaturas",
   clientes: "Clientes",
+  email_acesso: "E-mail - Acesso",
   ferramentas_ia: "Ferramentas IA",
   analytics: "Analytics",
-  configuracoes: "Configurações",
   equipe: "Equipe",
+  configuracoes: "Configurações",
 };
 
 export default function DashboardEquipe() {
