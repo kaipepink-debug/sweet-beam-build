@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 
-type BannerType = "novidade" | "restabelecida" | "manutencao" | "geral";
+type BannerType = "novidade" | "restabelecida" | "manutencao" | "geral" | "senha_alterada";
 
 interface Ferramenta {
   id: string;
