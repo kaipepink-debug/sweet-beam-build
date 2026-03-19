@@ -16,7 +16,7 @@ import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import {
   Plus, Search, Copy, Pencil, Trash2,
-  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft
+  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon
 } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
@@ -80,6 +80,7 @@ type AcessoForm = {
   email_cliente: string;
   login: string;
   senha: string;
+  video_url: string;
 };
 
 type Gmail = {
@@ -87,10 +88,13 @@ type Gmail = {
   gmail: string;
 };
 
+type AcessoMode = "gmail" | "fornecedor" | null;
+
 const emptyForm: AcessoForm = {
   email_cliente: "",
   login: "",
   senha: "",
+  video_url: "",
 };
 
 function getStatus(dataExpiracao: string) {
@@ -117,6 +121,8 @@ export default function FerramentaGerenciamento() {
   const [filterStatus, setFilterStatus] = useState<string>("todos");
   const [sortAsc, setSortAsc] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [modeSelect, setModeSelect] = useState(false);
+  const [acessoMode, setAcessoMode] = useState<AcessoMode>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<AcessoForm>(emptyForm);
   const [videoModal, setVideoModal] = useState<string | null>(null);
@@ -159,7 +165,7 @@ export default function FerramentaGerenciamento() {
       const dias = toolConfig?.expiracaoDias || 30;
       const expDate = new Date(now.getTime() + dias * 24 * 60 * 60 * 1000);
 
-      // Find the gmail_id from the selected email
+      // Find the gmail_id from the selected email (only for gmail mode)
       const matchedGmail = gmailsList.find(g => g.gmail === payload.email_cliente.trim());
 
       if (payload.id) {
@@ -168,6 +174,7 @@ export default function FerramentaGerenciamento() {
           email_cliente: payload.email_cliente.trim(),
           login: payload.login.trim(),
           senha: payload.senha,
+          video_url: payload.video_url.trim() || null,
           gmail_id: matchedGmail?.id || null,
           created_by: user.id,
         }).eq("id", payload.id);
@@ -178,6 +185,7 @@ export default function FerramentaGerenciamento() {
           email_cliente: payload.email_cliente.trim(),
           login: payload.login.trim(),
           senha: payload.senha,
+          video_url: payload.video_url.trim() || null,
           gmail_id: matchedGmail?.id || null,
           created_by: user.id,
           data_criacao: now.toISOString(),
@@ -191,6 +199,7 @@ export default function FerramentaGerenciamento() {
       queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
       setDialogOpen(false);
       setEditingId(null);
+      setAcessoMode(null);
       setForm(emptyForm);
       toast.success(editingId ? "Acesso atualizado!" : "Acesso criado!");
     },
@@ -240,13 +249,23 @@ export default function FerramentaGerenciamento() {
       email_cliente: a.email_cliente,
       login: a.login,
       senha: a.senha,
+      video_url: a.video_url || "",
     });
+    // Detect mode: if has gmail_id it's gmail, otherwise fornecedor
+    setAcessoMode(a.gmail_id ? "gmail" : "fornecedor");
     setDialogOpen(true);
   }
 
   function openNew() {
     setEditingId(null);
     setForm(emptyForm);
+    setAcessoMode(null);
+    setModeSelect(true);
+  }
+
+  function selectMode(mode: AcessoMode) {
+    setAcessoMode(mode);
+    setModeSelect(false);
     setDialogOpen(true);
   }
 
@@ -443,38 +462,89 @@ export default function FerramentaGerenciamento() {
         </main>
       </div>
 
+      {/* Mode Selection Dialog */}
+      <Dialog open={modeSelect} onOpenChange={setModeSelect}>
+        <DialogContent className="sm:max-w-sm rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>Tipo de acesso</DialogTitle>
+            <DialogDescription>Como deseja adicionar o login?</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-3 py-2">
+            <button
+              onClick={() => selectMode("gmail")}
+              className="flex items-center gap-3 rounded-xl border border-border p-4 hover:border-primary/40 hover:bg-primary/5 transition-all text-left"
+            >
+              <Mail className="w-5 h-5 text-primary shrink-0" />
+              <div>
+                <p className="text-sm font-semibold text-foreground">A partir de um Gmail</p>
+                <p className="text-xs text-muted-foreground">Selecione um Gmail cadastrado</p>
+              </div>
+            </button>
+            <button
+              onClick={() => selectMode("fornecedor")}
+              className="flex items-center gap-3 rounded-xl border border-border p-4 hover:border-primary/40 hover:bg-primary/5 transition-all text-left"
+            >
+              <LinkIcon className="w-5 h-5 text-primary shrink-0" />
+              <div>
+                <p className="text-sm font-semibold text-foreground">Fornecedor</p>
+                <p className="text-xs text-muted-foreground">Insira os dados manualmente com link</p>
+              </div>
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-lg rounded-2xl">
           <DialogHeader>
-            <DialogTitle>{editingId ? "Editar acesso" : "Novo acesso"}</DialogTitle>
+            <DialogTitle>{editingId ? "Editar acesso" : acessoMode === "gmail" ? "Novo acesso via Gmail" : "Novo acesso via Fornecedor"}</DialogTitle>
             <DialogDescription>
               {editingId ? "Atualize os dados do acesso." : `Preencha os dados para criar um novo acesso ${toolConfig.name}.`}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-2">
-            <div className="grid gap-2">
-              <Label>E-mail principal</Label>
-              <Select value={form.email_cliente} onValueChange={v => setForm(f => ({ ...f, email_cliente: v }))}>
-                <SelectTrigger className="rounded-xl">
-                  <SelectValue placeholder="Selecione um Gmail" />
-                </SelectTrigger>
-                <SelectContent>
-                  {gmailsList.map(g => {
-                    const isUsed = acessos.some(a => a.email_cliente === g.gmail && a.id !== editingId);
-                    return (
-                      <SelectItem key={g.id} value={g.gmail} disabled={isUsed}>
-                        {g.gmail}{isUsed ? " (já usado nesta ferramenta)" : ""}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label>Usuário (opcional)</Label>
-              <Input placeholder="nome de usuário" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
-            </div>
+            {acessoMode === "gmail" ? (
+              <div className="grid gap-2">
+                <Label>E-mail principal</Label>
+                <Select value={form.email_cliente} onValueChange={v => setForm(f => ({ ...f, email_cliente: v }))}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue placeholder="Selecione um Gmail" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {gmailsList.map(g => {
+                      const isUsed = acessos.some(a => a.email_cliente === g.gmail && a.id !== editingId);
+                      return (
+                        <SelectItem key={g.id} value={g.gmail} disabled={isUsed}>
+                          {g.gmail}{isUsed ? " (já usado nesta ferramenta)" : ""}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : (
+              <>
+                <div className="grid gap-2">
+                  <Label>E-mail / Login</Label>
+                  <Input placeholder="email@fornecedor.com" value={form.email_cliente} onChange={e => setForm(f => ({ ...f, email_cliente: e.target.value }))} className="rounded-xl" />
+                </div>
+                <div className="grid gap-2">
+                  <Label>Link do Fornecedor <span className="text-destructive">*</span></Label>
+                  <Input placeholder="https://fornecedor.com/login" value={form.video_url} onChange={e => setForm(f => ({ ...f, video_url: e.target.value }))} className="rounded-xl" />
+                </div>
+                <div className="grid gap-2">
+                  <Label>E-mail de recuperação <span className="text-muted-foreground text-xs">(opcional)</span></Label>
+                  <Input placeholder="recuperacao@email.com" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
+                </div>
+              </>
+            )}
+            {acessoMode === "gmail" && (
+              <div className="grid gap-2">
+                <Label>Usuário (opcional)</Label>
+                <Input placeholder="nome de usuário" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
+              </div>
+            )}
             <div className="grid gap-2">
               <Label>Senha</Label>
               <Input placeholder="••••••••" value={form.senha} onChange={e => setForm(f => ({ ...f, senha: e.target.value }))} className="rounded-xl" />
@@ -484,7 +554,10 @@ export default function FerramentaGerenciamento() {
             <Button variant="outline" onClick={() => setDialogOpen(false)} className="rounded-xl">Cancelar</Button>
             <Button
               onClick={() => upsertMutation.mutate({ id: editingId || undefined, ...form })}
-              disabled={!form.email_cliente || !form.senha || upsertMutation.isPending}
+              disabled={
+                !form.email_cliente || !form.senha || upsertMutation.isPending ||
+                (acessoMode === "fornecedor" && !form.video_url.trim())
+              }
               className="rounded-xl"
             >
               {upsertMutation.isPending ? "Salvando..." : editingId ? "Salvar" : "Criar acesso"}
