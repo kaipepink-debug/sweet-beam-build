@@ -5,6 +5,8 @@ import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { getFirstPermittedRoute } from "@/lib/getFirstPermittedRoute";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,10 +21,23 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     const { error } = await signIn(email, password);
-    setLoading(false);
     if (error) {
+      setLoading(false);
       toast({ title: "Erro ao entrar", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: perms } = await supabase
+        .from("team_permissions")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+      setLoading(false);
+      navigate(getFirstPermittedRoute(perms));
     } else {
+      setLoading(false);
       navigate("/dashboard");
     }
   };
