@@ -43,7 +43,7 @@ export function DashboardSidebar() {
         <img
           src={isLight ? ratariaLogoBlack : ratariaLogo}
           alt="Ratar.ia"
-          className="w-10 h-10 shrink-0 object-contain"
+          className="h-10 shrink-0 object-contain"
         />
       </div>
 
@@ -70,8 +70,8 @@ export function DashboardSidebar() {
                 key={item.title}
                 className="h-10 rounded-xl flex items-center gap-3 px-[10px] whitespace-nowrap cursor-not-allowed opacity-30"
               >
-                <item.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" strokeWidth={2.5} />
-                <span className="text-[13px] font-bold text-muted-foreground">
+                <item.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" strokeWidth={1.8} />
+                <span className="text-[13px] font-medium text-muted-foreground" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   {item.title}
                 </span>
                 <Lock className="h-3 w-3 ml-auto shrink-0 text-muted-foreground" />
@@ -87,11 +87,11 @@ export function DashboardSidebar() {
                 "h-10 rounded-xl flex items-center gap-3 px-[10px] transition-all duration-300 whitespace-nowrap relative",
                 isActive
                   ? "bg-primary/20 text-primary shadow-[0_0_18px_hsl(270_100%_55%/0.3)]"
-                  : "text-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
+                  : "text-muted-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
               )}
             >
-              <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2.5} />
-              <span className="text-[13px] font-bold">
+              <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
+              <span className="text-[13px] font-medium" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 {item.title}
               </span>
               {isActive && (

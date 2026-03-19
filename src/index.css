@@ -80,7 +80,7 @@ All colors MUST be HSL.
   }
 
   .light {
-    --background: 0 0% 96%;
+    --background: 220 10% 92%;
     --foreground: 240 10% 10%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 10%;
@@ -100,7 +100,7 @@ All colors MUST be HSL.
     --input: 240 6% 85%;
     --ring: 270 80% 40%;
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 240 10% 30%;
+    --sidebar-foreground: 240 5% 45%;
     --sidebar-primary: 270 80% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 260 20% 95%;
