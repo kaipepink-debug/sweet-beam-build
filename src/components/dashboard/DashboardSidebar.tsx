@@ -39,11 +39,11 @@ export function DashboardSidebar() {
       className="fixed left-0 top-0 bottom-0 w-[220px] z-40 flex flex-col py-4 gap-1 border-r border-border/20 bg-sidebar-background/95 backdrop-blur-xl"
     >
       {/* Logo only */}
-      <div className="flex items-center justify-center px-4 mb-1 min-h-[36px]">
+      <div className="flex items-center justify-center px-4 mb-1 min-h-[44px]">
         <img
           src={isLight ? ratariaLogoBlack : ratariaLogo}
           alt="Ratar.ia"
-          className="w-10 h-10 rounded-xl shrink-0"
+          className="w-10 h-10 shrink-0 object-contain"
         />
       </div>
 
