@@ -178,18 +178,20 @@ export default function DashboardEquipe() {
 
   return (
     <div className="space-y-5">
-            <div>
-              <p className="text-xs text-muted-foreground mb-1">Gerencie os membros da sua equipe</p>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Equipe</h1>
-            </div>
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
-            >
-              {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-              {showForm ? "Cancelar" : "Novo Membro"}
-            </button>
-          </div>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs text-muted-foreground mb-1">Gerencie os membros da sua equipe</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Equipe</h1>
+        </div>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+          {showForm ? "Cancelar" : "Novo Membro"}
+        </button>
+      </div>
 
           {/* Add Member Form */}
           {showForm && (
