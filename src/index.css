@@ -196,6 +196,6 @@ All colors MUST be HSL.
 /* Desktop 80% zoom for dashboard and login pages */
 @media (min-width: 1024px) {
   .desktop-zoom {
-    zoom: 0.8;
+    zoom: 0.9;
   }
 }
