@@ -384,6 +384,7 @@ export default function FerramentaGerenciamento() {
                 const status = getStatus(a.data_expiracao);
                 const cfg = statusConfig[status];
                 const showPass = visiblePasswords.has(a.id);
+                const isFornecedor = !a.gmail_id && !!a.video_url;
 
                 return (
                   <div
@@ -400,10 +401,10 @@ export default function FerramentaGerenciamento() {
 
                       {/* Main content */}
                       <div className="flex-1 min-w-0">
-                        {/* Top row: E-mail principal | Status */}
+                        {/* Top row */}
                         <div className="flex items-center gap-3 flex-wrap mb-2">
                           <div className="flex items-center gap-1.5 min-w-0">
-                            <p className="text-xs text-muted-foreground shrink-0">Principal:</p>
+                            <p className="text-xs text-muted-foreground shrink-0">{isFornecedor ? "Login:" : "Principal:"}</p>
                             <p className="text-sm font-semibold text-foreground truncate">{a.email_cliente}</p>
                             <button onClick={() => handleCopy(a.email_cliente, `email-${a.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
                               {copiedField === `email-${a.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -412,6 +413,11 @@ export default function FerramentaGerenciamento() {
                           <Badge variant="outline" className={cn("rounded-full text-[10px] px-2.5 py-0.5 border", cfg.color)}>
                             {cfg.label}
                           </Badge>
+                          {isFornecedor && (
+                            <Badge variant="outline" className="rounded-full text-[10px] px-2.5 py-0.5 border border-primary/30 text-primary bg-primary/10">
+                              Fornecedor
+                            </Badge>
+                          )}
                         </div>
 
                         {/* Senha */}
@@ -426,13 +432,24 @@ export default function FerramentaGerenciamento() {
                           </button>
                         </div>
 
-                        {/* Usuário */}
+                        {/* Usuário / Recuperação */}
                         {a.login && (
                           <div className="flex items-center gap-1.5 mb-2">
-                            <p className="text-xs text-muted-foreground">Usuário:</p>
+                            <p className="text-xs text-muted-foreground">{isFornecedor ? "Recuperação:" : "Usuário:"}</p>
                             <p className="text-sm text-foreground truncate">{a.login}</p>
                             <button onClick={() => handleCopy(a.login, `login-${a.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
                               {copiedField === `login-${a.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Link do Fornecedor */}
+                        {isFornecedor && a.video_url && (
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <p className="text-xs text-muted-foreground">Link:</p>
+                            <a href={a.video_url} target="_blank" rel="noopener noreferrer" className="text-sm text-primary truncate hover:underline">{a.video_url}</a>
+                            <button onClick={() => handleCopy(a.video_url!, `link-${a.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                              {copiedField === `link-${a.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                             </button>
                           </div>
                         )}
