@@ -380,7 +380,7 @@ export default function FerramentaGerenciamento() {
                           <p className="text-sm font-medium text-foreground truncate">{a.email_cliente}</p>
                         </div>
                         <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">Login</p>
+                          <p className="text-[11px] text-muted-foreground mb-0.5">Usuário</p>
                           <div className="flex items-center gap-1.5">
                             <p className="text-sm font-medium text-foreground truncate">{a.login}</p>
                             <button
@@ -474,8 +474,8 @@ export default function FerramentaGerenciamento() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
-                <Label>Login</Label>
-                <Input placeholder="login@email.com" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
+                <Label>Usuário (opcional)</Label>
+                <Input placeholder="nome de usuário" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
               </div>
               <div className="grid gap-2">
                 <Label>Senha</Label>
@@ -535,7 +535,7 @@ export default function FerramentaGerenciamento() {
             <Button variant="outline" onClick={() => setDialogOpen(false)} className="rounded-xl">Cancelar</Button>
             <Button
               onClick={() => upsertMutation.mutate({ id: editingId || undefined, ...form })}
-              disabled={!form.email_cliente || !form.login || !form.senha || upsertMutation.isPending}
+              disabled={!form.email_cliente || !form.senha || upsertMutation.isPending}
               className="rounded-xl"
             >
               {upsertMutation.isPending ? "Salvando..." : editingId ? "Salvar" : "Criar acesso"}
