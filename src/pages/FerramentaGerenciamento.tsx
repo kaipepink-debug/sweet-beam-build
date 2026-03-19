@@ -332,11 +332,22 @@ export default function FerramentaGerenciamento() {
                 <p className="text-muted-foreground text-sm">Gerenciamento de acessos</p>
               </div>
             </div>
-            <Button onClick={openNew} className="rounded-2xl gap-2 shadow-lg">
-              <Plus className="w-4 h-4" />
-              Adicionar acesso
-            </Button>
-          </div>
+            <div className="flex items-center gap-2">
+              {toolId && farmingVideos[toolId] && (
+                <Button
+                  variant="outline"
+                  onClick={() => window.open(farmingVideos[toolId!], "_blank")}
+                  className="rounded-2xl gap-2 border-border"
+                >
+                  <Video className="w-4 h-4" />
+                  Farmar ferramenta
+                </Button>
+              )}
+              <Button onClick={openNew} className="rounded-2xl gap-2 shadow-lg">
+                <Plus className="w-4 h-4" />
+                Adicionar acesso
+              </Button>
+            </div>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3 mb-6">
