@@ -168,7 +168,6 @@ export default function DashboardFerramentas() {
                   </div>
                 );
               })}
-            </div>
           </div>
         </main>
       </div>
