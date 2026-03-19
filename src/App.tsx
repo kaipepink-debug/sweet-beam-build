@@ -42,6 +42,7 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard-ferramentas" element={<DashboardFerramentas />} />
               <Route path="/dashboard-ferramentas/:toolId" element={<FerramentaGerenciamento />} />
+              <Route path="/dashboard-ferramentas/banners" element={<BannersAviso />} />
               <Route path="/dashboard-equipe" element={<DashboardEquipe />} />
               <Route path="/dashboard/gmail" element={<DashboardGmail />} />
               <Route path="/dashboard/financeiro" element={<UnderDevelopment />} />
