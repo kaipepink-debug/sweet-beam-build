@@ -228,10 +228,6 @@ export default function FerramentaGerenciamento() {
       email_cliente: a.email_cliente,
       login: a.login,
       senha: a.senha,
-      data_criacao: new Date(a.data_criacao),
-      data_expiracao: new Date(a.data_expiracao),
-      video_url: a.video_url || "",
-      gmail_id: a.gmail_id || "",
     });
     setDialogOpen(true);
   }
