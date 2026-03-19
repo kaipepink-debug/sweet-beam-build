@@ -474,8 +474,8 @@ export default function FerramentaGerenciamento() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
-                <Label>Login</Label>
-                <Input placeholder="login@email.com" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
+                <Label>Usuário (opcional)</Label>
+                <Input placeholder="nome de usuário" value={form.login} onChange={e => setForm(f => ({ ...f, login: e.target.value }))} className="rounded-xl" />
               </div>
               <div className="grid gap-2">
                 <Label>Senha</Label>
