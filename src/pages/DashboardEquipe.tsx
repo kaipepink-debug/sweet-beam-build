@@ -370,8 +370,6 @@ export default function DashboardEquipe() {
                 </div>
               ))
             )}
-          </div>
-        </main>
       </div>
     </div>
   );
