@@ -16,7 +16,7 @@ import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import {
   Plus, Search, Copy, Pencil, Trash2,
-  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon
+  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon, Video
 } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
