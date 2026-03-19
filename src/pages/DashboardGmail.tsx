@@ -264,9 +264,20 @@ export default function DashboardGmail() {
 
                       {/* Main content */}
                       <div className="flex-1 min-w-0">
-                        {/* Top row: Recovery | Gmail */}
+                        {/* Top row: Principal | Recuperação */}
                         <div className="flex items-center gap-3 flex-wrap mb-2">
-                          {/* Recovery email first */}
+                          {/* Gmail principal */}
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <p className="text-xs text-muted-foreground shrink-0">Principal:</p>
+                            <p className="text-sm font-semibold text-foreground truncate">{g.gmail}</p>
+                            <button onClick={() => handleCopy(g.gmail, `gmail-${g.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                              {copiedField === `gmail-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+
+                          <span className="text-border">|</span>
+
+                          {/* Recovery email */}
                           <div className="flex items-center gap-1.5 min-w-0">
                             <p className="text-xs text-muted-foreground shrink-0">Recuperação:</p>
                             <p className="text-sm text-foreground truncate">{g.email_recuperacao || "—"}</p>
@@ -275,16 +286,6 @@ export default function DashboardGmail() {
                                 {copiedField === `rec-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                               </button>
                             )}
-                          </div>
-
-                          <span className="text-border">|</span>
-
-                          {/* Gmail principal */}
-                          <div className="flex items-center gap-1.5 min-w-0">
-                            <p className="text-sm font-semibold text-foreground truncate">{g.gmail}</p>
-                            <button onClick={() => handleCopy(g.gmail, `gmail-${g.id}`)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
-                              {copiedField === `gmail-${g.id}` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                            </button>
                           </div>
                         </div>
 
