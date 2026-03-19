@@ -246,13 +246,23 @@ export default function FerramentaGerenciamento() {
       email_cliente: a.email_cliente,
       login: a.login,
       senha: a.senha,
+      video_url: a.video_url || "",
     });
+    // Detect mode: if has gmail_id it's gmail, otherwise fornecedor
+    setAcessoMode(a.gmail_id ? "gmail" : "fornecedor");
     setDialogOpen(true);
   }
 
   function openNew() {
     setEditingId(null);
     setForm(emptyForm);
+    setAcessoMode(null);
+    setModeSelect(true);
+  }
+
+  function selectMode(mode: AcessoMode) {
+    setAcessoMode(mode);
+    setModeSelect(false);
     setDialogOpen(true);
   }
 
