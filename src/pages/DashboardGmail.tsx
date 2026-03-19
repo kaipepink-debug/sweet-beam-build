@@ -254,7 +254,6 @@ export default function DashboardGmail() {
           ) : (
             <div className="grid gap-3">
               {filtered.map(g => {
-                const showPass = visiblePasswords.has(g.id);
                 const linkedTools = gmailToolsMap[g.id] || [];
 
                 return (
