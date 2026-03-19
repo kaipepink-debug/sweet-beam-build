@@ -141,9 +141,7 @@ export default function DashboardFerramentas() {
                         <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
                         <span className={`w-2 h-2 rounded-full shrink-0 ${getToolDotColor(info)}`} />
                       </div>
-                      <span className="text-[11px] text-muted-foreground font-medium shrink-0">
-                        {info?.totalActive ?? 0} {info?.totalActive === 1 ? "login" : "logins"}
-                      </span>
+                      <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
                     </div>
 
                     {/* Expiration info */}
@@ -152,7 +150,10 @@ export default function DashboardFerramentas() {
                         <Clock className="w-3 h-3" />
                         <span>Ciclo: {tool.expiracaoDias} dias</span>
                       </div>
-                      {expLabel ? (
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border bg-blue-500/10 border-blue-500/20 text-blue-400">
+                          {info?.totalActive ?? 0} {info?.totalActive === 1 ? "login" : "logins"}
+                        </span>
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${expLabel.bg} ${expLabel.color}`}>
                           {expLabel.color.includes("yellow") || expLabel.color.includes("red") ? (
                             <AlertTriangle className="w-2.5 h-2.5" />
