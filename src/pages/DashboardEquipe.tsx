@@ -327,7 +327,7 @@ export default function DashboardEquipe() {
                                 <Pencil className="h-4 w-4" />
                               </button>
                               <button
-                                onClick={() => handleRemove(member.id)}
+                                onClick={() => handleRemove(member.id, memberName)}
                                 className="text-destructive/60 hover:text-destructive transition-colors p-2"
                                 title="Remover membro"
                               >
