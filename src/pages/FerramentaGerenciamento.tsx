@@ -93,8 +93,9 @@ const emptyForm: AcessoForm = {
 
 function getStatus(dataExpiracao: string) {
   const exp = new Date(dataExpiracao);
+  const now = new Date();
   if (isPast(exp)) return "expirado";
-  if (differenceInDays(exp, new Date()) < 3) return "proximo";
+  if (differenceInDays(exp, now) < 1) return "proximo";
   return "ativo";
 }
 
