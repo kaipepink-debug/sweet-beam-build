@@ -53,6 +53,7 @@ export function usePermissions() {
             vendas: data.vendas,
             assinaturas: data.assinaturas,
             clientes: data.clientes,
+            email_acesso: (data as any).email_acesso ?? true,
             ferramentas_ia: data.ferramentas_ia,
             analytics: data.analytics,
             configuracoes: data.configuracoes,
