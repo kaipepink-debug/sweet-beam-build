@@ -141,7 +141,9 @@ export default function DashboardFerramentas() {
                         <h3 className="text-foreground font-semibold text-sm">{tool.name}</h3>
                         <span className={`w-2 h-2 rounded-full shrink-0 ${getToolDotColor(info)}`} />
                       </div>
-                      <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+                      <span className="text-[11px] text-muted-foreground font-medium shrink-0">
+                        {info?.totalActive ?? 0} {info?.totalActive === 1 ? "login" : "logins"}
+                      </span>
                     </div>
 
                     {/* Expiration info */}
