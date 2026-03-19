@@ -16,7 +16,7 @@ import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import {
   Plus, Search, Copy, Pencil, Trash2,
-  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon
+  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon, Video
 } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
@@ -59,6 +59,16 @@ const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: n
   hailuo: { name: "Hailuo", logo: hailuoLogo, expiracaoDias: 30 },
   freepik: { name: "Freepik", logo: freepikLogo, expiracaoDias: 30 },
   heygen: { name: "Heygen", logo: heygenLogo, expiracaoDias: 30 },
+};
+
+const farmingVideos: Record<string, string> = {
+  grok: "https://www.loom.com/share/84fa11f334e249d0a38a5124aae75775",
+  gemini: "https://www.loom.com/share/f7d0654ecf074fa79433f6a5c43a6bb2",
+  tess: "https://www.loom.com/share/7d2ce63764b54b26907a47b478662183",
+  innerai: "https://www.loom.com/share/74210d8eceb24d8fb800ee9e21bb5213",
+  canva: "https://www.loom.com/share/23bd394b17b845aa865d71481f5f55be",
+  leonardo: "https://www.loom.com/share/55052e29d8d54db4b6927c7ed9a26392",
+  capcut: "https://www.loom.com/share/5eebacc4bc314c688f1b02ff28fa6237",
 };
 
 type Acesso = {
@@ -322,10 +332,22 @@ export default function FerramentaGerenciamento() {
                 <p className="text-muted-foreground text-sm">Gerenciamento de acessos</p>
               </div>
             </div>
-            <Button onClick={openNew} className="rounded-2xl gap-2 shadow-lg">
-              <Plus className="w-4 h-4" />
-              Adicionar acesso
-            </Button>
+            <div className="flex items-center gap-2">
+              {toolId && farmingVideos[toolId] && (
+                <Button
+                  variant="outline"
+                  onClick={() => window.open(farmingVideos[toolId!], "_blank")}
+                  className="rounded-2xl gap-2 border-border"
+                >
+                  <Video className="w-4 h-4" />
+                  Farmar ferramenta
+                </Button>
+              )}
+              <Button onClick={openNew} className="rounded-2xl gap-2 shadow-lg">
+                <Plus className="w-4 h-4" />
+                Adicionar acesso
+              </Button>
+            </div>
           </div>
 
           {/* Stats */}
