@@ -18,9 +18,11 @@ import grokLogo from "@/assets/tools/grok.png";
 import claudeLogo from "@/assets/tools/claude.png";
 import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
+import geminiLogo from "@/assets/tools/gemini.png";
 
 const tools = [
   { name: "ChatGPT", desc: "Assistente de IA conversacional mais avançado do mundo.", rating: 4.9, logo: chatgptLogo },
+  { name: "Gemini", desc: "IA multimodal do Google com raciocínio avançado.", rating: 4.9, logo: geminiLogo },
   { name: "Midjourney", desc: "Geração de imagens artísticas com qualidade profissional.", rating: 4.9, logo: midjourneyLogo },
   { name: "ElevenLabs", desc: "Síntese de voz ultra-realista com clonagem de voz.", rating: 4.8, logo: elevenlabsLogo },
   { name: "Runway ML", desc: "Edição de vídeo com IA generativa de última geração.", rating: 4.9, logo: runwaymlLogo },
