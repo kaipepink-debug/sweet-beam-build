@@ -15,7 +15,7 @@ import { format, differenceInDays, isPast } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import {
-  Plus, Search, Copy, Pencil, Trash2, Play,
+  Plus, Search, Copy, Pencil, Trash2,
   ArrowUpDown, Check, Eye, EyeOff, ArrowLeft
 } from "lucide-react";
 
