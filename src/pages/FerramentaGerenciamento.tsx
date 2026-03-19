@@ -40,25 +40,25 @@ import heygenLogo from "@/assets/tools/heygen.png";
 import inneraiLogo from "@/assets/tools/innerai.png";
 import tessLogo from "@/assets/tools/tess.png";
 
-const toolsConfig: Record<string, { name: string; logo: string }> = {
-  grok: { name: "SuperGrok", logo: grokLogo },
-  chatgpt: { name: "ChatGPT", logo: chatgptLogo },
-  claude: { name: "Claude", logo: claudeLogo },
-  midjourney: { name: "Midjourney", logo: midjourneyLogo },
-  elevenlabs: { name: "ElevenLabs", logo: elevenlabsLogo },
-  runwayml: { name: "Runway ML", logo: runwaymlLogo },
-  canva: { name: "Canva Pro", logo: canvaLogo },
-  innerai: { name: "Inner AI", logo: inneraiLogo },
-  tess: { name: "Tess", logo: tessLogo },
-  copyai: { name: "Copy.AI", logo: copyaiLogo },
-  kling: { name: "Kling", logo: klingLogo },
-  synthesia: { name: "Synthesia", logo: synthesiaLogo },
-  higgsfield: { name: "Higgsfield Creator", logo: higgsFieldLogo },
-  sora: { name: "Sora", logo: soraLogo },
-  veo3: { name: "Veo 3", logo: veo3Logo },
-  hailuo: { name: "Hailuo", logo: hailuoLogo },
-  freepik: { name: "Freepik", logo: freepikLogo },
-  heygen: { name: "Heygen", logo: heygenLogo },
+const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: number }> = {
+  grok: { name: "SuperGrok", logo: grokLogo, expiracaoDias: 3 },
+  chatgpt: { name: "ChatGPT", logo: chatgptLogo, expiracaoDias: 30 },
+  claude: { name: "Claude", logo: claudeLogo, expiracaoDias: 30 },
+  midjourney: { name: "Midjourney", logo: midjourneyLogo, expiracaoDias: 30 },
+  elevenlabs: { name: "ElevenLabs", logo: elevenlabsLogo, expiracaoDias: 30 },
+  runwayml: { name: "Runway ML", logo: runwaymlLogo, expiracaoDias: 30 },
+  canva: { name: "Canva Pro", logo: canvaLogo, expiracaoDias: 7 },
+  innerai: { name: "Inner AI", logo: inneraiLogo, expiracaoDias: 7 },
+  tess: { name: "Tess", logo: tessLogo, expiracaoDias: 7 },
+  copyai: { name: "Copy.AI", logo: copyaiLogo, expiracaoDias: 30 },
+  kling: { name: "Kling", logo: klingLogo, expiracaoDias: 30 },
+  synthesia: { name: "Synthesia", logo: synthesiaLogo, expiracaoDias: 30 },
+  higgsfield: { name: "Higgsfield Creator", logo: higgsFieldLogo, expiracaoDias: 30 },
+  sora: { name: "Sora", logo: soraLogo, expiracaoDias: 30 },
+  veo3: { name: "Veo 3", logo: veo3Logo, expiracaoDias: 30 },
+  hailuo: { name: "Hailuo", logo: hailuoLogo, expiracaoDias: 30 },
+  freepik: { name: "Freepik", logo: freepikLogo, expiracaoDias: 30 },
+  heygen: { name: "Heygen", logo: heygenLogo, expiracaoDias: 30 },
 };
 
 type Acesso = {
