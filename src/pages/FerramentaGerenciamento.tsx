@@ -165,7 +165,7 @@ export default function FerramentaGerenciamento() {
       const dias = toolConfig?.expiracaoDias || 30;
       const expDate = new Date(now.getTime() + dias * 24 * 60 * 60 * 1000);
 
-      // Find the gmail_id from the selected email
+      // Find the gmail_id from the selected email (only for gmail mode)
       const matchedGmail = gmailsList.find(g => g.gmail === payload.email_cliente.trim());
 
       if (payload.id) {
@@ -174,6 +174,7 @@ export default function FerramentaGerenciamento() {
           email_cliente: payload.email_cliente.trim(),
           login: payload.login.trim(),
           senha: payload.senha,
+          video_url: payload.video_url.trim() || null,
           gmail_id: matchedGmail?.id || null,
           created_by: user.id,
         }).eq("id", payload.id);
@@ -184,6 +185,7 @@ export default function FerramentaGerenciamento() {
           email_cliente: payload.email_cliente.trim(),
           login: payload.login.trim(),
           senha: payload.senha,
+          video_url: payload.video_url.trim() || null,
           gmail_id: matchedGmail?.id || null,
           created_by: user.id,
           data_criacao: now.toISOString(),
@@ -197,6 +199,7 @@ export default function FerramentaGerenciamento() {
       queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
       setDialogOpen(false);
       setEditingId(null);
+      setAcessoMode(null);
       setForm(emptyForm);
       toast.success(editingId ? "Acesso atualizado!" : "Acesso criado!");
     },
