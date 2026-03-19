@@ -43,7 +43,7 @@ export function DashboardSidebar() {
         <img
           src={isLight ? ratariaLogoBlack : ratariaLogo}
           alt="Ratar.ia"
-          className="w-10 h-10 shrink-0 object-contain"
+          className="h-10 shrink-0 object-contain"
         />
       </div>
 
