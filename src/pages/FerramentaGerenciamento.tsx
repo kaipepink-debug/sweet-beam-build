@@ -189,6 +189,7 @@ export default function FerramentaGerenciamento() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["acessos"] });
       queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
+      setDialogOpen(false);
       setEditingId(null);
       setForm(emptyForm);
       toast.success(editingId ? "Acesso atualizado!" : "Acesso criado!");
@@ -204,6 +205,7 @@ export default function FerramentaGerenciamento() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["acessos"] });
       queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
+      setDeleteConfirm(null);
       toast.success("Acesso removido!");
     },
     onError: (err: Error) => toast.error(err.message),
