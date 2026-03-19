@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 
-type BannerType = "novidade" | "restabelecida" | "manutencao" | "geral";
+type BannerType = "novidade" | "restabelecida" | "manutencao" | "geral" | "senha_alterada";
 
 interface Ferramenta {
   id: string;
@@ -27,6 +27,7 @@ const bannerTypes = [
   { value: "restabelecida" as BannerType, label: "Ferramenta Restabelecida", icon: "✅", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
   { value: "manutencao" as BannerType, label: "Em Manutenção", icon: "🔴", color: "bg-red-500/20 text-red-400 border-red-500/30" },
   { value: "geral" as BannerType, label: "Aviso Geral", icon: "📢", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
+  { value: "senha_alterada" as BannerType, label: "Senha Alterada", icon: "🔑", color: "bg-orange-500/20 text-orange-400 border-orange-500/30" },
 ];
 
 export default function BannersAviso() {
@@ -136,6 +137,18 @@ This is a "GENERAL ANNOUNCEMENT" banner for the platform.
 - Use a megaphone or announcement icon element
 - Make it look official and attention-grabbing
 - ${textoDestaque ? `Highlight: "${textoDestaque}"` : ""}`;
+
+      case "senha_alterada":
+        return `${baseBanner}
+
+This is a "PASSWORD CHANGED" notice banner for the AI tool "${selectedFerramenta?.nome || ""}".
+- Show the tool name "${selectedFerramenta?.nome || ""}" prominently with a glow effect in color ${selectedFerramenta?.cor_tema || "#7C3AED"}
+- Main highlight text: "SENHA ALTERADA 🔑"
+- Include a key or lock icon element with orange/amber accent color
+- ${descricao ? `New instructions or message: "${descricao}"` : ""}
+- ${textoDestaque ? `Highlight: "${textoDestaque}"` : ""}
+- Make it look important and attention-grabbing, professional password change notice
+- Include visual cues like a key icon, lock symbol, or shield to represent security`;
 
       default:
         return baseBanner;
@@ -286,7 +299,7 @@ This is a "GENERAL ANNOUNCEMENT" banner for the platform.
       </div>
 
       {/* Type Selection */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {bannerTypes.map((type) => (
           <button
             key={type.value}
@@ -380,6 +393,19 @@ This is a "GENERAL ANNOUNCEMENT" banner for the platform.
               <div className="space-y-2">
                 <Label className="text-sm text-muted-foreground">Previsão de retorno</Label>
                 <Input value={previsao} onChange={(e) => setPrevisao(e.target.value)} placeholder="Previsão: 2h" />
+              </div>
+            </>
+          )}
+
+          {selectedType === "senha_alterada" && (
+            <>
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">Texto de destaque</Label>
+                <Input value={textoDestaque || "SENHA ALTERADA 🔑"} onChange={(e) => setTextoDestaque(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm text-muted-foreground">Mensagem / Instruções (opcional)</Label>
+                <Textarea value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Ex: A nova senha foi enviada no canal..." rows={3} />
               </div>
             </>
           )}
