@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Search, Pencil, Trash2, Copy, Check, Eye, EyeOff, Mail } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Copy, Check, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import googleIcon from "@/assets/google-icon.png";
