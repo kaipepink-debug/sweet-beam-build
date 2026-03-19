@@ -13,6 +13,7 @@ import { Plus, Search, Pencil, Trash2, Copy, Check, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import googleIcon from "@/assets/google-icon.png";
+import outlookIcon from "@/assets/outlook-icon.png";
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
 import elevenlabsLogo from "@/assets/tools/elevenlabs.png";
@@ -206,8 +207,8 @@ export default function DashboardGmail() {
                 <Mail className="w-7 h-7 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Gmail</h1>
-                <p className="text-muted-foreground text-sm">Gerenciamento de contas Gmail</p>
+                <h1 className="text-2xl font-bold text-foreground">E-mail - Acesso</h1>
+                <p className="text-muted-foreground text-sm">Gerenciamento de contas de e-mail</p>
               </div>
             </div>
             <Button onClick={openNew} className="rounded-2xl gap-2 shadow-lg">
@@ -262,7 +263,10 @@ export default function DashboardGmail() {
                   <div key={g.id} className="rounded-2xl border border-border p-4 md:p-5 bg-card transition-all hover:border-border/80">
                     <div className="flex items-start gap-4">
                       {/* Google Icon */}
-                      <img src={googleIcon} alt="Google" className="w-10 h-10 rounded-xl shrink-0 mt-1" />
+                      {(() => {
+                        const isOutlook = /outlook|hotmail|live\.com/i.test(g.gmail);
+                        return <img src={isOutlook ? outlookIcon : googleIcon} alt={isOutlook ? "Outlook" : "Google"} className="w-10 h-10 rounded-xl shrink-0 mt-1" />;
+                      })()}
 
                       {/* Main content */}
                       <div className="flex-1 min-w-0">
