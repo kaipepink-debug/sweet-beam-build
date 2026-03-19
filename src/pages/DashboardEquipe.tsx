@@ -263,7 +263,11 @@ export default function DashboardEquipe() {
                 <p className="text-sm text-muted-foreground">Nenhum membro na equipe</p>
               </div>
             ) : (
-              team.map((member) => (
+              [...team].sort((a, b) => {
+                const aM = a.email === "mandarrari@rataria.io" ? 0 : 1;
+                const bM = b.email === "mandarrari@rataria.io" ? 0 : 1;
+                return aM - bM;
+              }).map((member) => (
                 <div
                   key={member.id}
                   className="rounded-2xl border border-border bg-card p-5 purple-hover-glow"
@@ -318,7 +322,7 @@ export default function DashboardEquipe() {
                               .map(([, label]) => (
                                 <span
                                   key={label}
-                                  className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary/15 text-primary"
+                                  className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-green-500/15 text-green-400"
                                 >
                                   {label}
                                 </span>
