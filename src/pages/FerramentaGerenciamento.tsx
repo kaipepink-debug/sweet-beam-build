@@ -159,27 +159,36 @@ export default function FerramentaGerenciamento() {
       const dias = toolConfig?.expiracaoDias || 30;
       const expDate = new Date(now.getTime() + dias * 24 * 60 * 60 * 1000);
 
-      const record = {
-        ferramenta: toolId!,
-        email_cliente: payload.email_cliente.trim(),
-        login: payload.login.trim(),
-        senha: payload.senha,
-        data_criacao: payload.id ? undefined : now.toISOString(),
-        data_expiracao: payload.id ? undefined : expDate.toISOString(),
-        created_by: user.id,
-      };
+      // Find the gmail_id from the selected email
+      const matchedGmail = gmailsList.find(g => g.gmail === payload.email_cliente.trim());
 
       if (payload.id) {
-        const { error } = await supabase.from("acessos").update(record).eq("id", payload.id);
+        const { error } = await supabase.from("acessos").update({
+          ferramenta: toolId!,
+          email_cliente: payload.email_cliente.trim(),
+          login: payload.login.trim(),
+          senha: payload.senha,
+          gmail_id: matchedGmail?.id || null,
+          created_by: user.id,
+        }).eq("id", payload.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("acessos").insert(record);
+        const { error } = await supabase.from("acessos").insert({
+          ferramenta: toolId!,
+          email_cliente: payload.email_cliente.trim(),
+          login: payload.login.trim(),
+          senha: payload.senha,
+          gmail_id: matchedGmail?.id || null,
+          created_by: user.id,
+          data_criacao: now.toISOString(),
+          data_expiracao: expDate.toISOString(),
+        });
         if (error) throw error;
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["acessos"] });
-      setDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
       setEditingId(null);
       setForm(emptyForm);
       toast.success(editingId ? "Acesso atualizado!" : "Acesso criado!");
@@ -194,7 +203,7 @@ export default function FerramentaGerenciamento() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["acessos"] });
-      setDeleteConfirm(null);
+      queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
       toast.success("Acesso removido!");
     },
     onError: (err: Error) => toast.error(err.message),
