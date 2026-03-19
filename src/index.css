@@ -142,6 +142,12 @@ All colors MUST be HSL.
   box-shadow: 0 0 25px rgba(180, 0, 255, 0.18), 0 0 50px rgba(180, 0, 255, 0.08);
   border-color: rgba(180, 0, 255, 0.25) !important;
 }
+
+.light .purple-hover-glow:hover {
+  box-shadow: 0 4px 20px rgba(100, 0, 180, 0.1);
+  border-color: rgba(100, 0, 180, 0.2) !important;
+}
+
 @keyframes neon-spin {
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
@@ -188,7 +194,7 @@ All colors MUST be HSL.
   position: absolute;
   inset: 1.5px;
   border-radius: inherit;
-  background: #000;
+  background: hsl(var(--background));
 }
 
 /* Neon underline text effect */
