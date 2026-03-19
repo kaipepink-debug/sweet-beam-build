@@ -263,7 +263,11 @@ export default function DashboardEquipe() {
                 <p className="text-sm text-muted-foreground">Nenhum membro na equipe</p>
               </div>
             ) : (
-              team.map((member) => (
+              [...team].sort((a, b) => {
+                const aM = a.email === "mandarrari@rataria.io" ? 0 : 1;
+                const bM = b.email === "mandarrari@rataria.io" ? 0 : 1;
+                return aM - bM;
+              }).map((member) => (
                 <div
                   key={member.id}
                   className="rounded-2xl border border-border bg-card p-5 purple-hover-glow"
