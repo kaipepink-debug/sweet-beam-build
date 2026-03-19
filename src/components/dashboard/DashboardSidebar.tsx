@@ -141,7 +141,7 @@ export function DashboardSidebar() {
 
           <button
             onClick={toggleTheme}
-            className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50"
+            className="text-sidebar-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50"
             title={isLight ? "Modo escuro" : "Modo claro"}
           >
             {isLight ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
