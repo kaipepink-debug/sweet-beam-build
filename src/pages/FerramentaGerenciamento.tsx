@@ -584,6 +584,40 @@ export default function FerramentaGerenciamento() {
               <Label>Senha</Label>
               <Input placeholder="••••••••" value={form.senha} onChange={e => setForm(f => ({ ...f, senha: e.target.value }))} className="rounded-xl" />
             </div>
+
+            {/* Custom creation date */}
+            {!editingId && (
+              <div className="grid gap-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="custom-date"
+                    checked={customDateEnabled}
+                    onCheckedChange={(checked) => {
+                      setCustomDateEnabled(!!checked);
+                      if (!checked) setCustomDate("");
+                    }}
+                  />
+                  <Label htmlFor="custom-date" className="text-sm cursor-pointer">Data de criação personalizada</Label>
+                </div>
+                {customDateEnabled && (
+                  <div className="space-y-2">
+                    <Input
+                      type="date"
+                      value={customDate}
+                      onChange={e => setCustomDate(e.target.value)}
+                      className="rounded-xl"
+                    />
+                    {customDate && (
+                      <p className="text-xs text-muted-foreground">
+                        <CalendarIcon className="w-3 h-3 inline mr-1" />
+                        Expira em: <span className="text-foreground font-medium">{format(addDays(new Date(customDate + "T00:00:00"), toolConfig?.expiracaoDias || 30), "dd/MM/yyyy", { locale: ptBR })}</span>
+                        {" "}({toolConfig?.expiracaoDias} dias)
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)} className="rounded-xl">Cancelar</Button>
