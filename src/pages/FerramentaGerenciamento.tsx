@@ -348,6 +348,7 @@ export default function FerramentaGerenciamento() {
                 Adicionar acesso
               </Button>
             </div>
+          </div>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3 mb-6">
