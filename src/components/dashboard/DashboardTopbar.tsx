@@ -1,7 +1,17 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Search, Bell } from "lucide-react";
+import { Search, Bell, LogOut } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 export function DashboardTopbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
+
   return (
     <header className="h-14 border-b border-border bg-background sticky top-0 z-20 flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-3">
@@ -30,9 +40,21 @@ export function DashboardTopbar() {
           <Bell className="h-4 w-4" />
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full" />
         </button>
-        <Avatar className="h-8 w-8">
-          <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">AD</AvatarFallback>
-        </Avatar>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="outline-none">
+              <Avatar className="h-8 w-8 cursor-pointer">
+                <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">AD</AvatarFallback>
+              </Avatar>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
+              <LogOut className="h-4 w-4 mr-2" />
+              Sair
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
