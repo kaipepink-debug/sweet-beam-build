@@ -114,15 +114,14 @@ export default function DashboardFerramentas() {
       <div className="flex-1 flex flex-col min-w-0 ml-[60px]">
         <DashboardTopbar />
         <main className="flex-1 overflow-auto p-4 md:p-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="mb-6">
-              <h1 className="text-xl font-bold text-foreground">Ferramentas de IA</h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                Gerencie os acessos de cada ferramenta. O tempo de expiração é exibido automaticamente.
-              </p>
-            </div>
+          <div className="mb-6">
+            <h1 className="text-xl font-bold text-foreground">Ferramentas de IA</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Gerencie os acessos de cada ferramenta. O tempo de expiração é exibido automaticamente.
+            </p>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
               {tools.map((tool) => {
                 const info = expirations[tool.ferramenta];
                 const expLabel = info?.nearestExpiration ? getExpirationLabel(info.nearestExpiration) : null;
