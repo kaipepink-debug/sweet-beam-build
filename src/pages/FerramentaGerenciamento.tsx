@@ -455,8 +455,22 @@ export default function FerramentaGerenciamento() {
           </DialogHeader>
           <div className="grid gap-4 py-2">
             <div className="grid gap-2">
-              <Label>E-mail do cliente</Label>
-              <Input placeholder="cliente@email.com" value={form.email_cliente} onChange={e => setForm(f => ({ ...f, email_cliente: e.target.value }))} className="rounded-xl" />
+              <Label>E-mail principal</Label>
+              <Select value={form.email_cliente} onValueChange={v => setForm(f => ({ ...f, email_cliente: v }))}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue placeholder="Selecione um Gmail" />
+                </SelectTrigger>
+                <SelectContent>
+                  {gmailsList.map(g => {
+                    const isUsed = !editingId && acessos.some(a => a.gmail_id === g.id);
+                    return (
+                      <SelectItem key={g.id} value={g.gmail} disabled={isUsed}>
+                        {g.gmail}{isUsed ? " (já vinculado)" : ""}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
