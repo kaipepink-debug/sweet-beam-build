@@ -269,49 +269,60 @@ export default function DashboardEquipe() {
                   key={member.id}
                   className="rounded-2xl border border-border bg-card p-5 purple-hover-glow"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center">
-                        {member.role === "admin" ? (
-                          <Shield className="h-4 w-4 text-primary" />
-                        ) : (
-                          <Users2 className="h-4 w-4 text-primary" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">{member.email}</p>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                          {member.role === "admin" ? "Administrador" : "Membro"}
-                        </p>
-                      </div>
-                    </div>
-                    {member.role !== "admin" && (
-                      <button
-                        onClick={() => handleRemove(member.id)}
-                        className="text-red-400/60 hover:text-red-400 transition-colors p-2"
-                        title="Remover membro"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
+                  {(() => {
+                    const isMaster = member.email === "mandarrari@rataria.io";
+                    return (
+                      <>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center">
+                              {isMaster ? (
+                                <Shield className="h-4 w-4 text-primary" />
+                              ) : member.role === "admin" ? (
+                                <Shield className="h-4 w-4 text-primary" />
+                              ) : (
+                                <Users2 className="h-4 w-4 text-primary" />
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold text-foreground">{member.email}</p>
+                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                                {isMaster ? "Master" : member.role === "admin" ? "Administrador" : "Membro"}
+                              </p>
+                            </div>
+                          </div>
+                          {!isMaster && member.role !== "admin" && (
+                            <button
+                              onClick={() => handleRemove(member.id)}
+                              className="text-red-400/60 hover:text-red-400 transition-colors p-2"
+                              title="Remover membro"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
 
-                  {/* Permission toggles */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                    {Object.entries(PERMISSION_LABELS).map(([key, label]) => (
-                      <div
-                        key={key}
-                        className="flex items-center justify-between rounded-lg border border-border/50 px-2.5 py-2 bg-muted/20"
-                      >
-                        <span className="text-[11px] text-muted-foreground">{label}</span>
-                        <Switch
-                          checked={member.permissions?.[key] ?? false}
-                          onCheckedChange={(v) => handleUpdatePermission(member.id, key, v)}
-                          disabled={member.role === "admin"}
-                        />
-                      </div>
-                    ))}
-                  </div>
+                        {/* Permission toggles */}
+                        {!isMaster && (
+                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                            {Object.entries(PERMISSION_LABELS).map(([key, label]) => (
+                              <div
+                                key={key}
+                                className="flex items-center justify-between rounded-lg border border-border/50 px-2.5 py-2 bg-muted/20"
+                              >
+                                <span className="text-[11px] text-muted-foreground">{label}</span>
+                                <Switch
+                                  checked={member.permissions?.[key] ?? false}
+                                  onCheckedChange={(v) => handleUpdatePermission(member.id, key, v)}
+                                  disabled={member.role === "admin"}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               ))
             )}
