@@ -154,15 +154,17 @@ export default function FerramentaGerenciamento() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
 
+      const now = new Date();
+      const dias = toolConfig?.expiracaoDias || 30;
+      const expDate = new Date(now.getTime() + dias * 24 * 60 * 60 * 1000);
+
       const record = {
         ferramenta: toolId!,
         email_cliente: payload.email_cliente.trim(),
         login: payload.login.trim(),
         senha: payload.senha,
-        data_criacao: payload.data_criacao.toISOString(),
-        data_expiracao: payload.data_expiracao.toISOString(),
-        video_url: payload.video_url || null,
-        gmail_id: payload.gmail_id || null,
+        data_criacao: payload.id ? undefined : now.toISOString(),
+        data_expiracao: payload.id ? undefined : expDate.toISOString(),
         created_by: user.id,
       };
 
