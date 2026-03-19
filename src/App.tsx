@@ -14,6 +14,7 @@ import DashboardFerramentas from "./pages/DashboardFerramentas";
 import DashboardEquipe from "./pages/DashboardEquipe";
 import GrokGerenciamento from "./pages/GrokGerenciamento";
 import FerramentaGerenciamento from "./pages/FerramentaGerenciamento";
+import BannersAviso from "./pages/BannersAviso";
 import DashboardGmail from "./pages/DashboardGmail";
 import NotFound from "./pages/NotFound";
 import Cod from "./pages/Cod";
