@@ -39,21 +39,24 @@ export function DashboardSidebar() {
       className="fixed left-0 top-0 bottom-0 w-[220px] z-40 flex flex-col py-4 gap-1 border-r border-border/20 bg-sidebar-background/95 backdrop-blur-xl"
     >
       {/* Logo only */}
-      <div className="flex items-center justify-center px-4 mb-1 min-h-[36px]">
+      <div className="flex items-center justify-center px-4 mb-1 min-h-[44px]">
         <img
           src={isLight ? ratariaLogoBlack : ratariaLogo}
           alt="Ratar.ia"
-          className="w-10 h-10 rounded-xl shrink-0"
+          className="w-10 h-10 shrink-0 object-contain"
         />
       </div>
 
       {/* Admin greeting */}
-      <div className="px-4 mb-4 text-center">
+      <div className="px-4 mb-3 text-center">
         <p className="text-[11px] text-muted-foreground font-medium">Painel Administrador</p>
         <p className="text-[12px] text-foreground font-semibold truncate">
           Olá, {displayName || "Admin"}
         </p>
       </div>
+
+      {/* Separator */}
+      <div className="mx-4 mb-2 border-t border-border/40" />
 
       {/* Menu items */}
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2">
