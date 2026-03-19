@@ -380,7 +380,7 @@ export default function FerramentaGerenciamento() {
                           <p className="text-sm font-medium text-foreground truncate">{a.email_cliente}</p>
                         </div>
                         <div>
-                          <p className="text-[11px] text-muted-foreground mb-0.5">Login</p>
+                          <p className="text-[11px] text-muted-foreground mb-0.5">Usuário</p>
                           <div className="flex items-center gap-1.5">
                             <p className="text-sm font-medium text-foreground truncate">{a.login}</p>
                             <button
