@@ -177,13 +177,7 @@ export default function DashboardEquipe() {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      <DashboardSidebar />
-      <div className="flex-1 flex flex-col min-w-0 ml-[220px]">
-        <DashboardTopbar />
-        <main className="flex-1 p-4 md:p-6 space-y-5 overflow-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between">
+    <div className="space-y-5">
             <div>
               <p className="text-xs text-muted-foreground mb-1">Gerencie os membros da sua equipe</p>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Equipe</h1>
