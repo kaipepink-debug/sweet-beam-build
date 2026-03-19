@@ -462,10 +462,10 @@ export default function FerramentaGerenciamento() {
                 </SelectTrigger>
                 <SelectContent>
                   {gmailsList.map(g => {
-                    const isUsed = !editingId && acessos.some(a => a.gmail_id === g.id);
+                    const isUsed = acessos.some(a => a.email_cliente === g.gmail && a.id !== editingId);
                     return (
                       <SelectItem key={g.id} value={g.gmail} disabled={isUsed}>
-                        {g.gmail}{isUsed ? " (já vinculado)" : ""}
+                        {g.gmail}{isUsed ? " (já usado nesta ferramenta)" : ""}
                       </SelectItem>
                     );
                   })}
