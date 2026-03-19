@@ -1,11 +1,14 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Mail, Settings, ShoppingBag, Sparkles, Users2 } from "lucide-react";
-import { useLocation, Link } from "react-router-dom";
+import { Activity, CreditCard, LayoutGrid, LineChart, Lock, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut } from "lucide-react";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
 import ratariaLogoBlack from "@/assets/rataria-icon-black.png";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { supabase } from "@/integrations/supabase/client";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, permKey: "dashboard" },
@@ -22,6 +25,7 @@ const menuItems = [
 
 export function DashboardSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { permissions, loading } = usePermissions();
   const { displayName } = useProfile();
   const [isLight, setIsLight] = useState(document.documentElement.classList.contains("light"));
@@ -33,6 +37,28 @@ export function DashboardSidebar() {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
+
+  const toggleTheme = () => {
+    const root = document.documentElement;
+    const newIsLight = !isLight;
+    if (newIsLight) {
+      root.classList.add("light");
+      localStorage.setItem("dashboard-theme", "light");
+    } else {
+      root.classList.remove("light");
+      localStorage.setItem("dashboard-theme", "dark");
+    }
+    setIsLight(newIsLight);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
+
+  const initials = displayName
+    ? displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
+    : "AD";
 
   return (
     <aside
@@ -102,11 +128,39 @@ export function DashboardSidebar() {
         })}
       </nav>
 
-      {/* Bottom glow */}
-      <div
-        className="w-10 h-10 rounded-full blur-2xl opacity-40 mt-auto self-center"
-        style={{ background: "radial-gradient(circle, hsl(270 100% 55%), transparent)" }}
-      />
+      {/* Bottom controls */}
+      <div className="mt-auto px-3 pt-2 border-t border-border/40">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={toggleTheme}
+            className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50"
+            title={isLight ? "Modo escuro" : "Modo claro"}
+          >
+            {isLight ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          </button>
+
+          <button className="relative text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-muted/50">
+            <Bell className="h-4 w-4" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+          </button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="outline-none">
+                <Avatar className="h-7 w-7 cursor-pointer">
+                  <AvatarFallback className="bg-primary/20 text-primary text-[10px] font-semibold">{initials}</AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" side="top" className="w-40">
+              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
+                <LogOut className="h-4 w-4 mr-2" />
+                Sair
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
     </aside>
   );
 }
