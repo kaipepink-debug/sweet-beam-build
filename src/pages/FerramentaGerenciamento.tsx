@@ -535,7 +535,7 @@ export default function FerramentaGerenciamento() {
             <Button variant="outline" onClick={() => setDialogOpen(false)} className="rounded-xl">Cancelar</Button>
             <Button
               onClick={() => upsertMutation.mutate({ id: editingId || undefined, ...form })}
-              disabled={!form.email_cliente || !form.login || !form.senha || upsertMutation.isPending}
+              disabled={!form.email_cliente || !form.senha || upsertMutation.isPending}
               className="rounded-xl"
             >
               {upsertMutation.isPending ? "Salvando..." : editingId ? "Salvar" : "Criar acesso"}
