@@ -116,10 +116,6 @@ export default function DashboardEquipe() {
     setEmail("");
     setPassword("");
     setShowForm(false);
-    setNewPermissions({
-      dashboard: false, financeiro: false, vendas: false, assinaturas: false,
-      clientes: false, email_acesso: true, ferramentas_ia: true, analytics: false, configuracoes: false, equipe: false,
-    });
     fetchTeam();
   };
 
