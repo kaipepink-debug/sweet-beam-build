@@ -108,6 +108,7 @@ All colors MUST be HSL.
     --sidebar-border: 240 6% 90%;
     --sidebar-ring: 270 80% 40%;
   }
+}
 
 @layer base {
   * {
