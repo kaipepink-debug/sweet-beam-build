@@ -159,13 +159,15 @@ export default function FerramentaGerenciamento() {
       const dias = toolConfig?.expiracaoDias || 30;
       const expDate = new Date(now.getTime() + dias * 24 * 60 * 60 * 1000);
 
-      const record = {
+      // Find the gmail_id from the selected email
+      const matchedGmail = gmailsList.find(g => g.gmail === payload.email_cliente.trim());
+
+      const record: Record<string, unknown> = {
         ferramenta: toolId!,
         email_cliente: payload.email_cliente.trim(),
         login: payload.login.trim(),
         senha: payload.senha,
-        data_criacao: payload.id ? undefined : now.toISOString(),
-        data_expiracao: payload.id ? undefined : expDate.toISOString(),
+        gmail_id: matchedGmail?.id || null,
         created_by: user.id,
       };
 
@@ -173,6 +175,8 @@ export default function FerramentaGerenciamento() {
         const { error } = await supabase.from("acessos").update(record).eq("id", payload.id);
         if (error) throw error;
       } else {
+        (record as Record<string, unknown>).data_criacao = now.toISOString();
+        (record as Record<string, unknown>).data_expiracao = expDate.toISOString();
         const { error } = await supabase.from("acessos").insert(record);
         if (error) throw error;
       }
