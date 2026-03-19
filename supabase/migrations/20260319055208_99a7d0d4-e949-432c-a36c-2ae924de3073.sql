@@ -1,0 +1,1 @@
+UPDATE profiles SET display_name = 'Mandarrari' WHERE user_id = 'eef75ffa-340f-4933-a8c6-13750476f5be';
