@@ -189,7 +189,7 @@ export default function DashboardEquipe() {
       const data = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        toast({ title: "Membro removido com sucesso" });
+        toast({ title: "Membro removido com sucesso", className: "bg-green-600 text-white border-green-600" });
         fetchTeam();
       } else {
         toast({
