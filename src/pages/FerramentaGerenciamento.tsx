@@ -171,9 +171,9 @@ export default function FerramentaGerenciamento() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
 
-      const now = new Date();
       const dias = toolConfig?.expiracaoDias || 30;
-      const expDate = new Date(now.getTime() + dias * 24 * 60 * 60 * 1000);
+      const baseDate = customDateEnabled && customDate ? new Date(customDate + "T00:00:00") : new Date();
+      const expDate = addDays(baseDate, dias);
 
       // Find the gmail_id from the selected email (only for gmail mode)
       const matchedGmail = gmailsList.find(g => g.gmail === payload.email_cliente.trim());
@@ -198,7 +198,7 @@ export default function FerramentaGerenciamento() {
           video_url: payload.video_url.trim() || null,
           gmail_id: matchedGmail?.id || null,
           created_by: user.id,
-          data_criacao: now.toISOString(),
+          data_criacao: baseDate.toISOString(),
           data_expiracao: expDate.toISOString(),
         });
         if (error) throw error;
