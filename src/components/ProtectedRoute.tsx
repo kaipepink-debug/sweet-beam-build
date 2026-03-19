@@ -14,5 +14,5 @@ export default function ProtectedRoute({ children, redirectTo = "/login" }: { ch
 
   if (!user) return <Navigate to={redirectTo} replace />;
 
-  return <>{children}</>;
+  return <div className="dashboard-light">{children}</div>;
 }
