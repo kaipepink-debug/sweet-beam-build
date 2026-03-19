@@ -14,6 +14,7 @@ import DashboardFerramentas from "./pages/DashboardFerramentas";
 import DashboardEquipe from "./pages/DashboardEquipe";
 import GrokGerenciamento from "./pages/GrokGerenciamento";
 import FerramentaGerenciamento from "./pages/FerramentaGerenciamento";
+import BannersAviso from "./pages/BannersAviso";
 import DashboardGmail from "./pages/DashboardGmail";
 import NotFound from "./pages/NotFound";
 import Cod from "./pages/Cod";
@@ -40,6 +41,7 @@ const App = () => (
             <Route element={<ProtectedRoute><div className="desktop-zoom"><DashboardLayout /></div></ProtectedRoute>}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard-ferramentas" element={<DashboardFerramentas />} />
+              <Route path="/dashboard-ferramentas/banners" element={<BannersAviso />} />
               <Route path="/dashboard-ferramentas/:toolId" element={<FerramentaGerenciamento />} />
               <Route path="/dashboard-equipe" element={<DashboardEquipe />} />
               <Route path="/dashboard/gmail" element={<DashboardGmail />} />

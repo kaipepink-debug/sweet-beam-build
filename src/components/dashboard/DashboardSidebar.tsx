@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, ChevronDown, Image } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
@@ -10,14 +10,27 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 
-const menuItems = [
+interface MenuItem {
+  title: string;
+  url: string;
+  icon: any;
+  permKey: string;
+  children?: MenuItem[];
+}
+
+const menuItems: MenuItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, permKey: "dashboard" },
   { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard, permKey: "financeiro" },
   { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, permKey: "vendas" },
   { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, permKey: "assinaturas" },
   { title: "Clientes", url: "/dashboard/clientes", icon: Users2, permKey: "clientes" },
   { title: "E-mail - Acesso", url: "/dashboard/gmail", icon: Mail, permKey: "email_acesso" },
-  { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, permKey: "ferramentas_ia" },
+  {
+    title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, permKey: "ferramentas_ia",
+    children: [
+      { title: "Banners Aviso", url: "/dashboard-ferramentas/banners", icon: Image, permKey: "ferramentas_ia" },
+    ],
+  },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
   { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
   { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, permKey: "configuracoes" },
@@ -29,6 +42,16 @@ export function DashboardSidebar() {
   const { permissions, loading } = usePermissions();
   const { displayName } = useProfile();
   const [isLight, setIsLight] = useState(document.documentElement.classList.contains("light"));
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+
+  // Auto-expand if on a child route
+  useEffect(() => {
+    menuItems.forEach((item) => {
+      if (item.children?.some((child) => location.pathname === child.url)) {
+        setExpandedMenus((prev) => prev.includes(item.title) ? prev : [...prev, item.title]);
+      }
+    });
+  }, [location.pathname]);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -85,32 +108,73 @@ export function DashboardSidebar() {
       <div className="mx-4 mb-2 border-t border-border/40" />
 
       {/* Menu items */}
-      <nav className="flex-1 flex flex-col gap-0.5 w-full px-2">
+      <nav className="flex-1 flex flex-col gap-0.5 w-full px-2 overflow-auto">
         {menuItems.map((item) => {
-          const isActive = location.pathname === item.url;
           const hasPermission = loading ? true : permissions[item.permKey as keyof typeof permissions];
-
           if (!hasPermission) return null;
 
+          const isActive = location.pathname === item.url;
+          const hasChildren = item.children && item.children.length > 0;
+          const isExpanded = expandedMenus.includes(item.title);
+          const isChildActive = item.children?.some((child) => location.pathname === child.url);
+
+          const toggleExpand = (e: React.MouseEvent) => {
+            if (hasChildren) {
+              e.preventDefault();
+              setExpandedMenus((prev) =>
+                prev.includes(item.title) ? prev.filter((t) => t !== item.title) : [...prev, item.title]
+              );
+            }
+          };
+
           return (
-            <Link
-              key={item.title}
-              to={item.url}
-              className={cn(
-                "h-10 rounded-xl flex items-center gap-3 px-[10px] transition-all duration-300 whitespace-nowrap relative",
-                isActive
-                  ? "bg-primary/20 text-primary shadow-[0_0_18px_hsl(270_100%_55%/0.3)]"
-                  : "text-sidebar-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
+            <div key={item.title}>
+              <Link
+                to={item.url}
+                onClick={hasChildren ? toggleExpand : undefined}
+                className={cn(
+                  "h-10 rounded-xl flex items-center gap-3 px-[10px] transition-all duration-300 whitespace-nowrap relative",
+                  isActive || isChildActive
+                    ? "bg-primary/20 text-primary shadow-[0_0_18px_hsl(270_100%_55%/0.3)]"
+                    : "text-sidebar-foreground hover:text-primary hover:bg-primary/10 hover:shadow-[0_0_15px_hsl(270_100%_55%/0.2)]"
+                )}
+              >
+                <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
+                <span className="text-[13px] font-medium flex-1">{item.title}</span>
+                {hasChildren && (
+                  <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", isExpanded && "rotate-180")} />
+                )}
+                {(isActive && !hasChildren) && (
+                  <div className="absolute left-0 w-[3px] h-5 rounded-r-full bg-primary" />
+                )}
+              </Link>
+              {hasChildren && isExpanded && (
+                <div className="ml-4 mt-0.5 space-y-0.5">
+                  {item.children!.map((child) => {
+                    const childActive = location.pathname === child.url;
+                    return (
+                      <Link
+                        key={child.title}
+                        to={child.url}
+                        className={cn(
+                          "h-9 rounded-lg flex items-center gap-2.5 px-[10px] transition-all duration-200 whitespace-nowrap relative",
+                          childActive
+                            ? "bg-primary/15 text-primary"
+                            : "text-sidebar-foreground/70 hover:text-primary hover:bg-primary/10"
+                        )}
+                      >
+                        <child.icon className="h-[15px] w-[15px] shrink-0" strokeWidth={1.8} />
+                        <span className="text-[12px] font-medium">{child.title}</span>
+                        <span className="ml-auto text-[9px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">NOVO</span>
+                        {childActive && (
+                          <div className="absolute left-0 w-[3px] h-4 rounded-r-full bg-primary" />
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
               )}
-            >
-              <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
-              <span className="text-[13px] font-medium">
-                {item.title}
-              </span>
-              {isActive && (
-                <div className="absolute left-0 w-[3px] h-5 rounded-r-full bg-primary" />
-              )}
-            </Link>
+            </div>
           );
         })}
       </nav>

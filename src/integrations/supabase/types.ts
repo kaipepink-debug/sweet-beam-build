@@ -67,6 +67,77 @@ export type Database = {
           },
         ]
       }
+      banners_historico: {
+        Row: {
+          created_at: string
+          created_by: string
+          dados: Json | null
+          ferramenta_id: string | null
+          id: string
+          imagem_url: string | null
+          prompt_usado: string | null
+          tipo: string
+          titulo: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          dados?: Json | null
+          ferramenta_id?: string | null
+          id?: string
+          imagem_url?: string | null
+          prompt_usado?: string | null
+          tipo: string
+          titulo?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          dados?: Json | null
+          ferramenta_id?: string | null
+          id?: string
+          imagem_url?: string | null
+          prompt_usado?: string | null
+          tipo?: string
+          titulo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "banners_historico_ferramenta_id_fkey"
+            columns: ["ferramenta_id"]
+            isOneToOne: false
+            referencedRelation: "ferramentas_banner"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ferramentas_banner: {
+        Row: {
+          cor_tema: string | null
+          created_at: string
+          id: string
+          logo_url: string | null
+          nome: string
+          updated_at: string
+        }
+        Insert: {
+          cor_tema?: string | null
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          nome: string
+          updated_at?: string
+        }
+        Update: {
+          cor_tema?: string | null
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          nome?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       gmails: {
         Row: {
           created_at: string
