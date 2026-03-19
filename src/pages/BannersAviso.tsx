@@ -299,7 +299,7 @@ This is a "PASSWORD CHANGED" notice banner for the AI tool "${selectedFerramenta
       </div>
 
       {/* Type Selection */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {bannerTypes.map((type) => (
           <button
             key={type.value}
