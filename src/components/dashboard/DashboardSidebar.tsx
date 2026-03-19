@@ -133,7 +133,7 @@ export function DashboardSidebar() {
         <div className="flex items-center justify-between">
           <button
             onClick={handleLogout}
-            className="text-muted-foreground hover:text-destructive transition-colors p-2 rounded-lg hover:bg-muted/50"
+            className="text-sidebar-foreground hover:text-destructive transition-colors p-2 rounded-lg hover:bg-muted/50"
             title="Sair"
           >
             <LogOut className="h-4 w-4" />
