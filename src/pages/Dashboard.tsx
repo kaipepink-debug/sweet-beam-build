@@ -5,11 +5,14 @@ import { TopPlanCard } from "@/components/dashboard/TopPlanCard";
 import { RecentClients } from "@/components/dashboard/RecentClients";
 import { SubscriptionGrowth } from "@/components/dashboard/SubscriptionGrowth";
 import { QuickMetrics } from "@/components/dashboard/QuickMetrics";
+import { ToolAlerts } from "@/components/dashboard/ToolAlerts";
 import { Zap } from "lucide-react";
 
 export default function Dashboard() {
   return (
     <div className="space-y-5">
+      {/* Tool Alerts */}
+      <ToolAlerts />
       {/* Welcome Header */}
       <div className="flex items-center justify-between">
         <div>
