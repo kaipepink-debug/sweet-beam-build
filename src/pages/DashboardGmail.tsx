@@ -318,8 +318,6 @@ export default function DashboardGmail() {
                                   />
                                 ) : null;
                               })}
-                                ) : null;
-                              })}
                             </div>
                           ) : (
                             <p className="text-xs text-muted-foreground/60 py-1.5">Nenhuma ferramenta vinculada</p>
