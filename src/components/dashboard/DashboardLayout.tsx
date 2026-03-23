@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { ToolAlerts } from "@/components/dashboard/ToolAlerts";
 import { usePermissions } from "@/hooks/usePermissions";
 import { getFirstPermittedRoute } from "@/lib/getFirstPermittedRoute";
 
