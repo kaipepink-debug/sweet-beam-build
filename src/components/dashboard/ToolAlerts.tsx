@@ -79,7 +79,18 @@ export function ToolAlerts() {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-destructive">Logins expirados</p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              {expiredAlerts.map(a => `${toolNames[a.ferramenta] || a.ferramenta} (${a.count})`).join(", ")}
+              {expiredAlerts.map((a, i) => (
+                <span key={a.ferramenta}>
+                  {i > 0 && ", "}
+                  <span
+                    className="text-destructive hover:underline cursor-pointer font-medium"
+                    onClick={() => navigate(`/dashboard-ferramentas/${a.ferramenta}`)}
+                  >
+                    {toolNames[a.ferramenta] || a.ferramenta}
+                  </span>
+                  {` (${a.count})`}
+                </span>
+              ))}
             </p>
           </div>
           <button
