@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { isPast, differenceInDays } from "date-fns";
+import { isPast } from "date-fns";
 import { AlertTriangle, X } from "lucide-react";
 
 interface ToolAlert {
