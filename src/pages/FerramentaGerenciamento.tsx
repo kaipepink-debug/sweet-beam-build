@@ -572,10 +572,12 @@ export default function FerramentaGerenciamento() {
                   </SelectTrigger>
                   <SelectContent>
                     {gmailsList.map(g => {
-                      const isUsed = acessos.some(a => a.email_cliente === g.gmail && a.id !== editingId);
+                      const isUsedActive = acessos.some(a => a.email_cliente === g.gmail && a.id !== editingId);
+                      const wasUsedBefore = gmailsUtilizados.some(u => u.gmail_id === g.id);
+                      const isUnavailable = isUsedActive || wasUsedBefore;
                       return (
-                        <SelectItem key={g.id} value={g.gmail} disabled={isUsed}>
-                          {g.gmail}{isUsed ? " (já usado nesta ferramenta)" : ""}
+                        <SelectItem key={g.id} value={g.gmail} disabled={isUnavailable}>
+                          {g.gmail}{isUsedActive ? " (em uso nesta ferramenta)" : wasUsedBefore ? " (já utilizado anteriormente)" : ""}
                         </SelectItem>
                       );
                     })}
