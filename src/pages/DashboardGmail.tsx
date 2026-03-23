@@ -75,6 +75,7 @@ const emptyForm: GmailForm = { gmail: "", senha: "", email_recuperacao: "" };
 
 export default function DashboardGmail() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
