@@ -34,17 +34,22 @@ export function ToolAlerts() {
 
       if (!data) return;
 
-      const toolStats: Record<string, { total: number; expired: number }> = {};
+      const toolStats: Record<string, { total: number; expired: number; expiringSoon: number }> = {};
 
       for (const tool of allTools) {
-        toolStats[tool] = { total: 0, expired: 0 };
+        toolStats[tool] = { total: 0, expired: 0, expiringSoon: 0 };
       }
 
+      const now = new Date();
+
       for (const row of data) {
-        if (!toolStats[row.ferramenta]) toolStats[row.ferramenta] = { total: 0, expired: 0 };
+        if (!toolStats[row.ferramenta]) toolStats[row.ferramenta] = { total: 0, expired: 0, expiringSoon: 0 };
         toolStats[row.ferramenta].total++;
-        if (isPast(new Date(row.data_expiracao))) {
+        const expDate = new Date(row.data_expiracao);
+        if (isPast(expDate)) {
           toolStats[row.ferramenta].expired++;
+        } else if (differenceInDays(expDate, now) <= 7) {
+          toolStats[row.ferramenta].expiringSoon++;
         }
       }
 
@@ -53,8 +58,12 @@ export function ToolAlerts() {
       for (const [tool, stats] of Object.entries(toolStats)) {
         if (stats.total === 0) {
           newAlerts.push({ ferramenta: tool, type: "no_logins" });
-        } else if (stats.expired > 0) {
+        }
+        if (stats.expired > 0) {
           newAlerts.push({ ferramenta: tool, type: "expired", count: stats.expired });
+        }
+        if (stats.expiringSoon > 0) {
+          newAlerts.push({ ferramenta: tool, type: "expiring_soon", count: stats.expiringSoon });
         }
       }
 
