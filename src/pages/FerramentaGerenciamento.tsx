@@ -37,6 +37,7 @@ import heygenLogo from "@/assets/tools/heygen.png";
 import inneraiLogo from "@/assets/tools/innerai.png";
 import tessLogo from "@/assets/tools/tess.png";
 import geminiLogo from "@/assets/tools/gemini.png";
+import leonardoaiLogo from "@/assets/tools/leonardoai.png";
 
 const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: number }> = {
   grok: { name: "SuperGrok", logo: grokLogo, expiracaoDias: 3 },
@@ -58,6 +59,15 @@ const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: n
   hailuo: { name: "Hailuo", logo: hailuoLogo, expiracaoDias: 30 },
   freepik: { name: "Freepik", logo: freepikLogo, expiracaoDias: 30 },
   heygen: { name: "Heygen", logo: heygenLogo, expiracaoDias: 30 },
+  leonardoai: { name: "Leonardo AI", logo: leonardoaiLogo, expiracaoDias: 30 },
+};
+
+// Ferramentas vinculadas: compartilham o mesmo login
+const linkedTools: Record<string, string> = {
+  canva: "leonardoai",
+  leonardoai: "canva",
+  sora: "chatgpt",
+  chatgpt: "sora",
 };
 
 const farmingVideos: Record<string, string> = {
