@@ -153,6 +153,19 @@ export default function FerramentaGerenciamento() {
     },
   });
 
+  const { data: gmailsUtilizados = [] } = useQuery({
+    queryKey: ["gmails-utilizados", toolId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("gmails_utilizados")
+        .select("gmail_id, gmail_email")
+        .eq("ferramenta", toolId!);
+      if (error) throw error;
+      return data as { gmail_id: string; gmail_email: string }[];
+    },
+    enabled: !!toolId,
+  });
+
   const { data: acessos = [], isLoading } = useQuery({
     queryKey: ["acessos", toolId],
     queryFn: async () => {
