@@ -37,6 +37,7 @@ import heygenLogo from "@/assets/tools/heygen.png";
 import inneraiLogo from "@/assets/tools/innerai.png";
 import tessLogo from "@/assets/tools/tess.png";
 import geminiLogo from "@/assets/tools/gemini.png";
+import leonardoaiLogo from "@/assets/tools/leonardoai.png";
 
 const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: number }> = {
   grok: { name: "SuperGrok", logo: grokLogo, expiracaoDias: 3 },
@@ -58,6 +59,15 @@ const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: n
   hailuo: { name: "Hailuo", logo: hailuoLogo, expiracaoDias: 30 },
   freepik: { name: "Freepik", logo: freepikLogo, expiracaoDias: 30 },
   heygen: { name: "Heygen", logo: heygenLogo, expiracaoDias: 30 },
+  leonardoai: { name: "Leonardo AI", logo: leonardoaiLogo, expiracaoDias: 30 },
+};
+
+// Ferramentas vinculadas: compartilham o mesmo login
+const linkedTools: Record<string, string> = {
+  canva: "leonardoai",
+  leonardoai: "canva",
+  sora: "chatgpt",
+  chatgpt: "sora",
 };
 
 const farmingVideos: Record<string, string> = {
@@ -224,6 +234,44 @@ export default function FerramentaGerenciamento() {
             gmail_email: matchedGmail.gmail,
             ferramenta: toolId!,
           }, { onConflict: "gmail_id,ferramenta" });
+        }
+
+        // Auto-create in linked tool
+        const linkedTool = linkedTools[toolId!];
+        if (linkedTool) {
+          const linkedConfig = toolsConfig[linkedTool];
+          const linkedExpDate = addDays(baseDate, linkedConfig?.expiracaoDias || 30);
+          
+          // Check if already exists in linked tool
+          const { data: existing } = await supabase.from("acessos")
+            .select("id")
+            .eq("ferramenta", linkedTool)
+            .eq("email_cliente", payload.email_cliente.trim())
+            .maybeSingle();
+
+          if (!existing) {
+            await supabase.from("acessos").insert({
+              ferramenta: linkedTool,
+              email_cliente: payload.email_cliente.trim(),
+              login: payload.login.trim(),
+              senha: payload.senha,
+              video_url: payload.video_url.trim() || null,
+              gmail_id: matchedGmail?.id || null,
+              created_by: user.id,
+              data_criacao: baseDate.toISOString(),
+              data_expiracao: linkedExpDate.toISOString(),
+            });
+
+            if (matchedGmail) {
+              await supabase.from("gmails_utilizados").upsert({
+                gmail_id: matchedGmail.id,
+                gmail_email: matchedGmail.gmail,
+                ferramenta: linkedTool,
+              }, { onConflict: "gmail_id,ferramenta" });
+            }
+
+            toast.success(`Acesso também criado em ${linkedConfig?.name || linkedTool}!`);
+          }
         }
       }
     },
