@@ -117,7 +117,17 @@ export function ToolAlerts() {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-destructive">Ferramentas sem logins</p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              {noLoginAlerts.map(a => toolNames[a.ferramenta] || a.ferramenta).join(", ")}
+              {noLoginAlerts.map((a, i) => (
+                <span key={a.ferramenta}>
+                  {i > 0 && ", "}
+                  <span
+                    className="text-destructive hover:underline cursor-pointer font-medium"
+                    onClick={() => navigate(`/dashboard-ferramentas/${a.ferramenta}`)}
+                  >
+                    {toolNames[a.ferramenta] || a.ferramenta}
+                  </span>
+                </span>
+              ))}
             </p>
           </div>
           <button
