@@ -57,7 +57,7 @@ const Navbar = () => {
 
         {/* CTA */}
         <a
-          href="/login"
+          href="/usuario"
           className="neon-border-btn relative px-4 py-1.5 rounded-full text-xs font-semibold text-white/80 overflow-hidden"
           style={{ border: "1px solid rgba(255,255,255,0.15)", background: "transparent" }}
         >
