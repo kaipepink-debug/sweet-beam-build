@@ -308,7 +308,16 @@ export default function DashboardGmail() {
                               {linkedTools.map(toolKey => {
                                 const tool = toolsConfig[toolKey];
                                 return tool ? (
-                                  <img key={toolKey} src={tool.logo} alt={tool.name} title={tool.name} className="w-6 h-6 rounded-md object-contain" />
+                                  <img
+                                    key={toolKey}
+                                    src={tool.logo}
+                                    alt={tool.name}
+                                    title={tool.name}
+                                    className="w-6 h-6 rounded-md object-contain cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all"
+                                    onClick={() => navigate(`/dashboard-ferramentas/${toolKey}`)}
+                                  />
+                                ) : null;
+                              })}
                                 ) : null;
                               })}
                             </div>
