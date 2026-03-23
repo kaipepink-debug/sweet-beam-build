@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,6 +75,7 @@ const emptyForm: GmailForm = { gmail: "", senha: "", email_recuperacao: "" };
 
 export default function DashboardGmail() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -306,7 +308,14 @@ export default function DashboardGmail() {
                               {linkedTools.map(toolKey => {
                                 const tool = toolsConfig[toolKey];
                                 return tool ? (
-                                  <img key={toolKey} src={tool.logo} alt={tool.name} title={tool.name} className="w-6 h-6 rounded-md object-contain" />
+                                  <img
+                                    key={toolKey}
+                                    src={tool.logo}
+                                    alt={tool.name}
+                                    title={tool.name}
+                                    className="w-6 h-6 rounded-md object-contain cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all"
+                                    onClick={() => navigate(`/dashboard-ferramentas/${toolKey}`)}
+                                  />
                                 ) : null;
                               })}
                             </div>
