@@ -216,11 +216,21 @@ export default function FerramentaGerenciamento() {
           data_expiracao: expDate.toISOString(),
         });
         if (error) throw error;
+
+        // Record gmail as used for this tool (so it can't be reused even after deletion)
+        if (matchedGmail) {
+          await supabase.from("gmails_utilizados").upsert({
+            gmail_id: matchedGmail.id,
+            gmail_email: matchedGmail.gmail,
+            ferramenta: toolId!,
+          }, { onConflict: "gmail_id,ferramenta" });
+        }
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["acessos"] });
       queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
+      queryClient.invalidateQueries({ queryKey: ["gmails-utilizados"] });
       setDialogOpen(false);
       setEditingId(null);
       setAcessoMode(null);
