@@ -153,6 +153,19 @@ export default function FerramentaGerenciamento() {
     },
   });
 
+  const { data: gmailsUtilizados = [] } = useQuery({
+    queryKey: ["gmails-utilizados", toolId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("gmails_utilizados")
+        .select("gmail_id, gmail_email")
+        .eq("ferramenta", toolId!);
+      if (error) throw error;
+      return data as { gmail_id: string; gmail_email: string }[];
+    },
+    enabled: !!toolId,
+  });
+
   const { data: acessos = [], isLoading } = useQuery({
     queryKey: ["acessos", toolId],
     queryFn: async () => {
@@ -203,11 +216,21 @@ export default function FerramentaGerenciamento() {
           data_expiracao: expDate.toISOString(),
         });
         if (error) throw error;
+
+        // Record gmail as used for this tool (so it can't be reused even after deletion)
+        if (matchedGmail) {
+          await supabase.from("gmails_utilizados").upsert({
+            gmail_id: matchedGmail.id,
+            gmail_email: matchedGmail.gmail,
+            ferramenta: toolId!,
+          }, { onConflict: "gmail_id,ferramenta" });
+        }
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["acessos"] });
       queryClient.invalidateQueries({ queryKey: ["acessos-all"] });
+      queryClient.invalidateQueries({ queryKey: ["gmails-utilizados"] });
       setDialogOpen(false);
       setEditingId(null);
       setAcessoMode(null);
@@ -549,10 +572,12 @@ export default function FerramentaGerenciamento() {
                   </SelectTrigger>
                   <SelectContent>
                     {gmailsList.map(g => {
-                      const isUsed = acessos.some(a => a.email_cliente === g.gmail && a.id !== editingId);
+                      const isUsedActive = acessos.some(a => a.email_cliente === g.gmail && a.id !== editingId);
+                      const wasUsedBefore = gmailsUtilizados.some(u => u.gmail_id === g.id);
+                      const isUnavailable = isUsedActive || wasUsedBefore;
                       return (
-                        <SelectItem key={g.id} value={g.gmail} disabled={isUsed}>
-                          {g.gmail}{isUsed ? " (já usado nesta ferramenta)" : ""}
+                        <SelectItem key={g.id} value={g.gmail} disabled={isUnavailable}>
+                          {g.gmail}{isUsedActive ? " (em uso nesta ferramenta)" : wasUsedBefore ? " (já utilizado anteriormente)" : ""}
                         </SelectItem>
                       );
                     })}

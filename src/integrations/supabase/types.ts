@@ -168,6 +168,30 @@ export type Database = {
         }
         Relationships: []
       }
+      gmails_utilizados: {
+        Row: {
+          created_at: string
+          ferramenta: string
+          gmail_email: string
+          gmail_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          ferramenta: string
+          gmail_email: string
+          gmail_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          ferramenta?: string
+          gmail_email?: string
+          gmail_id?: string
+          id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
