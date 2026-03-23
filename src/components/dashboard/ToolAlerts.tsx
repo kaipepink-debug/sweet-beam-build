@@ -101,10 +101,10 @@ export function ToolAlerts() {
       )}
 
       {noLoginAlerts.length > 0 && (
-        <div className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-3">
-          <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
+        <div className="flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-3">
+          <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-amber-500">Ferramentas sem logins</p>
+            <p className="text-sm font-medium text-destructive">Ferramentas sem logins</p>
             <p className="text-xs text-muted-foreground mt-0.5">
               {noLoginAlerts.map(a => toolNames[a.ferramenta] || a.ferramenta).join(", ")}
             </p>
