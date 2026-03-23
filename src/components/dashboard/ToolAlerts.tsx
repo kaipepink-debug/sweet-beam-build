@@ -111,7 +111,7 @@ export function ToolAlerts() {
           </div>
           <button
             onClick={() => navigate("/dashboard-ferramentas")}
-            className="text-xs font-medium text-amber-500 hover:underline whitespace-nowrap"
+            className="text-xs font-medium text-destructive hover:underline whitespace-nowrap"
           >
             Configurar
           </button>
