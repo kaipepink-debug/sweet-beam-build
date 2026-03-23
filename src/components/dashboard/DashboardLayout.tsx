@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { ToolAlerts } from "@/components/dashboard/ToolAlerts";
 import { usePermissions } from "@/hooks/usePermissions";
 import { getFirstPermittedRoute } from "@/lib/getFirstPermittedRoute";
 
@@ -53,6 +54,7 @@ export default function DashboardLayout() {
       <DashboardSidebar />
       <div className="flex-1 flex flex-col min-w-0 ml-[220px]">
         <main className="flex-1 overflow-auto p-4 md:p-6">
+          <ToolAlerts />
           <Outlet />
         </main>
       </div>
