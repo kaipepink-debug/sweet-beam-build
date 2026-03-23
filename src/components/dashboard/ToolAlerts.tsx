@@ -34,22 +34,17 @@ export function ToolAlerts() {
 
       if (!data) return;
 
-      const toolStats: Record<string, { total: number; expired: number; expiringSoon: number }> = {};
+      const toolStats: Record<string, { total: number; expired: number }> = {};
 
       for (const tool of allTools) {
-        toolStats[tool] = { total: 0, expired: 0, expiringSoon: 0 };
+        toolStats[tool] = { total: 0, expired: 0 };
       }
 
-      const now = new Date();
-
       for (const row of data) {
-        if (!toolStats[row.ferramenta]) toolStats[row.ferramenta] = { total: 0, expired: 0, expiringSoon: 0 };
+        if (!toolStats[row.ferramenta]) toolStats[row.ferramenta] = { total: 0, expired: 0 };
         toolStats[row.ferramenta].total++;
-        const expDate = new Date(row.data_expiracao);
-        if (isPast(expDate)) {
+        if (isPast(new Date(row.data_expiracao))) {
           toolStats[row.ferramenta].expired++;
-        } else if (differenceInDays(expDate, now) <= 7) {
-          toolStats[row.ferramenta].expiringSoon++;
         }
       }
 
@@ -61,9 +56,6 @@ export function ToolAlerts() {
         }
         if (stats.expired > 0) {
           newAlerts.push({ ferramenta: tool, type: "expired", count: stats.expired });
-        }
-        if (stats.expiringSoon > 0) {
-          newAlerts.push({ ferramenta: tool, type: "expiring_soon", count: stats.expiringSoon });
         }
       }
 
