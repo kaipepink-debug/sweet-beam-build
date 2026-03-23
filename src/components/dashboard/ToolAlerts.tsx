@@ -159,7 +159,7 @@ export function ToolAlerts() {
         </div>
       )}
 
-
+      {noLoginAlerts.length > 0 && (
         <div className="flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-3">
           <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
