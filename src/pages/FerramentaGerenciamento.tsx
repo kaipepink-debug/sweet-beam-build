@@ -235,6 +235,44 @@ export default function FerramentaGerenciamento() {
             ferramenta: toolId!,
           }, { onConflict: "gmail_id,ferramenta" });
         }
+
+        // Auto-create in linked tool
+        const linkedTool = linkedTools[toolId!];
+        if (linkedTool) {
+          const linkedConfig = toolsConfig[linkedTool];
+          const linkedExpDate = addDays(baseDate, linkedConfig?.expiracaoDias || 30);
+          
+          // Check if already exists in linked tool
+          const { data: existing } = await supabase.from("acessos")
+            .select("id")
+            .eq("ferramenta", linkedTool)
+            .eq("email_cliente", payload.email_cliente.trim())
+            .maybeSingle();
+
+          if (!existing) {
+            await supabase.from("acessos").insert({
+              ferramenta: linkedTool,
+              email_cliente: payload.email_cliente.trim(),
+              login: payload.login.trim(),
+              senha: payload.senha,
+              video_url: payload.video_url.trim() || null,
+              gmail_id: matchedGmail?.id || null,
+              created_by: user.id,
+              data_criacao: baseDate.toISOString(),
+              data_expiracao: linkedExpDate.toISOString(),
+            });
+
+            if (matchedGmail) {
+              await supabase.from("gmails_utilizados").upsert({
+                gmail_id: matchedGmail.id,
+                gmail_email: matchedGmail.gmail,
+                ferramenta: linkedTool,
+              }, { onConflict: "gmail_id,ferramenta" });
+            }
+
+            toast.success(`Acesso também criado em ${linkedConfig?.name || linkedTool}!`);
+          }
+        }
       }
     },
     onSuccess: () => {
