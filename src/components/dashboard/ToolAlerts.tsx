@@ -78,6 +78,7 @@ export function ToolAlerts() {
   if (visible.length === 0) return null;
 
   const expiredAlerts = visible.filter(a => a.type === "expired");
+  const expiringSoonAlerts = visible.filter(a => a.type === "expiring_soon");
   const noLoginAlerts = visible.filter(a => a.type === "no_logins");
 
   return (
