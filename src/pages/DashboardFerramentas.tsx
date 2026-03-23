@@ -45,6 +45,7 @@ const tools = [
   { name: "Hailuo", ferramenta: "hailuo", logo: hailuoLogo, expiracaoDias: 30 },
   { name: "Freepik", ferramenta: "freepik", logo: freepikLogo, expiracaoDias: 30 },
   { name: "Heygen", ferramenta: "heygen", logo: heygenLogo, expiracaoDias: 30 },
+  { name: "Leonardo AI", ferramenta: "leonardoai", logo: leonardoaiLogo, expiracaoDias: 30 },
 ];
 
 interface ToolExpiration {
