@@ -6,7 +6,7 @@ import { AlertTriangle, X } from "lucide-react";
 
 interface ToolAlert {
   ferramenta: string;
-  type: "expired" | "no_logins";
+  type: "expired" | "expiring_soon" | "no_logins";
   count?: number;
 }
 
