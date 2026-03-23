@@ -16,7 +16,7 @@ const toolNames: Record<string, string> = {
   canva: "Canva Pro", innerai: "Inner AI", tess: "Tess", copyai: "Copy.AI",
   kling: "Kling", synthesia: "Synthesia", higgsfield: "Higgsfield",
   sora: "Sora", veo3: "Veo 3", hailuo: "Hailuo", freepik: "Freepik",
-  heygen: "Heygen", leonardoai: "Leonardo AI",
+  heygen: "Heygen", leonardoai: "Leonardo AI", capcut: "CapCut",
 };
 
 const allTools = Object.keys(toolNames);

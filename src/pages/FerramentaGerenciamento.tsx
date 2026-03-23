@@ -38,6 +38,7 @@ import inneraiLogo from "@/assets/tools/innerai.png";
 import tessLogo from "@/assets/tools/tess.png";
 import geminiLogo from "@/assets/tools/gemini.png";
 import leonardoaiLogo from "@/assets/tools/leonardoai.png";
+import capcutLogo from "@/assets/tools/capcut.png";
 
 const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: number }> = {
   grok: { name: "SuperGrok", logo: grokLogo, expiracaoDias: 3 },
@@ -60,6 +61,7 @@ const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: n
   freepik: { name: "Freepik", logo: freepikLogo, expiracaoDias: 30 },
   heygen: { name: "Heygen", logo: heygenLogo, expiracaoDias: 30 },
   leonardoai: { name: "Leonardo AI", logo: leonardoaiLogo, expiracaoDias: 30 },
+  capcut: { name: "CapCut", logo: capcutLogo, expiracaoDias: 30 },
 };
 
 // Ferramentas vinculadas: compartilham o mesmo login
