@@ -23,6 +23,7 @@ import heygenLogo from "@/assets/tools/heygen.png";
 import inneraiLogo from "@/assets/tools/innerai.png";
 import tessLogo from "@/assets/tools/tess.png";
 import geminiLogo from "@/assets/tools/gemini.png";
+import leonardoaiLogo from "@/assets/tools/leonardoai.png";
 
 const tools = [
   { name: "SuperGrok", ferramenta: "grok", logo: grokLogo, expiracaoDias: 3 },
