@@ -26,7 +26,7 @@ const Usuario = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [isDark, setIsDark] = useState(true);
+  
   const [popup, setPopup] = useState<PopupType>(null);
   const [popupData, setPopupData] = useState<PopupData>({});
 
