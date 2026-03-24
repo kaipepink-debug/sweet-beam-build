@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CreditCard, Calendar, Package, Shield, Clock, User, Mail } from "lucide-react";
+import { X, CreditCard, Calendar, Package, Shield, Clock, User, Mail, ArrowUpCircle } from "lucide-react";
+import PlansPopup from "./PlansPopup";
 
 interface AccountModalProps {
   open: boolean;
@@ -21,6 +23,7 @@ const t = {
 };
 
 export default function AccountModal({ open, onClose, subData, activeSub, daysRemaining, statusText }: AccountModalProps) {
+  const [showPlans, setShowPlans] = useState(false);
   if (!open) return null;
 
   const statusColor = statusText === "Ativo" ? "34, 197, 94" : "239, 68, 68";
@@ -55,6 +58,7 @@ export default function AccountModal({ open, onClose, subData, activeSub, daysRe
   ];
 
   return (
+    <>
     <AnimatePresence>
       {open && (
         <motion.div
@@ -110,6 +114,20 @@ export default function AccountModal({ open, onClose, subData, activeSub, daysRe
                       {row.value}
                     </p>
                   </div>
+                  {row.label === "Plano" && (
+                    <button
+                      onClick={() => setShowPlans(true)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold shrink-0 transition-all duration-200 hover:scale-105"
+                      style={{
+                        background: "rgba(139, 92, 246, 0.12)",
+                        border: "1px solid rgba(139, 92, 246, 0.2)",
+                        color: "rgba(139, 92, 246, 0.9)",
+                      }}
+                    >
+                      <ArrowUpCircle className="w-3.5 h-3.5" />
+                      Upgrade
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -117,5 +135,13 @@ export default function AccountModal({ open, onClose, subData, activeSub, daysRe
         </motion.div>
       )}
     </AnimatePresence>
+
+    <PlansPopup
+      open={showPlans}
+      onClose={() => setShowPlans(false)}
+      title="Upgrade de Plano"
+      description="Escolha o plano ideal para você"
+    />
+    </>
   );
 }
