@@ -48,7 +48,7 @@ const App = () => (
               <Route path="/dashboard/gmail" element={<DashboardGmail />} />
               <Route path="/dashboard/financeiro" element={<UnderDevelopment />} />
               <Route path="/dashboard/vendas" element={<UnderDevelopment />} />
-              <Route path="/dashboard/assinaturas" element={<UnderDevelopment />} />
+              <Route path="/dashboard/assinaturas" element={<DashboardAssinaturas />} />
               <Route path="/dashboard/clientes" element={<UnderDevelopment />} />
               <Route path="/dashboard/analytics" element={<UnderDevelopment />} />
               <Route path="/dashboard/configuracoes" element={<UnderDevelopment />} />
