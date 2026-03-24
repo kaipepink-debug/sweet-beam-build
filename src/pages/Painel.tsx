@@ -87,7 +87,7 @@ export default function Painel() {
     return null;
   }, []);
 
-  const userName = subData?.name || "Usuário";
+  const userName = subData?.name?.split(" ")[0] || "Usuário";
 
   const activeSub = useMemo(() => {
     if (!subData?.subscriptions?.length) return null;
