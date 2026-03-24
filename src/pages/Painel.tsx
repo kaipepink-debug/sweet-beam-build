@@ -40,7 +40,7 @@ const darkTheme = {
   infoTitle: "rgba(255,255,255,0.8)",
   infoText: "rgba(255,255,255,0.4)",
   infoStrong: "rgba(255,255,255,0.7)",
-  bottomGradient: "rgba(0,0,0,0.9)",
+  bottomGradient: "rgba(21,21,24,0.95)",
   logoutColor: "rgba(255,255,255,0.3)",
   toggleBg: "rgba(255,255,255,0.08)",
   toggleBorder: "rgba(255,255,255,0.08)",
