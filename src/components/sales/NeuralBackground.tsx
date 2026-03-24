@@ -152,13 +152,14 @@ const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
       }
 
       if (mouseActive) {
-        const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_RADIUS);
+        const glowRadius = isDarkGray ? 100 : MOUSE_RADIUS;
+        const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, glowRadius);
         glow.addColorStop(0, glowColor1);
         glow.addColorStop(0.5, glowColor2);
         glow.addColorStop(1, "transparent");
         ctx.fillStyle = glow;
         ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, MOUSE_RADIUS, 0, Math.PI * 2);
+        ctx.arc(mouse.x, mouse.y, glowRadius, 0, Math.PI * 2);
         ctx.fill();
       }
     };
