@@ -98,36 +98,7 @@ export default function Painel() {
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
-      <NeuralBackground key={isDark ? "dark-gray" : "light"} variant={isDark ? "dark-gray" : "light"} />
-
-      {/* Theme toggle */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
-        onClick={() => setIsDark(!isDark)}
-        className="fixed top-6 right-6 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110"
-        style={{
-          background: t.toggleBg,
-          border: `1px solid ${t.toggleBorder}`,
-          backdropFilter: "blur(20px)",
-        }}
-        title={isDark ? "Modo claro" : "Modo escuro"}
-      >
-        <motion.div
-          key={isDark ? "moon" : "sun"}
-          initial={{ rotate: -90, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          exit={{ rotate: 90, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {isDark ? (
-            <Moon className="w-4 h-4" style={{ color: t.toggleIcon }} />
-          ) : (
-            <Sun className="w-4 h-4" style={{ color: t.toggleIcon }} />
-          )}
-        </motion.div>
-      </motion.button>
+      <NeuralBackground variant="dark-gray" />
 
       {/* Scrollable content */}
       <div className="relative z-10 flex-1 flex flex-col items-center px-5 md:px-8 pt-12 md:pt-16 pb-28 overflow-y-auto">
