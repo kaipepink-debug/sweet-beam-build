@@ -88,7 +88,7 @@ const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
       const w = canvas.width;
       const h = canvas.height;
 
-      ctx.fillStyle = fadeColor;
+      ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, w, h);
 
       const mouseActive = !isMobile && mouse.x > 0 && mouse.y > 0;
