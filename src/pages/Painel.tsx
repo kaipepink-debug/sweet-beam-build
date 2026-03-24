@@ -55,6 +55,7 @@ export default function Painel() {
   const [phrase] = useState(() => phrases[Math.floor(Math.random() * phrases.length)]);
   const [activeTab, setActiveTab] = useState<"menu" | "info">("menu");
   const [showAccount, setShowAccount] = useState(false);
+  const [showPlans, setShowPlans] = useState(false);
 
   const t = darkTheme;
 
