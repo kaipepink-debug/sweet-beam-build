@@ -290,9 +290,7 @@ const Usuario = () => {
               style={{
                 background: "rgba(12, 12, 12, 0.92)",
                 border: `1px solid ${"rgba(255,255,255,0.08)"}`,
-                boxShadow: isDark
-                  ? "0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(180,0,255,0.08)"
-                  : "0 25px 60px rgba(0,0,0,0.15), 0 0 80px rgba(180,0,255,0.05)",
+                boxShadow: "0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(180,0,255,0.08)",
                 backdropFilter: "blur(40px)",
               }}
               onClick={(e) => e.stopPropagation()}
