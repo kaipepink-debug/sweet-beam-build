@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
+import AccountModal from "@/components/painel/AccountModal";
 
 const getGreeting = () => {
   const hour = new Date().getHours();
