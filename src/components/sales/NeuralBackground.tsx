@@ -191,7 +191,7 @@ const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 w-full h-full"
-      style={{ zIndex: 0, background: variant === "light" ? "#f5f5f5" : variant === "dark-gray" ? "#151518" : "#000000", willChange: "auto" }}
+      style={{ zIndex: 0, background: variant === "light" ? "#f5f5f5" : "#000000", willChange: "auto" }}
     />
   );
 };
