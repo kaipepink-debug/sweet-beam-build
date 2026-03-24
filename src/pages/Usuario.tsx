@@ -208,7 +208,7 @@ const Usuario = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 onFocus={() => setFocusedField("email")}
                 onBlur={() => setFocusedField(null)}
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-500"
+                className="w-full px-4 py-3 rounded-xl text-base outline-none transition-all duration-500"
                 style={{
                   background: theme.inputBg,
                   border: focusedField === "email" ? `1px solid ${theme.inputBorderFocus}` : `1px solid ${theme.inputBorder}`,
