@@ -231,9 +231,9 @@ const Usuario = () => {
                 disabled={loading}
                 className="relative w-full py-3.5 rounded-xl text-sm font-medium uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden disabled:opacity-70 neon-border-btn"
                 style={{
-                  background: isDark ? "transparent" : "rgba(50, 50, 50, 0.9)",
-                  border: isDark ? undefined : "1px solid rgba(80, 80, 80, 0.5)",
-                  boxShadow: isDark ? undefined : "0 0 20px rgba(180, 0, 255, 0.15)",
+                  background: "transparent",
+                  border: undefined,
+                  boxShadow: undefined,
                 }}
               >
                 <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
@@ -289,7 +289,7 @@ const Usuario = () => {
               className="relative w-full max-w-lg rounded-2xl overflow-hidden"
               style={{
                 background: "rgba(12, 12, 12, 0.92)",
-                border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)"}`,
+                border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                 boxShadow: isDark
                   ? "0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(180,0,255,0.08)"
                   : "0 25px 60px rgba(0,0,0,0.15), 0 0 80px rgba(180,0,255,0.05)",
@@ -311,10 +311,10 @@ const Usuario = () => {
                 onClick={() => setPopup(null)}
                 className="absolute top-4 right-4 p-1.5 rounded-full transition-all hover:scale-110"
                 style={{
-                  background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)",
+                  background: "rgba(255,255,255,0.06)",
                 }}
               >
-                <X className="w-4 h-4" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }} />
+                <X className="w-4 h-4" style={{ color: "rgba(255,255,255,0.4)" }} />
               </button>
 
               {popup === "expired" ? (
@@ -323,10 +323,10 @@ const Usuario = () => {
                     <AlertTriangle className="w-8 h-8 text-red-500" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold mb-2" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                    <h2 className="text-lg font-bold mb-2" style={{ color: "rgba(255,255,255,0.9)" }}>
                       Assinatura Expirada
                     </h2>
-                    <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
+                    <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
                       {popupData.name ? `Olá, ${popupData.name}! ` : ""}
                       Sua assinatura{popupData.productName ? ` do ${popupData.productName}` : ""} expirou
                       {popupData.expiresAt ? ` em ${new Date(popupData.expiresAt).toLocaleDateString("pt-BR")}` : ""}.
@@ -355,9 +355,9 @@ const Usuario = () => {
                         rel="noopener noreferrer"
                         className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
                         style={{
-                          background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
-                          color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)",
-                          border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                          background: "rgba(255,255,255,0.06)",
+                          color: "rgba(255,255,255,0.7)",
+                          border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                         }}
                       >
                         Semestral — R$ 297
@@ -368,9 +368,9 @@ const Usuario = () => {
                         rel="noopener noreferrer"
                         className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
                         style={{
-                          background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
-                          color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)",
-                          border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                          background: "rgba(255,255,255,0.06)",
+                          color: "rgba(255,255,255,0.7)",
+                          border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                         }}
                       >
                         Anual — R$ 497
@@ -386,10 +386,10 @@ const Usuario = () => {
                       <XCircle className="w-8 h-8" style={{ color: "rgba(180, 0, 255, 0.7)" }} />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold mb-1" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                      <h2 className="text-lg font-bold mb-1" style={{ color: "rgba(255,255,255,0.9)" }}>
                         Nenhuma Assinatura Encontrada
                       </h2>
-                      <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)" }}>
+                      <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
                         Escolha um plano para ter acesso completo às ferramentas de IA.
                       </p>
                     </div>
@@ -404,22 +404,22 @@ const Usuario = () => {
                       rel="noopener noreferrer"
                       className="block rounded-xl p-4 transition-all hover:scale-[1.02] group"
                       style={{
-                        background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-                        border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                        background: "rgba(255,255,255,0.04)",
+                        border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                       }}
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)" }}>
+                          <h3 className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.85)" }}>
                             Plano Mensal
                           </h3>
-                          <p className="text-xs mt-0.5" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
+                          <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
                             Acesso completo a +300 ferramentas
                           </p>
                         </div>
                         <div className="text-right">
-                          <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>R$ 67</span>
-                          <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/mês</span>
+                          <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.9)" }}>R$ 67</span>
+                          <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/mês</span>
                         </div>
                       </div>
                     </a>
@@ -431,16 +431,16 @@ const Usuario = () => {
                       rel="noopener noreferrer"
                       className="block rounded-xl p-4 transition-all hover:scale-[1.02] group"
                       style={{
-                        background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-                        border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                        background: "rgba(255,255,255,0.04)",
+                        border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                       }}
                     >
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)" }}>
+                          <h3 className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.85)" }}>
                             Plano Semestral
                           </h3>
-                          <p className="text-xs mt-0.5" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
+                          <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
                             Ferramentas + Cursos + Comunidade
                           </p>
                         </div>
@@ -449,8 +449,8 @@ const Usuario = () => {
                             30% OFF
                           </span>
                           <div>
-                            <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>R$ 297</span>
-                            <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/sem</span>
+                            <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.9)" }}>R$ 297</span>
+                            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/sem</span>
                           </div>
                         </div>
                       </div>
@@ -463,14 +463,14 @@ const Usuario = () => {
                       rel="noopener noreferrer"
                       className="relative block rounded-xl p-4 transition-all hover:scale-[1.02] group overflow-hidden"
                       style={{
-                        background: isDark ? "rgba(180,0,255,0.08)" : "rgba(180,0,255,0.05)",
+                        background: "rgba(180,0,255,0.08)",
                         border: "1px solid rgba(180,0,255,0.25)",
                       }}
                     >
                       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(180,0,255,0.5), transparent)" }} />
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="text-sm font-bold mb-0.5" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                          <h3 className="text-sm font-bold mb-0.5" style={{ color: "rgba(255,255,255,0.9)" }}>
                             Plano Anual
                           </h3>
                           <div className="flex items-center gap-1.5 mb-1">
@@ -478,7 +478,7 @@ const Usuario = () => {
                               Mais Escolhido
                             </span>
                           </div>
-                          <p className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}>
+                          <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
                             Tudo incluído + Mentorias + Garantia R$ 10k
                           </p>
                         </div>
@@ -487,8 +487,8 @@ const Usuario = () => {
                             40% OFF
                           </span>
                           <div>
-                            <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.95)" : "rgba(0,0,0,0.95)" }}>R$ 497</span>
-                            <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/ano</span>
+                            <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.95)" }}>R$ 497</span>
+                            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/ano</span>
                           </div>
                         </div>
                       </div>
@@ -499,7 +499,7 @@ const Usuario = () => {
                   <div
                     className="rounded-lg p-3 text-center"
                     style={{
-                      background: isDark ? "rgba(34,197,94,0.06)" : "rgba(34,197,94,0.05)",
+                      background: "rgba(34,197,94,0.06)",
                       border: "1px solid rgba(34,197,94,0.15)",
                     }}
                   >
