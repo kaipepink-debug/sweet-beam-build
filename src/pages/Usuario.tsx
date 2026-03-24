@@ -496,8 +496,8 @@ const Usuario = () => {
                         border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
                       }}
                     >
-                      <div className="flex items-center justify-between">
-                        <div>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
                           <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)" }}>
                             Plano Semestral
                           </h3>
@@ -505,8 +505,8 @@ const Usuario = () => {
                             Ferramentas + Cursos + Comunidade
                           </p>
                         </div>
-                        <div className="text-right flex items-center gap-2">
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(34,197,94,0.1)", color: "rgba(34,197,94,0.9)", border: "1px solid rgba(34,197,94,0.2)" }}>
+                        <div className="text-right shrink-0 flex flex-col items-end gap-1">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(34,197,94,0.1)", color: "rgba(34,197,94,0.9)", border: "1px solid rgba(34,197,94,0.2)" }}>
                             30% OFF
                           </span>
                           <div>
