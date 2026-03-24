@@ -23,6 +23,7 @@ import Painel from "./pages/Painel";
 import Ferramentas from "./pages/Ferramentas";
 import Cursos from "./pages/Cursos";
 import CursoPlayer from "./pages/CursoPlayer";
+import DashboardAssinaturas from "./pages/DashboardAssinaturas";
 
 const queryClient = new QueryClient();
 
