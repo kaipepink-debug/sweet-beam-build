@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
+import AccountModal from "@/components/painel/AccountModal";
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -52,6 +53,7 @@ export default function Painel() {
   const navigate = useNavigate();
   const [phrase] = useState(() => phrases[Math.floor(Math.random() * phrases.length)]);
   const [activeTab, setActiveTab] = useState<"menu" | "info">("menu");
+  const [showAccount, setShowAccount] = useState(false);
 
   const t = darkTheme;
 
@@ -87,7 +89,7 @@ export default function Painel() {
 
   const menuItems = [
     { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
-    { icon: User, label: "Minha conta", desc: "Em breve", id: "config", color: "59, 130, 246", locked: true },
+    { icon: User, label: "Minha conta", desc: "Dados da sua assinatura", id: "config", color: "59, 130, 246", locked: false },
     { icon: GraduationCap, label: "eBook Monetizando com IA", desc: "Em breve", id: "ebook", color: "16, 185, 129", locked: true },
     { icon: MessageCircle, label: "Fale conosco", desc: "Em breve", id: "suporte", color: "34, 197, 94", locked: true },
   ];
@@ -202,6 +204,7 @@ export default function Painel() {
                     }}
                     onClick={() => {
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
+                      if (!item.locked && item.id === "config") setShowAccount(true);
                     }}
                   >
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ background: `rgba(${item.color}, 0.1)` }}>
@@ -279,6 +282,15 @@ export default function Painel() {
           <span className="text-[10px] font-medium transition-colors duration-500" style={{ color: t.logoutColor }}>Deslogar</span>
         </motion.button>
       </motion.div>
+
+      <AccountModal
+        open={showAccount}
+        onClose={() => setShowAccount(false)}
+        subData={subData}
+        activeSub={activeSub}
+        daysRemaining={daysRemaining}
+        statusText={statusText}
+      />
     </div>
   );
 }
