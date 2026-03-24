@@ -1,11 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Sun, Moon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sun, Moon, AlertTriangle, XCircle, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
+
+type PopupType = "expired" | "no_subscription" | null;
+
+interface PopupData {
+  name?: string;
+  productName?: string;
+  expiresAt?: string;
+}
+
+const PLAN_LINKS = {
+  mensal: "https://funnel.navenaut.com/J8vSJ",
+  semestral: "https://funnel.navenaut.com/aPEco",
+  anual: "https://funnel.navenaut.com/N8Jzj",
+};
 
 const Usuario = () => {
   const navigate = useNavigate();
@@ -13,6 +27,8 @@ const Usuario = () => {
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(true);
+  const [popup, setPopup] = useState<PopupType>(null);
+  const [popupData, setPopupData] = useState<PopupData>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,17 +50,44 @@ const Usuario = () => {
         return;
       }
 
-      if (!data?.success || !data?.data?.active) {
-        toast({
-          title: "Acesso negado",
-          description: "Nenhuma assinatura ativa encontrada para este e-mail.",
-          variant: "destructive",
-        });
+      // No subscription found at all
+      if (!data?.success || !data?.data?.subscriptions?.length) {
+        setPopupData({ name: data?.data?.name });
+        setPopup("no_subscription");
         setLoading(false);
         return;
       }
 
-      // Store subscription data for the panel
+      // Check if any subscription is active
+      const activeSub = data.data.subscriptions.find((s: any) => s.isActive);
+      
+      if (!activeSub) {
+        // All subscriptions expired
+        const lastSub = data.data.subscriptions[0];
+        setPopupData({
+          name: data.data.name,
+          productName: lastSub.productName,
+          expiresAt: lastSub.expiresAt,
+        });
+        setPopup("expired");
+        setLoading(false);
+        return;
+      }
+
+      // Check if active subscription is actually expired by date
+      const expiresAt = new Date(activeSub.expiresAt);
+      if (expiresAt < new Date()) {
+        setPopupData({
+          name: data.data.name,
+          productName: activeSub.productName,
+          expiresAt: activeSub.expiresAt,
+        });
+        setPopup("expired");
+        setLoading(false);
+        return;
+      }
+
+      // Active subscription - grant access
       const subscriptionInfo = {
         email: data.data.email,
         name: data.data.name,
@@ -283,6 +326,159 @@ const Usuario = () => {
           />
         </div>
       </motion.div>
+
+      {/* Subscription Popups */}
+      <AnimatePresence>
+        {popup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: "rgba(0, 0, 0, 0.7)", backdropFilter: "blur(8px)" }}
+            onClick={() => setPopup(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="relative w-full max-w-md rounded-2xl p-8"
+              style={{
+                background: isDark ? "rgba(15, 15, 15, 0.95)" : "rgba(255, 255, 255, 0.95)",
+                border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.15)"}`,
+                boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setPopup(null)}
+                className="absolute top-4 right-4 p-1 rounded-full transition-colors hover:bg-white/10"
+              >
+                <X className="w-5 h-5" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }} />
+              </button>
+
+              {popup === "expired" ? (
+                <div className="text-center space-y-5">
+                  <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "rgba(239, 68, 68, 0.15)" }}>
+                    <AlertTriangle className="w-8 h-8 text-red-500" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold mb-2" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                      Assinatura Expirada
+                    </h2>
+                    <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
+                      {popupData.name ? `Olá, ${popupData.name}! ` : ""}
+                      Sua assinatura{popupData.productName ? ` do ${popupData.productName}` : ""} expirou
+                      {popupData.expiresAt ? ` em ${new Date(popupData.expiresAt).toLocaleDateString("pt-BR")}` : ""}.
+                      Renove para continuar acessando.
+                    </p>
+                  </div>
+                  <div className="space-y-3 pt-2">
+                    <a
+                      href={PLAN_LINKS.mensal}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest text-center transition-all hover:scale-[1.02]"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(139,92,246,0.9), rgba(168,85,247,0.9))",
+                        color: "white",
+                      }}
+                    >
+                      Renovar Mensal — R$ 67/mês
+                    </a>
+                    <div className="flex gap-3">
+                      <a
+                        href={PLAN_LINKS.semestral}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
+                        style={{
+                          background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                          color: isDark ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)",
+                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+                        }}
+                      >
+                        Semestral
+                      </a>
+                      <a
+                        href={PLAN_LINKS.anual}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
+                        style={{
+                          background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                          color: isDark ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)",
+                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+                        }}
+                      >
+                        Anual
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center space-y-5">
+                  <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "rgba(239, 68, 68, 0.15)" }}>
+                    <XCircle className="w-8 h-8 text-red-500" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold mb-2" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                      Nenhuma Assinatura Encontrada
+                    </h2>
+                    <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
+                      Não encontramos uma assinatura ativa para este e-mail. 
+                      Assine agora para ter acesso completo às ferramentas de IA.
+                    </p>
+                  </div>
+                  <div className="space-y-3 pt-2">
+                    <a
+                      href={PLAN_LINKS.mensal}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest text-center transition-all hover:scale-[1.02]"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(139,92,246,0.9), rgba(168,85,247,0.9))",
+                        color: "white",
+                      }}
+                    >
+                      Assinar Mensal — R$ 67/mês
+                    </a>
+                    <div className="flex gap-3">
+                      <a
+                        href={PLAN_LINKS.semestral}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
+                        style={{
+                          background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                          color: isDark ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)",
+                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+                        }}
+                      >
+                        Semestral
+                      </a>
+                      <a
+                        href={PLAN_LINKS.anual}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
+                        style={{
+                          background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                          color: isDark ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)",
+                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+                        }}
+                      >
+                        Anual
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
