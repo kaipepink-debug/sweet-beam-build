@@ -2,10 +2,11 @@ import { useState, useMemo } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock } from "lucide-react";
+import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock, AlertTriangle } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 import AccountModal from "@/components/painel/AccountModal";
+import PlansPopup from "@/components/painel/PlansPopup";
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -54,6 +55,7 @@ export default function Painel() {
   const [phrase] = useState(() => phrases[Math.floor(Math.random() * phrases.length)]);
   const [activeTab, setActiveTab] = useState<"menu" | "info">("menu");
   const [showAccount, setShowAccount] = useState(false);
+  const [showPlans, setShowPlans] = useState(false);
 
   const t = darkTheme;
 
@@ -86,6 +88,8 @@ export default function Painel() {
   }, [activeSub]);
 
   const statusColor = statusText === "Ativo" ? "34, 197, 94" : "239, 68, 68";
+  const daysNum = parseInt(daysRemaining) || 0;
+  const showRenewalAlert = daysNum > 0 && daysNum <= 5;
 
   const menuItems = [
     { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
@@ -115,6 +119,35 @@ export default function Painel() {
           <motion.div variants={stagger.item} className="flex justify-center">
             <img src={ratariaLogo} alt="ratarIA" className="h-20 md:h-28 w-auto transition-all duration-500" style={{ filter: t.logoFilter }} />
           </motion.div>
+
+          {/* Renewal alert */}
+          {showRenewalAlert && (
+            <motion.div
+              variants={stagger.item}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowPlans(true)}
+              className="flex items-center gap-3 rounded-2xl px-4 md:px-5 py-3.5 md:py-4 cursor-pointer"
+              style={{
+                background: "rgba(239, 168, 68, 0.08)",
+                border: "1px solid rgba(239, 168, 68, 0.2)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(239, 168, 68, 0.12)" }}>
+                <AlertTriangle className="w-5 h-5" style={{ color: "rgba(239, 168, 68, 0.9)" }} />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold" style={{ color: "rgba(239, 168, 68, 0.95)" }}>
+                  Sua assinatura expira em {daysRemaining} dias
+                </p>
+                <p className="text-[11px]" style={{ color: "rgba(239, 168, 68, 0.5)" }}>
+                  Toque para renovar e não perder o acesso
+                </p>
+              </div>
+              <ChevronRight className="w-4 h-4" style={{ color: "rgba(239, 168, 68, 0.4)" }} />
+            </motion.div>
+          )}
 
           {/* Greeting */}
           <motion.div variants={stagger.item} className="text-center">
@@ -290,6 +323,13 @@ export default function Painel() {
         activeSub={activeSub}
         daysRemaining={daysRemaining}
         statusText={statusText}
+      />
+
+      <PlansPopup
+        open={showPlans}
+        onClose={() => setShowPlans(false)}
+        title="Renove sua Assinatura"
+        description={`Faltam apenas ${daysRemaining} dias para seu plano expirar. Renove agora!`}
       />
     </div>
   );
