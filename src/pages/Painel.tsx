@@ -204,6 +204,7 @@ export default function Painel() {
                     }}
                     onClick={() => {
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
+                      if (!item.locked && item.id === "config") setShowAccount(true);
                     }}
                   >
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ background: `rgba(${item.color}, 0.1)` }}>
