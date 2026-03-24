@@ -87,7 +87,7 @@ export default function Painel() {
     return null;
   }, []);
 
-  const userName = subData?.name || "Usuário";
+  const userName = subData?.name?.split(" ")[0] || "Usuário";
 
   const activeSub = useMemo(() => {
     if (!subData?.subscriptions?.length) return null;
@@ -122,7 +122,7 @@ export default function Painel() {
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
-      <NeuralBackground key={isDark ? "dark" : "light"} variant={isDark ? "dark" : "light"} />
+      <NeuralBackground key={isDark ? "dark-gray" : "light"} variant={isDark ? "dark-gray" : "light"} />
 
       {/* Theme toggle */}
       <motion.button

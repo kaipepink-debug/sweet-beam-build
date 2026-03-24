@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 
 interface NeuralBackgroundProps {
-  variant?: "dark" | "light";
+  variant?: "dark" | "light" | "dark-gray";
 }
 
 const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
@@ -14,8 +14,9 @@ const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
     if (!ctx) return;
 
     const isLight = variant === "light";
-    const bgColor = isLight ? "#f5f5f5" : "#000000";
-    const fadeColor = isLight ? "rgba(245, 245, 245, 0.15)" : "rgba(0, 0, 0, 0.15)";
+    const isDarkGray = variant === "dark-gray";
+    const bgColor = isLight ? "#f5f5f5" : isDarkGray ? "#151518" : "#000000";
+    const fadeColor = isLight ? "rgba(245, 245, 245, 0.15)" : isDarkGray ? "rgba(21, 21, 24, 0.15)" : "rgba(0, 0, 0, 0.15)";
     const particleColor = isLight ? "rgba(180, 0, 255, 0.5)" : "rgba(180,180,180,0.4)";
     const connectionColor = isLight
       ? (alpha: number) => `rgba(180, 0, 255, ${alpha})`
