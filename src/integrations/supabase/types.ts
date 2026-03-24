@@ -67,6 +67,57 @@ export type Database = {
           },
         ]
       }
+      assinantes: {
+        Row: {
+          created_at: string
+          created_by: string
+          data_criacao: string
+          data_renovacao: string | null
+          email: string
+          id: string
+          meio_pagamento: string | null
+          nome: string
+          plano: string | null
+          produto: string
+          proxima_cobranca: string | null
+          status: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          data_criacao?: string
+          data_renovacao?: string | null
+          email: string
+          id?: string
+          meio_pagamento?: string | null
+          nome: string
+          plano?: string | null
+          produto?: string
+          proxima_cobranca?: string | null
+          status?: string
+          updated_at?: string
+          valor?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          data_criacao?: string
+          data_renovacao?: string | null
+          email?: string
+          id?: string
+          meio_pagamento?: string | null
+          nome?: string
+          plano?: string | null
+          produto?: string
+          proxima_cobranca?: string | null
+          status?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: []
+      }
       banners_historico: {
         Row: {
           created_at: string
