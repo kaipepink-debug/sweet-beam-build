@@ -15,8 +15,8 @@ const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
 
     const isLight = variant === "light";
     const isDarkGray = variant === "dark-gray";
-    const bgColor = isLight ? "#f5f5f5" : isDarkGray ? "#151518" : "#000000";
-    const fadeColor = isLight ? "rgba(245, 245, 245, 0.15)" : isDarkGray ? "rgba(21, 21, 24, 0.4)" : "rgba(0, 0, 0, 0.15)";
+    const bgColor = isLight ? "#f5f5f5" : "#000000";
+    const fadeColor = isLight ? "rgba(245, 245, 245, 0.15)" : isDarkGray ? "rgba(0, 0, 0, 0.4)" : "rgba(0, 0, 0, 0.15)";
     const particleColor = isLight ? "rgba(180, 0, 255, 0.5)" : "rgba(180,180,180,0.4)";
     const connectionColor = isLight
       ? (alpha: number) => `rgba(180, 0, 255, ${alpha})`
@@ -191,7 +191,7 @@ const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 w-full h-full"
-      style={{ zIndex: 0, background: variant === "light" ? "#f5f5f5" : variant === "dark-gray" ? "#151518" : "#000000", willChange: "auto" }}
+      style={{ zIndex: 0, background: variant === "light" ? "#f5f5f5" : "#000000", willChange: "auto" }}
     />
   );
 };
