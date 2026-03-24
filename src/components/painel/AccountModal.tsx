@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CreditCard, Calendar, Package, Shield, Clock, User, Mail } from "lucide-react";
+import { X, CreditCard, Calendar, Package, Shield, Clock, User, Mail, ArrowUpCircle } from "lucide-react";
+import PlansPopup from "./PlansPopup";
 
 interface AccountModalProps {
   open: boolean;
