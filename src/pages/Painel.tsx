@@ -88,6 +88,8 @@ export default function Painel() {
   }, [activeSub]);
 
   const statusColor = statusText === "Ativo" ? "34, 197, 94" : "239, 68, 68";
+  const daysNum = parseInt(daysRemaining) || 0;
+  const showRenewalAlert = daysNum > 0 && daysNum <= 5;
 
   const menuItems = [
     { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
