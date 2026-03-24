@@ -133,56 +133,20 @@ const Usuario = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Neural background with variant */}
-      <NeuralBackground key={isDark ? "dark" : "light"} variant={isDark ? "dark" : "light"} />
+      <NeuralBackground variant="dark" />
 
       {/* Overlay glows */}
       <div className="fixed inset-0 z-[1] pointer-events-none" style={{
-        background: isDark
-          ? "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.03) 0%, transparent 50%)"
-          : "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.06) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.04) 0%, transparent 50%)"
+        background: "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.03) 0%, transparent 50%)"
       }} />
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-10 blur-[120px]" style={{
-          background: isDark
-            ? "radial-gradient(circle, rgba(255,255,255,0.15), transparent)"
-            : "radial-gradient(circle, rgba(180,0,255,0.15), transparent)"
+          background: "radial-gradient(circle, rgba(255,255,255,0.15), transparent)"
         }} />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-8 blur-[100px]" style={{
-          background: isDark
-            ? "radial-gradient(circle, rgba(200,200,200,0.1), transparent)"
-            : "radial-gradient(circle, rgba(140,0,220,0.1), transparent)"
+          background: "radial-gradient(circle, rgba(200,200,200,0.1), transparent)"
         }} />
       </div>
-
-      {/* Theme toggle button */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        onClick={() => setIsDark(!isDark)}
-        className="fixed top-6 right-6 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110"
-        style={{
-          background: theme.toggleBg,
-          border: `1px solid ${theme.toggleBorder}`,
-          backdropFilter: "blur(20px)",
-        }}
-        title={isDark ? "Modo claro" : "Modo escuro"}
-      >
-        <motion.div
-          key={isDark ? "moon" : "sun"}
-          initial={{ rotate: -90, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          exit={{ rotate: 90, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {isDark ? (
-            <Moon className="w-4 h-4" style={{ color: theme.toggleIcon }} />
-          ) : (
-            <Sun className="w-4 h-4" style={{ color: theme.toggleIcon }} />
-          )}
-        </motion.div>
-      </motion.button>
 
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
