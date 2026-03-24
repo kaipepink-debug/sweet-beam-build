@@ -335,32 +335,52 @@ const Usuario = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "rgba(0, 0, 0, 0.7)", backdropFilter: "blur(8px)" }}
+            style={{
+              background: isDark ? "rgba(0, 0, 0, 0.5)" : "rgba(100, 100, 100, 0.3)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+            }}
             onClick={() => setPopup(null)}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3 }}
-              className="relative w-full max-w-md rounded-2xl p-8"
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-lg rounded-2xl overflow-hidden"
               style={{
-                background: isDark ? "rgba(15, 15, 15, 0.95)" : "rgba(255, 255, 255, 0.95)",
-                border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.15)"}`,
-                boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+                background: isDark ? "rgba(12, 12, 12, 0.92)" : "rgba(255, 255, 255, 0.92)",
+                border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)"}`,
+                boxShadow: isDark
+                  ? "0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(180,0,255,0.08)"
+                  : "0 25px 60px rgba(0,0,0,0.15), 0 0 80px rgba(180,0,255,0.05)",
+                backdropFilter: "blur(40px)",
               }}
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Top gradient line */}
+              <div
+                className="absolute top-0 left-0 right-0 h-[2px]"
+                style={{
+                  background: popup === "expired"
+                    ? "linear-gradient(90deg, transparent, rgba(239,68,68,0.6), transparent)"
+                    : "linear-gradient(90deg, transparent, rgba(180,0,255,0.6), transparent)",
+                }}
+              />
+
               <button
                 onClick={() => setPopup(null)}
-                className="absolute top-4 right-4 p-1 rounded-full transition-colors hover:bg-white/10"
+                className="absolute top-4 right-4 p-1.5 rounded-full transition-all hover:scale-110"
+                style={{
+                  background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)",
+                }}
               >
-                <X className="w-5 h-5" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }} />
+                <X className="w-4 h-4" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }} />
               </button>
 
               {popup === "expired" ? (
-                <div className="text-center space-y-5">
-                  <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "rgba(239, 68, 68, 0.15)" }}>
+                <div className="p-8 text-center space-y-5">
+                  <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "rgba(239, 68, 68, 0.12)" }}>
                     <AlertTriangle className="w-8 h-8 text-red-500" />
                   </div>
                   <div>
@@ -381,8 +401,10 @@ const Usuario = () => {
                       rel="noopener noreferrer"
                       className="block w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest text-center transition-all hover:scale-[1.02]"
                       style={{
-                        background: "linear-gradient(135deg, rgba(139,92,246,0.9), rgba(168,85,247,0.9))",
+                        background: "linear-gradient(135deg, rgba(180,0,255,0.5), rgba(120,0,200,0.4))",
+                        border: "1px solid rgba(180,0,255,0.3)",
                         color: "white",
+                        boxShadow: "0 4px 20px rgba(180,0,255,0.2)",
                       }}
                     >
                       Renovar Mensal — R$ 67/mês
@@ -394,12 +416,12 @@ const Usuario = () => {
                         rel="noopener noreferrer"
                         className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
                         style={{
-                          background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-                          color: isDark ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)",
-                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+                          background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
+                          color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)",
+                          border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
                         }}
                       >
-                        Semestral
+                        Semestral — R$ 297
                       </a>
                       <a
                         href={PLAN_LINKS.anual}
@@ -407,71 +429,144 @@ const Usuario = () => {
                         rel="noopener noreferrer"
                         className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
                         style={{
-                          background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-                          color: isDark ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)",
-                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+                          background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
+                          color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)",
+                          border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
                         }}
                       >
-                        Anual
+                        Anual — R$ 497
                       </a>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-center space-y-5">
-                  <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "rgba(239, 68, 68, 0.15)" }}>
-                    <XCircle className="w-8 h-8 text-red-500" />
+                <div className="p-8 space-y-6">
+                  {/* Header */}
+                  <div className="text-center space-y-3">
+                    <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "rgba(180, 0, 255, 0.1)" }}>
+                      <XCircle className="w-8 h-8" style={{ color: "rgba(180, 0, 255, 0.7)" }} />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold mb-1" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                        Nenhuma Assinatura Encontrada
+                      </h2>
+                      <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)" }}>
+                        Escolha um plano para ter acesso completo às ferramentas de IA.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-lg font-bold mb-2" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
-                      Nenhuma Assinatura Encontrada
-                    </h2>
-                    <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
-                      Não encontramos uma assinatura ativa para este e-mail. 
-                      Assine agora para ter acesso completo às ferramentas de IA.
-                    </p>
-                  </div>
-                  <div className="space-y-3 pt-2">
+
+                  {/* Plans */}
+                  <div className="space-y-3">
+                    {/* Mensal */}
                     <a
                       href={PLAN_LINKS.mensal}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest text-center transition-all hover:scale-[1.02]"
+                      className="block rounded-xl p-4 transition-all hover:scale-[1.02] group"
                       style={{
-                        background: "linear-gradient(135deg, rgba(139,92,246,0.9), rgba(168,85,247,0.9))",
-                        color: "white",
+                        background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
+                        border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
                       }}
                     >
-                      Assinar Mensal — R$ 67/mês
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)" }}>
+                            Plano Mensal
+                          </h3>
+                          <p className="text-xs mt-0.5" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
+                            Acesso completo a +300 ferramentas
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>R$ 67</span>
+                          <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/mês</span>
+                        </div>
+                      </div>
                     </a>
-                    <div className="flex gap-3">
-                      <a
-                        href={PLAN_LINKS.semestral}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
-                        style={{
-                          background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-                          color: isDark ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)",
-                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
-                        }}
-                      >
-                        Semestral
-                      </a>
-                      <a
-                        href={PLAN_LINKS.anual}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
-                        style={{
-                          background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-                          color: isDark ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)",
-                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
-                        }}
-                      >
-                        Anual
-                      </a>
-                    </div>
+
+                    {/* Semestral */}
+                    <a
+                      href={PLAN_LINKS.semestral}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block rounded-xl p-4 transition-all hover:scale-[1.02] group"
+                      style={{
+                        background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
+                        border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)" }}>
+                            Plano Semestral
+                          </h3>
+                          <p className="text-xs mt-0.5" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
+                            Ferramentas + Cursos + Comunidade
+                          </p>
+                        </div>
+                        <div className="text-right flex items-center gap-2">
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(34,197,94,0.1)", color: "rgba(34,197,94,0.9)", border: "1px solid rgba(34,197,94,0.2)" }}>
+                            30% OFF
+                          </span>
+                          <div>
+                            <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>R$ 297</span>
+                            <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/sem</span>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+
+                    {/* Anual — Destaque */}
+                    <a
+                      href={PLAN_LINKS.anual}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative block rounded-xl p-4 transition-all hover:scale-[1.02] group overflow-hidden"
+                      style={{
+                        background: isDark ? "rgba(180,0,255,0.08)" : "rgba(180,0,255,0.05)",
+                        border: "1px solid rgba(180,0,255,0.25)",
+                      }}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(180,0,255,0.5), transparent)" }} />
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                              Plano Anual
+                            </h3>
+                            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>
+                              Mais Escolhido
+                            </span>
+                          </div>
+                          <p className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}>
+                            Tudo incluído + Mentorias + Garantia R$ 10k
+                          </p>
+                        </div>
+                        <div className="text-right flex items-center gap-2">
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>
+                            40% OFF
+                          </span>
+                          <div>
+                            <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.95)" : "rgba(0,0,0,0.95)" }}>R$ 497</span>
+                            <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/ano</span>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+
+                  {/* Auto access note */}
+                  <div
+                    className="rounded-lg p-3 text-center"
+                    style={{
+                      background: isDark ? "rgba(34,197,94,0.06)" : "rgba(34,197,94,0.05)",
+                      border: "1px solid rgba(34,197,94,0.15)",
+                    }}
+                  >
+                    <p className="text-[11px] leading-relaxed" style={{ color: "rgba(34,197,94,0.8)" }}>
+                      ✨ Após a compra, seu acesso é liberado <strong>automaticamente</strong>. Basta voltar aqui e inserir o mesmo e-mail utilizado na compra.
+                    </p>
                   </div>
                 </div>
               )}
