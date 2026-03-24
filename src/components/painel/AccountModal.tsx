@@ -23,6 +23,7 @@ const t = {
 };
 
 export default function AccountModal({ open, onClose, subData, activeSub, daysRemaining, statusText }: AccountModalProps) {
+  const [showPlans, setShowPlans] = useState(false);
   if (!open) return null;
 
   const statusColor = statusText === "Ativo" ? "34, 197, 94" : "239, 68, 68";
