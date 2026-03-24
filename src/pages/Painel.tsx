@@ -47,36 +47,12 @@ const darkTheme = {
   logoFilter: "brightness(1.15)",
 };
 
-const lightTheme = {
-  greeting: "rgba(0,0,0,0.85)",
-  phrase: "rgba(0,0,0,0.35)",
-  statLabel: "rgba(0,0,0,0.4)",
-  tabBg: "rgba(0,0,0,0.04)",
-  tabInactive: "rgba(0,0,0,0.35)",
-  cardBg: "rgba(255,255,255,0.7)",
-  cardBorder: "rgba(0,0,0,0.06)",
-  menuLabel: "rgba(0,0,0,0.8)",
-  menuDesc: "rgba(0,0,0,0.4)",
-  chevron: "rgba(0,0,0,0.15)",
-  chevronHover: "rgba(0,0,0,0.4)",
-  infoTitle: "rgba(0,0,0,0.8)",
-  infoText: "rgba(0,0,0,0.5)",
-  infoStrong: "rgba(0,0,0,0.7)",
-  bottomGradient: "rgba(245,245,245,0.95)",
-  logoutColor: "rgba(0,0,0,0.35)",
-  toggleBg: "rgba(0,0,0,0.06)",
-  toggleBorder: "rgba(0,0,0,0.1)",
-  toggleIcon: "rgba(60,60,60,0.8)",
-  logoFilter: "brightness(0) saturate(100%)",
-};
-
 export default function Painel() {
   const navigate = useNavigate();
   const [phrase] = useState(() => phrases[Math.floor(Math.random() * phrases.length)]);
   const [activeTab, setActiveTab] = useState<"menu" | "info">("menu");
-  const [isDark, setIsDark] = useState(true);
 
-  const t = isDark ? darkTheme : lightTheme;
+  const t = darkTheme;
 
   // Pull subscription data from localStorage
   const subData = useMemo(() => {
