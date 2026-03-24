@@ -25,7 +25,7 @@ const plans = [
     period: "/ano",
     highlight: true,
     badge: "Mais Escolhido",
-    link: "https://funnel.navenaut.com/aPEco",
+    link: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-6f17-7561-b16a-6dc9b3e3dbbe&funnel=aPEco&offer=anual",
     discount: "40% OFF",
     features: [
       "Acesso ilimitado a +300 ferramentas de IA",
