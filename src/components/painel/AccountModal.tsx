@@ -134,5 +134,13 @@ export default function AccountModal({ open, onClose, subData, activeSub, daysRe
         </motion.div>
       )}
     </AnimatePresence>
+
+    <PlansPopup
+      open={showPlans}
+      onClose={() => setShowPlans(false)}
+      title="Upgrade de Plano"
+      description="Escolha o plano ideal para você"
+    />
+    </>
   );
 }
