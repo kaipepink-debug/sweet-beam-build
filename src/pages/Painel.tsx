@@ -120,6 +120,35 @@ export default function Painel() {
             <img src={ratariaLogo} alt="ratarIA" className="h-20 md:h-28 w-auto transition-all duration-500" style={{ filter: t.logoFilter }} />
           </motion.div>
 
+          {/* Renewal alert */}
+          {showRenewalAlert && (
+            <motion.div
+              variants={stagger.item}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowPlans(true)}
+              className="flex items-center gap-3 rounded-2xl px-4 md:px-5 py-3.5 md:py-4 cursor-pointer"
+              style={{
+                background: "rgba(239, 168, 68, 0.08)",
+                border: "1px solid rgba(239, 168, 68, 0.2)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(239, 168, 68, 0.12)" }}>
+                <AlertTriangle className="w-5 h-5" style={{ color: "rgba(239, 168, 68, 0.9)" }} />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold" style={{ color: "rgba(239, 168, 68, 0.95)" }}>
+                  Sua assinatura expira em {daysRemaining} dias
+                </p>
+                <p className="text-[11px]" style={{ color: "rgba(239, 168, 68, 0.5)" }}>
+                  Toque para renovar e não perder o acesso
+                </p>
+              </div>
+              <ChevronRight className="w-4 h-4" style={{ color: "rgba(239, 168, 68, 0.4)" }} />
+            </motion.div>
+          )}
+
           {/* Greeting */}
           <motion.div variants={stagger.item} className="text-center">
              <h1 className="text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500" style={{ color: t.greeting }}>
