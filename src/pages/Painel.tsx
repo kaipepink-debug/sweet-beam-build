@@ -105,7 +105,7 @@ export default function Painel() {
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
-      <NeuralBackground variant="dark-gray" />
+      <NeuralBackground />
 
       {/* Scrollable content */}
       <div className="relative z-10 flex-1 flex flex-col items-center px-5 md:px-8 pt-12 md:pt-16 pb-28 overflow-y-auto">
