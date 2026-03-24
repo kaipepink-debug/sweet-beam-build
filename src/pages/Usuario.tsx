@@ -112,49 +112,24 @@ const Usuario = () => {
     }
   };
 
-  const theme = isDark
-    ? {
-        cardBg: "rgba(10, 10, 10, 0.8)",
-        cardBorder: "rgba(255, 255, 255, 0.08)",
-        cardShadow: "0 0 60px rgba(0, 0, 0, 0.4), 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03)",
-        title: "rgba(255, 255, 255, 0.9)",
-        subtitle: "rgba(180, 180, 180, 0.5)",
-        label: "rgba(200, 200, 200, 0.6)",
-        inputBg: "rgba(15, 15, 15, 0.8)",
-        inputBorder: "rgba(255, 255, 255, 0.08)",
-        inputBorderFocus: "rgba(255, 255, 255, 0.25)",
-        inputText: "rgba(255, 255, 255, 0.9)",
-        inputShadowFocus: "0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.02)",
-        btnText: "rgba(255, 255, 255, 0.95)",
-        btnSpinnerBorder: "rgba(255,255,255,0.2)",
-        btnSpinnerTop: "rgba(255,255,255,0.9)",
-        accent: "rgba(255, 255, 255, 0.15)",
-        toggleBg: "rgba(255, 255, 255, 0.08)",
-        toggleIcon: "rgba(255, 255, 255, 0.6)",
-        toggleBorder: "rgba(255,255,255,0.08)",
-        logoFilter: "brightness(1.1)",
-      }
-    : {
-        cardBg: "rgba(255, 255, 255, 0.85)",
-        cardBorder: "rgba(0, 0, 0, 0.25)",
-        cardShadow: "0 0 60px rgba(180, 0, 255, 0.06), 0 25px 50px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
-        title: "rgba(0, 0, 0, 0.88)",
-        subtitle: "rgba(100, 100, 100, 0.6)",
-        label: "rgba(60, 60, 60, 0.8)",
-        inputBg: "rgba(250, 248, 255, 0.9)",
-        inputBorder: "rgba(180, 0, 255, 0.1)",
-        inputBorderFocus: "rgba(180, 0, 255, 0.4)",
-        inputText: "rgba(0, 0, 0, 0.88)",
-        inputShadowFocus: "0 0 20px rgba(180, 0, 255, 0.1), inset 0 0 20px rgba(180, 0, 255, 0.03)",
-        btnText: "rgba(255, 255, 255, 0.95)",
-        btnSpinnerBorder: "rgba(180, 0, 255, 0.25)",
-        btnSpinnerTop: "rgba(180, 0, 255, 0.9)",
-        accent: "rgba(180, 0, 255, 0.2)",
-        toggleBg: "rgba(0, 0, 0, 0.06)",
-        toggleIcon: "rgba(60, 60, 60, 0.8)",
-        toggleBorder: "rgba(0,0,0,0.1)",
-        logoFilter: "brightness(0) saturate(100%)",
-      };
+  const theme = {
+    cardBg: "rgba(10, 10, 10, 0.8)",
+    cardBorder: "rgba(255, 255, 255, 0.08)",
+    cardShadow: "0 0 60px rgba(0, 0, 0, 0.4), 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03)",
+    title: "rgba(255, 255, 255, 0.9)",
+    subtitle: "rgba(180, 180, 180, 0.5)",
+    label: "rgba(200, 200, 200, 0.6)",
+    inputBg: "rgba(15, 15, 15, 0.8)",
+    inputBorder: "rgba(255, 255, 255, 0.08)",
+    inputBorderFocus: "rgba(255, 255, 255, 0.25)",
+    inputText: "rgba(255, 255, 255, 0.9)",
+    inputShadowFocus: "0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.02)",
+    btnText: "rgba(255, 255, 255, 0.95)",
+    btnSpinnerBorder: "rgba(255,255,255,0.2)",
+    btnSpinnerTop: "rgba(255,255,255,0.9)",
+    accent: "rgba(255, 255, 255, 0.15)",
+    logoFilter: "brightness(1.1)",
+  };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
