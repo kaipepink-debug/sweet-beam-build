@@ -95,7 +95,7 @@ export default function Painel() {
     { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
     { icon: User, label: "Minha conta", desc: "Dados da sua assinatura", id: "config", color: "59, 130, 246", locked: false },
     { icon: GraduationCap, label: "eBook Monetizando com IA", desc: "Em breve", id: "ebook", color: "16, 185, 129", locked: true },
-    { icon: MessageCircle, label: "Fale conosco", desc: "Em breve", id: "suporte", color: "34, 197, 94", locked: true },
+    { icon: MessageCircle, label: "Fale conosco", desc: "Abrir WhatsApp", id: "suporte", color: "34, 197, 94", locked: false },
   ];
 
   const stats = [
