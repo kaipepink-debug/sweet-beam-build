@@ -16,13 +16,13 @@ const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
     const isLight = variant === "light";
     const isDarkGray = variant === "dark-gray";
     const bgColor = isLight ? "#f5f5f5" : isDarkGray ? "#151518" : "#000000";
-    const fadeColor = isLight ? "rgba(245, 245, 245, 0.15)" : isDarkGray ? "rgba(21, 21, 24, 0.15)" : "rgba(0, 0, 0, 0.15)";
+    const fadeColor = isLight ? "rgba(245, 245, 245, 0.15)" : isDarkGray ? "rgba(21, 21, 24, 0.4)" : "rgba(0, 0, 0, 0.15)";
     const particleColor = isLight ? "rgba(180, 0, 255, 0.5)" : "rgba(180,180,180,0.4)";
     const connectionColor = isLight
       ? (alpha: number) => `rgba(180, 0, 255, ${alpha})`
       : (alpha: number) => `rgba(160,160,160,${alpha})`;
-    const glowColor1 = isLight ? "rgba(180,0,255,0.18)" : "rgba(180,0,255,0.12)";
-    const glowColor2 = isLight ? "rgba(180,0,255,0.06)" : "rgba(180,0,255,0.04)";
+    const glowColor1 = isLight ? "rgba(180,0,255,0.18)" : isDarkGray ? "rgba(180,0,255,0.06)" : "rgba(180,0,255,0.12)";
+    const glowColor2 = isLight ? "rgba(180,0,255,0.06)" : "rgba(180,0,255,0.02)";
 
     let animationId: number;
     const mouse = { x: -9999, y: -9999 };
