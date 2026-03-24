@@ -336,9 +336,9 @@ const Usuario = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             style={{
-              background: isDark ? "rgba(0, 0, 0, 0.5)" : "rgba(100, 100, 100, 0.3)",
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
+              background: isDark ? "rgba(0, 0, 0, 0.25)" : "rgba(150, 150, 150, 0.15)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
             }}
             onClick={() => setPopup(null)}
           >
@@ -496,8 +496,8 @@ const Usuario = () => {
                         border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
                       }}
                     >
-                      <div className="flex items-center justify-between">
-                        <div>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
                           <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)" }}>
                             Plano Semestral
                           </h3>
@@ -505,8 +505,8 @@ const Usuario = () => {
                             Ferramentas + Cursos + Comunidade
                           </p>
                         </div>
-                        <div className="text-right flex items-center gap-2">
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(34,197,94,0.1)", color: "rgba(34,197,94,0.9)", border: "1px solid rgba(34,197,94,0.2)" }}>
+                        <div className="text-right shrink-0 flex flex-col items-end gap-1">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(34,197,94,0.1)", color: "rgba(34,197,94,0.9)", border: "1px solid rgba(34,197,94,0.2)" }}>
                             30% OFF
                           </span>
                           <div>
@@ -529,13 +529,13 @@ const Usuario = () => {
                       }}
                     >
                       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(180,0,255,0.5), transparent)" }} />
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
-                              Plano Anual
-                            </h3>
-                            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <h3 className="text-sm font-bold mb-0.5" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                            Plano Anual
+                          </h3>
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>
                               Mais Escolhido
                             </span>
                           </div>
@@ -543,8 +543,8 @@ const Usuario = () => {
                             Tudo incluído + Mentorias + Garantia R$ 10k
                           </p>
                         </div>
-                        <div className="text-right flex items-center gap-2">
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>
+                        <div className="text-right shrink-0 flex flex-col items-end gap-1">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>
                             40% OFF
                           </span>
                           <div>
