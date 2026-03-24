@@ -1,11 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Sun, Moon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sun, Moon, AlertTriangle, XCircle, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
+
+type PopupType = "expired" | "no_subscription" | null;
+
+interface PopupData {
+  name?: string;
+  productName?: string;
+  expiresAt?: string;
+}
+
+const PLAN_LINKS = {
+  mensal: "https://funnel.navenaut.com/J8vSJ",
+  semestral: "https://funnel.navenaut.com/aPEco",
+  anual: "https://funnel.navenaut.com/N8Jzj",
+};
 
 const Usuario = () => {
   const navigate = useNavigate();
@@ -13,6 +27,8 @@ const Usuario = () => {
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(true);
+  const [popup, setPopup] = useState<PopupType>(null);
+  const [popupData, setPopupData] = useState<PopupData>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,17 +50,44 @@ const Usuario = () => {
         return;
       }
 
-      if (!data?.success || !data?.data?.active) {
-        toast({
-          title: "Acesso negado",
-          description: "Nenhuma assinatura ativa encontrada para este e-mail.",
-          variant: "destructive",
-        });
+      // No subscription found at all
+      if (!data?.success || !data?.data?.subscriptions?.length) {
+        setPopupData({ name: data?.data?.name });
+        setPopup("no_subscription");
         setLoading(false);
         return;
       }
 
-      // Store subscription data for the panel
+      // Check if any subscription is active
+      const activeSub = data.data.subscriptions.find((s: any) => s.isActive);
+      
+      if (!activeSub) {
+        // All subscriptions expired
+        const lastSub = data.data.subscriptions[0];
+        setPopupData({
+          name: data.data.name,
+          productName: lastSub.productName,
+          expiresAt: lastSub.expiresAt,
+        });
+        setPopup("expired");
+        setLoading(false);
+        return;
+      }
+
+      // Check if active subscription is actually expired by date
+      const expiresAt = new Date(activeSub.expiresAt);
+      if (expiresAt < new Date()) {
+        setPopupData({
+          name: data.data.name,
+          productName: activeSub.productName,
+          expiresAt: activeSub.expiresAt,
+        });
+        setPopup("expired");
+        setLoading(false);
+        return;
+      }
+
+      // Active subscription - grant access
       const subscriptionInfo = {
         email: data.data.email,
         name: data.data.name,
