@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Sun, Moon, Lock } from "lucide-react";
+import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
@@ -47,36 +47,12 @@ const darkTheme = {
   logoFilter: "brightness(1.15)",
 };
 
-const lightTheme = {
-  greeting: "rgba(0,0,0,0.85)",
-  phrase: "rgba(0,0,0,0.35)",
-  statLabel: "rgba(0,0,0,0.4)",
-  tabBg: "rgba(0,0,0,0.04)",
-  tabInactive: "rgba(0,0,0,0.35)",
-  cardBg: "rgba(255,255,255,0.7)",
-  cardBorder: "rgba(0,0,0,0.06)",
-  menuLabel: "rgba(0,0,0,0.8)",
-  menuDesc: "rgba(0,0,0,0.4)",
-  chevron: "rgba(0,0,0,0.15)",
-  chevronHover: "rgba(0,0,0,0.4)",
-  infoTitle: "rgba(0,0,0,0.8)",
-  infoText: "rgba(0,0,0,0.5)",
-  infoStrong: "rgba(0,0,0,0.7)",
-  bottomGradient: "rgba(245,245,245,0.95)",
-  logoutColor: "rgba(0,0,0,0.35)",
-  toggleBg: "rgba(0,0,0,0.06)",
-  toggleBorder: "rgba(0,0,0,0.1)",
-  toggleIcon: "rgba(60,60,60,0.8)",
-  logoFilter: "brightness(0) saturate(100%)",
-};
-
 export default function Painel() {
   const navigate = useNavigate();
   const [phrase] = useState(() => phrases[Math.floor(Math.random() * phrases.length)]);
   const [activeTab, setActiveTab] = useState<"menu" | "info">("menu");
-  const [isDark, setIsDark] = useState(true);
 
-  const t = isDark ? darkTheme : lightTheme;
+  const t = darkTheme;
 
   // Pull subscription data from localStorage
   const subData = useMemo(() => {
@@ -122,36 +98,7 @@ export default function Painel() {
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
-      <NeuralBackground key={isDark ? "dark-gray" : "light"} variant={isDark ? "dark-gray" : "light"} />
-
-      {/* Theme toggle */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
-        onClick={() => setIsDark(!isDark)}
-        className="fixed top-6 right-6 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110"
-        style={{
-          background: t.toggleBg,
-          border: `1px solid ${t.toggleBorder}`,
-          backdropFilter: "blur(20px)",
-        }}
-        title={isDark ? "Modo claro" : "Modo escuro"}
-      >
-        <motion.div
-          key={isDark ? "moon" : "sun"}
-          initial={{ rotate: -90, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          exit={{ rotate: 90, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {isDark ? (
-            <Moon className="w-4 h-4" style={{ color: t.toggleIcon }} />
-          ) : (
-            <Sun className="w-4 h-4" style={{ color: t.toggleIcon }} />
-          )}
-        </motion.div>
-      </motion.button>
+      <NeuralBackground variant="dark-gray" />
 
       {/* Scrollable content */}
       <div className="relative z-10 flex-1 flex flex-col items-center px-5 md:px-8 pt-12 md:pt-16 pb-28 overflow-y-auto">
