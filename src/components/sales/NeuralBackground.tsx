@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 
 interface NeuralBackgroundProps {
-  variant?: "dark" | "light";
+  variant?: "dark" | "light" | "dark-gray";
 }
 
 const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
