@@ -336,9 +336,9 @@ const Usuario = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             style={{
-              background: isDark ? "rgba(0, 0, 0, 0.25)" : "rgba(150, 150, 150, 0.15)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
+              background: isDark ? "rgba(0, 0, 0, 0.15)" : "rgba(150, 150, 150, 0.1)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
             }}
             onClick={() => setPopup(null)}
           >
