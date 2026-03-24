@@ -275,7 +275,7 @@ const Usuario = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             style={{
-              background: isDark ? "rgba(0, 0, 0, 0.15)" : "rgba(150, 150, 150, 0.1)",
+              background: "rgba(0, 0, 0, 0.15)",
               backdropFilter: "blur(6px)",
               WebkitBackdropFilter: "blur(6px)",
             }}
@@ -288,7 +288,7 @@ const Usuario = () => {
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="relative w-full max-w-lg rounded-2xl overflow-hidden"
               style={{
-                background: isDark ? "rgba(12, 12, 12, 0.92)" : "rgba(255, 255, 255, 0.92)",
+                background: "rgba(12, 12, 12, 0.92)",
                 border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)"}`,
                 boxShadow: isDark
                   ? "0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(180,0,255,0.08)"
