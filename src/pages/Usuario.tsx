@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, AlertTriangle, XCircle, X } from "lucide-react";
+import { AlertTriangle, XCircle, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import NeuralBackground from "@/components/sales/NeuralBackground";
@@ -26,7 +26,7 @@ const Usuario = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [isDark, setIsDark] = useState(true);
+  
   const [popup, setPopup] = useState<PopupType>(null);
   const [popupData, setPopupData] = useState<PopupData>({});
 
@@ -112,102 +112,41 @@ const Usuario = () => {
     }
   };
 
-  const theme = isDark
-    ? {
-        cardBg: "rgba(10, 10, 10, 0.8)",
-        cardBorder: "rgba(255, 255, 255, 0.08)",
-        cardShadow: "0 0 60px rgba(0, 0, 0, 0.4), 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03)",
-        title: "rgba(255, 255, 255, 0.9)",
-        subtitle: "rgba(180, 180, 180, 0.5)",
-        label: "rgba(200, 200, 200, 0.6)",
-        inputBg: "rgba(15, 15, 15, 0.8)",
-        inputBorder: "rgba(255, 255, 255, 0.08)",
-        inputBorderFocus: "rgba(255, 255, 255, 0.25)",
-        inputText: "rgba(255, 255, 255, 0.9)",
-        inputShadowFocus: "0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.02)",
-        btnText: "rgba(255, 255, 255, 0.95)",
-        btnSpinnerBorder: "rgba(255,255,255,0.2)",
-        btnSpinnerTop: "rgba(255,255,255,0.9)",
-        accent: "rgba(255, 255, 255, 0.15)",
-        toggleBg: "rgba(255, 255, 255, 0.08)",
-        toggleIcon: "rgba(255, 255, 255, 0.6)",
-        toggleBorder: "rgba(255,255,255,0.08)",
-        logoFilter: "brightness(1.1)",
-      }
-    : {
-        cardBg: "rgba(255, 255, 255, 0.85)",
-        cardBorder: "rgba(0, 0, 0, 0.25)",
-        cardShadow: "0 0 60px rgba(180, 0, 255, 0.06), 0 25px 50px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
-        title: "rgba(0, 0, 0, 0.88)",
-        subtitle: "rgba(100, 100, 100, 0.6)",
-        label: "rgba(60, 60, 60, 0.8)",
-        inputBg: "rgba(250, 248, 255, 0.9)",
-        inputBorder: "rgba(180, 0, 255, 0.1)",
-        inputBorderFocus: "rgba(180, 0, 255, 0.4)",
-        inputText: "rgba(0, 0, 0, 0.88)",
-        inputShadowFocus: "0 0 20px rgba(180, 0, 255, 0.1), inset 0 0 20px rgba(180, 0, 255, 0.03)",
-        btnText: "rgba(255, 255, 255, 0.95)",
-        btnSpinnerBorder: "rgba(180, 0, 255, 0.25)",
-        btnSpinnerTop: "rgba(180, 0, 255, 0.9)",
-        accent: "rgba(180, 0, 255, 0.2)",
-        toggleBg: "rgba(0, 0, 0, 0.06)",
-        toggleIcon: "rgba(60, 60, 60, 0.8)",
-        toggleBorder: "rgba(0,0,0,0.1)",
-        logoFilter: "brightness(0) saturate(100%)",
-      };
+  const theme = {
+    cardBg: "rgba(10, 10, 10, 0.8)",
+    cardBorder: "rgba(255, 255, 255, 0.08)",
+    cardShadow: "0 0 60px rgba(0, 0, 0, 0.4), 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03)",
+    title: "rgba(255, 255, 255, 0.9)",
+    subtitle: "rgba(180, 180, 180, 0.5)",
+    label: "rgba(200, 200, 200, 0.6)",
+    inputBg: "rgba(15, 15, 15, 0.8)",
+    inputBorder: "rgba(255, 255, 255, 0.08)",
+    inputBorderFocus: "rgba(255, 255, 255, 0.25)",
+    inputText: "rgba(255, 255, 255, 0.9)",
+    inputShadowFocus: "0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.02)",
+    btnText: "rgba(255, 255, 255, 0.95)",
+    btnSpinnerBorder: "rgba(255,255,255,0.2)",
+    btnSpinnerTop: "rgba(255,255,255,0.9)",
+    accent: "rgba(255, 255, 255, 0.15)",
+    logoFilter: "brightness(1.1)",
+  };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Neural background with variant */}
-      <NeuralBackground key={isDark ? "dark" : "light"} variant={isDark ? "dark" : "light"} />
+      <NeuralBackground variant="dark" />
 
       {/* Overlay glows */}
       <div className="fixed inset-0 z-[1] pointer-events-none" style={{
-        background: isDark
-          ? "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.03) 0%, transparent 50%)"
-          : "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.06) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.04) 0%, transparent 50%)"
+        background: "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.03) 0%, transparent 50%)"
       }} />
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-10 blur-[120px]" style={{
-          background: isDark
-            ? "radial-gradient(circle, rgba(255,255,255,0.15), transparent)"
-            : "radial-gradient(circle, rgba(180,0,255,0.15), transparent)"
+          background: "radial-gradient(circle, rgba(255,255,255,0.15), transparent)"
         }} />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-8 blur-[100px]" style={{
-          background: isDark
-            ? "radial-gradient(circle, rgba(200,200,200,0.1), transparent)"
-            : "radial-gradient(circle, rgba(140,0,220,0.1), transparent)"
+          background: "radial-gradient(circle, rgba(200,200,200,0.1), transparent)"
         }} />
       </div>
-
-      {/* Theme toggle button */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        onClick={() => setIsDark(!isDark)}
-        className="fixed top-6 right-6 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110"
-        style={{
-          background: theme.toggleBg,
-          border: `1px solid ${theme.toggleBorder}`,
-          backdropFilter: "blur(20px)",
-        }}
-        title={isDark ? "Modo claro" : "Modo escuro"}
-      >
-        <motion.div
-          key={isDark ? "moon" : "sun"}
-          initial={{ rotate: -90, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          exit={{ rotate: 90, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {isDark ? (
-            <Moon className="w-4 h-4" style={{ color: theme.toggleIcon }} />
-          ) : (
-            <Sun className="w-4 h-4" style={{ color: theme.toggleIcon }} />
-          )}
-        </motion.div>
-      </motion.button>
 
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -292,9 +231,9 @@ const Usuario = () => {
                 disabled={loading}
                 className="relative w-full py-3.5 rounded-xl text-sm font-medium uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden disabled:opacity-70 neon-border-btn"
                 style={{
-                  background: isDark ? "transparent" : "rgba(50, 50, 50, 0.9)",
-                  border: isDark ? undefined : "1px solid rgba(80, 80, 80, 0.5)",
-                  boxShadow: isDark ? undefined : "0 0 20px rgba(180, 0, 255, 0.15)",
+                  background: "transparent",
+                  border: undefined,
+                  boxShadow: undefined,
                 }}
               >
                 <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
@@ -336,7 +275,7 @@ const Usuario = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             style={{
-              background: isDark ? "rgba(0, 0, 0, 0.15)" : "rgba(150, 150, 150, 0.1)",
+              background: "rgba(0, 0, 0, 0.15)",
               backdropFilter: "blur(6px)",
               WebkitBackdropFilter: "blur(6px)",
             }}
@@ -349,11 +288,9 @@ const Usuario = () => {
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="relative w-full max-w-lg rounded-2xl overflow-hidden"
               style={{
-                background: isDark ? "rgba(12, 12, 12, 0.92)" : "rgba(255, 255, 255, 0.92)",
-                border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)"}`,
-                boxShadow: isDark
-                  ? "0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(180,0,255,0.08)"
-                  : "0 25px 60px rgba(0,0,0,0.15), 0 0 80px rgba(180,0,255,0.05)",
+                background: "rgba(12, 12, 12, 0.92)",
+                border: `1px solid ${"rgba(255,255,255,0.08)"}`,
+                boxShadow: "0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(180,0,255,0.08)",
                 backdropFilter: "blur(40px)",
               }}
               onClick={(e) => e.stopPropagation()}
@@ -372,10 +309,10 @@ const Usuario = () => {
                 onClick={() => setPopup(null)}
                 className="absolute top-4 right-4 p-1.5 rounded-full transition-all hover:scale-110"
                 style={{
-                  background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)",
+                  background: "rgba(255,255,255,0.06)",
                 }}
               >
-                <X className="w-4 h-4" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }} />
+                <X className="w-4 h-4" style={{ color: "rgba(255,255,255,0.4)" }} />
               </button>
 
               {popup === "expired" ? (
@@ -384,10 +321,10 @@ const Usuario = () => {
                     <AlertTriangle className="w-8 h-8 text-red-500" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold mb-2" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                    <h2 className="text-lg font-bold mb-2" style={{ color: "rgba(255,255,255,0.9)" }}>
                       Assinatura Expirada
                     </h2>
-                    <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
+                    <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
                       {popupData.name ? `Olá, ${popupData.name}! ` : ""}
                       Sua assinatura{popupData.productName ? ` do ${popupData.productName}` : ""} expirou
                       {popupData.expiresAt ? ` em ${new Date(popupData.expiresAt).toLocaleDateString("pt-BR")}` : ""}.
@@ -416,9 +353,9 @@ const Usuario = () => {
                         rel="noopener noreferrer"
                         className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
                         style={{
-                          background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
-                          color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)",
-                          border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                          background: "rgba(255,255,255,0.06)",
+                          color: "rgba(255,255,255,0.7)",
+                          border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                         }}
                       >
                         Semestral — R$ 297
@@ -429,9 +366,9 @@ const Usuario = () => {
                         rel="noopener noreferrer"
                         className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
                         style={{
-                          background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
-                          color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)",
-                          border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                          background: "rgba(255,255,255,0.06)",
+                          color: "rgba(255,255,255,0.7)",
+                          border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                         }}
                       >
                         Anual — R$ 497
@@ -447,10 +384,10 @@ const Usuario = () => {
                       <XCircle className="w-8 h-8" style={{ color: "rgba(180, 0, 255, 0.7)" }} />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold mb-1" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                      <h2 className="text-lg font-bold mb-1" style={{ color: "rgba(255,255,255,0.9)" }}>
                         Nenhuma Assinatura Encontrada
                       </h2>
-                      <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)" }}>
+                      <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
                         Escolha um plano para ter acesso completo às ferramentas de IA.
                       </p>
                     </div>
@@ -465,22 +402,22 @@ const Usuario = () => {
                       rel="noopener noreferrer"
                       className="block rounded-xl p-4 transition-all hover:scale-[1.02] group"
                       style={{
-                        background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-                        border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                        background: "rgba(255,255,255,0.04)",
+                        border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                       }}
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)" }}>
+                          <h3 className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.85)" }}>
                             Plano Mensal
                           </h3>
-                          <p className="text-xs mt-0.5" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
+                          <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
                             Acesso completo a +300 ferramentas
                           </p>
                         </div>
                         <div className="text-right">
-                          <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>R$ 67</span>
-                          <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/mês</span>
+                          <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.9)" }}>R$ 67</span>
+                          <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/mês</span>
                         </div>
                       </div>
                     </a>
@@ -492,16 +429,16 @@ const Usuario = () => {
                       rel="noopener noreferrer"
                       className="block rounded-xl p-4 transition-all hover:scale-[1.02] group"
                       style={{
-                        background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-                        border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+                        background: "rgba(255,255,255,0.04)",
+                        border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                       }}
                     >
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)" }}>
+                          <h3 className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.85)" }}>
                             Plano Semestral
                           </h3>
-                          <p className="text-xs mt-0.5" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
+                          <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
                             Ferramentas + Cursos + Comunidade
                           </p>
                         </div>
@@ -510,8 +447,8 @@ const Usuario = () => {
                             30% OFF
                           </span>
                           <div>
-                            <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>R$ 297</span>
-                            <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/sem</span>
+                            <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.9)" }}>R$ 297</span>
+                            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/sem</span>
                           </div>
                         </div>
                       </div>
@@ -524,14 +461,14 @@ const Usuario = () => {
                       rel="noopener noreferrer"
                       className="relative block rounded-xl p-4 transition-all hover:scale-[1.02] group overflow-hidden"
                       style={{
-                        background: isDark ? "rgba(180,0,255,0.08)" : "rgba(180,0,255,0.05)",
+                        background: "rgba(180,0,255,0.08)",
                         border: "1px solid rgba(180,0,255,0.25)",
                       }}
                     >
                       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(180,0,255,0.5), transparent)" }} />
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="text-sm font-bold mb-0.5" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" }}>
+                          <h3 className="text-sm font-bold mb-0.5" style={{ color: "rgba(255,255,255,0.9)" }}>
                             Plano Anual
                           </h3>
                           <div className="flex items-center gap-1.5 mb-1">
@@ -539,7 +476,7 @@ const Usuario = () => {
                               Mais Escolhido
                             </span>
                           </div>
-                          <p className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}>
+                          <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
                             Tudo incluído + Mentorias + Garantia R$ 10k
                           </p>
                         </div>
@@ -548,8 +485,8 @@ const Usuario = () => {
                             40% OFF
                           </span>
                           <div>
-                            <span className="text-lg font-black" style={{ color: isDark ? "rgba(255,255,255,0.95)" : "rgba(0,0,0,0.95)" }}>R$ 497</span>
-                            <span className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>/ano</span>
+                            <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.95)" }}>R$ 497</span>
+                            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/ano</span>
                           </div>
                         </div>
                       </div>
@@ -560,7 +497,7 @@ const Usuario = () => {
                   <div
                     className="rounded-lg p-3 text-center"
                     style={{
-                      background: isDark ? "rgba(34,197,94,0.06)" : "rgba(34,197,94,0.05)",
+                      background: "rgba(34,197,94,0.06)",
                       border: "1px solid rgba(34,197,94,0.15)",
                     }}
                   >
