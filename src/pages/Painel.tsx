@@ -324,6 +324,13 @@ export default function Painel() {
         daysRemaining={daysRemaining}
         statusText={statusText}
       />
+
+      <PlansPopup
+        open={showPlans}
+        onClose={() => setShowPlans(false)}
+        title="Renove sua Assinatura"
+        description={`Faltam apenas ${daysRemaining} dias para seu plano expirar. Renove agora!`}
+      />
     </div>
   );
 }
