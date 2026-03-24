@@ -152,7 +152,7 @@ export default function Painel() {
           {/* Greeting */}
           <motion.div variants={stagger.item} className="text-center">
              <h1 className="text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500" style={{ color: t.greeting }}>
-              Seja bem-vindo, {userName}
+              Seja bem-vindo(a), {userName}
             </h1>
             <p className="text-xs md:text-sm mt-1 italic transition-colors duration-500" style={{ color: t.phrase }}>{phrase}</p>
           </motion.div>
