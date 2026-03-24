@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, AlertTriangle, XCircle, X } from "lucide-react";
+import { AlertTriangle, XCircle, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import NeuralBackground from "@/components/sales/NeuralBackground";
