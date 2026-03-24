@@ -17,8 +17,8 @@ interface PopupData {
 
 const PLAN_LINKS = {
   mensal: "https://funnel.navenaut.com/J8vSJ",
-  semestral: "https://funnel.navenaut.com/aPEco",
-  anual: "https://funnel.navenaut.com/N8Jzj",
+  semestral: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-2820-73fc-b229-f0ebc4a9c79b&funnel=N8Jzj&offer=semestral",
+  anual: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-6f17-7561-b16a-6dc9b3e3dbbe&funnel=aPEco&offer=anual",
 };
 
 const Usuario = () => {
