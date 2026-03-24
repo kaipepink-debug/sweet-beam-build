@@ -207,7 +207,7 @@ const Usuario = () => {
               className="text-xs font-semibold tracking-[0.3em] uppercase transition-colors duration-500"
               style={{ color: theme.subtitle }}
             >
-              Acesse sua conta
+              Informe seu e-mail de compra
             </p>
           </motion.div>
 
@@ -239,41 +239,15 @@ const Usuario = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-            >
-              <label className="block text-xs uppercase tracking-widest mb-2 font-medium transition-colors duration-500" style={{ color: theme.label }}>
-                Senha
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setFocusedField("password")}
-                onBlur={() => setFocusedField(null)}
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-500"
-                style={{
-                  background: theme.inputBg,
-                  border: focusedField === "password" ? `1px solid ${theme.inputBorderFocus}` : `1px solid ${theme.inputBorder}`,
-                  color: theme.inputText,
-                  boxShadow: focusedField === "password" ? theme.inputShadowFocus : "none",
-                }}
-                placeholder="••••••••••"
-                required
-              />
-            </motion.div>
-
-            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
               className="pt-2"
             >
               <button
                 type="submit"
                 disabled={loading}
-                className={`relative w-full py-3.5 rounded-xl text-sm font-medium uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden disabled:opacity-70 ${isDark ? "neon-border-btn" : "neon-border-btn"}`}
+                className="relative w-full py-3.5 rounded-xl text-sm font-medium uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden disabled:opacity-70 neon-border-btn"
                 style={{
                   background: isDark ? "transparent" : "rgba(50, 50, 50, 0.9)",
                   border: isDark ? undefined : "1px solid rgba(80, 80, 80, 0.5)",
@@ -293,7 +267,7 @@ const Usuario = () => {
                       }}
                     />
                   ) : (
-                    "Entrar"
+                    "Acessar"
                   )}
                 </span>
               </button>
