@@ -113,6 +113,20 @@ export default function AccountModal({ open, onClose, subData, activeSub, daysRe
                       {row.value}
                     </p>
                   </div>
+                  {row.label === "Plano" && (
+                    <button
+                      onClick={() => setShowPlans(true)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold shrink-0 transition-all duration-200 hover:scale-105"
+                      style={{
+                        background: "rgba(139, 92, 246, 0.12)",
+                        border: "1px solid rgba(139, 92, 246, 0.2)",
+                        color: "rgba(139, 92, 246, 0.9)",
+                      }}
+                    >
+                      <ArrowUpCircle className="w-3.5 h-3.5" />
+                      Upgrade
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
