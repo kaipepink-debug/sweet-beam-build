@@ -58,6 +58,7 @@ export default function AccountModal({ open, onClose, subData, activeSub, daysRe
   ];
 
   return (
+    <>
     <AnimatePresence>
       {open && (
         <motion.div
