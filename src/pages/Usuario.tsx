@@ -2,23 +2,71 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
 const Usuario = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim()) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 2000));
-    setLoading(false);
-    navigate("/painel");
+
+    try {
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        body: { email: email.trim() },
+      });
+
+      if (error) {
+        toast({
+          title: "Erro",
+          description: "Não foi possível verificar sua assinatura. Tente novamente.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (!data?.success || !data?.data?.active) {
+        toast({
+          title: "Acesso negado",
+          description: "Nenhuma assinatura ativa encontrada para este e-mail.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Store subscription data for the panel
+      const subscriptionInfo = {
+        email: data.data.email,
+        name: data.data.name,
+        subscriptions: data.data.subscriptions,
+      };
+      localStorage.setItem("naut_subscription", JSON.stringify(subscriptionInfo));
+
+      toast({
+        title: "Bem-vindo!",
+        description: `Acesso liberado, ${data.data.name || "usuário"}!`,
+      });
+
+      navigate("/painel");
+    } catch (err) {
+      toast({
+        title: "Erro",
+        description: "Erro ao conectar com o servidor. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const theme = isDark
