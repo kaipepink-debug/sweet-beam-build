@@ -282,6 +282,15 @@ export default function Painel() {
           <span className="text-[10px] font-medium transition-colors duration-500" style={{ color: t.logoutColor }}>Deslogar</span>
         </motion.button>
       </motion.div>
+
+      <AccountModal
+        open={showAccount}
+        onClose={() => setShowAccount(false)}
+        subData={subData}
+        activeSub={activeSub}
+        daysRemaining={daysRemaining}
+        statusText={statusText}
+      />
     </div>
   );
 }
