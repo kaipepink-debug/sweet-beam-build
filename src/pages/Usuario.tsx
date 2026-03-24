@@ -2,23 +2,71 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 
 const Usuario = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim()) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 2000));
-    setLoading(false);
-    navigate("/painel");
+
+    try {
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        body: { email: email.trim() },
+      });
+
+      if (error) {
+        toast({
+          title: "Erro",
+          description: "Não foi possível verificar sua assinatura. Tente novamente.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (!data?.success || !data?.data?.active) {
+        toast({
+          title: "Acesso negado",
+          description: "Nenhuma assinatura ativa encontrada para este e-mail.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Store subscription data for the panel
+      const subscriptionInfo = {
+        email: data.data.email,
+        name: data.data.name,
+        subscriptions: data.data.subscriptions,
+      };
+      localStorage.setItem("naut_subscription", JSON.stringify(subscriptionInfo));
+
+      toast({
+        title: "Bem-vindo!",
+        description: `Acesso liberado, ${data.data.name || "usuário"}!`,
+      });
+
+      navigate("/painel");
+    } catch (err) {
+      toast({
+        title: "Erro",
+        description: "Erro ao conectar com o servidor. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const theme = isDark
@@ -159,7 +207,7 @@ const Usuario = () => {
               className="text-xs font-semibold tracking-[0.3em] uppercase transition-colors duration-500"
               style={{ color: theme.subtitle }}
             >
-              Acesse sua conta
+              Informe seu e-mail de compra
             </p>
           </motion.div>
 
@@ -191,41 +239,15 @@ const Usuario = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-            >
-              <label className="block text-xs uppercase tracking-widest mb-2 font-medium transition-colors duration-500" style={{ color: theme.label }}>
-                Senha
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setFocusedField("password")}
-                onBlur={() => setFocusedField(null)}
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-500"
-                style={{
-                  background: theme.inputBg,
-                  border: focusedField === "password" ? `1px solid ${theme.inputBorderFocus}` : `1px solid ${theme.inputBorder}`,
-                  color: theme.inputText,
-                  boxShadow: focusedField === "password" ? theme.inputShadowFocus : "none",
-                }}
-                placeholder="••••••••••"
-                required
-              />
-            </motion.div>
-
-            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
               className="pt-2"
             >
               <button
                 type="submit"
                 disabled={loading}
-                className={`relative w-full py-3.5 rounded-xl text-sm font-medium uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden disabled:opacity-70 ${isDark ? "neon-border-btn" : "neon-border-btn"}`}
+                className="relative w-full py-3.5 rounded-xl text-sm font-medium uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden disabled:opacity-70 neon-border-btn"
                 style={{
                   background: isDark ? "transparent" : "rgba(50, 50, 50, 0.9)",
                   border: isDark ? undefined : "1px solid rgba(80, 80, 80, 0.5)",
@@ -245,7 +267,7 @@ const Usuario = () => {
                       }}
                     />
                   ) : (
-                    "Entrar"
+                    "Acessar"
                   )}
                 </span>
               </button>
