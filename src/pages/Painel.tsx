@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Sun, Moon, Lock } from "lucide-react";
@@ -72,12 +72,41 @@ const lightTheme = {
 
 export default function Painel() {
   const navigate = useNavigate();
-  const [userName] = useState("Usuário");
   const [phrase] = useState(() => phrases[Math.floor(Math.random() * phrases.length)]);
   const [activeTab, setActiveTab] = useState<"menu" | "info">("menu");
   const [isDark, setIsDark] = useState(true);
 
   const t = isDark ? darkTheme : lightTheme;
+
+  // Pull subscription data from localStorage
+  const subData = useMemo(() => {
+    try {
+      const raw = localStorage.getItem("naut_subscription");
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return null;
+  }, []);
+
+  const userName = subData?.name || "Usuário";
+
+  const activeSub = useMemo(() => {
+    if (!subData?.subscriptions?.length) return null;
+    return subData.subscriptions.find((s: any) => s.isActive) || subData.subscriptions[0];
+  }, [subData]);
+
+  const daysRemaining = useMemo(() => {
+    if (!activeSub?.expiresAt) return "—";
+    const diff = Math.ceil((new Date(activeSub.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    return diff > 0 ? String(diff) : "0";
+  }, [activeSub]);
+
+  const statusText = useMemo(() => {
+    if (!activeSub) return "Inativo";
+    const diff = new Date(activeSub.expiresAt).getTime() - Date.now();
+    return diff > 0 ? "Ativo" : "Expirado";
+  }, [activeSub]);
+
+  const statusColor = statusText === "Ativo" ? "34, 197, 94" : "239, 68, 68";
 
   const menuItems = [
     { icon: Wrench, label: "Ferramentas IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
@@ -87,8 +116,8 @@ export default function Painel() {
   ];
 
   const stats = [
-    { icon: Clock, label: "Dias restantes", value: "28", color: "59, 130, 246" },
-    { icon: Shield, label: "Status", value: "Ativo", color: "34, 197, 94" },
+    { icon: Clock, label: "Dias restantes", value: daysRemaining, color: "59, 130, 246" },
+    { icon: Shield, label: "Status", value: statusText, color: statusColor },
   ];
 
   return (
