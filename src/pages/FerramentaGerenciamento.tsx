@@ -154,6 +154,8 @@ export default function FerramentaGerenciamento() {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [customDateEnabled, setCustomDateEnabled] = useState(false);
   const [customDate, setCustomDate] = useState("");
+  const [fornecedorDialogOpen, setFornecedorDialogOpen] = useState(false);
+  const [fornecedorUrl, setFornecedorUrl] = useState("");
 
   const { data: gmailsList = [] } = useQuery({
     queryKey: ["gmails-list"],
