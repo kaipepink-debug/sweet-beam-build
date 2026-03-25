@@ -189,6 +189,33 @@ export type Database = {
         }
         Relationships: []
       }
+      ferramentas_fornecedor: {
+        Row: {
+          created_at: string
+          ferramenta: string
+          id: string
+          updated_at: string
+          updated_by: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          ferramenta: string
+          id?: string
+          updated_at?: string
+          updated_by: string
+          url?: string
+        }
+        Update: {
+          created_at?: string
+          ferramenta?: string
+          id?: string
+          updated_at?: string
+          updated_by?: string
+          url?: string
+        }
+        Relationships: []
+      }
       gmails: {
         Row: {
           created_at: string

@@ -154,6 +154,38 @@ export default function FerramentaGerenciamento() {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [customDateEnabled, setCustomDateEnabled] = useState(false);
   const [customDate, setCustomDate] = useState("");
+  const [fornecedorDialogOpen, setFornecedorDialogOpen] = useState(false);
+  const [fornecedorUrl, setFornecedorUrl] = useState("");
+
+  const { data: fornecedorData } = useQuery({
+    queryKey: ["fornecedor", toolId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("ferramentas_fornecedor")
+        .select("url")
+        .eq("ferramenta", toolId!)
+        .maybeSingle();
+      return data?.url || "";
+    },
+    enabled: !!toolId,
+  });
+
+  const fornecedorMutation = useMutation({
+    mutationFn: async (url: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Não autenticado");
+      const { error } = await supabase
+        .from("ferramentas_fornecedor")
+        .upsert({ ferramenta: toolId!, url, updated_by: user.id, updated_at: new Date().toISOString() }, { onConflict: "ferramenta" });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["fornecedor", toolId] });
+      setFornecedorDialogOpen(false);
+      toast.success("URL do fornecedor atualizada!");
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
 
   const { data: gmailsList = [] } = useQuery({
     queryKey: ["gmails-list"],
@@ -407,17 +439,34 @@ export default function FerramentaGerenciamento() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  /* TODO: definir URL do fornecedor */
-                  toast.info("Fornecedor ainda não configurado para esta ferramenta.");
-                }}
-                className="rounded-2xl gap-2 border-border"
-              >
-                <LinkIcon className="w-4 h-4" />
-                Fornecedor
-              </Button>
+              <div className="flex items-center gap-0">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (fornecedorData) {
+                      window.open(fornecedorData, "_blank");
+                    } else {
+                      toast.info("Fornecedor ainda não configurado. Clique no lápis para adicionar.");
+                    }
+                  }}
+                  className="rounded-l-2xl rounded-r-none gap-2 border-border"
+                >
+                  <LinkIcon className="w-4 h-4" />
+                  Fornecedor
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => {
+                    setFornecedorUrl(fornecedorData || "");
+                    setFornecedorDialogOpen(true);
+                  }}
+                  className="rounded-r-2xl rounded-l-none border-l-0 border-border h-10 w-9"
+                  title="Editar URL do fornecedor"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </Button>
+              </div>
               {toolId && farmingVideos[toolId] && (
                 <Button
                   variant="outline"
@@ -750,6 +799,35 @@ export default function FerramentaGerenciamento() {
             <Button variant="outline" onClick={() => setDeleteConfirm(null)} className="rounded-xl">Cancelar</Button>
             <Button variant="destructive" onClick={() => deleteConfirm && deleteMutation.mutate(deleteConfirm)} disabled={deleteMutation.isPending} className="rounded-xl">
               {deleteMutation.isPending ? "Excluindo..." : "Excluir"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Fornecedor URL Dialog */}
+      <Dialog open={fornecedorDialogOpen} onOpenChange={setFornecedorDialogOpen}>
+        <DialogContent className="sm:max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>URL do Fornecedor</DialogTitle>
+            <DialogDescription>Insira ou atualize o link do fornecedor para {toolConfig?.name}.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <Label>URL</Label>
+            <Input
+              placeholder="https://exemplo.com/fornecedor"
+              value={fornecedorUrl}
+              onChange={e => setFornecedorUrl(e.target.value)}
+              className="rounded-xl"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setFornecedorDialogOpen(false)} className="rounded-xl">Cancelar</Button>
+            <Button
+              onClick={() => fornecedorMutation.mutate(fornecedorUrl.trim())}
+              disabled={fornecedorMutation.isPending || !fornecedorUrl.trim()}
+              className="rounded-xl"
+            >
+              {fornecedorMutation.isPending ? "Salvando..." : "Salvar"}
             </Button>
           </DialogFooter>
         </DialogContent>
