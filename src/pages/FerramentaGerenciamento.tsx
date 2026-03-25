@@ -405,6 +405,17 @@ export default function FerramentaGerenciamento() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  /* TODO: definir URL do fornecedor */
+                  toast.info("Fornecedor ainda não configurado para esta ferramenta.");
+                }}
+                className="rounded-2xl gap-2 border-border"
+              >
+                <LinkIcon className="w-4 h-4" />
+                Fornecedor
+              </Button>
               {toolId && farmingVideos[toolId] && (
                 <Button
                   variant="outline"
@@ -412,7 +423,7 @@ export default function FerramentaGerenciamento() {
                   className="rounded-2xl gap-2 border-border"
                 >
                   <Video className="w-4 h-4" />
-                  Farmar ferramenta
+                  Vídeo de criação
                 </Button>
               )}
               <Button onClick={openNew} className="rounded-2xl gap-2 shadow-lg">
