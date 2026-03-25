@@ -157,6 +157,36 @@ export default function FerramentaGerenciamento() {
   const [fornecedorDialogOpen, setFornecedorDialogOpen] = useState(false);
   const [fornecedorUrl, setFornecedorUrl] = useState("");
 
+  const { data: fornecedorData } = useQuery({
+    queryKey: ["fornecedor", toolId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("ferramentas_fornecedor")
+        .select("url")
+        .eq("ferramenta", toolId!)
+        .maybeSingle();
+      return data?.url || "";
+    },
+    enabled: !!toolId,
+  });
+
+  const fornecedorMutation = useMutation({
+    mutationFn: async (url: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Não autenticado");
+      const { error } = await supabase
+        .from("ferramentas_fornecedor")
+        .upsert({ ferramenta: toolId!, url, updated_by: user.id, updated_at: new Date().toISOString() }, { onConflict: "ferramenta" });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["fornecedor", toolId] });
+      setFornecedorDialogOpen(false);
+      toast.success("URL do fornecedor atualizada!");
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
   const { data: gmailsList = [] } = useQuery({
     queryKey: ["gmails-list"],
     queryFn: async () => {
