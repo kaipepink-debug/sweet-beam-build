@@ -16,6 +16,7 @@ import veo3Logo from "@/assets/tools/veo3.png";
 import hailuoLogo from "@/assets/tools/hailuo.png";
 import grokLogo from "@/assets/tools/grok.png";
 import claudeLogo from "@/assets/tools/claude.png";
+import perplexityLogo from "@/assets/tools/perplexity.png";
 import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
 import geminiLogo from "@/assets/tools/gemini.png";
