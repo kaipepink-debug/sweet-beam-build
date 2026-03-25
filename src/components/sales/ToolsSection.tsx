@@ -16,6 +16,7 @@ import veo3Logo from "@/assets/tools/veo3.png";
 import hailuoLogo from "@/assets/tools/hailuo.png";
 import grokLogo from "@/assets/tools/grok.png";
 import claudeLogo from "@/assets/tools/claude.png";
+import perplexityLogo from "@/assets/tools/perplexity.png";
 import freepikLogo from "@/assets/tools/freepik.png";
 import heygenLogo from "@/assets/tools/heygen.png";
 import geminiLogo from "@/assets/tools/gemini.png";
@@ -38,6 +39,7 @@ const tools = [
   { name: "Claude", desc: "Assistente de IA seguro e confiável da Anthropic.", rating: 4.9, logo: claudeLogo },
   { name: "Freepik", desc: "Banco de imagens e design com geração por IA.", rating: 4.8, logo: freepikLogo },
   { name: "Heygen", desc: "Criação de vídeos com avatares e tradução por IA.", rating: 4.8, logo: heygenLogo },
+  { name: "Perplexity AI", desc: "Pesquisa inteligente com IA e respostas fundamentadas em tempo real.", rating: 4.8, logo: perplexityLogo },
 ];
 
 const ToolsSection = () => {

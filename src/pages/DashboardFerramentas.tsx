@@ -25,6 +25,7 @@ import tessLogo from "@/assets/tools/tess.png";
 import geminiLogo from "@/assets/tools/gemini.png";
 import leonardoaiLogo from "@/assets/tools/leonardoai.png";
 import capcutLogo from "@/assets/tools/capcut.png";
+import perplexityLogo from "@/assets/tools/perplexity.png";
 
 const tools = [
   { name: "SuperGrok", ferramenta: "grok", logo: grokLogo, expiracaoDias: 3 },
@@ -48,6 +49,7 @@ const tools = [
   { name: "Heygen", ferramenta: "heygen", logo: heygenLogo, expiracaoDias: 30 },
   { name: "Leonardo AI", ferramenta: "leonardoai", logo: leonardoaiLogo, expiracaoDias: 30 },
   { name: "CapCut", ferramenta: "capcut", logo: capcutLogo, expiracaoDias: 30 },
+  { name: "Perplexity AI", ferramenta: "perplexity", logo: perplexityLogo, expiracaoDias: 30 },
 ];
 
 interface ToolExpiration {
