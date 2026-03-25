@@ -63,6 +63,7 @@ const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: n
   heygen: { name: "Heygen", logo: heygenLogo, expiracaoDias: 30 },
   leonardoai: { name: "Leonardo AI", logo: leonardoaiLogo, expiracaoDias: 30 },
   capcut: { name: "CapCut", logo: capcutLogo, expiracaoDias: 30 },
+  perplexity: { name: "Perplexity AI", logo: perplexityLogo, expiracaoDias: 30 },
 };
 
 // Ferramentas vinculadas: compartilham o mesmo login
