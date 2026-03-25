@@ -803,6 +803,35 @@ export default function FerramentaGerenciamento() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Fornecedor URL Dialog */}
+      <Dialog open={fornecedorDialogOpen} onOpenChange={setFornecedorDialogOpen}>
+        <DialogContent className="sm:max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>URL do Fornecedor</DialogTitle>
+            <DialogDescription>Insira ou atualize o link do fornecedor para {toolConfig?.name}.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <Label>URL</Label>
+            <Input
+              placeholder="https://exemplo.com/fornecedor"
+              value={fornecedorUrl}
+              onChange={e => setFornecedorUrl(e.target.value)}
+              className="rounded-xl"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setFornecedorDialogOpen(false)} className="rounded-xl">Cancelar</Button>
+            <Button
+              onClick={() => fornecedorMutation.mutate(fornecedorUrl.trim())}
+              disabled={fornecedorMutation.isPending || !fornecedorUrl.trim()}
+              className="rounded-xl"
+            >
+              {fornecedorMutation.isPending ? "Salvando..." : "Salvar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
