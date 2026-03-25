@@ -439,17 +439,34 @@ export default function FerramentaGerenciamento() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  /* TODO: definir URL do fornecedor */
-                  toast.info("Fornecedor ainda não configurado para esta ferramenta.");
-                }}
-                className="rounded-2xl gap-2 border-border"
-              >
-                <LinkIcon className="w-4 h-4" />
-                Fornecedor
-              </Button>
+              <div className="flex items-center gap-0">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (fornecedorData) {
+                      window.open(fornecedorData, "_blank");
+                    } else {
+                      toast.info("Fornecedor ainda não configurado. Clique no lápis para adicionar.");
+                    }
+                  }}
+                  className="rounded-l-2xl rounded-r-none gap-2 border-border"
+                >
+                  <LinkIcon className="w-4 h-4" />
+                  Fornecedor
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => {
+                    setFornecedorUrl(fornecedorData || "");
+                    setFornecedorDialogOpen(true);
+                  }}
+                  className="rounded-r-2xl rounded-l-none border-l-0 border-border h-10 w-9"
+                  title="Editar URL do fornecedor"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </Button>
+              </div>
               {toolId && farmingVideos[toolId] && (
                 <Button
                   variant="outline"
