@@ -82,6 +82,23 @@ const HeroSection = () => {
           <span className="text-white/90">único acesso</span>
         </h1>
 
+        {/* Video */}
+        <div
+          className="mt-6 md:mt-8 mb-6 md:mb-8 w-full max-w-3xl mx-auto animate-fade-in rounded-2xl overflow-hidden border border-white/10"
+          style={{ animationDelay: "0.08s", animationFillMode: "both" }}
+        >
+          <video
+            className="w-full h-auto"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          >
+            <source src="/videos/final.mp4" type="video/mp4" />
+          </video>
+        </div>
+
         <p
           className="text-sm md:text-lg text-white/40 max-w-xl mx-auto mb-6 md:mb-8 animate-fade-in"
           style={{ animationDelay: "0.1s", animationFillMode: "both" }}
