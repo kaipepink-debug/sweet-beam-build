@@ -14,7 +14,7 @@ import freepikLogo from "@/assets/tools/freepik.png";
 const floatingIcons = [
   { logo: higgsFieldLogo, name: "Higgsfield", x: -320, y: -100, mobileX: -150, mobileY: -280, delay: 0 },
   { logo: grokLogo, name: "Grok", x: 340, y: -110, mobileX: 150, mobileY: -300, delay: 0 },
-  { logo: heygenLogo, name: "Heygen", x: -350, y: 50, mobileX: -160, mobileY: -230, delay: 0 },
+  { logo: heygenLogo, name: "Heygen", x: -350, y: 50, mobileX: -160, mobileY: -50, delay: 0 },
   { logo: soraLogo, name: "Sora", x: 370, y: 40, mobileX: 140, mobileY: 80, delay: 0 },
   { logo: claudeLogo, name: "Claude", x: -300, y: 130, mobileX: -110, mobileY: 260, delay: 0 },
   { logo: freepikLogo, name: "Freepik", x: 320, y: 150, mobileX: 110, mobileY: 290, delay: 0 },
