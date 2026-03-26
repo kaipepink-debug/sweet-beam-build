@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Layers } from "lucide-react";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
@@ -21,6 +22,15 @@ const floatingIcons = [
 
 const HeroSection = () => {
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (!document.querySelector('script[src*="converteai.net"]')) {
+      const s = document.createElement("script");
+      s.src = "https://scripts.converteai.net/5e6fbd72-a477-4fee-864a-8a4e8fb9779e/players/69c5860a449496c3a0b666a2/v4/player.js";
+      s.async = true;
+      document.head.appendChild(s);
+    }
+  }, []);
 
   return (
     <section id="hero" className="relative min-h-[85vh] flex items-center justify-center px-3 md:px-4 overflow-hidden pt-16 md:pt-20">
@@ -85,21 +95,11 @@ const HeroSection = () => {
         {/* Video */}
         <div
           className="relative mt-6 md:mt-8 mb-6 md:mb-8 w-full max-w-3xl mx-auto animate-fade-in rounded-2xl overflow-hidden border border-white/10"
-          style={{ animationDelay: "0.08s", animationFillMode: "both", aspectRatio: "16/9" }}
-        >
-          <iframe
-            className="w-full h-full"
-            src="https://www.youtube.com/embed/8WD3hnAGR2I?controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1&iv_load_policy=3&fs=0&autoplay=0"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-          {/* Top overlay to hide channel info */}
-          <div className="absolute top-0 left-0 right-0 h-14 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none z-10" />
-          {/* Bottom overlay to hide Watch on YouTube */}
-          <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none z-10" />
-        </div>
+          style={{ animationDelay: "0.08s", animationFillMode: "both" }}
+          dangerouslySetInnerHTML={{
+            __html: `<vturb-smartplayer id="vid-69c5860a449496c3a0b666a2" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>`
+          }}
+        />
 
         <p
           className="text-sm md:text-lg text-white/40 max-w-xl mx-auto mb-6 md:mb-8 animate-fade-in"
