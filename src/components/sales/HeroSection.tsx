@@ -95,10 +95,6 @@ const HeroSection = () => {
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-          {/* Top overlay to hide channel info */}
-          <div className="absolute top-0 left-0 right-0 h-14 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none z-10" />
-          {/* Bottom overlay to hide Watch on YouTube */}
-          <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none z-10" />
         </div>
 
         <p
