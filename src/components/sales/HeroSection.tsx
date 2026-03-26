@@ -89,13 +89,16 @@ const HeroSection = () => {
         >
           <iframe
             className="w-full h-full"
-            src="https://www.youtube-nocookie.com/embed/8WD3hnAGR2I?si=wo5wz-SYjVaurAHL&controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1&iv_load_policy=3&fs=0"
+            src="https://www.youtube.com/embed/8WD3hnAGR2I?controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1&iv_load_policy=3&fs=0&autoplay=0"
             title="YouTube video player"
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black to-transparent pointer-events-auto z-10" />
+          {/* Top overlay to hide channel info */}
+          <div className="absolute top-0 left-0 right-0 h-14 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none z-10" />
+          {/* Bottom overlay to hide Watch on YouTube */}
+          <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none z-10" />
         </div>
 
         <p
