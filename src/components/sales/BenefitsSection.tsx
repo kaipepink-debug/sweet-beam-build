@@ -103,8 +103,8 @@ const BenefitsSection = () => {
                 >
                   <b.icon className="w-4 h-4" style={{ color: "rgba(180, 0, 255, 0.6)" }} />
                 </div>
-                <h3 className="text-white/90 font-semibold mb-1.5 text-sm">{b.title}</h3>
-                <p className="text-white/35 text-xs leading-relaxed">{b.desc}</p>
+                <h3 className="text-white/90 font-semibold mb-1.5 text-base md:text-sm">{b.title}</h3>
+                <p className="text-white/35 text-sm md:text-xs leading-relaxed">{b.desc}</p>
               </div>
             ))}
           </div>

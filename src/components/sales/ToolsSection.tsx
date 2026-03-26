@@ -97,7 +97,7 @@ const ToolsSection = () => {
                     <span className="text-white/30 text-[9px] ml-0.5">{tool.rating}</span>
                   </div>
                 </div>
-                <p className={`text-white/30 text-[11px] leading-relaxed ${
+                <p className={`text-white/30 text-xs md:text-[11px] leading-relaxed ${
                   selected === tool.name ? "whitespace-normal" : "truncate"
                 }`}>{tool.desc}</p>
               </div>

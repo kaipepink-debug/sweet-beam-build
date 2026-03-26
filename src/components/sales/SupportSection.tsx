@@ -15,8 +15,8 @@ const SupportSection = () => {
           <div className="absolute inset-0" style={{ background: "radial-gradient(circle at top right, rgba(255,255,255,0.02), transparent)" }} />
 
           <MessageCircle className="w-10 h-10 text-white/30 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-3">Estamos aqui para ajudá-lo</h2>
-          <p className="text-white/30 text-sm mb-8 max-w-sm mx-auto">
+          <h2 className="text-3xl md:text-2xl font-bold text-white mb-3">Estamos aqui para ajudá-lo</h2>
+          <p className="text-white/30 text-base md:text-sm mb-8 max-w-sm mx-auto">
             Fale com nossa equipe especializada e tire todas as suas dúvidas em tempo real.
           </p>
 

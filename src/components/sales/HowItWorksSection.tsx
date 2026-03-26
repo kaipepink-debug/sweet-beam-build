@@ -68,8 +68,8 @@ const HowItWorksSection = () => {
                 <step.icon className="w-6 h-6" style={{ color: "rgba(180, 0, 255, 0.5)" }} />
               </div>
               <span className="text-[9px] font-bold text-white/20 tracking-widest">{step.num}</span>
-              <h3 className="text-white/80 font-semibold mt-1 mb-1.5 text-sm">{step.title}</h3>
-              <p className="text-white/30 text-xs max-w-[180px] mx-auto">{step.desc}</p>
+              <h3 className="text-white/80 font-semibold mt-1 mb-1.5 text-base md:text-sm">{step.title}</h3>
+              <p className="text-white/30 text-sm md:text-xs max-w-[180px] mx-auto">{step.desc}</p>
             </div>
           ))}
         </div>

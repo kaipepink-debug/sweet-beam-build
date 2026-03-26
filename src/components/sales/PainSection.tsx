@@ -68,7 +68,7 @@ const PainSection = () => {
             <span className="relative inline-block neon-underline-text">gasta por ano</span>{" "}
             com ferramentas de IA?
           </h2>
-          <p className="text-white/30 max-w-lg mx-auto text-sm">
+          <p className="text-white/30 max-w-lg mx-auto text-base md:text-sm">
             Veja a comparação real de custos e descubra como economizar milhares de reais.
           </p>
         </div>

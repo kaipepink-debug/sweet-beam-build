@@ -188,7 +188,7 @@ const PlansSection = () => {
                         }}
                       />
                       <span
-                        className={`text-xs leading-relaxed ${
+                        className={`text-sm md:text-xs leading-relaxed ${
                           plan.highlight ? "text-white/60" : "text-white/40"
                         }`}
                       >
