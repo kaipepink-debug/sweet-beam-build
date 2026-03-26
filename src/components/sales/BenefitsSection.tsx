@@ -36,7 +36,7 @@ const BenefitsSection = () => {
           <h2 className="text-3xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Benefícios <span className="text-white/70">Exclusivos</span>
           </h2>
-          <p className="text-white/30 max-w-lg mx-auto text-sm">
+          <p className="text-white/30 max-w-lg mx-auto text-base md:text-sm">
             Tudo o que você precisa para dominar o universo da inteligência artificial.
           </p>
         </div>
