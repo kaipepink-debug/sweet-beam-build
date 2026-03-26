@@ -78,7 +78,7 @@ const PlansSection = () => {
             </span>{" "}
             para você
           </h2>
-          <p className="text-white/30 max-w-lg mx-auto text-sm">
+          <p className="text-white/30 max-w-lg mx-auto text-base md:text-sm">
             Todos os planos incluem acesso completo às ferramentas de IA mais poderosas do mercado.
           </p>
         </div>
