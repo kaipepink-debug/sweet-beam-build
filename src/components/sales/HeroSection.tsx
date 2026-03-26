@@ -91,7 +91,7 @@ const HeroSection = () => {
           <span className="text-white">premium e ilimitadas. </span>
           <span className="text-white/90">Por um preço de uma Pizza!</span>
           <br />
-          <span className="text-white/70 text-2xl md:text-4xl lg:text-5xl">Em um único acesso, use a vontade...</span>
+          <span className="text-white/70 text-lg md:text-2xl lg:text-3xl whitespace-nowrap">Em um único acesso, use a vontade...</span>
         </h1>
 
         {/* Video */}
