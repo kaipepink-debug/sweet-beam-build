@@ -59,7 +59,7 @@ const ToolsSection = () => {
               <span className="neon-trail" />
             </span>
           </h2>
-          <p className="text-white/30 max-w-lg mx-auto text-sm">
+          <p className="text-white/30 max-w-lg mx-auto text-base md:text-sm">
             Acesse as ferramentas de IA mais poderosas do mercado, todas incluídas no seu plano.
           </p>
         </div>
