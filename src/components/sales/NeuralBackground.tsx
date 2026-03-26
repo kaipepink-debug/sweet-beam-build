@@ -29,7 +29,7 @@ const NeuralBackground = ({ variant = "dark" }: NeuralBackgroundProps) => {
     const MOUSE_RADIUS = 180;
     const PUSH_FORCE = 0.08;
     const isMobile = window.innerWidth < 768;
-    const PARTICLE_COUNT = isMobile ? 15 : 45;
+    const PARTICLE_COUNT = isMobile ? 15 : 90;
     const CONNECTION_DIST = isMobile ? 100 : 120;
     const CONNECTION_DIST_SQ = CONNECTION_DIST * CONNECTION_DIST;
     const TARGET_FPS = isMobile ? 20 : 30;
