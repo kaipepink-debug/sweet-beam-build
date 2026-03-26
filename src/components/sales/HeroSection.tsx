@@ -82,7 +82,7 @@ const HeroSection = () => {
         </div>
 
         <h1
-          className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight mb-3 md:mb-5 animate-fade-in"
+          className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight mb-3 md:mb-5 animate-fade-in"
           style={{ fontFamily: "'Montserrat', sans-serif", animationDelay: "0.05s", animationFillMode: "both" }}
         >
           <span className="text-white">Mais de </span>
