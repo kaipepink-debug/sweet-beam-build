@@ -85,11 +85,13 @@ const HeroSection = () => {
           className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight mb-3 md:mb-5 animate-fade-in"
           style={{ fontFamily: "'Montserrat', sans-serif", animationDelay: "0.05s", animationFillMode: "both" }}
         >
-          <span className="text-white">Centralize as </span>
-          <span className="neon-underline-text relative inline-block">melhores IAs</span>
+          <span className="text-white">Mais de </span>
+          <span className="neon-underline-text relative inline-block">300 ferramentas de IA</span>
           <br />
-          <span className="text-white">do mundo em um </span>
-          <span className="text-white/90">único acesso</span>
+          <span className="text-white">premium e ilimitadas. </span>
+          <span className="text-white/90">Por um preço de uma Pizza!</span>
+          <br />
+          <span className="text-white/70 text-2xl md:text-4xl lg:text-5xl">Em um único acesso, use a vontade...</span>
         </h1>
 
         {/* Video */}
