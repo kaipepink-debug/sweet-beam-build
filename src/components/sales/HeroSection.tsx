@@ -85,18 +85,16 @@ const HeroSection = () => {
         {/* Video */}
         <div
           className="mt-6 md:mt-8 mb-6 md:mb-8 w-full max-w-3xl mx-auto animate-fade-in rounded-2xl overflow-hidden border border-white/10"
-          style={{ animationDelay: "0.08s", animationFillMode: "both" }}
+          style={{ animationDelay: "0.08s", animationFillMode: "both", aspectRatio: "16/9" }}
         >
-          <video
-            className="w-full h-auto"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          >
-            <source src="/videos/final.mp4" type="video/mp4" />
-          </video>
+          <iframe
+            className="w-full h-full"
+            src="https://www.youtube.com/embed/8WD3hnAGR2I?si=wo5wz-SYjVaurAHL&controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1&iv_load_policy=3"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
 
         <p
