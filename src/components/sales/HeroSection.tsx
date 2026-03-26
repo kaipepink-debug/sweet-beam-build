@@ -23,6 +23,15 @@ const floatingIcons = [
 const HeroSection = () => {
   const isMobile = useIsMobile();
 
+  useEffect(() => {
+    if (!document.querySelector('script[src*="converteai.net"]')) {
+      const s = document.createElement("script");
+      s.src = "https://scripts.converteai.net/5e6fbd72-a477-4fee-864a-8a4e8fb9779e/players/69c5860a449496c3a0b666a2/v4/player.js";
+      s.async = true;
+      document.head.appendChild(s);
+    }
+  }, []);
+
   return (
     <section id="hero" className="relative min-h-[85vh] flex items-center justify-center px-3 md:px-4 overflow-hidden pt-16 md:pt-20">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px]" style={{ background: "radial-gradient(circle, rgba(255,255,255,0.03), transparent)" }} />
