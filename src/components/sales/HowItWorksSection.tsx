@@ -11,7 +11,7 @@ const HowItWorksSection = () => {
     <section className="relative py-12 md:py-16 px-3 md:px-4">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
+          <h2 className="text-3xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Como <span className="text-white/70">funciona</span>
           </h2>
         </div>
