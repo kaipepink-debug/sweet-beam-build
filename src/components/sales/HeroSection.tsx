@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Layers } from "lucide-react";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
