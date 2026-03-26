@@ -52,14 +52,14 @@ const ToolsSection = () => {
     <section id="ferramentas" className="relative py-12 md:py-16 px-3 md:px-4">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
+          <h2 className="text-3xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Ferramentas{" "}
             <span className="relative inline-block neon-underline-text">
               Premium
               <span className="neon-trail" />
             </span>
           </h2>
-          <p className="text-white/30 max-w-lg mx-auto text-sm">
+          <p className="text-white/30 max-w-lg mx-auto text-base md:text-sm">
             Acesse as ferramentas de IA mais poderosas do mercado, todas incluídas no seu plano.
           </p>
         </div>
@@ -82,7 +82,7 @@ const ToolsSection = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <h3 className="text-white/85 font-semibold text-xs">{tool.name}</h3>
+                  <h3 className="text-white/85 font-semibold text-sm md:text-xs">{tool.name}</h3>
                   <div className="flex gap-0.5 items-center">
                     {Array.from({ length: 5 }).map((_, s) => (
                       <Star
@@ -97,7 +97,7 @@ const ToolsSection = () => {
                     <span className="text-white/30 text-[9px] ml-0.5">{tool.rating}</span>
                   </div>
                 </div>
-                <p className={`text-white/30 text-[11px] leading-relaxed ${
+                <p className={`text-white/30 text-xs md:text-[11px] leading-relaxed ${
                   selected === tool.name ? "whitespace-normal" : "truncate"
                 }`}>{tool.desc}</p>
               </div>

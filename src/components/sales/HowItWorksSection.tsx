@@ -11,7 +11,7 @@ const HowItWorksSection = () => {
     <section className="relative py-12 md:py-16 px-3 md:px-4">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
+          <h2 className="text-3xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Como <span className="text-white/70">funciona</span>
           </h2>
         </div>
@@ -68,8 +68,8 @@ const HowItWorksSection = () => {
                 <step.icon className="w-6 h-6" style={{ color: "rgba(180, 0, 255, 0.5)" }} />
               </div>
               <span className="text-[9px] font-bold text-white/20 tracking-widest">{step.num}</span>
-              <h3 className="text-white/80 font-semibold mt-1 mb-1.5 text-sm">{step.title}</h3>
-              <p className="text-white/30 text-xs max-w-[180px] mx-auto">{step.desc}</p>
+              <h3 className="text-white/80 font-semibold mt-1 mb-1.5 text-base md:text-sm">{step.title}</h3>
+              <p className="text-white/30 text-sm md:text-xs max-w-[180px] mx-auto">{step.desc}</p>
             </div>
           ))}
         </div>

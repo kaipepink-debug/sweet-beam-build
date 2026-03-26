@@ -70,7 +70,7 @@ const PlansSection = () => {
     <section className="relative py-12 md:py-16 px-3 md:px-4" id="planos">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
+          <h2 className="text-3xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Escolha o plano{" "}
             <span className="relative inline-block neon-underline-text">
               perfeito
@@ -78,7 +78,7 @@ const PlansSection = () => {
             </span>{" "}
             para você
           </h2>
-          <p className="text-white/30 max-w-lg mx-auto text-sm">
+          <p className="text-white/30 max-w-lg mx-auto text-base md:text-sm">
             Todos os planos incluem acesso completo às ferramentas de IA mais poderosas do mercado.
           </p>
         </div>
@@ -188,7 +188,7 @@ const PlansSection = () => {
                         }}
                       />
                       <span
-                        className={`text-xs leading-relaxed ${
+                        className={`text-sm md:text-xs leading-relaxed ${
                           plan.highlight ? "text-white/60" : "text-white/40"
                         }`}
                       >

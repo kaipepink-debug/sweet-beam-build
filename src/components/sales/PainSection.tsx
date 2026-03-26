@@ -63,12 +63,12 @@ const PainSection = () => {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
           <TrendingDown className="w-7 h-7 md:w-8 md:h-8 text-white/30 mx-auto mb-2 md:mb-3" />
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
+          <h2 className="text-3xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Já pensou quanto você{" "}
             <span className="relative inline-block neon-underline-text">gasta por ano</span>{" "}
             com ferramentas de IA?
           </h2>
-          <p className="text-white/30 max-w-lg mx-auto text-sm">
+          <p className="text-white/30 max-w-lg mx-auto text-base md:text-sm">
             Veja a comparação real de custos e descubra como economizar milhares de reais.
           </p>
         </div>

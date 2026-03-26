@@ -19,7 +19,7 @@ const FAQSection = () => {
     <section id="faq" className="relative py-12 md:py-16 px-3 md:px-4">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
+          <h2 className="text-3xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Perguntas <span className="text-white/70">Frequentes</span>
           </h2>
         </div>
@@ -33,10 +33,10 @@ const FAQSection = () => {
                 className="border border-white/5 rounded-lg px-4 md:px-5 hover:border-white/10 transition-colors purple-hover-glow"
                 style={{ background: "rgba(10, 10, 10, 0.5)" }}
               >
-                <AccordionTrigger className="text-white/70 text-xs font-medium hover:no-underline py-4">
+                <AccordionTrigger className="text-white/70 text-sm md:text-xs font-medium hover:no-underline py-4">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-white/30 text-xs leading-relaxed">
+                <AccordionContent className="text-white/30 text-sm md:text-xs leading-relaxed">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>

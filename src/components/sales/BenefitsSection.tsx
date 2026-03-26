@@ -33,10 +33,10 @@ const BenefitsSection = () => {
 
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">
+          <h2 className="text-3xl md:text-3xl font-bold text-white mb-2 md:mb-3">
             Benefícios <span className="text-white/70">Exclusivos</span>
           </h2>
-          <p className="text-white/30 max-w-lg mx-auto text-sm">
+          <p className="text-white/30 max-w-lg mx-auto text-base md:text-sm">
             Tudo o que você precisa para dominar o universo da inteligência artificial.
           </p>
         </div>
@@ -103,8 +103,8 @@ const BenefitsSection = () => {
                 >
                   <b.icon className="w-4 h-4" style={{ color: "rgba(180, 0, 255, 0.6)" }} />
                 </div>
-                <h3 className="text-white/90 font-semibold mb-1.5 text-sm">{b.title}</h3>
-                <p className="text-white/35 text-xs leading-relaxed">{b.desc}</p>
+                <h3 className="text-white/90 font-semibold mb-1.5 text-base md:text-sm">{b.title}</h3>
+                <p className="text-white/35 text-sm md:text-xs leading-relaxed">{b.desc}</p>
               </div>
             ))}
           </div>
