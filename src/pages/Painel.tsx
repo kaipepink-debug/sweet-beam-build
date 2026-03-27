@@ -293,7 +293,7 @@ export default function Painel() {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowPlans(true)}
+                  onClick={() => setActiveTab("info")}
                   className="w-full rounded-2xl px-4 md:px-5 py-4 md:py-5 transition-all duration-200"
                   style={{
                     background: "linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05))",
