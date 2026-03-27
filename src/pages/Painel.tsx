@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock, AlertTriangle, Bell } from "lucide-react";
+import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock, AlertTriangle, Bell, TrendingUp, ArrowUpCircle } from "lucide-react";
 import ratariaIcon from "@/assets/rataria-icon.png";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
@@ -324,29 +324,72 @@ export default function Painel() {
                   ))}
                 </div>
               </motion.div>
-            )}
+             )}
           </AnimatePresence>
+
+          {/* Affiliate & Upgrade buttons */}
+          <motion.div variants={stagger.item} className="space-y-3 pt-2">
+            <motion.a
+              href="https://app.navenaut.com/affiliates"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="block w-full rounded-2xl px-4 md:px-5 py-4 md:py-5 transition-all duration-200"
+              style={{
+                background: "linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05))",
+                border: "1px solid rgba(249, 115, 22, 0.3)",
+              }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(249, 115, 22, 0.15)" }}>
+                  <TrendingUp className="w-6 h-6 md:w-7 md:h-7" style={{ color: "rgba(249, 115, 22, 0.9)" }} />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="text-sm md:text-base font-bold" style={{ color: "rgba(249, 115, 22, 0.95)" }}>Seja um Afiliado</p>
+                  <p className="text-[11px] md:text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>Ganhe comissões de até <strong style={{ color: "rgba(249, 115, 22, 0.9)" }}>70%</strong> no valor da venda</p>
+                </div>
+                <ChevronRight className="w-5 h-5" style={{ color: "rgba(249, 115, 22, 0.5)" }} />
+              </div>
+            </motion.a>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowPlans(true)}
+              className="w-full rounded-2xl px-4 md:px-5 py-4 md:py-5 transition-all duration-200"
+              style={{
+                background: "linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05))",
+                border: "1px solid rgba(139, 92, 246, 0.3)",
+              }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(139, 92, 246, 0.15)" }}>
+                  <ArrowUpCircle className="w-6 h-6 md:w-7 md:h-7" style={{ color: "rgba(139, 92, 246, 0.9)" }} />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="text-sm md:text-base font-bold" style={{ color: "rgba(139, 92, 246, 0.95)" }}>Fazer Upgrade</p>
+                  <p className="text-[11px] md:text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>Mude para um plano com mais benefícios</p>
+                </div>
+                <ChevronRight className="w-5 h-5" style={{ color: "rgba(139, 92, 246, 0.5)" }} />
+              </div>
+            </motion.button>
+          </motion.div>
+
+          {/* Logout */}
+          <motion.div variants={stagger.item} className="flex justify-center pt-4 pb-8">
+            <motion.button
+              whileHover={{ scale: 1.08, opacity: 0.8 }}
+              whileTap={{ scale: 0.92 }}
+              onClick={() => { localStorage.removeItem("naut_subscription"); navigate("/usuario"); }}
+              className="flex flex-col items-center gap-1 px-6 py-2"
+            >
+              <Power className="w-5 h-5" style={{ color: t.logoutColor }} />
+              <span className="text-[10px] font-medium" style={{ color: t.logoutColor }}>Deslogar</span>
+            </motion.button>
+          </motion.div>
         </motion.div>
       </div>
-
-      {/* Fixed bottom bar */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
-        className="fixed bottom-0 left-0 right-0 z-20 flex justify-center pb-6 pt-10"
-        style={{ background: "transparent" }}
-      >
-        <motion.button
-          whileHover={{ scale: 1.08, opacity: 0.8 }}
-          whileTap={{ scale: 0.92 }}
-          onClick={() => navigate("/usuario")}
-          className="flex flex-col items-center gap-1 px-6 py-2"
-        >
-          <Power className="w-5 h-5 transition-colors duration-500" style={{ color: t.logoutColor }} />
-          <span className="text-[10px] font-medium transition-colors duration-500" style={{ color: t.logoutColor }}>Deslogar</span>
-        </motion.button>
-      </motion.div>
 
       <AccountModal
         open={showAccount}
@@ -360,8 +403,8 @@ export default function Painel() {
       <PlansPopup
         open={showPlans}
         onClose={() => setShowPlans(false)}
-        title="Renove sua Assinatura"
-        description={`Faltam apenas ${daysRemaining} dias para seu plano expirar. Renove agora!`}
+        title="Upgrade de Plano"
+        description="Escolha o melhor plano para você e aproveite todos os benefícios!"
       />
     </div>
   );
