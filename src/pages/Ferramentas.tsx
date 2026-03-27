@@ -144,9 +144,9 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
           </div>
         </div>
 
-        {/* Step 3 - 2FA */}
+        {/* Step 4 - 2FA */}
         <div className="rounded-2xl p-5 space-y-4" style={glassStyle}>
-          <StepHeader num={3} title="Insira o código de 2 Fatores" />
+          <StepHeader num={4} title="Insira o código de 2 Fatores" />
           <p className="text-sm text-muted-foreground pl-9">O sistema irá solicitar um código de autenticação. Clique abaixo para revelar e copiar.</p>
 
           <div className="rounded-xl p-5 text-center space-y-3" style={{ background: "rgba(255,255,255,0.03)" }}>
