@@ -184,16 +184,17 @@ export default function Painel() {
           </motion.div>
 
           {/* Tab switcher */}
-          <motion.div variants={stagger.item} className="flex gap-1 p-1 rounded-xl transition-colors duration-500" style={{ background: t.tabBg }}>
+          <motion.div variants={stagger.item} className="flex gap-2 p-1.5 rounded-2xl transition-colors duration-500" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
             {(["menu", "info"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className="flex-1 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold uppercase tracking-wider transition-all duration-300"
+                className="flex-1 py-2.5 md:py-3 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer"
                 style={{
-                  background: activeTab === tab ? "rgba(139, 92, 246, 0.12)" : "transparent",
-                  color: activeTab === tab ? "rgba(139, 92, 246, 0.9)" : t.tabInactive,
-                  border: activeTab === tab ? "1px solid rgba(139, 92, 246, 0.2)" : "1px solid transparent",
+                  background: activeTab === tab ? "linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.08))" : "transparent",
+                  color: activeTab === tab ? "rgba(139, 92, 246, 0.95)" : "rgba(255,255,255,0.5)",
+                  border: activeTab === tab ? "1px solid rgba(139, 92, 246, 0.3)" : "1px solid transparent",
+                  boxShadow: activeTab === tab ? "0 0 20px rgba(139, 92, 246, 0.1)" : "none",
                 }}
               >
                 {tab === "menu" ? "Menu" : "Informações"}
