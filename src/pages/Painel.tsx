@@ -287,31 +287,6 @@ export default function Painel() {
                   </motion.button>
                 ))}
 
-                {/* Upgrade button */}
-                <motion.button
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setActiveTab("info")}
-                  className="w-full rounded-2xl px-4 md:px-5 py-4 md:py-5 transition-all duration-200"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05))",
-                    border: "1px solid rgba(139, 92, 246, 0.3)",
-                  }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(139, 92, 246, 0.15)" }}>
-                      <ArrowUpCircle className="w-6 h-6 md:w-7 md:h-7" style={{ color: "rgba(139, 92, 246, 0.9)" }} />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <p className="text-sm md:text-base font-bold" style={{ color: "rgba(139, 92, 246, 0.95)" }}>Fazer Upgrade</p>
-                      <p className="text-[11px] md:text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>Mude para um plano com mais benefícios</p>
-                    </div>
-                    <ChevronRight className="w-5 h-5" style={{ color: "rgba(139, 92, 246, 0.5)" }} />
-                  </div>
-                </motion.button>
-
                 {/* Affiliate button */}
                 <motion.a
                   href="https://navenaut.com/affiliates/products"
