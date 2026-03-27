@@ -181,9 +181,9 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
           </div>
         </div>
 
-        {/* Step 4 */}
+        {/* Step 5 */}
         <div className="rounded-2xl p-5 space-y-2" style={glassStyle}>
-          <StepHeader num={4} title="Pronto! Acesse o painel" icon="check" />
+          <StepHeader num={5} title="Pronto! Acesse o painel" icon="check" />
           <p className="text-sm text-muted-foreground pl-9">
             Basta acessar o painel com as ferramentas. Em caso de dúvidas, entre em contato que auxiliamos todo o acesso!
           </p>
