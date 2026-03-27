@@ -110,7 +110,8 @@ const Usuario = () => {
         description: `Acesso liberado, ${data.data.name || "usuário"}!`,
       });
 
-      navigate("/painel");
+      const redirectTo = searchParams.get("redirect") || "/painel";
+      navigate(redirectTo);
     } catch (err) {
       toast({
         title: "Erro",
