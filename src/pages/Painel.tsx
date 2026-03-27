@@ -324,7 +324,9 @@ export default function Painel() {
                   ))}
                 </div>
               </motion.div>
-            )}
+             )}
+          </AnimatePresence>
+
           {/* Affiliate & Upgrade buttons */}
           <motion.div variants={stagger.item} className="space-y-3 pt-2">
             <motion.a
