@@ -162,6 +162,33 @@ export type Database = {
           },
         ]
       }
+      configuracoes_acesso: {
+        Row: {
+          id: string
+          login: string
+          senha: string
+          totp_secret: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          login?: string
+          senha?: string
+          totp_secret?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          login?: string
+          senha?: string
+          totp_secret?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       ferramentas_banner: {
         Row: {
           cor_tema: string | null
