@@ -127,7 +127,7 @@ export default function Painel() {
               variants={stagger.item}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setShowPlans(true)}
+              onClick={() => setActiveTab("info")}
               className="flex items-center gap-3 rounded-2xl px-4 md:px-5 py-3.5 md:py-4 cursor-pointer"
               style={{
                 background: "rgba(239, 168, 68, 0.08)",
