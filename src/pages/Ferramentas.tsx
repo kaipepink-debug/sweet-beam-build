@@ -14,6 +14,15 @@ export default function Ferramentas() {
   const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Check naut_subscription session
+  useEffect(() => {
+    const stored = localStorage.getItem("naut_subscription");
+    if (!stored) {
+      navigate("/usuario?redirect=/ferramentas", { replace: true });
+      return;
+    }
+  }, [navigate]);
+
   useEffect(() => {
     supabase
       .from("configuracoes_acesso")
