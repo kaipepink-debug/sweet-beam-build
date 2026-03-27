@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock, AlertTriangle, Bell } from "lucide-react";
+import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock, AlertTriangle, Bell, TrendingUp, ArrowUpCircle } from "lucide-react";
 import ratariaIcon from "@/assets/rataria-icon.png";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
