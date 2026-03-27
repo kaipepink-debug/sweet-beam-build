@@ -254,24 +254,16 @@ export default function Painel() {
                     key={item.id}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 24 }}
-                    whileHover={!item.locked ? { x: 4 } : {}}
+                    transition={{ delay: (i + 1) * 0.05, type: "spring", stiffness: 300, damping: 24 }}
+                    whileHover={!item.locked ? { scale: 1.02 } : {}}
                     whileTap={!item.locked ? { scale: 0.98 } : {}}
-                    className={`w-full flex items-center gap-4 rounded-2xl px-4 md:px-5 py-4 md:py-5 group transition-all duration-200 ${item.locked ? "cursor-not-allowed" : ""}`}
+                    className={`w-full flex items-center gap-4 rounded-2xl px-4 md:px-5 py-4 md:py-5 transition-all duration-200 ${item.locked ? "cursor-not-allowed" : ""}`}
                     style={{
-                      background: t.cardBg,
-                      border: `1px solid ${t.cardBorder}`,
+                      background: item.locked
+                        ? "rgba(255,255,255,0.03)"
+                        : `linear-gradient(135deg, rgba(${item.color}, 0.12), rgba(${item.color}, 0.04))`,
+                      border: `1px solid rgba(${item.color}, ${item.locked ? 0.08 : 0.25})`,
                       opacity: item.locked ? 0.45 : 1,
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!item.locked) {
-                        e.currentTarget.style.background = `rgba(${item.color}, 0.08)`;
-                        e.currentTarget.style.borderColor = `rgba(${item.color}, 0.15)`;
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = t.cardBg;
-                      e.currentTarget.style.borderColor = t.cardBorder;
                     }}
                     onClick={() => {
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
@@ -279,17 +271,17 @@ export default function Painel() {
                       if (!item.locked && item.id === "suporte") window.open("https://wa.me/5511922926559?text=Ol%C3%A1%2C%20preciso%20de%20ajuda!", "_blank");
                     }}
                   >
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ background: `rgba(${item.color}, 0.1)` }}>
-                      <item.icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: `rgba(${item.color}, 0.8)` }} />
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: `rgba(${item.color}, 0.15)` }}>
+                      <item.icon className="w-6 h-6 md:w-7 md:h-7" style={{ color: `rgba(${item.color}, 0.85)` }} />
                     </div>
                     <div className="flex-1 text-left">
-                      <p className="text-sm md:text-base font-semibold transition-colors duration-500" style={{ color: t.menuLabel }}>{item.label}</p>
-                      <p className="text-[11px] md:text-sm transition-colors duration-500" style={{ color: t.menuDesc }}>{item.desc}</p>
+                      <p className="text-sm md:text-base font-bold" style={{ color: `rgba(${item.color}, 0.95)` }}>{item.label}</p>
+                      <p className="text-[11px] md:text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>{item.desc}</p>
                     </div>
                     {item.locked ? (
-                      <Lock className="w-4 h-4" style={{ color: t.chevron }} />
+                      <Lock className="w-5 h-5" style={{ color: `rgba(${item.color}, 0.3)` }} />
                     ) : (
-                      <ChevronRight className="w-4 h-4" style={{ color: t.chevron }} />
+                      <ChevronRight className="w-5 h-5" style={{ color: `rgba(${item.color}, 0.5)` }} />
                     )}
                   </motion.button>
                 ))}
