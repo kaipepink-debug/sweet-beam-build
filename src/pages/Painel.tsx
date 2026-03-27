@@ -381,7 +381,7 @@ export default function Painel() {
 
 
           {/* Logout */}
-          <motion.div variants={stagger.item} className="flex justify-center pt-4 pb-8">
+          <motion.div variants={stagger.item} className="flex justify-center pt-4 pb-2">
             <motion.button
               whileHover={{ scale: 1.08, opacity: 0.8 }}
               whileTap={{ scale: 0.92 }}
