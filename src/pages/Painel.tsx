@@ -269,7 +269,6 @@ export default function Painel() {
                     onClick={() => {
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
                       if (!item.locked && item.id === "suporte") window.open("https://wa.me/5511922926559?text=Ol%C3%A1%2C%20preciso%20de%20ajuda!", "_blank");
-                      if (!item.locked && item.id === "suporte") window.open("https://wa.me/5511922926559?text=Ol%C3%A1%2C%20preciso%20de%20ajuda!", "_blank");
                     }}
                   >
                     <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: `rgba(${item.color}, 0.15)` }}>
