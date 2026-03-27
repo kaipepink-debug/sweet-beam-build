@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
+import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2, Play } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -104,9 +104,29 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
           <p className="text-sm text-muted-foreground">Siga os passos abaixo para liberar seu acesso</p>
         </div>
 
-        {/* Step 1 */}
+        {/* Step 1 - Tutorial */}
         <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
-          <StepHeader num={1} title="Baixe o navegador DiCloak" />
+          <StepHeader num={1} title="Assista o tutorial" />
+          <p className="text-sm text-muted-foreground pl-9">Veja o vídeo abaixo para entender como acessar as ferramentas.</p>
+          <div className="pl-9">
+            <div className="rounded-xl overflow-hidden" style={{ background: "rgba(0,0,0,0.4)" }}>
+              <video
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full rounded-xl"
+                poster=""
+              >
+                <source src="/videos/diclaok.mp4" type="video/mp4" />
+                Seu navegador não suporta vídeos.
+              </video>
+            </div>
+          </div>
+        </div>
+
+        {/* Step 2 */}
+        <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
+          <StepHeader num={2} title="Baixe o navegador DiCloak" />
           <p className="text-sm text-muted-foreground pl-9">Faça o download do navegador oficial para acessar o painel.</p>
           <a href="https://dicloak.com/pt/download" target="_blank" rel="noopener noreferrer"
             className="ml-9 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-colors">
@@ -114,9 +134,9 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
           </a>
         </div>
 
-        {/* Step 2 */}
+        {/* Step 3 */}
         <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
-          <StepHeader num={2} title="Abra o DiCloak e insira o login" />
+          <StepHeader num={3} title="Abra o DiCloak e insira o login" />
           <p className="text-sm text-muted-foreground pl-9">Com o programa aberto, use as credenciais abaixo:</p>
           <div className="space-y-2 pl-9">
             <CredentialRow label="Usuário" value={config.login} onCopy={() => copyToClipboard(config.login, "Usuário")} />
@@ -124,9 +144,9 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
           </div>
         </div>
 
-        {/* Step 3 - 2FA */}
+        {/* Step 4 - 2FA */}
         <div className="rounded-2xl p-5 space-y-4" style={glassStyle}>
-          <StepHeader num={3} title="Insira o código de 2 Fatores" />
+          <StepHeader num={4} title="Insira o código de 2 Fatores" />
           <p className="text-sm text-muted-foreground pl-9">O sistema irá solicitar um código de autenticação. Clique abaixo para revelar e copiar.</p>
 
           <div className="rounded-xl p-5 text-center space-y-3" style={{ background: "rgba(255,255,255,0.03)" }}>
@@ -161,9 +181,9 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
           </div>
         </div>
 
-        {/* Step 4 */}
+        {/* Step 5 */}
         <div className="rounded-2xl p-5 space-y-2" style={glassStyle}>
-          <StepHeader num={4} title="Pronto! Acesse o painel" icon="check" />
+          <StepHeader num={5} title="Pronto! Acesse o painel" icon="check" />
           <p className="text-sm text-muted-foreground pl-9">
             Basta acessar o painel com as ferramentas. Em caso de dúvidas, entre em contato que auxiliamos todo o acesso!
           </p>
