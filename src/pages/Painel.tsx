@@ -335,7 +335,7 @@ export default function Painel() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
         className="fixed bottom-0 left-0 right-0 z-20 flex justify-center pb-6 pt-10"
-        style={{ background: `linear-gradient(to top, ${t.bottomGradient} 40%, transparent)` }}
+        style={{ background: "transparent" }}
       >
         <motion.button
           whileHover={{ scale: 1.08, opacity: 0.8 }}
