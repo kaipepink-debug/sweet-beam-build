@@ -403,8 +403,8 @@ export default function Painel() {
       <PlansPopup
         open={showPlans}
         onClose={() => setShowPlans(false)}
-        title="Renove sua Assinatura"
-        description={`Faltam apenas ${daysRemaining} dias para seu plano expirar. Renove agora!`}
+        title="Upgrade de Plano"
+        description="Escolha o melhor plano para você e aproveite todos os benefícios!"
       />
     </div>
   );
