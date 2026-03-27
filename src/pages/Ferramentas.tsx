@@ -93,7 +93,7 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-lg mx-4 py-10 space-y-5"
       >
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
+        <button onClick={() => navigate("/usuario")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
           <ArrowLeft className="w-4 h-4" /> Voltar
         </button>
 
