@@ -127,7 +127,7 @@ export default function Painel() {
               variants={stagger.item}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setShowPlans(true)}
+              onClick={() => setActiveTab("info")}
               className="flex items-center gap-3 rounded-2xl px-4 md:px-5 py-3.5 md:py-4 cursor-pointer"
               style={{
                 background: "rgba(239, 168, 68, 0.08)",
@@ -268,7 +268,7 @@ export default function Painel() {
                     }}
                     onClick={() => {
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
-                      if (!item.locked && item.id === "config") setShowAccount(true);
+                      if (!item.locked && item.id === "config") setActiveTab("info");
                       if (!item.locked && item.id === "suporte") window.open("https://wa.me/5511922926559?text=Ol%C3%A1%2C%20preciso%20de%20ajuda!", "_blank");
                     }}
                   >
@@ -293,7 +293,7 @@ export default function Painel() {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowPlans(true)}
+                  onClick={() => setActiveTab("info")}
                   className="w-full rounded-2xl px-4 md:px-5 py-4 md:py-5 transition-all duration-200"
                   style={{
                     background: "linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05))",
