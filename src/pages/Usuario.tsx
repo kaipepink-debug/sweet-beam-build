@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, XCircle, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,12 +23,22 @@ const PLAN_LINKS = {
 
 const Usuario = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   
   const [popup, setPopup] = useState<PopupType>(null);
   const [popupData, setPopupData] = useState<PopupData>({});
+
+  // Auto-redirect if already has active session
+  useEffect(() => {
+    const stored = localStorage.getItem("naut_subscription");
+    if (stored) {
+      const redirectTo = searchParams.get("redirect") || "/painel";
+      navigate(redirectTo, { replace: true });
+    }
+  }, [navigate, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,7 +110,8 @@ const Usuario = () => {
         description: `Acesso liberado, ${data.data.name || "usuário"}!`,
       });
 
-      navigate("/painel");
+      const redirectTo = searchParams.get("redirect") || "/painel";
+      navigate(redirectTo);
     } catch (err) {
       toast({
         title: "Erro",
