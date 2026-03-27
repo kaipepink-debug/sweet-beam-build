@@ -23,12 +23,22 @@ const PLAN_LINKS = {
 
 const Usuario = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   
   const [popup, setPopup] = useState<PopupType>(null);
   const [popupData, setPopupData] = useState<PopupData>({});
+
+  // Auto-redirect if already has active session
+  useEffect(() => {
+    const stored = localStorage.getItem("naut_subscription");
+    if (stored) {
+      const redirectTo = searchParams.get("redirect") || "/painel";
+      navigate(redirectTo, { replace: true });
+    }
+  }, [navigate, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
