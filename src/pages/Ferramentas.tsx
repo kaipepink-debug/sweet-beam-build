@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
+import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2, Play } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
