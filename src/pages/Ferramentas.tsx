@@ -137,7 +137,7 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
           <StepHeader num={2} title="Baixe o navegador DiCloak" />
           <p className="text-sm text-muted-foreground pl-9">Faça o download do navegador oficial para acessar o painel.</p>
-          <a href="https://dicloak.com/pt/download" target="_blank" rel="noopener noreferrer"
+          <a href={config.dicloak_url} target="_blank" rel="noopener noreferrer"
             className="ml-9 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-colors">
             <Download className="w-4 h-4" /> Baixar DiCloak <ExternalLink className="w-3 h-3 opacity-60" />
           </a>
