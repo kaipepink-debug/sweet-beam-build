@@ -83,13 +83,66 @@ export default function DashboardAcessoClientes() {
       <div>
         <h1 className="text-2xl font-bold text-foreground tracking-tight">Acesso — Clientes</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Gerencie as credenciais, código 2FA e conteúdo da página de ferramentas dos clientes.
+          Gerencie o conteúdo e credenciais da página de ferramentas dos clientes.
         </p>
       </div>
 
-      {/* Credenciais */}
+      {/* 1 - Vídeo Tutorial */}
       <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
         <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
+          <span className="w-5 h-5 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center">1</span>
+          <Video className="w-4 h-4 text-primary" />
+          Vídeo Tutorial
+        </h2>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-muted-foreground">URL do Vídeo</label>
+          <div className="relative">
+            <Video className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="Ex: /videos/diclaok.mp4 ou https://..."
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Vídeo exibido no Passo 1 — pode ser um caminho local ou URL externa.
+          </p>
+        </div>
+      </div>
+
+      {/* 2 - Link DiCloak */}
+      <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
+        <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
+          <span className="w-5 h-5 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center">2</span>
+          <Link2 className="w-4 h-4 text-primary" />
+          Link de Download — DiCloak
+        </h2>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-muted-foreground">URL de Download</label>
+          <div className="relative">
+            <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={dicloakUrl}
+              onChange={(e) => setDicloakUrl(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="Ex: https://dicloak.com/pt/download"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Link exibido no Passo 2 para download do navegador.
+          </p>
+        </div>
+      </div>
+
+      {/* 3 - Credenciais */}
+      <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
+        <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
+          <span className="w-5 h-5 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center">3</span>
           <User className="w-4 h-4 text-primary" />
           Credenciais de Login
         </h2>
@@ -130,9 +183,10 @@ export default function DashboardAcessoClientes() {
         </div>
       </div>
 
-      {/* TOTP */}
+      {/* 4 - TOTP */}
       <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
         <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
+          <span className="w-5 h-5 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center">4</span>
           <KeyRound className="w-4 h-4 text-primary" />
           Código de 2 Fatores (TOTP)
         </h2>
@@ -157,49 +211,7 @@ export default function DashboardAcessoClientes() {
             </button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Este código será usado para gerar os tokens de autenticação no painel dos clientes.
-          </p>
-        </div>
-      </div>
-
-      {/* Conteúdo da Página */}
-      <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
-        <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
-          <Video className="w-4 h-4 text-primary" />
-          Conteúdo da Página de Ferramentas
-        </h2>
-
-        <div className="space-y-1.5">
-          <label className="text-xs font-medium text-muted-foreground">URL do Vídeo Tutorial</label>
-          <div className="relative">
-            <Video className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-              placeholder="Ex: /videos/diclaok.mp4 ou https://..."
-            />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            URL do vídeo exibido no Passo 1 da página de ferramentas. Pode ser um caminho local ou URL externa.
-          </p>
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-xs font-medium text-muted-foreground">Link de Download do DiCloak</label>
-          <div className="relative">
-            <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              value={dicloakUrl}
-              onChange={(e) => setDicloakUrl(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-              placeholder="Ex: https://dicloak.com/pt/download"
-            />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Link exibido no Passo 2 para download do navegador.
+            Código usado para gerar os tokens de autenticação no painel dos clientes.
           </p>
         </div>
       </div>
