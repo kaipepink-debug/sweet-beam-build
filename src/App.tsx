@@ -25,6 +25,7 @@ import Cursos from "./pages/Cursos";
 import CursoPlayer from "./pages/CursoPlayer";
 import DashboardAssinaturas from "./pages/DashboardAssinaturas";
 import DashboardAcessoClientes from "./pages/DashboardAcessoClientes";
+import DashboardPixels from "./pages/DashboardPixels";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => (
               <Route path="/dashboard/clientes" element={<UnderDevelopment />} />
               <Route path="/dashboard/analytics" element={<UnderDevelopment />} />
               <Route path="/dashboard/acesso-clientes" element={<DashboardAcessoClientes />} />
+              <Route path="/dashboard/pixels" element={<DashboardPixels />} />
               <Route path="/dashboard/configuracoes" element={<UnderDevelopment />} />
             </Route>
 
