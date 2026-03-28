@@ -11,7 +11,7 @@ const TOTP_PERIOD = 30;
 
 export default function Ferramentas() {
   const navigate = useNavigate();
-  const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string } | null>(null);
+  const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Check naut_subscription session
@@ -26,7 +26,7 @@ export default function Ferramentas() {
   useEffect(() => {
     supabase
       .from("configuracoes_acesso")
-      .select("login, senha, totp_secret")
+      .select("login, senha, totp_secret, video_url, dicloak_url")
       .limit(1)
       .maybeSingle()
       .then(({ data }) => {
@@ -49,7 +49,7 @@ export default function Ferramentas() {
   return <FerramentasContent config={config} navigate={navigate} />;
 }
 
-function FerramentasContent({ config, navigate }: { config: { login: string; senha: string; totp_secret: string }; navigate: ReturnType<typeof useNavigate> }) {
+function FerramentasContent({ config, navigate }: { config: { login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string }; navigate: ReturnType<typeof useNavigate> }) {
   const totp = useMemo(() => new OTPAuth.TOTP({
     issuer: "app",
     label: "user",
@@ -126,7 +126,7 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
                 className="w-full rounded-xl"
                 poster=""
               >
-                <source src="/videos/diclaok.mp4" type="video/mp4" />
+                <source src={config.video_url} type="video/mp4" />
                 Seu navegador não suporta vídeos.
               </video>
             </div>
@@ -137,7 +137,7 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
           <StepHeader num={2} title="Baixe o navegador DiCloak" />
           <p className="text-sm text-muted-foreground pl-9">Faça o download do navegador oficial para acessar o painel.</p>
-          <a href="https://dicloak.com/pt/download" target="_blank" rel="noopener noreferrer"
+          <a href={config.dicloak_url} target="_blank" rel="noopener noreferrer"
             className="ml-9 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-colors">
             <Download className="w-4 h-4" /> Baixar DiCloak <ExternalLink className="w-3 h-3 opacity-60" />
           </a>

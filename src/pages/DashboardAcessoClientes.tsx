@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { KeyRound, User, Lock, Save, Loader2, Eye, EyeOff } from "lucide-react";
+import { KeyRound, User, Lock, Save, Loader2, Eye, EyeOff, Video, Link2 } from "lucide-react";
 
 export default function DashboardAcessoClientes() {
   const [login, setLogin] = useState("");
   const [senha, setSenha] = useState("");
   const [totpSecret, setTotpSecret] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [dicloakUrl, setDicloakUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showSenha, setShowSenha] = useState(false);
@@ -31,6 +33,8 @@ export default function DashboardAcessoClientes() {
       setLogin(data.login);
       setSenha(data.senha);
       setTotpSecret(data.totp_secret);
+      setVideoUrl((data as any).video_url || "/videos/diclaok.mp4");
+      setDicloakUrl((data as any).dicloak_url || "https://dicloak.com/pt/download");
       setConfigId(data.id);
     }
     setLoading(false);
@@ -38,7 +42,7 @@ export default function DashboardAcessoClientes() {
 
   const handleSave = async () => {
     if (!login.trim() || !senha.trim() || !totpSecret.trim()) {
-      toast({ title: "Preencha todos os campos", variant: "destructive" });
+      toast({ title: "Preencha todos os campos obrigatórios", variant: "destructive" });
       return;
     }
 
@@ -51,9 +55,11 @@ export default function DashboardAcessoClientes() {
         login: login.trim(),
         senha: senha.trim(),
         totp_secret: totpSecret.trim(),
+        video_url: videoUrl.trim() || "/videos/diclaok.mp4",
+        dicloak_url: dicloakUrl.trim() || "https://dicloak.com/pt/download",
         updated_by: user?.id,
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq("id", configId!);
 
     if (error) {
@@ -77,17 +83,17 @@ export default function DashboardAcessoClientes() {
       <div>
         <h1 className="text-2xl font-bold text-foreground tracking-tight">Acesso — Clientes</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Gerencie as credenciais e o código 2FA exibidos no painel dos clientes.
+          Gerencie as credenciais, código 2FA e conteúdo da página de ferramentas dos clientes.
         </p>
       </div>
 
+      {/* Credenciais */}
       <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
         <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
           <User className="w-4 h-4 text-primary" />
           Credenciais de Login
         </h2>
 
-        {/* Login */}
         <div className="space-y-1.5">
           <label className="text-xs font-medium text-muted-foreground">Usuário</label>
           <div className="relative">
@@ -102,7 +108,6 @@ export default function DashboardAcessoClientes() {
           </div>
         </div>
 
-        {/* Senha */}
         <div className="space-y-1.5">
           <label className="text-xs font-medium text-muted-foreground">Senha</label>
           <div className="relative">
@@ -125,6 +130,7 @@ export default function DashboardAcessoClientes() {
         </div>
       </div>
 
+      {/* TOTP */}
       <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
         <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
           <KeyRound className="w-4 h-4 text-primary" />
@@ -152,6 +158,48 @@ export default function DashboardAcessoClientes() {
           </div>
           <p className="text-xs text-muted-foreground">
             Este código será usado para gerar os tokens de autenticação no painel dos clientes.
+          </p>
+        </div>
+      </div>
+
+      {/* Conteúdo da Página */}
+      <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
+        <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
+          <Video className="w-4 h-4 text-primary" />
+          Conteúdo da Página de Ferramentas
+        </h2>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-muted-foreground">URL do Vídeo Tutorial</label>
+          <div className="relative">
+            <Video className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="Ex: /videos/diclaok.mp4 ou https://..."
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            URL do vídeo exibido no Passo 1 da página de ferramentas. Pode ser um caminho local ou URL externa.
+          </p>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-muted-foreground">Link de Download do DiCloak</label>
+          <div className="relative">
+            <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={dicloakUrl}
+              onChange={(e) => setDicloakUrl(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-muted border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="Ex: https://dicloak.com/pt/download"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Link exibido no Passo 2 para download do navegador.
           </p>
         </div>
       </div>
