@@ -273,7 +273,17 @@ export default function Painel() {
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
                       if (!item.locked && item.id === "suporte") window.open("https://wa.me/5511922926559?text=Ol%C3%A1%2C%20preciso%20de%20ajuda!", "_blank");
                     }}
-                  >
+                   >
+                    {isFerramentas && (
+                      <div className="absolute inset-0 rounded-2xl" style={{
+                        padding: "1.5px",
+                        background: "linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(168, 85, 247, 0.4), rgba(139, 92, 246, 0.8))",
+                        WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                        WebkitMaskComposite: "xor",
+                        maskComposite: "exclude",
+                        pointerEvents: "none",
+                      }} />
+                    )}
                     <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: `rgba(${item.color}, 0.15)` }}>
                       <item.icon className="w-6 h-6 md:w-7 md:h-7" style={{ color: `rgba(${item.color}, 0.85)` }} />
                     </div>
@@ -287,7 +297,8 @@ export default function Painel() {
                       <ChevronRight className="w-5 h-5" style={{ color: `rgba(${item.color}, 0.5)` }} />
                     )}
                   </motion.button>
-                ))}
+                  );
+                })}
 
                 {/* Affiliate button */}
                 <motion.a
