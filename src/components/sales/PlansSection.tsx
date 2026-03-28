@@ -229,7 +229,7 @@ const PlansSection = () => {
                 )}
 
                 <a
-                  href={plan.link}
+                  href={appendUtmToUrl(plan.link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`w-full py-3 rounded-lg font-semibold text-sm transition-all hover:scale-[1.02] flex items-center justify-center gap-2 ${
