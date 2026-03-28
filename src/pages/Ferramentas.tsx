@@ -126,7 +126,7 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
                 className="w-full rounded-xl"
                 poster=""
               >
-                <source src="/videos/diclaok.mp4" type="video/mp4" />
+                <source src={config.video_url} type="video/mp4" />
                 Seu navegador não suporta vídeos.
               </video>
             </div>
