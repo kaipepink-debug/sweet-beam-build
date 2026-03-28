@@ -24,6 +24,7 @@ const SalesPage = () => {
       <NeuralBackground />
       {/* Gradient overlay */}
       <div className="fixed inset-0 z-[1] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(180, 0, 255, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(140, 0, 200, 0.03) 0%, transparent 50%)" }} />
+      <PixelScripts />
       <Navbar />
       <div className="relative z-10">
         <HeroSection />

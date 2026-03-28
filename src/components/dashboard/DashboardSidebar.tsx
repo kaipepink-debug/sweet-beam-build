@@ -20,6 +20,7 @@ const menuItems = [
   { title: "Ferramentas IA", url: "/dashboard-ferramentas", icon: Sparkles, permKey: "ferramentas_ia" },
   { title: "Gerar Avisos", url: "/dashboard/gerar-avisos", icon: Image, permKey: "ferramentas_ia" },
   { title: "Acesso Clientes", url: "/dashboard/acesso-clientes", icon: KeyRound, permKey: "ferramentas_ia" },
+  { title: "Pixels", url: "/dashboard/pixels", icon: Crosshair, permKey: "analytics" },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
   { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
   { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, permKey: "configuracoes" },
