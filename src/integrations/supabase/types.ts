@@ -164,28 +164,34 @@ export type Database = {
       }
       configuracoes_acesso: {
         Row: {
+          dicloak_url: string
           id: string
           login: string
           senha: string
           totp_secret: string
           updated_at: string
           updated_by: string | null
+          video_url: string
         }
         Insert: {
+          dicloak_url?: string
           id?: string
           login?: string
           senha?: string
           totp_secret?: string
           updated_at?: string
           updated_by?: string | null
+          video_url?: string
         }
         Update: {
+          dicloak_url?: string
           id?: string
           login?: string
           senha?: string
           totp_secret?: string
           updated_at?: string
           updated_by?: string | null
+          video_url?: string
         }
         Relationships: []
       }
