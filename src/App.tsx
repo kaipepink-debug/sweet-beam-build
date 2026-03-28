@@ -25,6 +25,7 @@ import Cursos from "./pages/Cursos";
 import CursoPlayer from "./pages/CursoPlayer";
 import DashboardAssinaturas from "./pages/DashboardAssinaturas";
 import DashboardAcessoClientes from "./pages/DashboardAcessoClientes";
+import DashboardPixels from "./pages/DashboardPixels";
 
 const queryClient = new QueryClient();
 
