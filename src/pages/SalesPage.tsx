@@ -1,8 +1,9 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import instagramIcon from "@/assets/instagram-icon.png";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import Navbar from "@/components/sales/Navbar";
 import HeroSection from "@/components/sales/HeroSection";
+import { captureUtmParams } from "@/lib/utm";
 
 // Lazy load below-fold sections
 const PainSection = lazy(() => import("@/components/sales/PainSection"));
