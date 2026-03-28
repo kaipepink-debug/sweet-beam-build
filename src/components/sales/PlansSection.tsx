@@ -1,4 +1,5 @@
 import { Check, Crown, Shield, ArrowRight } from "lucide-react";
+import { appendUtmToUrl } from "@/lib/utm";
 
 const plans = [
   {

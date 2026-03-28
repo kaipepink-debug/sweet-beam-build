@@ -16,6 +16,8 @@ const FAQSection = lazy(() => import("@/components/sales/FAQSection"));
 const SectionFallback = () => <div className="min-h-[200px]" />;
 
 const SalesPage = () => {
+  useEffect(() => { captureUtmParams(); }, []);
+
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ background: "#000000" }}>
       <NeuralBackground />
