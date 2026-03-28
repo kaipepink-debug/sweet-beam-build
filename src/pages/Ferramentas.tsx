@@ -11,7 +11,7 @@ const TOTP_PERIOD = 30;
 
 export default function Ferramentas() {
   const navigate = useNavigate();
-  const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string } | null>(null);
+  const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Check naut_subscription session
