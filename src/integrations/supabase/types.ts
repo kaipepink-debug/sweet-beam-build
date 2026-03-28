@@ -303,6 +303,36 @@ export type Database = {
         }
         Relationships: []
       }
+      pixels: {
+        Row: {
+          api_token: string
+          created_at: string
+          enabled: boolean
+          id: string
+          pixel_id: string
+          platform: string
+          updated_at: string
+        }
+        Insert: {
+          api_token?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          pixel_id?: string
+          platform: string
+          updated_at?: string
+        }
+        Update: {
+          api_token?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          pixel_id?: string
+          platform?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
