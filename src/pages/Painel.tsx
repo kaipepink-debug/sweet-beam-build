@@ -250,7 +250,9 @@ export default function Painel() {
                   </div>
                 </motion.a>
 
-                {menuItems.map((item, i) => (
+                {menuItems.map((item, i) => {
+                  const isFerramentas = item.id === "ferramentas";
+                  return (
                   <motion.button
                     key={item.id}
                     initial={{ opacity: 0, y: 12 }}
@@ -258,13 +260,14 @@ export default function Painel() {
                     transition={{ delay: (i + 1) * 0.05, type: "spring", stiffness: 300, damping: 24 }}
                     whileHover={!item.locked ? { scale: 1.02 } : {}}
                     whileTap={!item.locked ? { scale: 0.98 } : {}}
-                    className={`w-full flex items-center gap-4 rounded-2xl px-4 md:px-5 py-4 md:py-5 transition-all duration-200 ${item.locked ? "cursor-not-allowed" : ""}`}
+                    className={`relative w-full flex items-center gap-4 rounded-2xl px-4 md:px-5 py-4 md:py-5 transition-all duration-200 ${item.locked ? "cursor-not-allowed" : ""} ${isFerramentas ? "overflow-hidden" : ""}`}
                     style={{
                       background: item.locked
                         ? "rgba(255,255,255,0.03)"
                         : `linear-gradient(135deg, rgba(${item.color}, 0.12), rgba(${item.color}, 0.04))`,
-                      border: `1px solid rgba(${item.color}, ${item.locked ? 0.08 : 0.25})`,
+                      border: isFerramentas ? "none" : `1px solid rgba(${item.color}, ${item.locked ? 0.08 : 0.25})`,
                       opacity: item.locked ? 0.45 : 1,
+                      boxShadow: isFerramentas ? "0 0 20px rgba(139, 92, 246, 0.25), 0 0 40px rgba(139, 92, 246, 0.1)" : "none",
                     }}
                     onClick={() => {
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
