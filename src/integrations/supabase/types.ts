@@ -362,6 +362,7 @@ export type Database = {
       }
       team_permissions: {
         Row: {
+          acesso_clientes: boolean
           analytics: boolean
           assinaturas: boolean
           clientes: boolean
@@ -372,12 +373,15 @@ export type Database = {
           equipe: boolean
           ferramentas_ia: boolean
           financeiro: boolean
+          gerar_avisos: boolean
           id: string
+          pixels: boolean
           updated_at: string
           user_id: string
           vendas: boolean
         }
         Insert: {
+          acesso_clientes?: boolean
           analytics?: boolean
           assinaturas?: boolean
           clientes?: boolean
@@ -388,12 +392,15 @@ export type Database = {
           equipe?: boolean
           ferramentas_ia?: boolean
           financeiro?: boolean
+          gerar_avisos?: boolean
           id?: string
+          pixels?: boolean
           updated_at?: string
           user_id: string
           vendas?: boolean
         }
         Update: {
+          acesso_clientes?: boolean
           analytics?: boolean
           assinaturas?: boolean
           clientes?: boolean
@@ -404,7 +411,9 @@ export type Database = {
           equipe?: boolean
           ferramentas_ia?: boolean
           financeiro?: boolean
+          gerar_avisos?: boolean
           id?: string
+          pixels?: boolean
           updated_at?: string
           user_id?: string
           vendas?: boolean

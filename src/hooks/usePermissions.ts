@@ -10,6 +10,9 @@ export interface TeamPermissions {
   clientes: boolean;
   email_acesso: boolean;
   ferramentas_ia: boolean;
+  gerar_avisos: boolean;
+  acesso_clientes: boolean;
+  pixels: boolean;
   analytics: boolean;
   configuracoes: boolean;
   equipe: boolean;
@@ -23,6 +26,9 @@ const defaultPermissions: TeamPermissions = {
   clientes: false,
   email_acesso: true,
   ferramentas_ia: true,
+  gerar_avisos: false,
+  acesso_clientes: false,
+  pixels: false,
   analytics: false,
   configuracoes: false,
   equipe: false,
@@ -55,6 +61,9 @@ export function usePermissions() {
             clientes: data.clientes,
             email_acesso: (data as any).email_acesso ?? true,
             ferramentas_ia: data.ferramentas_ia,
+            gerar_avisos: (data as any).gerar_avisos ?? false,
+            acesso_clientes: (data as any).acesso_clientes ?? false,
+            pixels: (data as any).pixels ?? false,
             analytics: data.analytics,
             configuracoes: data.configuracoes,
             equipe: data.equipe,
