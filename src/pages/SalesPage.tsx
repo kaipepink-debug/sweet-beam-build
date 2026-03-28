@@ -4,6 +4,7 @@ import NeuralBackground from "@/components/sales/NeuralBackground";
 import Navbar from "@/components/sales/Navbar";
 import HeroSection from "@/components/sales/HeroSection";
 import { captureUtmParams } from "@/lib/utm";
+import PixelScripts from "@/components/sales/PixelScripts";
 
 // Lazy load below-fold sections
 const PainSection = lazy(() => import("@/components/sales/PainSection"));
