@@ -49,7 +49,7 @@ export default function Ferramentas() {
   return <FerramentasContent config={config} navigate={navigate} />;
 }
 
-function FerramentasContent({ config, navigate }: { config: { login: string; senha: string; totp_secret: string }; navigate: ReturnType<typeof useNavigate> }) {
+function FerramentasContent({ config, navigate }: { config: { login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string }; navigate: ReturnType<typeof useNavigate> }) {
   const totp = useMemo(() => new OTPAuth.TOTP({
     issuer: "app",
     label: "user",
