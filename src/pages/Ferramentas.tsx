@@ -26,7 +26,7 @@ export default function Ferramentas() {
   useEffect(() => {
     supabase
       .from("configuracoes_acesso")
-      .select("login, senha, totp_secret")
+      .select("login, senha, totp_secret, video_url, dicloak_url")
       .limit(1)
       .maybeSingle()
       .then(({ data }) => {
