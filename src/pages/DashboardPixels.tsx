@@ -132,6 +132,44 @@ export default function DashboardPixels() {
     );
   };
 
+  const [addingPlatform, setAddingPlatform] = useState("");
+  const [adding, setAdding] = useState(false);
+
+  const handleAdd = async () => {
+    if (!addingPlatform) return;
+    setAdding(true);
+    const { data, error } = await supabase
+      .from("pixels")
+      .insert({ platform: addingPlatform, pixel_id: "", api_token: "", enabled: true })
+      .select()
+      .single();
+    if (error) {
+      toast.error("Erro ao adicionar pixel");
+    } else if (data) {
+      setPixels((prev) => [...prev, data]);
+      toast.success("Pixel adicionado!");
+      setAddingPlatform("");
+    }
+    setAdding(false);
+  };
+
+  const handleDelete = async (pixel: PixelConfig) => {
+    const config = platformConfig[pixel.platform as keyof typeof platformConfig];
+    const confirmed = window.confirm(`Excluir pixel ${config?.label || pixel.platform}? Ele será removido da página de vendas.`);
+    if (!confirmed) return;
+    const { error } = await supabase.from("pixels").delete().eq("id", pixel.id);
+    if (error) {
+      toast.error("Erro ao excluir pixel");
+    } else {
+      setPixels((prev) => prev.filter((p) => p.id !== pixel.id));
+      toast.success("Pixel excluído com sucesso!");
+    }
+  };
+
+  const availablePlatforms = Object.keys(platformConfig).filter(
+    (p) => !pixels.some((px) => px.platform === p)
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
