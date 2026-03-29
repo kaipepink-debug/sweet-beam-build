@@ -272,12 +272,8 @@ export default function DashboardPixels() {
             disabled={ttSending || !ttPixelId.trim()}
             className="w-full bg-gradient-to-r from-red-500 to-red-400 text-white hover:opacity-90 h-12 text-base font-semibold"
           >
-            <Send className="h-4 w-4 mr-2" />
-            {ttSending ? "Enviando..." : (
-              <>
-                <CheckCircle2 className="h-4 w-4 mr-1" /> Enviar Evento Purchase
-              </>
-            )}
+            <Send className="h-5 w-5" />
+            Enviar Evento Purchase
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">
