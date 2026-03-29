@@ -140,6 +140,7 @@ export default function DashboardPixels() {
       toast.error("Erro ao adicionar pixel");
     } else if (data) {
       setPixels((prev) => [...prev, data]);
+      setEditingId(data.id); // auto-open for editing
       toast.success("Pixel adicionado!");
     }
     setAdding(false);
