@@ -6,7 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Save, Facebook, Send, CheckCircle2 } from "lucide-react";
+import { Save, Facebook, Send, CheckCircle2, Trash2, Plus } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PixelConfig {
   id: string;
@@ -46,6 +53,8 @@ export default function DashboardPixels() {
   const [pixels, setPixels] = useState<PixelConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [addingPlatform, setAddingPlatform] = useState("");
+  const [adding, setAdding] = useState(false);
 
   // TikTok Purchase Activator state
   const [ttPixelId, setTtPixelId] = useState("");
@@ -125,6 +134,42 @@ export default function DashboardPixels() {
     );
   };
 
+
+  const handleAdd = async () => {
+    if (!addingPlatform) return;
+    setAdding(true);
+    const { data, error } = await supabase
+      .from("pixels")
+      .insert({ platform: addingPlatform, pixel_id: "", api_token: "", enabled: true })
+      .select()
+      .single();
+    if (error) {
+      toast.error("Erro ao adicionar pixel");
+    } else if (data) {
+      setPixels((prev) => [...prev, data]);
+      toast.success("Pixel adicionado!");
+      setAddingPlatform("");
+    }
+    setAdding(false);
+  };
+
+  const handleDelete = async (pixel: PixelConfig) => {
+    const config = platformConfig[pixel.platform as keyof typeof platformConfig];
+    const confirmed = window.confirm(`Excluir pixel ${config?.label || pixel.platform}? Ele será removido da página de vendas.`);
+    if (!confirmed) return;
+    const { error } = await supabase.from("pixels").delete().eq("id", pixel.id);
+    if (error) {
+      toast.error("Erro ao excluir pixel");
+    } else {
+      setPixels((prev) => prev.filter((p) => p.id !== pixel.id));
+      toast.success("Pixel excluído com sucesso!");
+    }
+  };
+
+  const availablePlatforms = Object.keys(platformConfig).filter(
+    (p) => !pixels.some((px) => px.platform === p)
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -200,20 +245,54 @@ export default function DashboardPixels() {
                   />
                 </div>
 
-                {/* Save */}
-                <Button
-                  onClick={() => handleSave(pixel)}
-                  disabled={saving === pixel.id}
-                  className={`w-full bg-gradient-to-r ${config.color} text-white hover:opacity-90`}
-                >
-                  <Save className="h-4 w-4 mr-2" />
-                  {saving === pixel.id ? "Salvando..." : "Salvar configuração"}
-                </Button>
+                {/* Save + Delete */}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => handleSave(pixel)}
+                    disabled={saving === pixel.id}
+                    className={`flex-1 bg-gradient-to-r ${config.color} text-white hover:opacity-90`}
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {saving === pixel.id ? "Salvando..." : "Salvar configuração"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handleDelete(pixel)}
+                    className="border-destructive/50 text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </Card>
           );
         })}
       </div>
+
+      {/* Add new pixel */}
+      {availablePlatforms.length > 0 && (
+        <Card className="border-dashed border-2 border-border/50 bg-card/40 p-5">
+          <div className="flex items-center gap-3">
+            <Select value={addingPlatform} onValueChange={setAddingPlatform}>
+              <SelectTrigger className="w-[200px] bg-muted/50">
+                <SelectValue placeholder="Escolha a plataforma" />
+              </SelectTrigger>
+              <SelectContent>
+                {availablePlatforms.map((p) => (
+                  <SelectItem key={p} value={p}>
+                    {platformConfig[p as keyof typeof platformConfig].label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button onClick={handleAdd} disabled={!addingPlatform || adding}>
+              <Plus className="h-4 w-4 mr-2" />
+              Adicionar Pixel
+            </Button>
+          </div>
+        </Card>
+      )}
 
       {/* TikTok Purchase Activator */}
       <Card className="relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
