@@ -178,6 +178,66 @@ export default function DashboardPixels() {
         })}
       </div>
 
+      {/* TikTok Purchase Activator */}
+      <Card className="relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
+        <div className="h-1.5 bg-gradient-to-r from-pink-500 to-violet-500" />
+        <div className="p-6 space-y-5">
+          <div>
+            <h3 className="font-semibold text-foreground text-lg">Ativador Manual de Pixel TikTok</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Dispare eventos de teste (Purchase) diretamente para o TikTok Ads sem afetar pedidos reais.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground font-medium">Pixel ID</Label>
+            <Input
+              placeholder="Ex: D6V0LGRC77U78B5PP8EG"
+              value={ttPixelId}
+              onChange={(e) => setTtPixelId(e.target.value)}
+              className="bg-muted/50 border-border/50"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground font-medium">Valor da Compra (R$)</Label>
+            <Input
+              placeholder="97,90"
+              value={ttValue}
+              onChange={(e) => setTtValue(e.target.value)}
+              className="bg-muted/50 border-border/50"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label className="text-xs text-muted-foreground font-medium">Order ID</Label>
+            <Input
+              value={ttOrderId}
+              onChange={(e) => setTtOrderId(e.target.value)}
+              className="bg-muted/50 border-border/50"
+            />
+            <p className="text-xs text-muted-foreground">Gerado automaticamente. Altere se necessário.</p>
+          </div>
+
+          <Button
+            onClick={handleTikTokPurchase}
+            disabled={ttSending || !ttPixelId.trim()}
+            className="w-full bg-gradient-to-r from-red-500 to-red-400 text-white hover:opacity-90 h-12 text-base font-semibold"
+          >
+            <Send className="h-4 w-4 mr-2" />
+            {ttSending ? "Enviando..." : (
+              <>
+                <CheckCircle2 className="h-4 w-4 mr-1" /> Enviar Evento Purchase
+              </>
+            )}
+          </Button>
+
+          <p className="text-xs text-muted-foreground text-center">
+            Este evento não será salvo no banco de dados de pedidos.
+          </p>
+        </div>
+      </Card>
+
       <Card className="border-border/30 bg-muted/20 p-4">
         <p className="text-xs text-muted-foreground">
           <strong className="text-foreground">Como funciona:</strong> Os pixels configurados aqui serão carregados automaticamente na página de vendas principal com o evento <code className="bg-muted px-1.5 py-0.5 rounded text-primary">PageView</code>. Os tokens da API são usados para a Conversions API (servidor) para melhor rastreamento.
