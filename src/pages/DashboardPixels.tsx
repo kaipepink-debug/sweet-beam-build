@@ -46,6 +46,7 @@ export default function DashboardPixels() {
   const [pixels, setPixels] = useState<PixelConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [addingPlatform, setAddingPlatform] = useState("");
   const [adding, setAdding] = useState(false);
 
