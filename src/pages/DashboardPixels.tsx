@@ -117,7 +117,8 @@ export default function DashboardPixels() {
     if (error) {
       toast.error("Erro ao salvar pixel");
     } else {
-      toast.success(`Pixel ${platformConfig[pixel.platform as keyof typeof platformConfig]?.label} salvo com sucesso!`);
+      toast.success(`Pixel salvo com sucesso!`);
+      setEditingId(null);
     }
     setSaving(null);
   };
