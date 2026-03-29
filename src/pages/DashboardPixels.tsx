@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Save, Facebook } from "lucide-react";
+import { Save, Facebook, Send, CheckCircle2 } from "lucide-react";
 
 interface PixelConfig {
   id: string;
@@ -35,10 +35,23 @@ const platformConfig = {
   },
 };
 
+function generateOrderId() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "TST-";
+  for (let i = 0; i < 5; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+  return result;
+}
+
 export default function DashboardPixels() {
   const [pixels, setPixels] = useState<PixelConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+
+  // TikTok Purchase Activator state
+  const [ttPixelId, setTtPixelId] = useState("");
+  const [ttValue, setTtValue] = useState("97,90");
+  const [ttOrderId, setTtOrderId] = useState(generateOrderId());
+  const [ttSending, setTtSending] = useState(false);
 
   useEffect(() => {
     supabase
