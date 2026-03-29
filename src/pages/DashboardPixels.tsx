@@ -6,14 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Save, Facebook, Send, CheckCircle2, Trash2, Plus } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Save, Facebook, Send, Trash2, Plus } from "lucide-react";
 
 interface PixelConfig {
   id: string;
@@ -135,12 +128,11 @@ export default function DashboardPixels() {
   };
 
 
-  const handleAdd = async () => {
-    if (!addingPlatform) return;
+  const handleAddDirect = async (platform: string) => {
     setAdding(true);
     const { data, error } = await supabase
       .from("pixels")
-      .insert({ platform: addingPlatform, pixel_id: "", api_token: "", enabled: true })
+      .insert({ platform, pixel_id: "", api_token: "", enabled: true })
       .select()
       .single();
     if (error) {
@@ -148,7 +140,6 @@ export default function DashboardPixels() {
     } else if (data) {
       setPixels((prev) => [...prev, data]);
       toast.success("Pixel adicionado!");
-      setAddingPlatform("");
     }
     setAdding(false);
   };
@@ -166,9 +157,7 @@ export default function DashboardPixels() {
     }
   };
 
-  const availablePlatforms = Object.keys(platformConfig).filter(
-    (p) => !pixels.some((px) => px.platform === p)
-  );
+  const allPlatforms = Object.keys(platformConfig) as Array<keyof typeof platformConfig>;
 
   if (loading) {
     return (
@@ -187,112 +176,116 @@ export default function DashboardPixels() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {pixels.map((pixel) => {
-          const config = platformConfig[pixel.platform as keyof typeof platformConfig];
-          if (!config) return null;
-          const Icon = config.icon;
+      {allPlatforms.map((platform) => {
+        const config = platformConfig[platform];
+        const Icon = config.icon;
+        const platformPixels = pixels.filter((p) => p.platform === platform);
 
-          return (
-            <Card
-              key={pixel.id}
-              className="relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm"
-              style={{ boxShadow: `0 0 30px ${config.bgGlow}` }}
-            >
-              {/* Header gradient */}
-              <div className={`h-1.5 bg-gradient-to-r ${config.color}`} />
-
-              <div className="p-6 space-y-5">
-                {/* Title + Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2.5 rounded-xl bg-gradient-to-br ${config.color} text-white`}>
-                      <Icon />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground">{config.label}</h3>
-                      <p className="text-xs text-muted-foreground">
-                        {pixel.enabled ? "Ativo na página de vendas" : "Desativado"}
-                      </p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={pixel.enabled}
-                    onCheckedChange={(v) => updatePixel(pixel.id, "enabled", v)}
-                  />
+        return (
+          <div key={platform} className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg bg-gradient-to-br ${config.color} text-white`}>
+                  <Icon />
                 </div>
-
-                {/* Pixel ID */}
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground font-medium">Pixel ID</Label>
-                  <Input
-                    placeholder={`ID do pixel ${config.label}`}
-                    value={pixel.pixel_id}
-                    onChange={(e) => updatePixel(pixel.id, "pixel_id", e.target.value)}
-                    className="bg-muted/50 border-border/50"
-                  />
-                </div>
-
-                {/* API Token */}
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground font-medium">Token da API (Conversions API)</Label>
-                  <Input
-                    placeholder="Token de acesso"
-                    value={pixel.api_token}
-                    onChange={(e) => updatePixel(pixel.id, "api_token", e.target.value)}
-                    className="bg-muted/50 border-border/50"
-                    type="password"
-                  />
-                </div>
-
-                {/* Save + Delete */}
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => handleSave(pixel)}
-                    disabled={saving === pixel.id}
-                    className={`flex-1 bg-gradient-to-r ${config.color} text-white hover:opacity-90`}
-                  >
-                    <Save className="h-4 w-4 mr-2" />
-                    {saving === pixel.id ? "Salvando..." : "Salvar configuração"}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDelete(pixel)}
-                    className="border-destructive/50 text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                <h2 className="text-lg font-semibold text-foreground">{config.label}</h2>
+                <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full">
+                  {platformPixels.length} pixel{platformPixels.length !== 1 ? "s" : ""}
+                </span>
               </div>
-            </Card>
-          );
-        })}
-      </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setAddingPlatform(platform);
+                  setTimeout(() => handleAddDirect(platform), 0);
+                }}
+                disabled={adding}
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Adicionar
+              </Button>
+            </div>
 
-      {/* Add new pixel */}
-      {availablePlatforms.length > 0 && (
-        <Card className="border-dashed border-2 border-border/50 bg-card/40 p-5">
-          <div className="flex items-center gap-3">
-            <Select value={addingPlatform} onValueChange={setAddingPlatform}>
-              <SelectTrigger className="w-[200px] bg-muted/50">
-                <SelectValue placeholder="Escolha a plataforma" />
-              </SelectTrigger>
-              <SelectContent>
-                {availablePlatforms.map((p) => (
-                  <SelectItem key={p} value={p}>
-                    {platformConfig[p as keyof typeof platformConfig].label}
-                  </SelectItem>
+            {platformPixels.length === 0 ? (
+              <Card className="border-dashed border-2 border-border/30 bg-card/30 p-6 text-center">
+                <p className="text-sm text-muted-foreground">
+                  Nenhum pixel configurado. Clique em "Adicionar" para começar.
+                </p>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {platformPixels.map((pixel, idx) => (
+                  <Card
+                    key={pixel.id}
+                    className="relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm"
+                    style={{ boxShadow: `0 0 20px ${config.bgGlow}` }}
+                  >
+                    <div className={`h-1 bg-gradient-to-r ${config.color}`} />
+                    <div className="p-5 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-medium text-foreground text-sm">
+                            Pixel {idx + 1}
+                          </h3>
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${pixel.enabled ? "bg-green-500/20 text-green-400" : "bg-muted text-muted-foreground"}`}>
+                            {pixel.enabled ? "Ativo" : "Inativo"}
+                          </span>
+                        </div>
+                        <Switch
+                          checked={pixel.enabled}
+                          onCheckedChange={(v) => updatePixel(pixel.id, "enabled", v)}
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground font-medium">Pixel ID</Label>
+                        <Input
+                          placeholder={`ID do pixel`}
+                          value={pixel.pixel_id}
+                          onChange={(e) => updatePixel(pixel.id, "pixel_id", e.target.value)}
+                          className="bg-muted/50 border-border/50 h-9 text-sm"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground font-medium">Token da API</Label>
+                        <Input
+                          placeholder="Token de acesso"
+                          value={pixel.api_token}
+                          onChange={(e) => updatePixel(pixel.id, "api_token", e.target.value)}
+                          className="bg-muted/50 border-border/50 h-9 text-sm"
+                          type="password"
+                        />
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => handleSave(pixel)}
+                          disabled={saving === pixel.id}
+                          size="sm"
+                          className={`flex-1 bg-gradient-to-r ${config.color} text-white hover:opacity-90`}
+                        >
+                          <Save className="h-3.5 w-3.5 mr-1.5" />
+                          {saving === pixel.id ? "Salvando..." : "Salvar"}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-9 w-9 border-destructive/50 text-destructive hover:bg-destructive/10"
+                          onClick={() => handleDelete(pixel)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
                 ))}
-              </SelectContent>
-            </Select>
-            <Button onClick={handleAdd} disabled={!addingPlatform || adding}>
-              <Plus className="h-4 w-4 mr-2" />
-              Adicionar Pixel
-            </Button>
+              </div>
+            )}
           </div>
-        </Card>
-      )}
+        );
+      })}
 
       {/* TikTok Purchase Activator */}
       <Card className="relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
