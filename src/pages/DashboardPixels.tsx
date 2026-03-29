@@ -237,6 +237,17 @@ export default function DashboardPixels() {
           </div>
 
           <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground font-medium">Token da API (Access Token)</Label>
+            <Input
+              placeholder="Token de acesso do TikTok"
+              value={ttAccessToken}
+              onChange={(e) => setTtAccessToken(e.target.value)}
+              className="bg-muted/50 border-border/50"
+              type="password"
+            />
+          </div>
+
+          <div className="space-y-2">
             <Label className="text-xs text-muted-foreground font-medium">Valor da Compra (R$)</Label>
             <Input
               placeholder="97,90"
