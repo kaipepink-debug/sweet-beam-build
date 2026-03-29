@@ -166,9 +166,7 @@ export default function DashboardPixels() {
     }
   };
 
-  const availablePlatforms = Object.keys(platformConfig).filter(
-    (p) => !pixels.some((px) => px.platform === p)
-  );
+  const allPlatforms = Object.keys(platformConfig) as Array<keyof typeof platformConfig>;
 
   if (loading) {
     return (
