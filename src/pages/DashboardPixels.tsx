@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Save, Facebook, Send, Trash2, Plus } from "lucide-react";
+import { Save, Facebook, Send, Trash2, Plus, Pencil } from "lucide-react";
 
 interface PixelConfig {
   id: string;
@@ -46,6 +46,7 @@ export default function DashboardPixels() {
   const [pixels, setPixels] = useState<PixelConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [addingPlatform, setAddingPlatform] = useState("");
   const [adding, setAdding] = useState(false);
 
@@ -116,7 +117,8 @@ export default function DashboardPixels() {
     if (error) {
       toast.error("Erro ao salvar pixel");
     } else {
-      toast.success(`Pixel ${platformConfig[pixel.platform as keyof typeof platformConfig]?.label} salvo com sucesso!`);
+      toast.success(`Pixel salvo com sucesso!`);
+      setEditingId(null);
     }
     setSaving(null);
   };
@@ -139,6 +141,7 @@ export default function DashboardPixels() {
       toast.error("Erro ao adicionar pixel");
     } else if (data) {
       setPixels((prev) => [...prev, data]);
+      setEditingId(data.id); // auto-open for editing
       toast.success("Pixel adicionado!");
     }
     setAdding(false);
@@ -215,72 +218,107 @@ export default function DashboardPixels() {
               </Card>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {platformPixels.map((pixel, idx) => (
-                  <Card
-                    key={pixel.id}
-                    className="relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm"
-                    style={{ boxShadow: `0 0 20px ${config.bgGlow}` }}
-                  >
-                    <div className={`h-1 bg-gradient-to-r ${config.color}`} />
-                    <div className="p-5 space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-medium text-foreground text-sm">
-                            Pixel {idx + 1}
-                          </h3>
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${pixel.enabled ? "bg-green-500/20 text-green-400" : "bg-muted text-muted-foreground"}`}>
-                            {pixel.enabled ? "Ativo" : "Inativo"}
-                          </span>
+                {platformPixels.map((pixel, idx) => {
+                  const isEditing = editingId === pixel.id;
+                  const hasSavedData = pixel.pixel_id.trim() !== "";
+
+                  return (
+                    <Card
+                      key={pixel.id}
+                      className="relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm"
+                      style={{ boxShadow: `0 0 20px ${config.bgGlow}` }}
+                    >
+                      <div className={`h-1 bg-gradient-to-r ${config.color}`} />
+                      <div className="p-5 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-medium text-foreground text-sm">
+                              Pixel {idx + 1}
+                            </h3>
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${pixel.enabled ? "bg-green-500/20 text-green-400" : "bg-muted text-muted-foreground"}`}>
+                              {pixel.enabled ? "Ativo" : "Inativo"}
+                            </span>
+                          </div>
+                          <Switch
+                            checked={pixel.enabled}
+                            onCheckedChange={(v) => updatePixel(pixel.id, "enabled", v)}
+                          />
                         </div>
-                        <Switch
-                          checked={pixel.enabled}
-                          onCheckedChange={(v) => updatePixel(pixel.id, "enabled", v)}
-                        />
-                      </div>
 
-                      <div className="space-y-1.5">
-                        <Label className="text-xs text-muted-foreground font-medium">Pixel ID</Label>
-                        <Input
-                          placeholder={`ID do pixel`}
-                          value={pixel.pixel_id}
-                          onChange={(e) => updatePixel(pixel.id, "pixel_id", e.target.value)}
-                          className="bg-muted/50 border-border/50 h-9 text-sm"
-                        />
+                        {isEditing ? (
+                          <>
+                            <div className="space-y-1.5">
+                              <Label className="text-xs text-muted-foreground font-medium">Pixel ID</Label>
+                              <Input
+                                placeholder="ID do pixel"
+                                value={pixel.pixel_id}
+                                onChange={(e) => updatePixel(pixel.id, "pixel_id", e.target.value)}
+                                className="bg-muted/50 border-border/50 h-9 text-sm"
+                                autoFocus
+                              />
+                            </div>
+                            <div className="space-y-1.5">
+                              <Label className="text-xs text-muted-foreground font-medium">Token da API</Label>
+                              <Input
+                                placeholder="Token de acesso"
+                                value={pixel.api_token}
+                                onChange={(e) => updatePixel(pixel.id, "api_token", e.target.value)}
+                                className="bg-muted/50 border-border/50 h-9 text-sm"
+                                type="password"
+                              />
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                onClick={() => handleSave(pixel)}
+                                disabled={saving === pixel.id}
+                                size="sm"
+                                className={`flex-1 bg-gradient-to-r ${config.color} text-white hover:opacity-90`}
+                              >
+                                <Save className="h-3.5 w-3.5 mr-1.5" />
+                                {saving === pixel.id ? "Salvando..." : "Salvar"}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-9 w-9 border-destructive/50 text-destructive hover:bg-destructive/10"
+                                onClick={() => handleDelete(pixel)}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {hasSavedData && (
+                              <p className="text-xs text-muted-foreground font-mono truncate">
+                                ID: {pixel.pixel_id}
+                              </p>
+                            )}
+                            <div className="flex gap-2">
+                              <Button
+                                onClick={() => setEditingId(pixel.id)}
+                                size="sm"
+                                variant="outline"
+                                className="flex-1"
+                              >
+                                <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                                Editar
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-9 w-9 border-destructive/50 text-destructive hover:bg-destructive/10"
+                                onClick={() => handleDelete(pixel)}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+                          </>
+                        )}
                       </div>
-
-                      <div className="space-y-1.5">
-                        <Label className="text-xs text-muted-foreground font-medium">Token da API</Label>
-                        <Input
-                          placeholder="Token de acesso"
-                          value={pixel.api_token}
-                          onChange={(e) => updatePixel(pixel.id, "api_token", e.target.value)}
-                          className="bg-muted/50 border-border/50 h-9 text-sm"
-                          type="password"
-                        />
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() => handleSave(pixel)}
-                          disabled={saving === pixel.id}
-                          size="sm"
-                          className={`flex-1 bg-gradient-to-r ${config.color} text-white hover:opacity-90`}
-                        >
-                          <Save className="h-3.5 w-3.5 mr-1.5" />
-                          {saving === pixel.id ? "Salvando..." : "Salvar"}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-9 w-9 border-destructive/50 text-destructive hover:bg-destructive/10"
-                          onClick={() => handleDelete(pixel)}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  );
+                })}
               </div>
             )}
           </div>
