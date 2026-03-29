@@ -134,8 +134,6 @@ export default function DashboardPixels() {
     );
   };
 
-  const [addingPlatform, setAddingPlatform] = useState("");
-  const [adding, setAdding] = useState(false);
 
   const handleAdd = async () => {
     if (!addingPlatform) return;
