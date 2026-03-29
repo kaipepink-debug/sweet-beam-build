@@ -58,10 +58,48 @@ export default function DashboardPixels() {
       .from("pixels")
       .select("*")
       .then(({ data }) => {
-        if (data) setPixels(data);
+        if (data) {
+          setPixels(data);
+          const tiktokPixel = data.find((p) => p.platform === "tiktok" && p.pixel_id);
+          if (tiktokPixel && !ttPixelId) setTtPixelId(tiktokPixel.pixel_id);
+        }
         setLoading(false);
       });
   }, []);
+
+  const handleTikTokPurchase = async () => {
+    if (!ttPixelId.trim()) return;
+    setTtSending(true);
+    try {
+      const tiktokPixel = pixels.find((p) => p.platform === "tiktok");
+      const accessToken = tiktokPixel?.api_token;
+      if (!accessToken) {
+        toast.error("Configure o Token da API do TikTok antes de enviar eventos.");
+        setTtSending(false);
+        return;
+      }
+
+      const value = parseFloat(ttValue.replace(",", ".")) || 0;
+      const res = await supabase.functions.invoke("tiktok-purchase-event", {
+        body: {
+          pixel_id: ttPixelId.trim(),
+          access_token: accessToken,
+          value,
+          order_id: ttOrderId,
+        },
+      });
+
+      if (res.error) {
+        toast.error("Erro ao enviar evento: " + (res.error.message || "Erro desconhecido"));
+      } else {
+        toast.success("Evento Purchase enviado com sucesso ao TikTok!");
+        setTtOrderId(generateOrderId());
+      }
+    } catch (err: any) {
+      toast.error("Erro ao enviar evento: " + (err.message || "Erro desconhecido"));
+    }
+    setTtSending(false);
+  };
 
   const handleSave = async (pixel: PixelConfig) => {
     setSaving(pixel.id);
