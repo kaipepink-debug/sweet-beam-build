@@ -61,8 +61,11 @@ export default function DashboardPixels() {
       .then(({ data }) => {
         if (data) {
           setPixels(data);
-          const tiktokPixel = data.find((p) => p.platform === "tiktok" && p.pixel_id);
-          if (tiktokPixel && !ttPixelId) setTtPixelId(tiktokPixel.pixel_id);
+          const tiktokPixel = data.find((p) => p.platform === "tiktok");
+          if (tiktokPixel) {
+            if (tiktokPixel.pixel_id && !ttPixelId) setTtPixelId(tiktokPixel.pixel_id);
+            if (tiktokPixel.api_token) setTtAccessToken(tiktokPixel.api_token);
+          }
         }
         setLoading(false);
       });
