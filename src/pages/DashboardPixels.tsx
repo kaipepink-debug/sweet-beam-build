@@ -72,17 +72,12 @@ export default function DashboardPixels() {
   }, []);
 
   const handleTikTokPurchase = async () => {
-    if (!ttPixelId.trim()) return;
+    if (!ttPixelId.trim() || !ttAccessToken.trim()) {
+      toast.error("Preencha o Pixel ID e o Token da API antes de enviar.");
+      return;
+    }
     setTtSending(true);
     try {
-      const tiktokPixel = pixels.find((p) => p.platform === "tiktok");
-      const accessToken = tiktokPixel?.api_token;
-      if (!accessToken) {
-        toast.error("Configure o Token da API do TikTok antes de enviar eventos.");
-        setTtSending(false);
-        return;
-      }
-
       const value = parseFloat(ttValue.replace(",", ".")) || 0;
       const res = await supabase.functions.invoke("tiktok-purchase-event", {
         body: {
