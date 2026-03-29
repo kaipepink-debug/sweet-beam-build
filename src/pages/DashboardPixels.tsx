@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Save, Facebook } from "lucide-react";
+import { Save, Facebook, Send, CheckCircle2 } from "lucide-react";
 
 interface PixelConfig {
   id: string;
@@ -35,20 +35,71 @@ const platformConfig = {
   },
 };
 
+function generateOrderId() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "TST-";
+  for (let i = 0; i < 5; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+  return result;
+}
+
 export default function DashboardPixels() {
   const [pixels, setPixels] = useState<PixelConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+
+  // TikTok Purchase Activator state
+  const [ttPixelId, setTtPixelId] = useState("");
+  const [ttValue, setTtValue] = useState("97,90");
+  const [ttOrderId, setTtOrderId] = useState(generateOrderId());
+  const [ttSending, setTtSending] = useState(false);
 
   useEffect(() => {
     supabase
       .from("pixels")
       .select("*")
       .then(({ data }) => {
-        if (data) setPixels(data);
+        if (data) {
+          setPixels(data);
+          const tiktokPixel = data.find((p) => p.platform === "tiktok" && p.pixel_id);
+          if (tiktokPixel && !ttPixelId) setTtPixelId(tiktokPixel.pixel_id);
+        }
         setLoading(false);
       });
   }, []);
+
+  const handleTikTokPurchase = async () => {
+    if (!ttPixelId.trim()) return;
+    setTtSending(true);
+    try {
+      const tiktokPixel = pixels.find((p) => p.platform === "tiktok");
+      const accessToken = tiktokPixel?.api_token;
+      if (!accessToken) {
+        toast.error("Configure o Token da API do TikTok antes de enviar eventos.");
+        setTtSending(false);
+        return;
+      }
+
+      const value = parseFloat(ttValue.replace(",", ".")) || 0;
+      const res = await supabase.functions.invoke("tiktok-purchase-event", {
+        body: {
+          pixel_id: ttPixelId.trim(),
+          access_token: accessToken,
+          value,
+          order_id: ttOrderId,
+        },
+      });
+
+      if (res.error) {
+        toast.error("Erro ao enviar evento: " + (res.error.message || "Erro desconhecido"));
+      } else {
+        toast.success("Evento Purchase enviado com sucesso ao TikTok!");
+        setTtOrderId(generateOrderId());
+      }
+    } catch (err: any) {
+      toast.error("Erro ao enviar evento: " + (err.message || "Erro desconhecido"));
+    }
+    setTtSending(false);
+  };
 
   const handleSave = async (pixel: PixelConfig) => {
     setSaving(pixel.id);
@@ -164,6 +215,66 @@ export default function DashboardPixels() {
           );
         })}
       </div>
+
+      {/* TikTok Purchase Activator */}
+      <Card className="relative overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
+        <div className="h-1.5 bg-gradient-to-r from-pink-500 to-violet-500" />
+        <div className="p-6 space-y-5">
+          <div>
+            <h3 className="font-semibold text-foreground text-lg">Ativador Manual de Pixel TikTok</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Dispare eventos de teste (Purchase) diretamente para o TikTok Ads sem afetar pedidos reais.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground font-medium">Pixel ID</Label>
+            <Input
+              placeholder="Ex: D6V0LGRC77U78B5PP8EG"
+              value={ttPixelId}
+              onChange={(e) => setTtPixelId(e.target.value)}
+              className="bg-muted/50 border-border/50"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground font-medium">Valor da Compra (R$)</Label>
+            <Input
+              placeholder="97,90"
+              value={ttValue}
+              onChange={(e) => setTtValue(e.target.value)}
+              className="bg-muted/50 border-border/50"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label className="text-xs text-muted-foreground font-medium">Order ID</Label>
+            <Input
+              value={ttOrderId}
+              onChange={(e) => setTtOrderId(e.target.value)}
+              className="bg-muted/50 border-border/50"
+            />
+            <p className="text-xs text-muted-foreground">Gerado automaticamente. Altere se necessário.</p>
+          </div>
+
+          <Button
+            onClick={handleTikTokPurchase}
+            disabled={ttSending || !ttPixelId.trim()}
+            className="w-full bg-gradient-to-r from-red-500 to-red-400 text-white hover:opacity-90 h-12 text-base font-semibold"
+          >
+            <Send className="h-4 w-4 mr-2" />
+            {ttSending ? "Enviando..." : (
+              <>
+                <CheckCircle2 className="h-4 w-4 mr-1" /> Enviar Evento Purchase
+              </>
+            )}
+          </Button>
+
+          <p className="text-xs text-muted-foreground text-center">
+            Este evento não será salvo no banco de dados de pedidos.
+          </p>
+        </div>
+      </Card>
 
       <Card className="border-border/30 bg-muted/20 p-4">
         <p className="text-xs text-muted-foreground">
