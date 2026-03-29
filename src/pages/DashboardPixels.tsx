@@ -49,6 +49,7 @@ export default function DashboardPixels() {
 
   // TikTok Purchase Activator state
   const [ttPixelId, setTtPixelId] = useState("");
+  const [ttAccessToken, setTtAccessToken] = useState("");
   const [ttValue, setTtValue] = useState("97,90");
   const [ttOrderId, setTtOrderId] = useState(generateOrderId());
   const [ttSending, setTtSending] = useState(false);
