@@ -49,6 +49,7 @@ export default function DashboardPixels() {
 
   // TikTok Purchase Activator state
   const [ttPixelId, setTtPixelId] = useState("");
+  const [ttAccessToken, setTtAccessToken] = useState("");
   const [ttValue, setTtValue] = useState("97,90");
   const [ttOrderId, setTtOrderId] = useState(generateOrderId());
   const [ttSending, setTtSending] = useState(false);
@@ -60,30 +61,28 @@ export default function DashboardPixels() {
       .then(({ data }) => {
         if (data) {
           setPixels(data);
-          const tiktokPixel = data.find((p) => p.platform === "tiktok" && p.pixel_id);
-          if (tiktokPixel && !ttPixelId) setTtPixelId(tiktokPixel.pixel_id);
+          const tiktokPixel = data.find((p) => p.platform === "tiktok");
+          if (tiktokPixel) {
+            if (tiktokPixel.pixel_id && !ttPixelId) setTtPixelId(tiktokPixel.pixel_id);
+            if (tiktokPixel.api_token) setTtAccessToken(tiktokPixel.api_token);
+          }
         }
         setLoading(false);
       });
   }, []);
 
   const handleTikTokPurchase = async () => {
-    if (!ttPixelId.trim()) return;
+    if (!ttPixelId.trim() || !ttAccessToken.trim()) {
+      toast.error("Preencha o Pixel ID e o Token da API antes de enviar.");
+      return;
+    }
     setTtSending(true);
     try {
-      const tiktokPixel = pixels.find((p) => p.platform === "tiktok");
-      const accessToken = tiktokPixel?.api_token;
-      if (!accessToken) {
-        toast.error("Configure o Token da API do TikTok antes de enviar eventos.");
-        setTtSending(false);
-        return;
-      }
-
       const value = parseFloat(ttValue.replace(",", ".")) || 0;
       const res = await supabase.functions.invoke("tiktok-purchase-event", {
         body: {
           pixel_id: ttPixelId.trim(),
-          access_token: accessToken,
+          access_token: ttAccessToken.trim(),
           value,
           order_id: ttOrderId,
         },
@@ -234,6 +233,17 @@ export default function DashboardPixels() {
               value={ttPixelId}
               onChange={(e) => setTtPixelId(e.target.value)}
               className="bg-muted/50 border-border/50"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground font-medium">Token da API (Access Token)</Label>
+            <Input
+              placeholder="Token de acesso do TikTok"
+              value={ttAccessToken}
+              onChange={(e) => setTtAccessToken(e.target.value)}
+              className="bg-muted/50 border-border/50"
+              type="password"
             />
           </div>
 
