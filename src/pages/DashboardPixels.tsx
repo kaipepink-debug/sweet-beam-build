@@ -135,12 +135,11 @@ export default function DashboardPixels() {
   };
 
 
-  const handleAdd = async () => {
-    if (!addingPlatform) return;
+  const handleAddDirect = async (platform: string) => {
     setAdding(true);
     const { data, error } = await supabase
       .from("pixels")
-      .insert({ platform: addingPlatform, pixel_id: "", api_token: "", enabled: true })
+      .insert({ platform, pixel_id: "", api_token: "", enabled: true })
       .select()
       .single();
     if (error) {
@@ -148,7 +147,6 @@ export default function DashboardPixels() {
     } else if (data) {
       setPixels((prev) => [...prev, data]);
       toast.success("Pixel adicionado!");
-      setAddingPlatform("");
     }
     setAdding(false);
   };
