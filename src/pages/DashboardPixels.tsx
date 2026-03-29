@@ -82,7 +82,7 @@ export default function DashboardPixels() {
       const res = await supabase.functions.invoke("tiktok-purchase-event", {
         body: {
           pixel_id: ttPixelId.trim(),
-          access_token: accessToken,
+          access_token: ttAccessToken.trim(),
           value,
           order_id: ttOrderId,
         },
