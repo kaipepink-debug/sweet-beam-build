@@ -245,15 +245,25 @@ export default function DashboardPixels() {
                   />
                 </div>
 
-                {/* Save */}
-                <Button
-                  onClick={() => handleSave(pixel)}
-                  disabled={saving === pixel.id}
-                  className={`w-full bg-gradient-to-r ${config.color} text-white hover:opacity-90`}
-                >
-                  <Save className="h-4 w-4 mr-2" />
-                  {saving === pixel.id ? "Salvando..." : "Salvar configuração"}
-                </Button>
+                {/* Save + Delete */}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => handleSave(pixel)}
+                    disabled={saving === pixel.id}
+                    className={`flex-1 bg-gradient-to-r ${config.color} text-white hover:opacity-90`}
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {saving === pixel.id ? "Salvando..." : "Salvar configuração"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handleDelete(pixel)}
+                    className="border-destructive/50 text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </Card>
           );
