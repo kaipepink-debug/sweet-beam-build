@@ -6,14 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Save, Facebook, Send, CheckCircle2, Trash2, Plus } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Save, Facebook, Send, Trash2, Plus } from "lucide-react";
 
 interface PixelConfig {
   id: string;
