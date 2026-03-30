@@ -6,6 +6,20 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+function determineStatus(sub: any): string {
+  // Check expiration date first
+  if (sub.expiresAt) {
+    const expires = new Date(sub.expiresAt);
+    const now = new Date();
+    if (expires < now) return "Cancelada";
+  }
+  // Then check isActive flag from Naut
+  if (sub.isActive) return "Ativa";
+  if (sub.status === "canceled" || sub.status === "expired") return "Cancelada";
+  if (sub.status === "pending") return "Pendente";
+  return "Cancelada";
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -32,7 +46,7 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // First try Naut API
+    // Try Naut API
     const response = await fetch('https://navenaut.com/api/public/v1/subscriptions/check', {
       method: 'POST',
       headers: {
@@ -45,47 +59,55 @@ serve(async (req) => {
 
     const data = await response.json();
 
-    // If Naut returns subscriptions, sync them to local table
+    // If Naut returns subscriptions, sync ALL to local table
     if (response.ok && data?.success && data?.data?.subscriptions?.length) {
-      // Sync each subscription to local assinantes table
+      const nautEmail = data.data.email || email.trim();
+      const nautName = data.data.name || email.trim();
+
       for (const sub of data.data.subscriptions) {
         try {
-          // Check if already exists by email + product
-          const { data: existing } = await supabaseAdmin
-            .from("assinantes")
-            .select("id, status, data_renovacao")
-            .eq("email", data.data.email || email.trim())
-            .eq("produto", sub.productName || "RatarIA")
-            .limit(1);
-
-          const nautStatus = sub.isActive ? "Ativa" : "Cancelada";
+          const status = determineStatus(sub);
           const expiresAt = sub.expiresAt ? new Date(sub.expiresAt).toISOString().split("T")[0] : null;
           const createdAt = sub.createdAt ? new Date(sub.createdAt).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
+          const productName = sub.productName || "RatarIA";
+          const planName = sub.planName || "N/A";
+          const price = sub.price || sub.amount || 0;
+          const paymentMethod = sub.paymentMethod || "Naut";
+
+          // Check if already exists
+          const { data: existing } = await supabaseAdmin
+            .from("assinantes")
+            .select("id")
+            .eq("email", nautEmail)
+            .eq("produto", productName)
+            .limit(1);
 
           if (existing && existing.length > 0) {
-            // Update existing record with latest data from Naut
+            // Update with latest Naut data + recalculated status
             await supabaseAdmin
               .from("assinantes")
               .update({
-                status: nautStatus,
+                status,
+                nome: nautName,
+                plano: planName,
+                valor: price,
                 data_renovacao: expiresAt,
                 proxima_cobranca: expiresAt,
-                nome: data.data.name || existing[0].nome || email.trim(),
-                plano: sub.planName || "N/A",
+                meio_pagamento: paymentMethod,
               })
               .eq("id", existing[0].id);
           } else {
-            // Insert new record synced from Naut
+            // Insert new subscriber from Naut
             await supabaseAdmin
               .from("assinantes")
               .insert({
-                email: data.data.email || email.trim(),
-                nome: data.data.name || email.trim(),
-                produto: sub.productName || "RatarIA",
-                plano: sub.planName || "N/A",
-                status: nautStatus,
-                valor: sub.price || 0,
-                meio_pagamento: "Naut",
+                email: nautEmail,
+                nome: nautName,
+                produto: productName,
+                plano: planName,
+                status,
+                valor: price,
+                meio_pagamento: paymentMethod,
                 data_criacao: createdAt,
                 data_renovacao: expiresAt,
                 proxima_cobranca: expiresAt,
@@ -93,12 +115,18 @@ serve(async (req) => {
               });
           }
         } catch (syncErr) {
-          console.error("Error syncing subscription to local table:", syncErr);
-          // Don't fail the main request if sync fails
+          console.error("Error syncing subscription:", syncErr);
         }
       }
 
-      const hasActive = data.data.subscriptions.some((s: any) => s.isActive);
+      // Return Naut response
+      const hasActive = data.data.subscriptions.some((s: any) => {
+        if (s.expiresAt) {
+          return new Date(s.expiresAt) >= new Date() && s.isActive;
+        }
+        return s.isActive;
+      });
+
       if (hasActive) {
         return new Response(
           JSON.stringify(data),
@@ -117,17 +145,12 @@ serve(async (req) => {
     if (localSubs && localSubs.length > 0) {
       const now = new Date();
       const activeSub = localSubs.find(sub => {
-        if (sub.data_renovacao) {
-          return new Date(sub.data_renovacao) >= now;
-        }
-        if (sub.proxima_cobranca) {
-          return new Date(sub.proxima_cobranca) >= now;
-        }
+        if (sub.data_renovacao) return new Date(sub.data_renovacao) >= now;
+        if (sub.proxima_cobranca) return new Date(sub.proxima_cobranca) >= now;
         return true;
       });
 
       if (activeSub) {
-        const expiresAt = activeSub.data_renovacao || activeSub.proxima_cobranca || null;
         return new Response(
           JSON.stringify({
             success: true,
@@ -138,7 +161,7 @@ serve(async (req) => {
                 productName: activeSub.produto,
                 planName: activeSub.plano,
                 isActive: true,
-                expiresAt: expiresAt,
+                expiresAt: activeSub.data_renovacao || activeSub.proxima_cobranca,
                 status: "active",
               }],
             },
@@ -147,8 +170,26 @@ serve(async (req) => {
         );
       }
 
-      // Local subscription expired
-      const lastSub = localSubs[0];
+      // Expired local - update status
+      for (const sub of localSubs) {
+        const expired = (sub.data_renovacao && new Date(sub.data_renovacao) < now) ||
+                        (sub.proxima_cobranca && new Date(sub.proxima_cobranca) < now);
+        if (expired) {
+          await supabaseAdmin.from("assinantes").update({ status: "Cancelada" }).eq("id", sub.id);
+        }
+      }
+    }
+
+    // Check for any expired local subs to show
+    const { data: allLocalSubs } = await supabaseAdmin
+      .from("assinantes")
+      .select("*")
+      .ilike("email", email.trim())
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    if (allLocalSubs && allLocalSubs.length > 0) {
+      const lastSub = allLocalSubs[0];
       return new Response(
         JSON.stringify({
           success: true,
@@ -176,7 +217,7 @@ serve(async (req) => {
       );
     }
 
-    // No subscription found anywhere
+    // No subscription found
     return new Response(
       JSON.stringify({ success: true, data: { email, name: null, subscriptions: [] } }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
