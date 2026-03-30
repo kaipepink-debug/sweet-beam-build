@@ -170,6 +170,15 @@ export default function DashboardAssinaturas() {
           <p className="text-xs text-muted-foreground">Gerencie todos os assinantes da plataforma</p>
         </div>
         <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline" className="gap-2"><Download className="h-4 w-4" /> Exportar</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleExport("xlsx")}>Exportar .xlsx</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport("xls")}>Exportar .xls</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {/* Ativar Login Dialog */}
           <Dialog open={ativarDialogOpen} onOpenChange={setAtivarDialogOpen}>
             <DialogTrigger asChild>
