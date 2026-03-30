@@ -135,6 +135,26 @@ export default function DashboardAssinaturas() {
 
   const formatCurrency = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
+  const handleExport = (format: "xlsx" | "xls") => {
+    const rows = filtered.map(a => ({
+      "Nome": a.nome,
+      "Email": a.email,
+      "Produto": a.produto,
+      "Plano": a.plano || "N/A",
+      "Status": a.status,
+      "Valor": a.valor,
+      "Meio de Pagamento": a.meio_pagamento || "N/A",
+      "Próx. Cobrança": formatDate(a.proxima_cobranca),
+      "Data Criação": formatDate(a.data_criacao),
+      "Data Renovação": formatDate(a.data_renovacao),
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Assinantes");
+    XLSX.writeFile(wb, `assinantes.${format}`, { bookType: format === "xls" ? "xls" : "xlsx" });
+    toast.success(`Exportado como .${format}`);
+  };
+
   const statusColor = (s: string) => {
     if (s === "Ativa") return "bg-emerald-600 text-white hover:bg-emerald-700";
     if (s === "Cancelada") return "bg-red-600 text-white hover:bg-red-700";
