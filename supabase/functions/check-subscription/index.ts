@@ -27,6 +27,11 @@ serve(async (req) => {
       );
     }
 
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
     // First try Naut API
     const response = await fetch('https://navenaut.com/api/public/v1/subscriptions/check', {
       method: 'POST',
@@ -40,8 +45,59 @@ serve(async (req) => {
 
     const data = await response.json();
 
-    // If Naut returns an active subscription, use it
+    // If Naut returns subscriptions, sync them to local table
     if (response.ok && data?.success && data?.data?.subscriptions?.length) {
+      // Sync each subscription to local assinantes table
+      for (const sub of data.data.subscriptions) {
+        try {
+          // Check if already exists by email + product
+          const { data: existing } = await supabaseAdmin
+            .from("assinantes")
+            .select("id, status, data_renovacao")
+            .eq("email", data.data.email || email.trim())
+            .eq("produto", sub.productName || "RatarIA")
+            .limit(1);
+
+          const nautStatus = sub.isActive ? "Ativa" : "Cancelada";
+          const expiresAt = sub.expiresAt ? new Date(sub.expiresAt).toISOString().split("T")[0] : null;
+          const createdAt = sub.createdAt ? new Date(sub.createdAt).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
+
+          if (existing && existing.length > 0) {
+            // Update existing record with latest data from Naut
+            await supabaseAdmin
+              .from("assinantes")
+              .update({
+                status: nautStatus,
+                data_renovacao: expiresAt,
+                proxima_cobranca: expiresAt,
+                nome: data.data.name || existing[0].nome || email.trim(),
+                plano: sub.planName || "N/A",
+              })
+              .eq("id", existing[0].id);
+          } else {
+            // Insert new record synced from Naut
+            await supabaseAdmin
+              .from("assinantes")
+              .insert({
+                email: data.data.email || email.trim(),
+                nome: data.data.name || email.trim(),
+                produto: sub.productName || "RatarIA",
+                plano: sub.planName || "N/A",
+                status: nautStatus,
+                valor: sub.price || 0,
+                meio_pagamento: "Naut",
+                data_criacao: createdAt,
+                data_renovacao: expiresAt,
+                proxima_cobranca: expiresAt,
+                created_by: "00000000-0000-0000-0000-000000000000",
+              });
+          }
+        } catch (syncErr) {
+          console.error("Error syncing subscription to local table:", syncErr);
+          // Don't fail the main request if sync fails
+        }
+      }
+
       const hasActive = data.data.subscriptions.some((s: any) => s.isActive);
       if (hasActive) {
         return new Response(
@@ -52,39 +108,22 @@ serve(async (req) => {
     }
 
     // Fallback: check local assinantes table
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-
     const { data: localSubs } = await supabaseAdmin
       .from("assinantes")
       .select("*")
-      .eq("email", email.trim().toLowerCase())
+      .ilike("email", email.trim())
       .eq("status", "Ativa");
 
-    // Also check with original case
-    const { data: localSubsOriginal } = await supabaseAdmin
-      .from("assinantes")
-      .select("*")
-      .eq("email", email.trim())
-      .eq("status", "Ativa");
-
-    const allLocal = [...(localSubs || []), ...(localSubsOriginal || [])];
-    // Deduplicate by id
-    const uniqueLocal = allLocal.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
-
-    if (uniqueLocal.length > 0) {
-      // Check if any local subscription is still valid
+    if (localSubs && localSubs.length > 0) {
       const now = new Date();
-      const activeSub = uniqueLocal.find(sub => {
+      const activeSub = localSubs.find(sub => {
         if (sub.data_renovacao) {
           return new Date(sub.data_renovacao) >= now;
         }
         if (sub.proxima_cobranca) {
           return new Date(sub.proxima_cobranca) >= now;
         }
-        return true; // No expiration set, consider active
+        return true;
       });
 
       if (activeSub) {
@@ -109,7 +148,7 @@ serve(async (req) => {
       }
 
       // Local subscription expired
-      const lastSub = uniqueLocal[0];
+      const lastSub = localSubs[0];
       return new Response(
         JSON.stringify({
           success: true,
@@ -130,7 +169,7 @@ serve(async (req) => {
     }
 
     // If Naut returned data (even expired), return that
-    if (response.ok) {
+    if (response.ok && data?.success) {
       return new Response(
         JSON.stringify(data),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
