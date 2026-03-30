@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, MoreHorizontal, Plus } from "lucide-react";
+import { Search, MoreHorizontal, Plus, UserPlus } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -34,10 +34,26 @@ export default function DashboardAssinaturas() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [produtoFilter, setProdutoFilter] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
   const [form, setForm] = useState({
     nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa",
     valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: ""
   });
+  const [ativarForm, setAtivarForm] = useState({
+    nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0]
+  });
+
+  const PLAN_CONFIG: Record<string, { days: number; label: string; valor: number }> = {
+    mensal: { days: 30, label: "Mensal", valor: 67 },
+    semestral: { days: 180, label: "Semestral", valor: 297 },
+    anual: { days: 365, label: "Anual", valor: 497 },
+  };
+
+  const calcExpiration = (startDate: string, plan: string) => {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + (PLAN_CONFIG[plan]?.days || 30));
+    return date.toISOString().split("T")[0];
+  };
 
   const fetchAssinantes = async () => {
     const { data } = await supabase.from("assinantes").select("*").order("created_at", { ascending: false });
@@ -62,6 +78,36 @@ export default function DashboardAssinaturas() {
     toast.success("Assinante adicionado");
     setDialogOpen(false);
     setForm({ nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa", valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: "" });
+    fetchAssinantes();
+  };
+
+  const handleAtivarLogin = async () => {
+    if (!user || !ativarForm.nome || !ativarForm.email) {
+      toast.error("Preencha nome e email");
+      return;
+    }
+    const config = PLAN_CONFIG[ativarForm.plano];
+    const expiration = calcExpiration(ativarForm.data_inicio, ativarForm.plano);
+    const nextCharge = expiration;
+
+    const { error } = await supabase.from("assinantes").insert({
+      nome: ativarForm.nome,
+      email: ativarForm.email,
+      produto: "RatarIA",
+      plano: config.label,
+      status: "Ativa",
+      valor: config.valor,
+      meio_pagamento: "Manual",
+      data_criacao: ativarForm.data_inicio,
+      proxima_cobranca: nextCharge,
+      data_renovacao: expiration,
+      created_by: user.id,
+    } as any);
+
+    if (error) { toast.error("Erro ao ativar login"); return; }
+    toast.success(`Login ativado! Expira em ${new Date(expiration).toLocaleDateString("pt-BR")}`);
+    setAtivarDialogOpen(false);
+    setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0] });
     fetchAssinantes();
   };
 
@@ -102,10 +148,40 @@ export default function DashboardAssinaturas() {
           <h1 className="text-2xl font-bold text-foreground">Assinaturas</h1>
           <p className="text-xs text-muted-foreground">Gerencie todos os assinantes da plataforma</p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" className="gap-2"><Plus className="h-4 w-4" /> Novo Assinante</Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          {/* Ativar Login Dialog */}
+          <Dialog open={ativarDialogOpen} onOpenChange={setAtivarDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700"><UserPlus className="h-4 w-4" /> Ativar Login</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader><DialogTitle>Ativar Login de Usuário</DialogTitle></DialogHeader>
+              <div className="space-y-3">
+                <div><Label>Nome</Label><Input value={ativarForm.nome} onChange={e => setAtivarForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
+                <div><Label>E-mail</Label><Input type="email" value={ativarForm.email} onChange={e => setAtivarForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
+                <div><Label>Plano</Label>
+                  <Select value={ativarForm.plano} onValueChange={v => setAtivarForm(f => ({ ...f, plano: v }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="mensal">Mensal (30 dias) — R$ 67</SelectItem>
+                      <SelectItem value="semestral">Semestral (180 dias) — R$ 297</SelectItem>
+                      <SelectItem value="anual">Anual (365 dias) — R$ 497</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div><Label>Data de Início</Label><Input type="date" value={ativarForm.data_inicio} onChange={e => setAtivarForm(f => ({ ...f, data_inicio: e.target.value }))} /></div>
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
+                  <p><strong>Expira em:</strong> {ativarForm.data_inicio ? new Date(calcExpiration(ativarForm.data_inicio, ativarForm.plano)).toLocaleDateString("pt-BR") : "—"}</p>
+                </div>
+              </div>
+              <Button onClick={handleAtivarLogin} className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700">Ativar Login</Button>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline" className="gap-2"><Plus className="h-4 w-4" /> Novo Assinante</Button>
+            </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader><DialogTitle>Adicionar Assinante</DialogTitle></DialogHeader>
             <div className="grid grid-cols-2 gap-3">
@@ -132,7 +208,8 @@ export default function DashboardAssinaturas() {
             </div>
             <Button onClick={handleAdd} className="w-full mt-2">Salvar</Button>
           </DialogContent>
-        </Dialog>
+          </Dialog>
+        </div>
       </div>
 
       {/* Filters */}
