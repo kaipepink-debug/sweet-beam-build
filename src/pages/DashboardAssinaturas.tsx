@@ -81,6 +81,36 @@ export default function DashboardAssinaturas() {
     fetchAssinantes();
   };
 
+  const handleAtivarLogin = async () => {
+    if (!user || !ativarForm.nome || !ativarForm.email) {
+      toast.error("Preencha nome e email");
+      return;
+    }
+    const config = PLAN_CONFIG[ativarForm.plano];
+    const expiration = calcExpiration(ativarForm.data_inicio, ativarForm.plano);
+    const nextCharge = expiration;
+
+    const { error } = await supabase.from("assinantes").insert({
+      nome: ativarForm.nome,
+      email: ativarForm.email,
+      produto: "RatarIA",
+      plano: config.label,
+      status: "Ativa",
+      valor: config.valor,
+      meio_pagamento: "Manual",
+      data_criacao: ativarForm.data_inicio,
+      proxima_cobranca: nextCharge,
+      data_renovacao: expiration,
+      created_by: user.id,
+    } as any);
+
+    if (error) { toast.error("Erro ao ativar login"); return; }
+    toast.success(`Login ativado! Expira em ${new Date(expiration).toLocaleDateString("pt-BR")}`);
+    setAtivarDialogOpen(false);
+    setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0] });
+    fetchAssinantes();
+  };
+
   const handleDelete = async (id: string) => {
     await supabase.from("assinantes").delete().eq("id", id);
     toast.success("Assinante removido");
