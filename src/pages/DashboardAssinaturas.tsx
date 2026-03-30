@@ -34,10 +34,26 @@ export default function DashboardAssinaturas() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [produtoFilter, setProdutoFilter] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
   const [form, setForm] = useState({
     nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa",
     valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: ""
   });
+  const [ativarForm, setAtivarForm] = useState({
+    nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0]
+  });
+
+  const PLAN_CONFIG: Record<string, { days: number; label: string; valor: number }> = {
+    mensal: { days: 30, label: "Mensal", valor: 67 },
+    semestral: { days: 180, label: "Semestral", valor: 297 },
+    anual: { days: 365, label: "Anual", valor: 497 },
+  };
+
+  const calcExpiration = (startDate: string, plan: string) => {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + (PLAN_CONFIG[plan]?.days || 30));
+    return date.toISOString().split("T")[0];
+  };
 
   const fetchAssinantes = async () => {
     const { data } = await supabase.from("assinantes").select("*").order("created_at", { ascending: false });
