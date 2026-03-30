@@ -148,10 +148,40 @@ export default function DashboardAssinaturas() {
           <h1 className="text-2xl font-bold text-foreground">Assinaturas</h1>
           <p className="text-xs text-muted-foreground">Gerencie todos os assinantes da plataforma</p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" className="gap-2"><Plus className="h-4 w-4" /> Novo Assinante</Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          {/* Ativar Login Dialog */}
+          <Dialog open={ativarDialogOpen} onOpenChange={setAtivarDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700"><UserPlus className="h-4 w-4" /> Ativar Login</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader><DialogTitle>Ativar Login de Usuário</DialogTitle></DialogHeader>
+              <div className="space-y-3">
+                <div><Label>Nome</Label><Input value={ativarForm.nome} onChange={e => setAtivarForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
+                <div><Label>E-mail</Label><Input type="email" value={ativarForm.email} onChange={e => setAtivarForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
+                <div><Label>Plano</Label>
+                  <Select value={ativarForm.plano} onValueChange={v => setAtivarForm(f => ({ ...f, plano: v }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="mensal">Mensal (30 dias) — R$ 67</SelectItem>
+                      <SelectItem value="semestral">Semestral (180 dias) — R$ 297</SelectItem>
+                      <SelectItem value="anual">Anual (365 dias) — R$ 497</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div><Label>Data de Início</Label><Input type="date" value={ativarForm.data_inicio} onChange={e => setAtivarForm(f => ({ ...f, data_inicio: e.target.value }))} /></div>
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
+                  <p><strong>Expira em:</strong> {ativarForm.data_inicio ? new Date(calcExpiration(ativarForm.data_inicio, ativarForm.plano)).toLocaleDateString("pt-BR") : "—"}</p>
+                </div>
+              </div>
+              <Button onClick={handleAtivarLogin} className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700">Ativar Login</Button>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline" className="gap-2"><Plus className="h-4 w-4" /> Novo Assinante</Button>
+            </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader><DialogTitle>Adicionar Assinante</DialogTitle></DialogHeader>
             <div className="grid grid-cols-2 gap-3">
