@@ -16,9 +16,9 @@ interface PopupData {
 }
 
 const PLAN_LINKS = {
-  mensal: "https://funnel.navenaut.com/J8vSJ",
-  semestral: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-2820-73fc-b229-f0ebc4a9c79b&funnel=N8Jzj&offer=semestral",
-  anual: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-6f17-7561-b16a-6dc9b3e3dbbe&funnel=aPEco&offer=anual",
+  mensal: "https://checkout.navenaut.com/KXAsP",
+  semanal: "https://checkout.navenaut.com/KXAsP?offer=anual",
+  semestral: "https://checkout.navenaut.com/KXAsP?offer=semestral",
 };
 
 const Usuario = () => {
@@ -359,6 +359,19 @@ const Usuario = () => {
                     </a>
                     <div className="flex gap-3">
                       <a
+                        href={PLAN_LINKS.semanal}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
+                        style={{
+                          background: "rgba(255,255,255,0.06)",
+                          color: "rgba(255,255,255,0.7)",
+                          border: `1px solid ${"rgba(255,255,255,0.08)"}`,
+                        }}
+                      >
+                        Semanal — R$ 39,99
+                      </a>
+                      <a
                         href={PLAN_LINKS.semestral}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -369,20 +382,7 @@ const Usuario = () => {
                           border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                         }}
                       >
-                        Semestral — R$ 297
-                      </a>
-                      <a
-                        href={PLAN_LINKS.anual}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
-                        style={{
-                          background: "rgba(255,255,255,0.06)",
-                          color: "rgba(255,255,255,0.7)",
-                          border: `1px solid ${"rgba(255,255,255,0.08)"}`,
-                        }}
-                      >
-                        Anual — R$ 497
+                        Semestral — R$ 497
                       </a>
                     </div>
                   </div>
@@ -433,41 +433,36 @@ const Usuario = () => {
                       </div>
                     </a>
 
-                    {/* Semestral */}
+                    {/* Semanal */}
                     <a
-                      href={PLAN_LINKS.semestral}
+                      href={PLAN_LINKS.semanal}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block rounded-xl p-4 transition-all hover:scale-[1.02] group"
                       style={{
                         background: "rgba(255,255,255,0.04)",
-                        border: `1px solid ${"rgba(255,255,255,0.08)"}`,
+                        border: "1px solid rgba(255,255,255,0.08)",
                       }}
                     >
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <h3 className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.85)" }}>
-                            Plano Semestral
+                            Plano Semanal
                           </h3>
                           <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                            Ferramentas + Cursos + Comunidade
+                            Acesso completo por 7 dias
                           </p>
                         </div>
-                        <div className="text-right shrink-0 flex flex-col items-end gap-1">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(34,197,94,0.1)", color: "rgba(34,197,94,0.9)", border: "1px solid rgba(34,197,94,0.2)" }}>
-                            30% OFF
-                          </span>
-                          <div>
-                            <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.9)" }}>R$ 297</span>
-                            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/sem</span>
-                          </div>
+                        <div className="text-right">
+                          <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.9)" }}>R$ 39,99</span>
+                          <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/sem</span>
                         </div>
                       </div>
                     </a>
 
-                    {/* Anual — Destaque */}
+                    {/* Semestral — Destaque */}
                     <a
-                      href={PLAN_LINKS.anual}
+                      href={PLAN_LINKS.semestral}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="relative block rounded-xl p-4 transition-all hover:scale-[1.02] group overflow-hidden"
@@ -480,7 +475,7 @@ const Usuario = () => {
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <h3 className="text-sm font-bold mb-0.5" style={{ color: "rgba(255,255,255,0.9)" }}>
-                            Plano Anual
+                            Plano Semestral
                           </h3>
                           <div className="flex items-center gap-1.5 mb-1">
                             <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>
@@ -497,7 +492,7 @@ const Usuario = () => {
                           </span>
                           <div>
                             <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.95)" }}>R$ 497</span>
-                            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/ano</span>
+                            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/sem</span>
                           </div>
                         </div>
                       </div>

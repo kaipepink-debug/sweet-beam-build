@@ -2,9 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
 const PLAN_LINKS = {
-  mensal: "https://funnel.navenaut.com/J8vSJ",
-  semestral: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-2820-73fc-b229-f0ebc4a9c79b&funnel=N8Jzj&offer=semestral",
-  anual: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-6f17-7561-b16a-6dc9b3e3dbbe&funnel=aPEco&offer=anual",
+  mensal: "https://checkout.navenaut.com/KXAsP",
+  semanal: "https://checkout.navenaut.com/KXAsP?offer=anual",
+  semestral: "https://checkout.navenaut.com/KXAsP?offer=semestral",
 };
 
 interface PlansPopupProps {
@@ -66,6 +66,26 @@ export default function PlansPopup({ open, onClose, title = "Renove sua Assinatu
               </div>
 
               <div className="space-y-3">
+                {/* Semanal */}
+                <a
+                  href={PLAN_LINKS.semanal}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-xl p-4 transition-all hover:scale-[1.02]"
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.85)" }}>Plano Semanal</h3>
+                      <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>Acesso completo por 7 dias</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.9)" }}>R$ 39,99</span>
+                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/sem</span>
+                    </div>
+                  </div>
+                </a>
+
                 {/* Mensal */}
                 <a
                   href={PLAN_LINKS.mensal}
@@ -86,32 +106,9 @@ export default function PlansPopup({ open, onClose, title = "Renove sua Assinatu
                   </div>
                 </a>
 
-                {/* Semestral */}
+                {/* Semestral — Destaque */}
                 <a
                   href={PLAN_LINKS.semestral}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block rounded-xl p-4 transition-all hover:scale-[1.02]"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <h3 className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.85)" }}>Plano Semestral</h3>
-                      <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>Ferramentas + Cursos + Comunidade</p>
-                    </div>
-                    <div className="text-right shrink-0 flex flex-col items-end gap-1">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(34,197,94,0.1)", color: "rgba(34,197,94,0.9)", border: "1px solid rgba(34,197,94,0.2)" }}>30% OFF</span>
-                      <div>
-                        <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.9)" }}>R$ 297</span>
-                        <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/sem</span>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-
-                {/* Anual */}
-                <a
-                  href={PLAN_LINKS.anual}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative block rounded-xl p-4 transition-all hover:scale-[1.02] overflow-hidden"
@@ -120,7 +117,7 @@ export default function PlansPopup({ open, onClose, title = "Renove sua Assinatu
                   <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(180,0,255,0.5), transparent)" }} />
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <h3 className="text-sm font-bold mb-0.5" style={{ color: "rgba(255,255,255,0.9)" }}>Plano Anual</h3>
+                      <h3 className="text-sm font-bold mb-0.5" style={{ color: "rgba(255,255,255,0.9)" }}>Plano Semestral</h3>
                       <div className="flex items-center gap-1.5 mb-1">
                         <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>Mais Escolhido</span>
                       </div>
@@ -130,7 +127,7 @@ export default function PlansPopup({ open, onClose, title = "Renove sua Assinatu
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(180,0,255,0.15)", color: "rgba(180,0,255,0.9)", border: "1px solid rgba(180,0,255,0.25)" }}>40% OFF</span>
                       <div>
                         <span className="text-lg font-black" style={{ color: "rgba(255,255,255,0.95)" }}>R$ 497</span>
-                        <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/ano</span>
+                        <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>/sem</span>
                       </div>
                     </div>
                   </div>
