@@ -45,9 +45,9 @@ export default function DashboardAssinaturas() {
   });
 
   const PLAN_CONFIG: Record<string, { days: number; label: string; valor: number }> = {
+    semanal: { days: 7, label: "Semanal", valor: 39.99 },
     mensal: { days: 30, label: "Mensal", valor: 67 },
-    semestral: { days: 180, label: "Semestral", valor: 297 },
-    anual: { days: 365, label: "Anual", valor: 497 },
+    semestral: { days: 180, label: "Semestral", valor: 497 },
   };
 
   const calcExpiration = (startDate: string, plan: string) => {
@@ -193,9 +193,9 @@ export default function DashboardAssinaturas() {
                   <Select value={ativarForm.plano} onValueChange={v => setAtivarForm(f => ({ ...f, plano: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="semanal">Semanal (7 dias) — R$ 39,99</SelectItem>
                       <SelectItem value="mensal">Mensal (30 dias) — R$ 67</SelectItem>
-                      <SelectItem value="semestral">Semestral (180 dias) — R$ 297</SelectItem>
-                      <SelectItem value="anual">Anual (365 dias) — R$ 497</SelectItem>
+                      <SelectItem value="semestral">Semestral (180 dias) — R$ 497</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

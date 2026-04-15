@@ -16,9 +16,9 @@ interface PopupData {
 }
 
 const PLAN_LINKS = {
-  mensal: "https://funnel.navenaut.com/J8vSJ",
-  semestral: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-2820-73fc-b229-f0ebc4a9c79b&funnel=N8Jzj&offer=semestral",
-  anual: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-6f17-7561-b16a-6dc9b3e3dbbe&funnel=aPEco&offer=anual",
+  mensal: "https://checkout.navenaut.com/KXAsP",
+  semanal: "https://checkout.navenaut.com/KXAsP?offer=anual",
+  semestral: "https://checkout.navenaut.com/KXAsP?offer=semestral",
 };
 
 const Usuario = () => {
@@ -359,6 +359,19 @@ const Usuario = () => {
                     </a>
                     <div className="flex gap-3">
                       <a
+                        href={PLAN_LINKS.semanal}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
+                        style={{
+                          background: "rgba(255,255,255,0.06)",
+                          color: "rgba(255,255,255,0.7)",
+                          border: `1px solid ${"rgba(255,255,255,0.08)"}`,
+                        }}
+                      >
+                        Semanal — R$ 39,99
+                      </a>
+                      <a
                         href={PLAN_LINKS.semestral}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -369,20 +382,7 @@ const Usuario = () => {
                           border: `1px solid ${"rgba(255,255,255,0.08)"}`,
                         }}
                       >
-                        Semestral — R$ 297
-                      </a>
-                      <a
-                        href={PLAN_LINKS.anual}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-all hover:scale-[1.02]"
-                        style={{
-                          background: "rgba(255,255,255,0.06)",
-                          color: "rgba(255,255,255,0.7)",
-                          border: `1px solid ${"rgba(255,255,255,0.08)"}`,
-                        }}
-                      >
-                        Anual — R$ 497
+                        Semestral — R$ 497
                       </a>
                     </div>
                   </div>

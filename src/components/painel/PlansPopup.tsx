@@ -2,9 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
 const PLAN_LINKS = {
-  mensal: "https://funnel.navenaut.com/J8vSJ",
-  semestral: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-2820-73fc-b229-f0ebc4a9c79b&funnel=N8Jzj&offer=semestral",
-  anual: "https://checkout.navenaut.com/KXAsP?fid=019d1de8-6f17-7561-b16a-6dc9b3e3dbbe&funnel=aPEco&offer=anual",
+  mensal: "https://checkout.navenaut.com/KXAsP",
+  semanal: "https://checkout.navenaut.com/KXAsP?offer=anual",
+  semestral: "https://checkout.navenaut.com/KXAsP?offer=semestral",
 };
 
 interface PlansPopupProps {
