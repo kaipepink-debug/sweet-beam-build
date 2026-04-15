@@ -6,7 +6,8 @@ const plans = [
     name: "Semanal",
     price: "39,99",
     period: "/semana",
-    highlight: false,
+    highlight: true,
+    badge: "Pague por Semana",
     link: "https://checkout.navenaut.com/KXAsP?offer=anual",
     discount: null,
     features: [
@@ -24,8 +25,8 @@ const plans = [
     name: "Semestral",
     price: "497",
     period: "/semestre",
-    highlight: true,
-    badge: "Mais Escolhido",
+    highlight: false,
+    badge: null,
     link: "https://checkout.navenaut.com/KXAsP?offer=semestral",
     discount: "40% OFF",
     features: [
