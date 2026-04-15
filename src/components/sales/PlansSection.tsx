@@ -87,7 +87,7 @@ const PlansSection = () => {
         </div>
 
         <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-4 items-stretch md:items-center">
-          {[plans[0], plans[2], plans[1]].map((plan, idx) => (
+          {[plans[1], plans[0], plans[2]].map((plan, idx) => (
             <div
               key={plan.name}
               className={`relative rounded-xl overflow-hidden transition-transform hover:scale-[1.02] purple-hover-glow ${
