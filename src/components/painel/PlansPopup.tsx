@@ -66,9 +66,9 @@ export default function PlansPopup({ open, onClose, title = "Renove sua Assinatu
               </div>
 
               <div className="space-y-3">
-                {/* Mensal */}
+                {/* Semanal */}
                 <a
-                  href={PLAN_LINKS.mensal}
+                  href={PLAN_LINKS.semanal}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block rounded-xl p-4 transition-all hover:scale-[1.02]"
