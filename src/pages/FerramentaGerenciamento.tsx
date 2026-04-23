@@ -233,7 +233,9 @@ export default function FerramentaGerenciamento() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
 
-      const dias = toolConfig?.expiracaoDias || 30;
+      const defaultDias = toolConfig?.expiracaoDias || 30;
+      const parsedCustom = parseInt(customDias, 10);
+      const dias = customDiasEnabled && !isNaN(parsedCustom) && parsedCustom > 0 ? parsedCustom : defaultDias;
       const baseDate = customDateEnabled && customDate ? new Date(customDate + "T00:00:00") : new Date();
       const expDate = addDays(baseDate, dias);
 
