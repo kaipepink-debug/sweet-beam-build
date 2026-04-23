@@ -154,6 +154,8 @@ export default function FerramentaGerenciamento() {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [customDateEnabled, setCustomDateEnabled] = useState(false);
   const [customDate, setCustomDate] = useState("");
+  const [customDiasEnabled, setCustomDiasEnabled] = useState(false);
+  const [customDias, setCustomDias] = useState<string>("");
   const [fornecedorDialogOpen, setFornecedorDialogOpen] = useState(false);
   const [fornecedorUrl, setFornecedorUrl] = useState("");
 
@@ -231,7 +233,9 @@ export default function FerramentaGerenciamento() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
 
-      const dias = toolConfig?.expiracaoDias || 30;
+      const defaultDias = toolConfig?.expiracaoDias || 30;
+      const parsedCustom = parseInt(customDias, 10);
+      const dias = customDiasEnabled && !isNaN(parsedCustom) && parsedCustom > 0 ? parsedCustom : defaultDias;
       const baseDate = customDateEnabled && customDate ? new Date(customDate + "T00:00:00") : new Date();
       const expDate = addDays(baseDate, dias);
 
@@ -321,6 +325,8 @@ export default function FerramentaGerenciamento() {
       setForm(emptyForm);
       setCustomDateEnabled(false);
       setCustomDate("");
+      setCustomDiasEnabled(false);
+      setCustomDias("");
       toast.success(editingId ? "Acesso atualizado!" : "Acesso criado!");
     },
     onError: (err: Error) => toast.error(err.message),
@@ -723,6 +729,54 @@ export default function FerramentaGerenciamento() {
               <Input placeholder="••••••••" value={form.senha} onChange={e => setForm(f => ({ ...f, senha: e.target.value }))} className="rounded-xl" />
             </div>
 
+            {/* Custom expiration days */}
+            {!editingId && (
+              <div className="grid gap-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="custom-dias"
+                    checked={customDiasEnabled}
+                    onCheckedChange={(checked) => {
+                      setCustomDiasEnabled(!!checked);
+                      if (!checked) setCustomDias("");
+                    }}
+                  />
+                  <Label htmlFor="custom-dias" className="text-sm cursor-pointer">
+                    Dias até vencer personalizado <span className="text-muted-foreground text-xs">(padrão: {toolConfig?.expiracaoDias} dias)</span>
+                  </Label>
+                </div>
+                {customDiasEnabled && (
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap gap-1.5">
+                      {[1, 3, 7, 15, 30, 60, 90].map(d => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setCustomDias(String(d))}
+                          className={cn(
+                            "px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors",
+                            customDias === String(d)
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-primary/40"
+                          )}
+                        >
+                          {d}d
+                        </button>
+                      ))}
+                    </div>
+                    <Input
+                      type="number"
+                      min={1}
+                      placeholder="Ex.: 14"
+                      value={customDias}
+                      onChange={e => setCustomDias(e.target.value)}
+                      className="rounded-xl"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Custom creation date */}
             {!editingId && (
               <div className="grid gap-2">
@@ -745,17 +799,26 @@ export default function FerramentaGerenciamento() {
                       onChange={e => setCustomDate(e.target.value)}
                       className="rounded-xl"
                     />
-                    {customDate && (
-                      <p className="text-xs text-muted-foreground">
-                        <CalendarIcon className="w-3 h-3 inline mr-1" />
-                        Expira em: <span className="text-foreground font-medium">{format(addDays(new Date(customDate + "T00:00:00"), toolConfig?.expiracaoDias || 30), "dd/MM/yyyy", { locale: ptBR })}</span>
-                        {" "}({toolConfig?.expiracaoDias} dias)
-                      </p>
-                    )}
                   </div>
                 )}
               </div>
             )}
+
+            {/* Expiration preview */}
+            {!editingId && (() => {
+              const defaultDias = toolConfig?.expiracaoDias || 30;
+              const parsedCustom = parseInt(customDias, 10);
+              const dias = customDiasEnabled && !isNaN(parsedCustom) && parsedCustom > 0 ? parsedCustom : defaultDias;
+              const baseDate = customDateEnabled && customDate ? new Date(customDate + "T00:00:00") : new Date();
+              const expDate = addDays(baseDate, dias);
+              return (
+                <p className="text-xs text-muted-foreground bg-muted/30 rounded-xl px-3 py-2 border border-border/50">
+                  <CalendarIcon className="w-3 h-3 inline mr-1" />
+                  Expira em: <span className="text-foreground font-medium">{format(expDate, "dd/MM/yyyy", { locale: ptBR })}</span>
+                  {" "}({dias} {dias === 1 ? "dia" : "dias"})
+                </p>
+              );
+            })()}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)} className="rounded-xl">Cancelar</Button>
