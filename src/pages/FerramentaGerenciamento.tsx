@@ -154,6 +154,8 @@ export default function FerramentaGerenciamento() {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [customDateEnabled, setCustomDateEnabled] = useState(false);
   const [customDate, setCustomDate] = useState("");
+  const [customDiasEnabled, setCustomDiasEnabled] = useState(false);
+  const [customDias, setCustomDias] = useState<string>("");
   const [fornecedorDialogOpen, setFornecedorDialogOpen] = useState(false);
   const [fornecedorUrl, setFornecedorUrl] = useState("");
 
