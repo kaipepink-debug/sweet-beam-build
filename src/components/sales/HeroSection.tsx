@@ -1,8 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Layers } from "lucide-react";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { supabase } from "@/integrations/supabase/client";
+
+const DEFAULT_PLAYER_ID = "vid-69c5860a449496c3a0b666a2";
+const DEFAULT_SCRIPT = "https://scripts.converteai.net/5e6fbd72-a477-4fee-864a-8a4e8fb9779e/players/69c5860a449496c3a0b666a2/v4/player.js";
 
 import higgsFieldLogo from "@/assets/tools/higgsfield.png";
 import grokLogo from "@/assets/tools/grok.png";
@@ -22,15 +26,38 @@ const floatingIcons = [
 
 const HeroSection = () => {
   const isMobile = useIsMobile();
+  const [playerId, setPlayerId] = useState<string>(DEFAULT_PLAYER_ID);
+  const [scriptUrl, setScriptUrl] = useState<string>(DEFAULT_SCRIPT);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!document.querySelector('script[src*="converteai.net"]')) {
+    let cancelled = false;
+    supabase
+      .from("vturb_config")
+      .select("player_id, script_url")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled) return;
+        if (data?.player_id && data?.script_url) {
+          setPlayerId(data.player_id);
+          setScriptUrl(data.script_url);
+        }
+        setReady(true);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (!document.querySelector(`script[src="${scriptUrl}"]`)) {
       const s = document.createElement("script");
-      s.src = "https://scripts.converteai.net/5e6fbd72-a477-4fee-864a-8a4e8fb9779e/players/69c5860a449496c3a0b666a2/v4/player.js";
+      s.src = scriptUrl;
       s.async = true;
       document.head.appendChild(s);
     }
-  }, []);
+  }, [ready, scriptUrl]);
 
   return (
     <section id="hero" className="relative min-h-[85vh] flex items-center justify-center px-3 md:px-4 overflow-hidden pt-16 md:pt-20">
@@ -99,7 +126,7 @@ const HeroSection = () => {
           className="relative mt-6 md:mt-8 mb-6 md:mb-8 w-full max-w-3xl mx-auto animate-fade-in rounded-2xl overflow-hidden border border-white/10"
           style={{ animationDelay: "0.08s", animationFillMode: "both" }}
           dangerouslySetInnerHTML={{
-            __html: `<vturb-smartplayer id="vid-69c5860a449496c3a0b666a2" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>`
+            __html: ready ? `<vturb-smartplayer id="${playerId}" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>` : ""
           }}
         />
 
