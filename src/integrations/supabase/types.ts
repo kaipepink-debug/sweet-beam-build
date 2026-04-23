@@ -438,6 +438,30 @@ export type Database = {
         }
         Relationships: []
       }
+      vturb_config: {
+        Row: {
+          id: string
+          player_id: string
+          script_url: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          player_id: string
+          script_url: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          player_id?: string
+          script_url?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
