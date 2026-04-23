@@ -114,28 +114,31 @@ Deno.serve(async (req) => {
       const { user_id } = await req.json();
       console.log("Removing user:", user_id);
 
-      // First, get all gmail IDs owned by this user
-      const { data: userGmails } = await supabaseAdmin
-        .from("gmails")
-        .select("id")
+      // IMPORTANT: We DO NOT delete acessos or gmails created by this user.
+      // Business data (client accesses and emails) must be preserved when an
+      // employee is removed. We reassign ownership to the admin performing the
+      // removal so the records remain valid and queryable.
+
+      const r1 = await supabaseAdmin
+        .from("acessos")
+        .update({ created_by: caller.id })
         .eq("created_by", user_id);
+      console.log("Reassign acessos to admin:", r1.error?.message || "ok");
 
-      const gmailIds = userGmails?.map((g) => g.id) || [];
+      const r2 = await supabaseAdmin
+        .from("gmails")
+        .update({ created_by: caller.id })
+        .eq("created_by", user_id);
+      console.log("Reassign gmails to admin:", r2.error?.message || "ok");
 
-      // Delete acessos created by the user
-      const r1 = await supabaseAdmin.from("acessos").delete().eq("created_by", user_id);
-      console.log("Delete acessos by created_by:", r1.error?.message || "ok");
+      // Reassign banners as well so historic creations are preserved
+      const r2b = await supabaseAdmin
+        .from("banners_historico")
+        .update({ created_by: caller.id })
+        .eq("created_by", user_id);
+      console.log("Reassign banners_historico to admin:", r2b.error?.message || "ok");
 
-      // Delete acessos that reference this user's gmails (created by others)
-      if (gmailIds.length > 0) {
-        const r1b = await supabaseAdmin.from("acessos").delete().in("gmail_id", gmailIds);
-        console.log("Delete acessos by gmail_id:", r1b.error?.message || "ok");
-      }
-
-      // Now delete gmails
-      const r2 = await supabaseAdmin.from("gmails").delete().eq("created_by", user_id);
-      console.log("Delete gmails:", r2.error?.message || "ok");
-
+      // Only remove the employee's personal account-related records
       const r3 = await supabaseAdmin.from("team_permissions").delete().eq("user_id", user_id);
       console.log("Delete team_permissions:", r3.error?.message || "ok");
 
@@ -151,7 +154,7 @@ Deno.serve(async (req) => {
         return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      console.log("User removed successfully");
+      console.log("User removed successfully (business data preserved)");
       return new Response(JSON.stringify({ success: true }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
