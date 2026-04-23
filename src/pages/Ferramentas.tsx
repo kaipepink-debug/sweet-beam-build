@@ -50,19 +50,36 @@ export default function Ferramentas() {
 }
 
 function FerramentasContent({ config, navigate }: { config: { login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string }; navigate: ReturnType<typeof useNavigate> }) {
-  const totp = useMemo(() => new OTPAuth.TOTP({
-    issuer: "app",
-    label: "user",
-    algorithm: "SHA1",
-    digits: 6,
-    period: TOTP_PERIOD,
-    secret: OTPAuth.Secret.fromBase32(config.totp_secret),
-  }), [config.totp_secret]);
+  const totp = useMemo(() => {
+    try {
+      const cleanSecret = (config.totp_secret || "").replace(/\s+/g, "").toUpperCase();
+      if (!cleanSecret) return null;
+      return new OTPAuth.TOTP({
+        issuer: "app",
+        label: "user",
+        algorithm: "SHA1",
+        digits: 6,
+        period: TOTP_PERIOD,
+        secret: OTPAuth.Secret.fromBase32(cleanSecret),
+      });
+    } catch (e) {
+      console.error("Invalid TOTP secret:", e);
+      return null;
+    }
+  }, [config.totp_secret]);
 
-  const generateCode = useCallback(() => totp.generate(), [totp]);
+  const generateCode = useCallback(() => {
+    if (!totp) return "------";
+    try {
+      return totp.generate();
+    } catch (e) {
+      console.error("TOTP generate error:", e);
+      return "------";
+    }
+  }, [totp]);
   const getTimeLeft = useCallback(() => TOTP_PERIOD - (Math.floor(Date.now() / 1000) % TOTP_PERIOD), []);
 
-  const [code, setCode] = useState(generateCode());
+  const [code, setCode] = useState<string>(() => generateCode());
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [revealed, setRevealed] = useState(false);
 
