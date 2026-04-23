@@ -325,6 +325,8 @@ export default function FerramentaGerenciamento() {
       setForm(emptyForm);
       setCustomDateEnabled(false);
       setCustomDate("");
+      setCustomDiasEnabled(false);
+      setCustomDias("");
       toast.success(editingId ? "Acesso atualizado!" : "Acesso criado!");
     },
     onError: (err: Error) => toast.error(err.message),
