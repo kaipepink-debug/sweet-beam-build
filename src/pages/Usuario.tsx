@@ -17,7 +17,7 @@ interface PopupData {
 
 const PLAN_LINKS = {
   mensal: "https://checkout.navenaut.com/KXAsP",
-  semanal: "https://checkout.navenaut.com/KXAsP?offer=anual",
+  semanal: "https://checkout.navenaut.com/KXAsP?offer=semanal",
   semestral: "https://checkout.navenaut.com/KXAsP?offer=semestral",
 };
 
