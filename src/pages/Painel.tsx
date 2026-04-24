@@ -238,12 +238,15 @@ export default function Painel() {
                         <p className="text-sm md:text-base font-bold" style={{ color: "rgba(37, 211, 102, 0.95)" }}>
                           Canal de Avisos
                         </p>
-                        <span className="px-2 py-0.5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider" style={{ background: "rgba(37, 211, 102, 0.2)", color: "rgba(37, 211, 102, 0.9)" }}>
+                        <span className="px-2 py-0.5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider animate-pulse" style={{ background: "rgba(239, 68, 68, 0.2)", color: "rgba(248, 113, 113, 0.95)", border: "1px solid rgba(239, 68, 68, 0.4)" }}>
                           Obrigatório
                         </span>
                       </div>
                       <p className="text-[11px] md:text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
                         Entre no canal <strong style={{ color: "rgba(255,255,255,0.7)" }}>@rataria.io</strong> no WhatsApp
+                      </p>
+                      <p className="text-[10px] md:text-xs mt-1.5" style={{ color: "rgba(248, 113, 113, 0.8)" }}>
+                        Todos os problemas e soluções das ferramentas serão atualizados por lá
                       </p>
                     </div>
                     <ChevronRight className="w-5 h-5" style={{ color: "rgba(37, 211, 102, 0.5)" }} />
