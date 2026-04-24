@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2, Play } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
+import CanalAvisoButton from "@/components/painel/CanalAvisoButton";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -122,6 +123,8 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         <button onClick={() => navigate("/painel")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
           <ArrowLeft className="w-4 h-4" /> Voltar
         </button>
+
+        <CanalAvisoButton />
 
         <div className="text-center space-y-2">
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
