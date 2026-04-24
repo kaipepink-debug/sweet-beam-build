@@ -124,6 +124,8 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
           <ArrowLeft className="w-4 h-4" /> Voltar
         </button>
 
+        <CanalAvisoButton />
+
         <div className="text-center space-y-2">
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
             Passo a passo para acessar as Ferramentas de IA
