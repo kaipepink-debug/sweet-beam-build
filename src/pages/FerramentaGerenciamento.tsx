@@ -40,6 +40,8 @@ import geminiLogo from "@/assets/tools/gemini.png";
 import leonardoaiLogo from "@/assets/tools/leonardoai.png";
 import capcutLogo from "@/assets/tools/capcut.png";
 import perplexityLogo from "@/assets/tools/perplexity.png";
+import digenLogo from "@/assets/tools/digen.png";
+import nanobananaLogo from "@/assets/tools/nanobanana.png";
 
 const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: number }> = {
   grok: { name: "SuperGrok", logo: grokLogo, expiracaoDias: 3 },
@@ -64,14 +66,18 @@ const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: n
   leonardoai: { name: "Leonardo AI", logo: leonardoaiLogo, expiracaoDias: 30 },
   capcut: { name: "CapCut", logo: capcutLogo, expiracaoDias: 30 },
   perplexity: { name: "Perplexity AI", logo: perplexityLogo, expiracaoDias: 30 },
+  digen: { name: "Digen", logo: digenLogo, expiracaoDias: 30 },
+  nanobanana: { name: "Nano Banana", logo: nanobananaLogo, expiracaoDias: 30 },
 };
 
-// Ferramentas vinculadas: compartilham o mesmo login
-const linkedTools: Record<string, string> = {
-  canva: "leonardoai",
-  leonardoai: "canva",
-  sora: "chatgpt",
-  chatgpt: "sora",
+// Ferramentas vinculadas: compartilham o mesmo login (1:N)
+const linkedTools: Record<string, string[]> = {
+  canva: ["leonardoai"],
+  leonardoai: ["canva"],
+  sora: ["chatgpt"],
+  chatgpt: ["sora"],
+  // Digen propaga login para Grok, Sora, Veo3, Runway e Nano Banana
+  digen: ["grok", "sora", "veo3", "runwayml", "nanobanana"],
 };
 
 const farmingVideos: Record<string, string> = {
@@ -276,12 +282,12 @@ export default function FerramentaGerenciamento() {
           }, { onConflict: "gmail_id,ferramenta" });
         }
 
-        // Auto-create in linked tool
-        const linkedTool = linkedTools[toolId!];
-        if (linkedTool) {
+        // Auto-create in linked tools
+        const linked = linkedTools[toolId!] || [];
+        for (const linkedTool of linked) {
           const linkedConfig = toolsConfig[linkedTool];
           const linkedExpDate = addDays(baseDate, linkedConfig?.expiracaoDias || 30);
-          
+
           // Check if already exists in linked tool
           const { data: existing } = await supabase.from("acessos")
             .select("id")
