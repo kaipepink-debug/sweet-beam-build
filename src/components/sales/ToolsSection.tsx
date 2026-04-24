@@ -126,7 +126,7 @@ const ToolsSection = () => {
           ))}
         </div>
 
-        {/* +150 ferramentas banner */}
+        {/* +300 ferramentas banner */}
         <div
           className="mt-8 rounded-xl p-6 text-center relative overflow-hidden"
           style={{
