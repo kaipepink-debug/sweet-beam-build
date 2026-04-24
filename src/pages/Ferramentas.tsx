@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2, Play } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
+import CanalAvisoButton from "@/components/painel/CanalAvisoButton";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
