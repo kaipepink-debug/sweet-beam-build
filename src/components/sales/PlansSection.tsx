@@ -8,7 +8,7 @@ const plans = [
     period: "/semana",
     highlight: true,
     badge: "Pague por Semana",
-    link: "https://checkout.navenaut.com/KXAsP?offer=anual",
+    link: "https://checkout.navenaut.com/KXAsP?offer=semanal",
     discount: null,
     features: [
       "Acesso ilimitado a +300 ferramentas de IA",
