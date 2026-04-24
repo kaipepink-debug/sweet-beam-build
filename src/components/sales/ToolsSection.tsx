@@ -137,13 +137,13 @@ const ToolsSection = () => {
         >
           <div className="relative z-10">
             <div className="mb-3">
-              <span className="text-3xl md:text-4xl font-light tracking-tight text-white/40">+150</span>
+              <span className="text-3xl md:text-4xl font-light tracking-tight text-white/40">+300</span>
             </div>
             <h3 className="text-lg md:text-xl font-bold text-white/90 mb-2">
               Ferramentas de IA Inclusas
             </h3>
             <p className="text-white/35 max-w-md mx-auto text-xs leading-relaxed mb-4">
-              Nosso catálogo conta com mais de 150 ferramentas de inteligência artificial nas áreas de texto, imagem, vídeo, áudio, código e muito mais — todas disponíveis no seu plano.
+              Nosso catálogo conta com mais de 300 ferramentas de inteligência artificial nas áreas de texto, imagem, vídeo, áudio, código e muito mais — todas disponíveis no seu plano.
             </p>
             <a
               href="#planos"
