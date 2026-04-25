@@ -1,0 +1,161 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Layers } from "lucide-react";
+import ratariaLogo from "@/assets/rataria-logo-full.png";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { supabase } from "@/integrations/supabase/client";
+
+const DEFAULT_PLAYER_ID = "vid-69c5860a449496c3a0b666a2";
+const DEFAULT_SCRIPT = "https://scripts.converteai.net/5e6fbd72-a477-4fee-864a-8a4e8fb9779e/players/69c5860a449496c3a0b666a2/v4/player.js";
+
+import higgsFieldLogo from "@/assets/tools/higgsfield.png";
+import grokLogo from "@/assets/tools/grok.png";
+import heygenLogo from "@/assets/tools/heygen.png";
+import soraLogo from "@/assets/tools/sora.png";
+import claudeLogo from "@/assets/tools/claude.png";
+import freepikLogo from "@/assets/tools/freepik.png";
+
+const floatingIcons = [
+  { logo: higgsFieldLogo, name: "Higgsfield", x: -420, y: -80, mobileX: -150, mobileY: -280, delay: 0 },
+  { logo: grokLogo, name: "Grok", x: 420, y: -90, mobileX: 150, mobileY: -300, delay: 0 },
+  { logo: heygenLogo, name: "Heygen", x: -460, y: 60, mobileX: -160, mobileY: -50, delay: 0 },
+  { logo: soraLogo, name: "Sora", x: 460, y: 50, mobileX: 140, mobileY: 80, delay: 0 },
+  { logo: claudeLogo, name: "Claude", x: -430, y: 180, mobileX: -110, mobileY: 260, delay: 0 },
+  { logo: freepikLogo, name: "Freepik", x: 430, y: 190, mobileX: 110, mobileY: 290, delay: 0 },
+];
+
+const HeroSectionEN = () => {
+  const isMobile = useIsMobile();
+  const [playerId, setPlayerId] = useState<string>(DEFAULT_PLAYER_ID);
+  const [scriptUrl, setScriptUrl] = useState<string>(DEFAULT_SCRIPT);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    supabase
+      .from("vturb_config")
+      .select("player_id, script_url")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled) return;
+        if (data?.player_id && data?.script_url) {
+          setPlayerId(data.player_id);
+          setScriptUrl(data.script_url);
+        }
+        setReady(true);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (!document.querySelector(`script[src="${scriptUrl}"]`)) {
+      const s = document.createElement("script");
+      s.src = scriptUrl;
+      s.async = true;
+      document.head.appendChild(s);
+    }
+  }, [ready, scriptUrl]);
+
+  return (
+    <section id="hero" className="relative min-h-[85vh] flex items-center justify-center px-3 md:px-4 overflow-hidden pt-16 md:pt-20">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px]" style={{ background: "radial-gradient(circle, rgba(255,255,255,0.03), transparent)" }} />
+
+      <div className="relative z-10 text-center max-w-4xl mx-auto">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {floatingIcons.map((item, i) => {
+            const posX = isMobile ? item.mobileX : item.x;
+            const posY = isMobile ? item.mobileY : item.y;
+            return isMobile ? (
+              <div
+                key={i}
+                className={`absolute ${(item.name === "Claude" || item.name === "Freepik") ? "z-30" : "z-0"}`}
+                style={{
+                  ["--float-base" as any]: `translate(${posX}px, ${posY}px)`,
+                  transform: `translate(${posX}px, ${posY}px)`,
+                  animation: `gentle-float 2.2s ease-in-out infinite`,
+                  animationDelay: "0s",
+                }}
+              >
+                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm overflow-hidden">
+                  <img src={item.logo} alt={item.name} className="w-full h-full object-cover rounded-full" />
+                </div>
+              </div>
+            ) : (
+              <motion.div
+                key={i}
+                className="absolute z-0"
+                style={{ x: posX, y: posY }}
+                animate={{ y: [posY - 8, posY + 8, posY - 8] }}
+                transition={{ duration: 4, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
+              >
+                <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm overflow-hidden">
+                  <img src={item.logo} alt={item.name} className="w-full h-full object-cover rounded-full" />
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col items-center animate-fade-in">
+          <img src={ratariaLogo} alt="ratarIA" className="h-20 md:h-24 mb-5 opacity-85" />
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium bg-white/5 text-white/60 border border-white/10 mb-6">
+            <Layers className="w-3 h-3" />
+            +300 AI tools in one place
+          </span>
+        </div>
+
+        <h1
+          className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight mb-3 md:mb-5 animate-fade-in"
+          style={{ fontFamily: "'Montserrat', sans-serif", animationDelay: "0.05s", animationFillMode: "both" }}
+        >
+          <span className="text-white">Over </span>
+          <span className="neon-underline-text relative inline-block">300 premium AI tools</span>
+          <br />
+          <span className="text-white">unlimited access. </span>
+          <span className="text-white/90">For the price of a pizza!</span>
+          <br />
+          <span className="text-white/70 text-lg md:text-2xl lg:text-3xl whitespace-nowrap">One single login, use as much as you want...</span>
+        </h1>
+
+        <div
+          className="relative mt-6 md:mt-8 mb-6 md:mb-8 w-full max-w-3xl mx-auto animate-fade-in rounded-2xl overflow-hidden border border-white/10"
+          style={{ animationDelay: "0.08s", animationFillMode: "both" }}
+          dangerouslySetInnerHTML={{
+            __html: ready ? `<vturb-smartplayer id="${playerId}" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>` : ""
+          }}
+        />
+
+        <p
+          className="text-sm md:text-lg text-white/40 max-w-xl mx-auto mb-6 md:mb-8 animate-fade-in"
+          style={{ animationDelay: "0.1s", animationFillMode: "both" }}
+        >
+          A complete AI tools library, paying just a fraction of the original price.
+        </p>
+
+        <div
+          className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-in"
+          style={{ animationDelay: "0.15s", animationFillMode: "both" }}
+        >
+          <a href="#ferramentas" onClick={(e) => { e.preventDefault(); document.querySelector('#ferramentas')?.scrollIntoView({ behavior: 'smooth' }); }} className="group relative px-6 py-3 rounded-xl font-semibold text-white overflow-hidden transition-transform hover:scale-105">
+            <div className="absolute inset-0 rounded-xl" style={{ background: "linear-gradient(135deg, rgba(60, 60, 60, 1), rgba(40, 40, 40, 1))" }} />
+            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(135deg, rgba(80, 80, 80, 1), rgba(60, 60, 60, 1))" }} />
+            <span className="relative z-10 text-sm" style={{ color: "rgba(255,255,255,0.95)" }}>Explore Tools</span>
+          </a>
+
+          <a href="#planos" onClick={(e) => { e.preventDefault(); document.querySelector('#planos')?.scrollIntoView({ behavior: 'smooth' }); }} className="neon-border-btn relative px-6 py-3 rounded-xl font-semibold text-sm text-white/70 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all hover:scale-105 overflow-hidden">
+            <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
+            <span className="relative z-10">View Plans</span>
+          </a>
+        </div>
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent)" }} />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-32 blur-[80px] rounded-full" style={{ background: "rgba(255,255,255,0.02)" }} />
+    </section>
+  );
+};
+
+export default HeroSectionEN;
