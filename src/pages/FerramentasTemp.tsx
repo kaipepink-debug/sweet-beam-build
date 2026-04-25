@@ -297,6 +297,16 @@ function FerramentasTempContent({
             </button>
           </div>
 
+          {Math.abs(clockOffset) > 10000 && (
+            <div className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: "rgba(239, 68, 68, 0.08)", border: "1px solid rgba(239, 68, 68, 0.3)" }}>
+              <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <p className="text-xs font-semibold text-foreground/90 leading-snug">
+                <span className="text-red-400">Relógio do seu computador está dessincronizado em {Math.round(clockOffset / 1000)}s.</span>{" "}
+                O código já foi corrigido automaticamente, mas se der erro, ajuste o horário do Windows (Configurações → Hora e Idioma → Sincronizar agora).
+              </p>
+            </div>
+          )}
+
           <div className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: "hsla(270, 100%, 50%, 0.08)", border: "1px solid hsla(270, 100%, 50%, 0.25)" }}>
             <AlertTriangle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <p className="text-xs font-semibold text-foreground/90 leading-snug">
