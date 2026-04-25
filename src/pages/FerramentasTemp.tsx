@@ -138,6 +138,19 @@ function FerramentasTempContent({
     toast({ title: `${label} copiado!`, duration: 2000 });
   }, []);
 
+  const handleRevealOrCopy = useCallback(() => {
+    if (timeLeft <= 5) {
+      toast({
+        title: "Aguarde o próximo código",
+        description: `Faltam ${timeLeft}s para expirar. Aguarde um novo código para evitar erro no DiCloak.`,
+        duration: 3000,
+      });
+      return;
+    }
+    if (!revealed) setRevealed(true);
+    copyToClipboard(code, "Código");
+  }, [timeLeft, revealed, code, copyToClipboard]);
+
   const progressPercent = (timeLeft / TOTP_PERIOD) * 100;
 
   const glassStyle = {
