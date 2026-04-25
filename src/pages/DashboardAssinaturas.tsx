@@ -114,7 +114,33 @@ export default function DashboardAssinaturas() {
     fetchAssinantes();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleTempLogin = async () => {
+    if (!user || !tempForm.nome || !tempForm.email) {
+      toast.error("Preencha nome e email");
+      return;
+    }
+    const today = new Date().toISOString().split("T")[0];
+    const { error } = await supabase.from("assinantes").insert({
+      nome: tempForm.nome,
+      email: tempForm.email,
+      produto: "RatarIA",
+      plano: "Temporário (30min)",
+      status: "Ativa",
+      valor: 0,
+      meio_pagamento: "Temporário",
+      data_criacao: today,
+      proxima_cobranca: today,
+      data_renovacao: today,
+      created_by: user.id,
+    } as any);
+    if (error) { toast.error("Erro ao criar login temporário"); return; }
+    toast.success(`Login temporário criado! Expira em 30 minutos.`);
+    setTempDialogOpen(false);
+    setTempForm({ nome: "", email: "" });
+    fetchAssinantes();
+  };
+
+
     await supabase.from("assinantes").delete().eq("id", id);
     toast.success("Assinante removido");
     fetchAssinantes();
