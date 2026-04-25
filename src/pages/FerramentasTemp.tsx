@@ -22,6 +22,7 @@ export default function FerramentasTemp() {
   const navigate = useNavigate();
   const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [clockOffset, setClockOffset] = useState(0); // serverTime - clientTime (ms)
 
   const subData = useMemo(() => getSubscriptionFromStorage(), []);
   const activeSub = useMemo(() => getActiveSubscription(subData), [subData]);
@@ -49,6 +50,27 @@ export default function FerramentasTemp() {
       });
   }, []);
 
+  // Calcula offset do relógio do cliente vs servidor (corrige TOTP em PCs com hora errada)
+  useEffect(() => {
+    const fetchServerTime = async () => {
+      try {
+        const t0 = Date.now();
+        const res = await fetch(window.location.origin + "/", { method: "HEAD", cache: "no-store" });
+        const t1 = Date.now();
+        const dateHeader = res.headers.get("date");
+        if (!dateHeader) return;
+        const serverTime = new Date(dateHeader).getTime();
+        const rtt = t1 - t0;
+        const estimatedServerNow = serverTime + rtt / 2;
+        const offset = estimatedServerNow - t1;
+        setClockOffset(offset);
+      } catch (e) {
+        console.warn("Could not sync clock with server:", e);
+      }
+    };
+    fetchServerTime();
+  }, []);
+
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-background">
@@ -60,17 +82,19 @@ export default function FerramentasTemp() {
 
   if (!config) return null;
 
-  return <FerramentasTempContent config={config} navigate={navigate} activeSub={activeSub} />;
+  return <FerramentasTempContent config={config} navigate={navigate} activeSub={activeSub} clockOffset={clockOffset} />;
 }
 
 function FerramentasTempContent({
   config,
   navigate,
   activeSub,
+  clockOffset,
 }: {
   config: { login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string };
   navigate: ReturnType<typeof useNavigate>;
   activeSub: any;
+  clockOffset: number;
 }) {
   const totp = useMemo(() => {
     try {
@@ -93,13 +117,16 @@ function FerramentasTempContent({
   const generateCode = useCallback(() => {
     if (!totp) return "------";
     try {
-      return totp.generate();
+      return totp.generate({ timestamp: Date.now() + clockOffset });
     } catch (e) {
       console.error("TOTP generate error:", e);
       return "------";
     }
-  }, [totp]);
-  const getTimeLeft = useCallback(() => TOTP_PERIOD - (Math.floor(Date.now() / 1000) % TOTP_PERIOD), []);
+  }, [totp, clockOffset]);
+  const getTimeLeft = useCallback(
+    () => TOTP_PERIOD - (Math.floor((Date.now() + clockOffset) / 1000) % TOTP_PERIOD),
+    [clockOffset]
+  );
 
   const [code, setCode] = useState<string>(() => generateCode());
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
@@ -269,6 +296,16 @@ function FerramentasTempContent({
               </span>
             </button>
           </div>
+
+          {Math.abs(clockOffset) > 10000 && (
+            <div className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: "rgba(239, 68, 68, 0.08)", border: "1px solid rgba(239, 68, 68, 0.3)" }}>
+              <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <p className="text-xs font-semibold text-foreground/90 leading-snug">
+                <span className="text-red-400">Relógio do seu computador está dessincronizado em {Math.round(clockOffset / 1000)}s.</span>{" "}
+                O código já foi corrigido automaticamente, mas se der erro, ajuste o horário do Windows (Configurações → Hora e Idioma → Sincronizar agora).
+              </p>
+            </div>
+          )}
 
           <div className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: "hsla(270, 100%, 50%, 0.08)", border: "1px solid hsla(270, 100%, 50%, 0.25)" }}>
             <AlertTriangle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
