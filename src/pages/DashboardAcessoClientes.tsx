@@ -230,14 +230,21 @@ export default function DashboardAcessoClientes() {
         </div>
       </div>
 
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="flex items-center gap-2 bg-primary text-primary-foreground px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
-      >
-        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-        {saving ? "Salvando..." : "Salvar alterações"}
-      </button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            {saving ? "Salvando..." : "Salvar alterações"}
+          </button>
+        </TabsContent>
+
+        <TabsContent value="temporario" className="mt-6">
+          <AcessoTemporarioSection />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
+
