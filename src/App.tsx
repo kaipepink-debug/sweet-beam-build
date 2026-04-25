@@ -27,6 +27,7 @@ import DashboardAssinaturas from "./pages/DashboardAssinaturas";
 import DashboardAcessoClientes from "./pages/DashboardAcessoClientes";
 import DashboardPixels from "./pages/DashboardPixels";
 import DashboardVturb from "./pages/DashboardVturb";
+import SalesPageEN from "./pages/SalesPageEN";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/en" element={<SalesPageEN />} />
             <Route path="/login" element={<div className="desktop-zoom"><Login /></div>} />
 
             {/* Dashboard routes with shared layout */}
