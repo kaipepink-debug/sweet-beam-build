@@ -111,10 +111,11 @@ function FerramentasTempContent({
       const remaining = getTimeLeft();
       setTimeLeft(remaining);
       setNow(Date.now());
-      if (remaining === TOTP_PERIOD) {
-        setCode(generateCode());
-        setRevealed(false);
-      }
+      // Regenera sempre que entra em novo ciclo (mantém revelado se já estava)
+      setCode((prev) => {
+        const fresh = generateCode();
+        return fresh !== prev ? fresh : prev;
+      });
     }, 1000);
     return () => clearInterval(interval);
   }, [generateCode, getTimeLeft]);
@@ -136,6 +137,19 @@ function FerramentasTempContent({
     navigator.clipboard.writeText(text);
     toast({ title: `${label} copiado!`, duration: 2000 });
   }, []);
+
+  const handleRevealOrCopy = useCallback(() => {
+    if (timeLeft <= 5) {
+      toast({
+        title: "Aguarde o próximo código",
+        description: `Faltam ${timeLeft}s para expirar. Aguarde um novo código para evitar erro no DiCloak.`,
+        duration: 3000,
+      });
+      return;
+    }
+    if (!revealed) setRevealed(true);
+    copyToClipboard(code, "Código");
+  }, [timeLeft, revealed, code, copyToClipboard]);
 
   const progressPercent = (timeLeft / TOTP_PERIOD) * 100;
 
@@ -239,16 +253,19 @@ function FerramentasTempContent({
             <div className="relative w-48 h-1.5 mx-auto rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
               <motion.div className="absolute inset-y-0 left-0 rounded-full bg-primary" animate={{ width: `${progressPercent}%` }} transition={{ duration: 0.5, ease: "linear" }} />
             </div>
-            <p className="text-xs text-muted-foreground">Expira em {timeLeft}s</p>
+            <p className={`text-xs ${timeLeft <= 5 ? "text-red-400 font-semibold" : "text-muted-foreground"}`}>
+              {timeLeft <= 5 ? `Expirando em ${timeLeft}s — aguarde o próximo` : `Expira em ${timeLeft}s`}
+            </p>
             <button
-              onClick={() => { if (!revealed) { setRevealed(true); copyToClipboard(code, "Código"); } else { copyToClipboard(code, "Código"); } }}
-              className="neon-border-btn relative w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest transition-all duration-300 overflow-hidden"
+              onClick={handleRevealOrCopy}
+              disabled={timeLeft <= 5}
+              className="neon-border-btn relative w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest transition-all duration-300 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ background: "transparent" }}
             >
               <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
               <span className="relative z-10 flex items-center justify-center gap-2 text-foreground">
                 {revealed ? <Copy className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {revealed ? "Copiar código" : "Revelar código"}
+                {timeLeft <= 5 ? "Aguardando novo código..." : revealed ? "Copiar código" : "Revelar código"}
               </span>
             </button>
           </div>
