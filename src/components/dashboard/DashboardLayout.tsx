@@ -13,7 +13,6 @@ const routePermMap: Record<string, string> = {
   "/dashboard/clientes": "clientes",
   "/dashboard/gmail": "email_acesso",
   "/dashboard-ferramentas": "ferramentas_ia",
-  "/dashboard/ferramentas-temporarias": "ferramentas_ia",
   "/dashboard/gerar-avisos": "ferramentas_ia",
   "/dashboard/analytics": "analytics",
   "/dashboard-equipe": "equipe",
