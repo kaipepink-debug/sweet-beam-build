@@ -8,6 +8,7 @@ import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 import AccountModal from "@/components/painel/AccountModal";
 import PlansPopup from "@/components/painel/PlansPopup";
+import { isTemporarySubscription } from "@/lib/isTemporarySub";
 
 const getGreeting = () => {
   const hour = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" })).getHours();
@@ -87,6 +88,13 @@ export default function Painel() {
     const diff = new Date(activeSub.expiresAt).getTime() - Date.now();
     return diff > 0 ? "Ativo" : "Expirado";
   }, [activeSub]);
+
+  // Redirect temporary subscribers to dedicated panel
+  useEffect(() => {
+    if (isTemporarySubscription(activeSub)) {
+      navigate("/painel-temp", { replace: true });
+    }
+  }, [activeSub, navigate]);
 
   // Auto-logout when subscription expires (handles 30-minute temporary logins)
   useEffect(() => {

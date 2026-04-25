@@ -7,6 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import * as OTPAuth from "otpauth";
+import { getSubscriptionFromStorage, getActiveSubscription, isTemporarySubscription } from "@/lib/isTemporarySub";
 
 const TOTP_PERIOD = 30;
 
@@ -15,12 +16,17 @@ export default function Ferramentas() {
   const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Check naut_subscription session
+  // Check naut_subscription session + redirect temporary subscribers
   useEffect(() => {
     const stored = localStorage.getItem("naut_subscription");
     if (!stored) {
       navigate("/usuario?redirect=/ferramentas", { replace: true });
       return;
+    }
+    const subData = getSubscriptionFromStorage();
+    const activeSub = getActiveSubscription(subData);
+    if (isTemporarySubscription(activeSub)) {
+      navigate("/ferramentas-temp", { replace: true });
     }
   }, [navigate]);
 
