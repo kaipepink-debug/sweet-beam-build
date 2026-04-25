@@ -36,6 +36,7 @@ export default function DashboardAssinaturas() {
   const [produtoFilter, setProdutoFilter] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
+  const [tempDialogOpen, setTempDialogOpen] = useState(false);
   const [form, setForm] = useState({
     nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa",
     valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: ""
@@ -43,6 +44,7 @@ export default function DashboardAssinaturas() {
   const [ativarForm, setAtivarForm] = useState({
     nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0]
   });
+  const [tempForm, setTempForm] = useState({ nome: "", email: "" });
 
   const PLAN_CONFIG: Record<string, { days: number; label: string; valor: number }> = {
     semanal: { days: 7, label: "Semanal", valor: 39.99 },
