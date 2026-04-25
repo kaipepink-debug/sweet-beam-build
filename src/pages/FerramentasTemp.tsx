@@ -22,6 +22,7 @@ export default function FerramentasTemp() {
   const navigate = useNavigate();
   const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [clockOffset, setClockOffset] = useState(0); // serverTime - clientTime (ms)
 
   const subData = useMemo(() => getSubscriptionFromStorage(), []);
   const activeSub = useMemo(() => getActiveSubscription(subData), [subData]);
@@ -49,6 +50,27 @@ export default function FerramentasTemp() {
       });
   }, []);
 
+  // Calcula offset do relógio do cliente vs servidor (corrige TOTP em PCs com hora errada)
+  useEffect(() => {
+    const fetchServerTime = async () => {
+      try {
+        const t0 = Date.now();
+        const res = await fetch(window.location.origin + "/", { method: "HEAD", cache: "no-store" });
+        const t1 = Date.now();
+        const dateHeader = res.headers.get("date");
+        if (!dateHeader) return;
+        const serverTime = new Date(dateHeader).getTime();
+        const rtt = t1 - t0;
+        const estimatedServerNow = serverTime + rtt / 2;
+        const offset = estimatedServerNow - t1;
+        setClockOffset(offset);
+      } catch (e) {
+        console.warn("Could not sync clock with server:", e);
+      }
+    };
+    fetchServerTime();
+  }, []);
+
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-background">
@@ -60,17 +82,19 @@ export default function FerramentasTemp() {
 
   if (!config) return null;
 
-  return <FerramentasTempContent config={config} navigate={navigate} activeSub={activeSub} />;
+  return <FerramentasTempContent config={config} navigate={navigate} activeSub={activeSub} clockOffset={clockOffset} />;
 }
 
 function FerramentasTempContent({
   config,
   navigate,
   activeSub,
+  clockOffset,
 }: {
   config: { login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string };
   navigate: ReturnType<typeof useNavigate>;
   activeSub: any;
+  clockOffset: number;
 }) {
   const totp = useMemo(() => {
     try {
