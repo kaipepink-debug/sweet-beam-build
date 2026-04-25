@@ -140,7 +140,7 @@ export default function DashboardAssinaturas() {
     fetchAssinantes();
   };
 
-
+  const handleDelete = async (id: string) => {
     await supabase.from("assinantes").delete().eq("id", id);
     toast.success("Assinante removido");
     fetchAssinantes();
