@@ -117,13 +117,16 @@ function FerramentasTempContent({
   const generateCode = useCallback(() => {
     if (!totp) return "------";
     try {
-      return totp.generate();
+      return totp.generate({ timestamp: Date.now() + clockOffset });
     } catch (e) {
       console.error("TOTP generate error:", e);
       return "------";
     }
-  }, [totp]);
-  const getTimeLeft = useCallback(() => TOTP_PERIOD - (Math.floor(Date.now() / 1000) % TOTP_PERIOD), []);
+  }, [totp, clockOffset]);
+  const getTimeLeft = useCallback(
+    () => TOTP_PERIOD - (Math.floor((Date.now() + clockOffset) / 1000) % TOTP_PERIOD),
+    [clockOffset]
+  );
 
   const [code, setCode] = useState<string>(() => generateCode());
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
