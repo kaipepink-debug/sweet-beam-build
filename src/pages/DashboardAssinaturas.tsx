@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, MoreHorizontal, Plus, UserPlus, Download } from "lucide-react";
+import { Search, MoreHorizontal, Plus, UserPlus, Download, Clock } from "lucide-react";
 import * as XLSX from "xlsx";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -36,6 +36,7 @@ export default function DashboardAssinaturas() {
   const [produtoFilter, setProdutoFilter] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
+  const [tempDialogOpen, setTempDialogOpen] = useState(false);
   const [form, setForm] = useState({
     nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa",
     valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: ""
@@ -43,6 +44,7 @@ export default function DashboardAssinaturas() {
   const [ativarForm, setAtivarForm] = useState({
     nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0]
   });
+  const [tempForm, setTempForm] = useState({ nome: "", email: "" });
 
   const PLAN_CONFIG: Record<string, { days: number; label: string; valor: number }> = {
     semanal: { days: 7, label: "Semanal", valor: 39.99 },
@@ -109,6 +111,32 @@ export default function DashboardAssinaturas() {
     toast.success(`Login ativado! Expira em ${new Date(expiration).toLocaleDateString("pt-BR")}`);
     setAtivarDialogOpen(false);
     setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0] });
+    fetchAssinantes();
+  };
+
+  const handleTempLogin = async () => {
+    if (!user || !tempForm.nome || !tempForm.email) {
+      toast.error("Preencha nome e email");
+      return;
+    }
+    const today = new Date().toISOString().split("T")[0];
+    const { error } = await supabase.from("assinantes").insert({
+      nome: tempForm.nome,
+      email: tempForm.email,
+      produto: "RatarIA",
+      plano: "Temporário (30min)",
+      status: "Ativa",
+      valor: 0,
+      meio_pagamento: "Temporário",
+      data_criacao: today,
+      proxima_cobranca: today,
+      data_renovacao: today,
+      created_by: user.id,
+    } as any);
+    if (error) { toast.error("Erro ao criar login temporário"); return; }
+    toast.success(`Login temporário criado! Expira em 30 minutos.`);
+    setTempDialogOpen(false);
+    setTempForm({ nome: "", email: "" });
     fetchAssinantes();
   };
 
@@ -205,6 +233,30 @@ export default function DashboardAssinaturas() {
                 </div>
               </div>
               <Button onClick={handleAtivarLogin} className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700">Ativar Login</Button>
+            </DialogContent>
+          </Dialog>
+
+          {/* Login Temporário (30 min) */}
+          <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="gap-2 bg-amber-600 hover:bg-amber-700 text-white">
+                <Clock className="h-4 w-4" /> Login Temporário (30min)
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Criar Login Temporário</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3">
+                <div className="rounded-lg border border-amber-600/30 bg-amber-600/10 p-3 text-xs text-amber-200">
+                  <p>⏱️ Este acesso dura apenas <strong>30 minutos</strong>. Após esse período, o usuário será expirado automaticamente e precisará assinar um plano para continuar.</p>
+                </div>
+                <div><Label>Nome</Label><Input value={tempForm.nome} onChange={e => setTempForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
+                <div><Label>E-mail</Label><Input type="email" value={tempForm.email} onChange={e => setTempForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
+              </div>
+              <Button onClick={handleTempLogin} className="w-full mt-2 bg-amber-600 hover:bg-amber-700 text-white">
+                <Clock className="h-4 w-4 mr-2" /> Criar Acesso de 30 minutos
+              </Button>
             </DialogContent>
           </Dialog>
 
