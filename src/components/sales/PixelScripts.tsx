@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface PixelConfig {
@@ -8,8 +9,18 @@ interface PixelConfig {
   enabled: boolean;
 }
 
+declare global {
+  interface Window {
+    fbq?: any;
+    _fbq?: any;
+    ttq?: any;
+  }
+}
+
 export default function PixelScripts() {
   const [pixels, setPixels] = useState<PixelConfig[]>([]);
+  const location = useLocation();
+  const initializedRef = useRef(false);
 
   useEffect(() => {
     supabase
@@ -21,7 +32,11 @@ export default function PixelScripts() {
       });
   }, []);
 
+  // Install pixels once when loaded
   useEffect(() => {
+    if (pixels.length === 0 || initializedRef.current) return;
+    initializedRef.current = true;
+
     pixels.forEach((pixel) => {
       if (pixel.platform === "facebook" && pixel.pixel_id) {
         installFacebookPixel(pixel.pixel_id);
@@ -32,39 +47,70 @@ export default function PixelScripts() {
     });
   }, [pixels]);
 
+  // Track PageView on every route change (SPA navigation)
+  useEffect(() => {
+    if (!initializedRef.current) return;
+
+    const fbPixels = pixels.filter((p) => p.platform === "facebook" && p.pixel_id);
+    if (window.fbq && fbPixels.length > 0) {
+      fbPixels.forEach((p) => {
+        try {
+          window.fbq("trackSingle", p.pixel_id, "PageView");
+        } catch (e) {
+          console.warn("[FB Pixel] PageView track failed", e);
+        }
+      });
+    }
+
+    const ttPixels = pixels.filter((p) => p.platform === "tiktok" && p.pixel_id);
+    if (window.ttq && ttPixels.length > 0) {
+      try {
+        window.ttq.page();
+      } catch (e) {
+        console.warn("[TT Pixel] page track failed", e);
+      }
+    }
+  }, [location.pathname, location.search, pixels]);
+
   return null;
 }
 
 function installFacebookPixel(pixelId: string) {
-  // Support multiple FB pixels by using unique script IDs
-  const scriptId = `fb-pixel-script-${pixelId}`;
-  if (document.getElementById(scriptId)) return;
-  
-  // If first FB pixel, install the base SDK
-  if (!document.getElementById("fb-pixel-sdk")) {
-    const sdkScript = document.createElement("script");
-    sdkScript.id = "fb-pixel-sdk";
-    sdkScript.innerHTML = `
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window,document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-    `;
-    document.head.appendChild(sdkScript);
+  // Initialize the base SDK stub if not present (synchronous — fbq is available immediately after this)
+  if (!window.fbq) {
+    (function (f: any, b: Document, e: string, v: string) {
+      if (f.fbq) return;
+      const n: any = (f.fbq = function () {
+        n.callMethod
+          ? n.callMethod.apply(n, arguments as any)
+          : n.queue.push(arguments);
+      });
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = true;
+      n.version = "2.0";
+      n.queue = [];
+      const t = b.createElement(e) as HTMLScriptElement;
+      t.async = true;
+      t.src = v;
+      const s = b.getElementsByTagName(e)[0];
+      s.parentNode!.insertBefore(t, s);
+    })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
   }
 
-  const script = document.createElement("script");
-  script.id = scriptId;
-  script.innerHTML = `
-    fbq('init', '${pixelId}');
-    fbq('track', 'PageView');
-  `;
-  document.head.appendChild(script);
+  // Avoid double-init for the same pixel id
+  const initFlag = `__fb_init_${pixelId}`;
+  if ((window as any)[initFlag]) return;
+  (window as any)[initFlag] = true;
 
+  try {
+    window.fbq("init", pixelId);
+    window.fbq("trackSingle", pixelId, "PageView");
+  } catch (e) {
+    console.warn("[FB Pixel] init failed", e);
+  }
+
+  // noscript fallback (must be in body, not head)
   const noscript = document.createElement("noscript");
   noscript.innerHTML = `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1"/>`;
   document.body.appendChild(noscript);
