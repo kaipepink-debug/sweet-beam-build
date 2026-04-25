@@ -47,7 +47,7 @@ const emptyForm: FormState = {
   ativo: true,
 };
 
-export default function DashboardFerramentasTemp() {
+export default function AcessoTemporarioSection() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -165,18 +165,12 @@ export default function DashboardFerramentasTemp() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
-            <Clock className="w-6 h-6 text-amber-400" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-foreground">Ferramentas — Acesso Temporário</h1>
-            <p className="text-sm text-muted-foreground">
-              Credenciais exibidas para usuários com plano Temporário (30 min)
-            </p>
-          </div>
+      {/* Section header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
+        <div>
+          <p className="text-sm text-muted-foreground">
+            Credenciais exibidas para usuários com plano <strong className="text-foreground">Temporário (30 min)</strong>.
+          </p>
         </div>
         <Button onClick={openNew} className="gap-2">
           <Plus className="w-4 h-4" /> Novo acesso
