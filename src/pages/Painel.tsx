@@ -88,6 +88,24 @@ export default function Painel() {
     return diff > 0 ? "Ativo" : "Expirado";
   }, [activeSub]);
 
+  // Auto-logout when subscription expires (handles 30-minute temporary logins)
+  useEffect(() => {
+    if (!activeSub?.expiresAt) return;
+    const expiresMs = new Date(activeSub.expiresAt).getTime();
+    const now = Date.now();
+    const remaining = expiresMs - now;
+    if (remaining <= 0) {
+      localStorage.removeItem("naut_subscription");
+      navigate("/usuario", { replace: true });
+      return;
+    }
+    const timer = setTimeout(() => {
+      localStorage.removeItem("naut_subscription");
+      navigate("/usuario", { replace: true });
+    }, remaining + 500);
+    return () => clearTimeout(timer);
+  }, [activeSub, navigate]);
+
   const statusColor = statusText === "Ativo" ? "34, 197, 94" : "239, 68, 68";
   const daysNum = parseInt(daysRemaining) || 0;
   const showRenewalAlert = daysNum > 0 && daysNum <= 5;
