@@ -142,11 +142,22 @@ serve(async (req) => {
       .ilike("email", email.trim())
       .eq("status", "Ativa");
 
+    // Helper: compute precise expiresAt for a local subscriber row
+    const computeLocalExpiresAt = (sub: any): string | null => {
+      // Temporary 30-minute logins use created_at + 30 minutes
+      if (sub.meio_pagamento === "Temporário" && sub.created_at) {
+        return new Date(new Date(sub.created_at).getTime() + 30 * 60 * 1000).toISOString();
+      }
+      if (sub.data_renovacao) return new Date(sub.data_renovacao).toISOString();
+      if (sub.proxima_cobranca) return new Date(sub.proxima_cobranca).toISOString();
+      return null;
+    };
+
     if (localSubs && localSubs.length > 0) {
       const now = new Date();
       const activeSub = localSubs.find(sub => {
-        if (sub.data_renovacao) return new Date(sub.data_renovacao) >= now;
-        if (sub.proxima_cobranca) return new Date(sub.proxima_cobranca) >= now;
+        const exp = computeLocalExpiresAt(sub);
+        if (exp) return new Date(exp) >= now;
         return true;
       });
 
@@ -161,7 +172,7 @@ serve(async (req) => {
                 productName: activeSub.produto,
                 planName: activeSub.plano,
                 isActive: true,
-                expiresAt: activeSub.data_renovacao || activeSub.proxima_cobranca,
+                expiresAt: computeLocalExpiresAt(activeSub),
                 status: "active",
               }],
             },
@@ -172,9 +183,8 @@ serve(async (req) => {
 
       // Expired local - update status
       for (const sub of localSubs) {
-        const expired = (sub.data_renovacao && new Date(sub.data_renovacao) < now) ||
-                        (sub.proxima_cobranca && new Date(sub.proxima_cobranca) < now);
-        if (expired) {
+        const exp = computeLocalExpiresAt(sub);
+        if (exp && new Date(exp) < now) {
           await supabaseAdmin.from("assinantes").update({ status: "Cancelada" }).eq("id", sub.id);
         }
       }
