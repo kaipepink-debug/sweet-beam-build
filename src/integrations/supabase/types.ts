@@ -67,6 +67,45 @@ export type Database = {
           },
         ]
       }
+      acessos_temporarios: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          created_by: string
+          ferramenta: string
+          id: string
+          login: string
+          observacoes: string | null
+          senha: string
+          updated_at: string
+          url_acesso: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          created_by: string
+          ferramenta: string
+          id?: string
+          login: string
+          observacoes?: string | null
+          senha: string
+          updated_at?: string
+          url_acesso?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          created_by?: string
+          ferramenta?: string
+          id?: string
+          login?: string
+          observacoes?: string | null
+          senha?: string
+          updated_at?: string
+          url_acesso?: string | null
+        }
+        Relationships: []
+      }
       assinantes: {
         Row: {
           created_at: string
