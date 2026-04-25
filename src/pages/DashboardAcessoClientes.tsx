@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { KeyRound, User, Lock, Save, Loader2, Eye, EyeOff, Video, Link2 } from "lucide-react";
+import { KeyRound, User, Lock, Save, Loader2, Eye, EyeOff, Video, Link2, Clock } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import AcessoTemporarioSection from "@/components/dashboard/AcessoTemporarioSection";
 
 export default function DashboardAcessoClientes() {
   const [login, setLogin] = useState("");
@@ -79,13 +81,25 @@ export default function DashboardAcessoClientes() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-3xl">
       <div>
         <h1 className="text-2xl font-bold text-foreground tracking-tight">Acesso — Clientes</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Gerencie o conteúdo e credenciais da página de ferramentas dos clientes.
+          Gerencie credenciais de acesso dos clientes (padrão e temporário).
         </p>
       </div>
+
+      <Tabs defaultValue="padrao" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsTrigger value="padrao" className="gap-2">
+            <KeyRound className="w-4 h-4" /> Acesso Padrão
+          </TabsTrigger>
+          <TabsTrigger value="temporario" className="gap-2">
+            <Clock className="w-4 h-4" /> Acesso Temporário
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="padrao" className="space-y-6 mt-6">
 
       {/* 1 - Vídeo Tutorial */}
       <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
