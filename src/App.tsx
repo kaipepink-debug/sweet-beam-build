@@ -27,7 +27,10 @@ import DashboardAssinaturas from "./pages/DashboardAssinaturas";
 import DashboardAcessoClientes from "./pages/DashboardAcessoClientes";
 import DashboardPixels from "./pages/DashboardPixels";
 import DashboardVturb from "./pages/DashboardVturb";
+import DashboardFerramentasTemp from "./pages/DashboardFerramentasTemp";
 import SalesPageEN from "./pages/SalesPageEN";
+import PainelTemp from "./pages/PainelTemp";
+import FerramentasTemp from "./pages/FerramentasTemp";
 
 const queryClient = new QueryClient();
 
@@ -59,13 +62,16 @@ const App = () => (
               <Route path="/dashboard/acesso-clientes" element={<DashboardAcessoClientes />} />
               <Route path="/dashboard/pixels" element={<DashboardPixels />} />
               <Route path="/dashboard/vturb" element={<DashboardVturb />} />
+              <Route path="/dashboard/ferramentas-temporarias" element={<DashboardFerramentasTemp />} />
               <Route path="/dashboard/configuracoes" element={<UnderDevelopment />} />
             </Route>
 
             <Route path="/cod" element={<Cod />} />
             <Route path="/usuario" element={<Usuario />} />
             <Route path="/painel" element={<Painel />} />
+            <Route path="/painel-temp" element={<PainelTemp />} />
             <Route path="/ferramentas" element={<Ferramentas />} />
+            <Route path="/ferramentas-temp" element={<FerramentasTemp />} />
             <Route path="/cursos" element={<Cursos />} />
             <Route path="/cursos/:courseId" element={<CursoPlayer />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
