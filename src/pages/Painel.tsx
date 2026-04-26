@@ -100,6 +100,8 @@ export default function Painel() {
   useEffect(() => {
     if (!activeSub?.expiresAt) return;
     const expiresMs = new Date(activeSub.expiresAt).getTime();
+    // Guard against invalid dates (NaN) — would otherwise force instant logout
+    if (!Number.isFinite(expiresMs)) return;
     const now = Date.now();
     const remaining = expiresMs - now;
     if (remaining <= 0) {
@@ -107,10 +109,13 @@ export default function Painel() {
       navigate("/usuario", { replace: true });
       return;
     }
+    // Cap to max safe timeout to avoid setTimeout overflow on long subscriptions
+    const MAX_TIMEOUT = 2147483647;
+    const delay = Math.min(remaining + 500, MAX_TIMEOUT);
     const timer = setTimeout(() => {
       localStorage.removeItem("naut_subscription");
       navigate("/usuario", { replace: true });
-    }, remaining + 500);
+    }, delay);
     return () => clearTimeout(timer);
   }, [activeSub, navigate]);
 
