@@ -223,12 +223,11 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
             </div>
             <p className="text-xs text-muted-foreground">Expira em {timeLeft}s</p>
             <button
-              onClick={() => { if (!revealed) { setRevealed(true); copyToClipboard(code, "Código"); } else { copyToClipboard(code, "Código"); } }}
-              className="neon-border-btn relative w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest transition-all duration-300 overflow-hidden"
-              style={{ background: "transparent" }}
+              type="button"
+              onClick={() => { if (!revealed) setRevealed(true); copyToClipboard(code, "Código"); }}
+              className="relative w-full py-3 rounded-xl text-sm font-semibold uppercase tracking-widest transition-colors duration-300 bg-primary/15 hover:bg-primary/25 border border-primary/40 text-foreground"
             >
-              <span className="neon-trail" style={{ borderRadius: "0.75rem" }} />
-              <span className="relative z-10 flex items-center justify-center gap-2 text-foreground">
+              <span className="flex items-center justify-center gap-2">
                 {revealed ? <Copy className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 {revealed ? "Copiar código" : "Revelar código"}
               </span>
