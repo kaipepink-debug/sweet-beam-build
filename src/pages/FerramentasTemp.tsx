@@ -65,23 +65,29 @@ export default function FerramentasTemp() {
 
   // Calcula offset do relógio do cliente vs servidor (corrige TOTP em PCs com hora errada)
   useEffect(() => {
+    let cancelled = false;
     const fetchServerTime = async () => {
       try {
         const t0 = Date.now();
-        const res = await fetch(window.location.origin + "/", { method: "HEAD", cache: "no-store" });
+        // Usa endpoint Supabase (CORS-safe) em vez de window.location que pode falhar
+        const res = await fetch("https://oovykpbrsbkromluhddp.supabase.co/auth/v1/health", {
+          method: "GET",
+          cache: "no-store",
+        });
         const t1 = Date.now();
         const dateHeader = res.headers.get("date");
-        if (!dateHeader) return;
+        if (!dateHeader || cancelled) return;
         const serverTime = new Date(dateHeader).getTime();
         const rtt = t1 - t0;
         const estimatedServerNow = serverTime + rtt / 2;
         const offset = estimatedServerNow - t1;
-        setClockOffset(offset);
+        if (!cancelled) setClockOffset(offset);
       } catch (e) {
         console.warn("Could not sync clock with server:", e);
       }
     };
     fetchServerTime();
+    return () => { cancelled = true; };
   }, []);
 
   if (loading) {
@@ -150,11 +156,9 @@ function FerramentasTempContent({
       const remaining = getTimeLeft();
       setTimeLeft(remaining);
       setNow(Date.now());
-      // Regenera sempre que entra em novo ciclo (mantém revelado se já estava)
-      setCode((prev) => {
-        const fresh = generateCode();
-        return fresh !== prev ? fresh : prev;
-      });
+      if (remaining === TOTP_PERIOD) {
+        setCode(generateCode());
+      }
     }, 1000);
     return () => clearInterval(interval);
   }, [generateCode, getTimeLeft]);
