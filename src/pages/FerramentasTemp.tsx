@@ -156,11 +156,9 @@ function FerramentasTempContent({
       const remaining = getTimeLeft();
       setTimeLeft(remaining);
       setNow(Date.now());
-      // Regenera sempre que entra em novo ciclo (mantém revelado se já estava)
-      setCode((prev) => {
-        const fresh = generateCode();
-        return fresh !== prev ? fresh : prev;
-      });
+      if (remaining === TOTP_PERIOD) {
+        setCode(generateCode());
+      }
     }, 1000);
     return () => clearInterval(interval);
   }, [generateCode, getTimeLeft]);
