@@ -319,8 +319,6 @@ function FerramentasTempContent({
                 {timeLeft <= 5 ? "Aguardando novo código..." : revealed ? "Copiar código" : "Revelar código"}
               </span>
             </button>
-              </span>
-            </button>
           </div>
 
           {Math.abs(clockOffset) > 10000 && (
