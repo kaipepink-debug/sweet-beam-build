@@ -103,8 +103,20 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
   }, [generateCode, getTimeLeft]);
 
   const copyToClipboard = useCallback((text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: `${label} copiado!`, duration: 2000 });
+    try {
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+      toast({ title: `${label} copiado!`, duration: 2000 });
+    } catch (e) {
+      console.error("Copy error:", e);
+      fallbackCopy(text);
+      toast({ title: `${label} copiado!`, duration: 2000 });
+    }
   }, []);
 
   const progressPercent = (timeLeft / TOTP_PERIOD) * 100;
