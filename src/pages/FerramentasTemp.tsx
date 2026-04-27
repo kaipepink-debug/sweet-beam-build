@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { motion } from "framer-motion";
 import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2, Clock } from "lucide-react";
-import NeuralBackground from "@/components/sales/NeuralBackground";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -89,7 +87,6 @@ export default function FerramentasTemp() {
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-background">
-        <NeuralBackground />
         <Loader2 className="h-8 w-8 animate-spin text-primary relative z-10" />
       </div>
     );
@@ -205,49 +202,29 @@ function FerramentasTempContent({
 
   const progressPercent = (timeLeft / TOTP_PERIOD) * 100;
 
-  const glassStyle = {
-    background: "rgba(10, 10, 10, 0.75)",
-    backdropFilter: "blur(30px)",
-    border: "1px solid rgba(255,255,255,0.08)",
-  };
-
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
-      <NeuralBackground />
-      <div className="fixed inset-0 z-[1] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, hsla(270, 100%, 50%, 0.04) 0%, transparent 60%)" }} />
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-lg mx-4 py-10 space-y-5"
-      >
+    <div className="relative min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="relative z-10 w-full max-w-lg py-10 space-y-5">
         <button onClick={() => navigate("/painel-temp")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
           <ArrowLeft className="w-4 h-4" /> Voltar
         </button>
 
         {/* Countdown da sessão temporária */}
-        <motion.div
-          className="rounded-2xl px-5 py-4 flex items-center gap-4"
-          style={{
-            background: lowTime ? "rgba(239, 68, 68, 0.08)" : "rgba(59, 130, 246, 0.08)",
-            border: `1px solid ${lowTime ? "rgba(239, 68, 68, 0.3)" : "rgba(59, 130, 246, 0.2)"}`,
-            backdropFilter: "blur(20px)",
-          }}
+        <div
+          className={`rounded-2xl px-5 py-4 flex items-center gap-4 border ${lowTime ? "bg-destructive/10 border-destructive/30" : "bg-primary/10 border-primary/20"}`}
         >
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: lowTime ? "rgba(239, 68, 68, 0.15)" : "rgba(59, 130, 246, 0.15)" }}
+            className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${lowTime ? "bg-destructive/15" : "bg-primary/15"}`}
           >
-            <Clock className="w-6 h-6" style={{ color: lowTime ? "rgba(248, 113, 113, 0.95)" : "rgba(96, 165, 250, 0.95)" }} />
+            <Clock className={`w-6 h-6 ${lowTime ? "text-red-400" : "text-primary"}`} />
           </div>
           <div className="flex-1">
             <p className="text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Tempo restante de acesso</p>
-            <p className="text-xl md:text-2xl font-bold tabular-nums" style={{ color: lowTime ? "rgba(248, 113, 113, 0.95)" : "rgba(96, 165, 250, 0.95)" }}>
+            <p className={`text-xl md:text-2xl font-bold tabular-nums ${lowTime ? "text-red-400" : "text-primary"}`}>
               {formatTime(Math.max(0, remainingSession))}
             </p>
           </div>
-        </motion.div>
+        </div>
 
         <div className="text-center space-y-2">
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
