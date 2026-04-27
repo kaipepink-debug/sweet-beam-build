@@ -59,6 +59,68 @@ serve(async (req) => {
 
     const data = await response.json();
 
+    // If Naut says the customer is active but returns no subscription detail,
+    // grant access using a synthesized subscription (handles cases where Naut
+    // confirmed the purchase but hasn't populated the subscriptions array yet).
+    if (response.ok && data?.success && data?.data?.active === true && (!data?.data?.subscriptions || data.data.subscriptions.length === 0)) {
+      const nautEmail = data.data.email || email.trim();
+      const nautName = data.data.name || nautEmail;
+
+      // Default expiration: 31 days from now (covers monthly plans by default)
+      const expiresAt = new Date(Date.now() + 31 * 24 * 60 * 60 * 1000).toISOString();
+
+      // Best-effort sync to local table so the subscriber appears in the dashboard
+      try {
+        const { data: existing } = await supabaseAdmin
+          .from("assinantes")
+          .select("id")
+          .eq("email", nautEmail)
+          .eq("produto", "RatarIA")
+          .limit(1);
+
+        if (!existing || existing.length === 0) {
+          await supabaseAdmin.from("assinantes").insert({
+            email: nautEmail,
+            nome: nautName,
+            produto: "RatarIA",
+            plano: "Naut",
+            status: "Ativa",
+            valor: 0,
+            meio_pagamento: "Naut",
+            data_criacao: new Date().toISOString().split("T")[0],
+            data_renovacao: expiresAt.split("T")[0],
+            proxima_cobranca: expiresAt.split("T")[0],
+            created_by: "00000000-0000-0000-0000-000000000000",
+          });
+        } else {
+          await supabaseAdmin
+            .from("assinantes")
+            .update({ status: "Ativa", nome: nautName })
+            .eq("id", existing[0].id);
+        }
+      } catch (syncErr) {
+        console.error("Error syncing active-without-subs subscriber:", syncErr);
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          data: {
+            email: nautEmail,
+            name: nautName,
+            subscriptions: [{
+              productName: "RatarIA",
+              planName: "Naut",
+              isActive: true,
+              expiresAt,
+              status: "active",
+            }],
+          },
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // If Naut returns subscriptions, sync ALL to local table
     if (response.ok && data?.success && data?.data?.subscriptions?.length) {
       const nautEmail = data.data.email || email.trim();
