@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2, Play } from "lucide-react";
+import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
 import CanalAvisoButton from "@/components/painel/CanalAvisoButton";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -131,8 +131,6 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
     }
   }, []);
 
-  const progressPercent = (timeLeft / TOTP_PERIOD) * 100;
-
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-background px-4">
       <div className="relative z-10 w-full max-w-lg py-10 space-y-5">
@@ -201,8 +199,10 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
             <div className="text-3xl font-bold tracking-widest text-foreground font-mono">
               {revealed ? code : "••••••"}
             </div>
-            <div className="relative w-48 h-1.5 mx-auto rounded-full overflow-hidden bg-muted">
-              <div className="absolute inset-y-0 left-0 rounded-full bg-primary transition-[width] duration-300 ease-linear" style={{ width: `${progressPercent}%` }} />
+            <div className="grid grid-cols-[repeat(30,minmax(0,1fr))] gap-0.5 w-48 h-1.5 mx-auto" aria-hidden="true">
+              {Array.from({ length: TOTP_PERIOD }, (_, index) => (
+                <span key={index} className={`rounded-full ${index < timeLeft ? "bg-primary" : "bg-muted"}`} />
+              ))}
             </div>
             <p className="text-xs text-muted-foreground">Expira em {timeLeft}s</p>
             <button
@@ -250,11 +250,11 @@ function StepHeader({ num, title, icon }: { num: number; title: string; icon?: s
 
 function CredentialRow({ label, value, onCopy }: { label: string; value: string; onCopy: () => void }) {
   return (
-    <div className="flex items-center justify-between rounded-lg px-3 py-2.5" style={{ background: "rgba(255,255,255,0.04)" }}>
+    <div className="flex items-center justify-between rounded-lg px-3 py-2.5 bg-muted/40">
       <span className="text-sm text-muted-foreground">
         <strong className="text-foreground">{label}:</strong> {value}
       </span>
-      <button onClick={onCopy} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-foreground transition-all duration-200 hover:bg-primary/20" style={{ background: "rgba(255,255,255,0.08)" }}>
+      <button onClick={onCopy} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-foreground transition-all duration-200 bg-muted hover:bg-primary/20">
         <Copy className="w-3.5 h-3.5 inline mr-1" /> Copiar
       </button>
     </div>
