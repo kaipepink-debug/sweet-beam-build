@@ -268,19 +268,19 @@ function FerramentasTempContent({
         </div>
 
         {/* Step 4 - 2FA */}
-        <div className="rounded-2xl p-5 space-y-4" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-4 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={4} title="Insira o código de 2 Fatores" />
           <p className="text-sm text-muted-foreground pl-9">O sistema irá solicitar um código de autenticação. Clique abaixo para revelar e copiar.</p>
 
-          <div className="rounded-xl p-5 text-center space-y-3" style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div className="rounded-xl p-5 text-center space-y-3 bg-muted/30">
             <div className="flex items-center justify-center gap-2 text-muted-foreground text-xs">
               <KeyRound className="w-3.5 h-3.5" /> Código de Autenticação
             </div>
-            <div className="text-3xl font-bold tracking-[0.3em] text-foreground" style={{ fontFamily: "monospace" }}>
+            <div className="text-3xl font-bold tracking-widest text-foreground font-mono">
               {revealed ? code : "••••••"}
             </div>
-            <div className="relative w-48 h-1.5 mx-auto rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
-              <motion.div className="absolute inset-y-0 left-0 rounded-full bg-primary" animate={{ width: `${progressPercent}%` }} transition={{ duration: 0.5, ease: "linear" }} />
+            <div className="relative w-48 h-1.5 mx-auto rounded-full overflow-hidden bg-muted">
+              <div className="absolute inset-y-0 left-0 rounded-full bg-primary transition-[width] duration-300 ease-linear" style={{ width: `${progressPercent}%` }} />
             </div>
             <p className={`text-xs ${timeLeft <= 5 ? "text-red-400 font-semibold" : "text-muted-foreground"}`}>
               {timeLeft <= 5 ? `Expirando em ${timeLeft}s — aguarde o próximo` : `Expira em ${timeLeft}s`}
