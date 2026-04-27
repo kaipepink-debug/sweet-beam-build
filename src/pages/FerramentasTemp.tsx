@@ -234,11 +234,11 @@ function FerramentasTempContent({
         </div>
 
         {/* Step 1 - Tutorial */}
-        <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-3 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={1} title="Assista o tutorial" />
           <p className="text-sm text-muted-foreground pl-9">Veja o vídeo abaixo para entender como acessar as ferramentas.</p>
           <div className="pl-9">
-            <div className="rounded-xl overflow-hidden" style={{ background: "rgba(0,0,0,0.4)" }}>
+            <div className="rounded-xl overflow-hidden bg-muted/40">
               <video controls playsInline preload="metadata" className="w-full rounded-xl" poster="">
                 <source src={config.video_url} type="video/mp4" />
                 Seu navegador não suporta vídeos.
@@ -248,7 +248,7 @@ function FerramentasTempContent({
         </div>
 
         {/* Step 2 */}
-        <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-3 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={2} title="Baixe o navegador DiCloak" />
           <p className="text-sm text-muted-foreground pl-9">Faça o download do navegador oficial para acessar o painel.</p>
           <a href={config.dicloak_url} target="_blank" rel="noopener noreferrer"
@@ -258,7 +258,7 @@ function FerramentasTempContent({
         </div>
 
         {/* Step 3 */}
-        <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-3 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={3} title="Abra o DiCloak e insira o login" />
           <p className="text-sm text-muted-foreground pl-9">Com o programa aberto, use as credenciais abaixo:</p>
           <div className="space-y-2 pl-9">
