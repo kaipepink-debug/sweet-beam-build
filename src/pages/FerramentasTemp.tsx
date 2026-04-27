@@ -299,7 +299,7 @@ function FerramentasTempContent({
           </div>
 
           {Math.abs(clockOffset) > 10000 && (
-            <div className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: "rgba(239, 68, 68, 0.08)", border: "1px solid rgba(239, 68, 68, 0.3)" }}>
+          <div className="flex items-start gap-3 rounded-xl p-3.5 border border-destructive/30 bg-destructive/10">
               <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
               <p className="text-xs font-semibold text-foreground/90 leading-snug">
                 <span className="text-red-400">Relógio do seu computador está dessincronizado em {Math.round(clockOffset / 1000)}s.</span>{" "}
@@ -308,7 +308,7 @@ function FerramentasTempContent({
             </div>
           )}
 
-          <div className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: "hsla(270, 100%, 50%, 0.08)", border: "1px solid hsla(270, 100%, 50%, 0.25)" }}>
+          <div className="flex items-start gap-3 rounded-xl p-3.5 border border-primary/25 bg-primary/10">
             <AlertTriangle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <p className="text-xs font-semibold text-foreground/90 leading-snug">
               Se aparecer <span className="text-primary">código incorreto</span>, atualize a página e copie o novo código.
@@ -317,13 +317,13 @@ function FerramentasTempContent({
         </div>
 
         {/* Step 5 */}
-        <div className="rounded-2xl p-5 space-y-2" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-2 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={5} title="Pronto! Acesse o painel" icon="check" />
           <p className="text-sm text-muted-foreground pl-9">
             Basta acessar o painel com as ferramentas. Em caso de dúvidas, entre em contato que auxiliamos todo o acesso!
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
