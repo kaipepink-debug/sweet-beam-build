@@ -10,6 +10,21 @@ import { getSubscriptionFromStorage, getActiveSubscription, isTemporarySubscript
 
 const TOTP_PERIOD = 30;
 
+function fallbackCopy(text: string) {
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  } catch (e) {
+    console.error("Fallback copy failed:", e);
+  }
+}
+
 function formatTime(ms: number) {
   if (ms <= 0) return "00:00";
   const totalSec = Math.floor(ms / 1000);
@@ -161,8 +176,18 @@ function FerramentasTempContent({
   const lowTime = remainingSession > 0 && remainingSession < 5 * 60 * 1000;
 
   const copyToClipboard = useCallback((text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: `${label} copiado!`, duration: 2000 });
+    try {
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+      toast({ title: `${label} copiado!`, duration: 2000 });
+    } catch (e) {
+      console.error("Copy error:", e);
+      fallbackCopy(text);
+      toast({ title: `${label} copiado!`, duration: 2000 });
+    }
   }, []);
 
   const handleRevealOrCopy = useCallback(() => {
