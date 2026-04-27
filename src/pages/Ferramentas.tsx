@@ -11,6 +11,21 @@ import { getSubscriptionFromStorage, getActiveSubscription, isTemporarySubscript
 
 const TOTP_PERIOD = 30;
 
+function fallbackCopy(text: string) {
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  } catch (e) {
+    console.error("Fallback copy failed:", e);
+  }
+}
+
 export default function Ferramentas() {
   const navigate = useNavigate();
   const [config, setConfig] = useState<{ login: string; senha: string; totp_secret: string; video_url: string; dicloak_url: string } | null>(null);
