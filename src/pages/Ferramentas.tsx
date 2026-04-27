@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2, Play } from "lucide-react";
-import NeuralBackground from "@/components/sales/NeuralBackground";
+import { Copy, Eye, Download, KeyRound, ExternalLink, AlertTriangle, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
 import CanalAvisoButton from "@/components/painel/CanalAvisoButton";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -60,7 +58,6 @@ export default function Ferramentas() {
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-background">
-        <NeuralBackground />
         <Loader2 className="h-8 w-8 animate-spin text-primary relative z-10" />
       </div>
     );
@@ -134,25 +131,9 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
     }
   }, []);
 
-  const progressPercent = (timeLeft / TOTP_PERIOD) * 100;
-
-  const glassStyle = {
-    background: "rgba(10, 10, 10, 0.75)",
-    backdropFilter: "blur(30px)",
-    border: "1px solid rgba(255,255,255,0.08)",
-  };
-
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
-      <NeuralBackground />
-      <div className="fixed inset-0 z-[1] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, hsla(270, 100%, 50%, 0.04) 0%, transparent 60%)" }} />
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-lg mx-4 py-10 space-y-5"
-      >
+    <div className="relative min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="relative z-10 w-full max-w-lg py-10 space-y-5">
         <button onClick={() => navigate("/painel")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
           <ArrowLeft className="w-4 h-4" /> Voltar
         </button>
@@ -167,11 +148,11 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         </div>
 
         {/* Step 1 - Tutorial */}
-        <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-3 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={1} title="Assista o tutorial" />
           <p className="text-sm text-muted-foreground pl-9">Veja o vídeo abaixo para entender como acessar as ferramentas.</p>
           <div className="pl-9">
-            <div className="rounded-xl overflow-hidden" style={{ background: "rgba(0,0,0,0.4)" }}>
+            <div className="rounded-xl overflow-hidden bg-muted/40">
               <video
                 controls
                 playsInline
@@ -187,7 +168,7 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         </div>
 
         {/* Step 2 */}
-        <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-3 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={2} title="Baixe o navegador DiCloak" />
           <p className="text-sm text-muted-foreground pl-9">Faça o download do navegador oficial para acessar o painel.</p>
           <a href={config.dicloak_url} target="_blank" rel="noopener noreferrer"
@@ -197,7 +178,7 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         </div>
 
         {/* Step 3 */}
-        <div className="rounded-2xl p-5 space-y-3" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-3 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={3} title="Abra o DiCloak e insira o login" />
           <p className="text-sm text-muted-foreground pl-9">Com o programa aberto, use as credenciais abaixo:</p>
           <div className="space-y-2 pl-9">
@@ -207,19 +188,21 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         </div>
 
         {/* Step 4 - 2FA */}
-        <div className="rounded-2xl p-5 space-y-4" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-4 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={4} title="Insira o código de 2 Fatores" />
           <p className="text-sm text-muted-foreground pl-9">O sistema irá solicitar um código de autenticação. Clique abaixo para revelar e copiar.</p>
 
-          <div className="rounded-xl p-5 text-center space-y-3" style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div className="rounded-xl p-5 text-center space-y-3 bg-muted/30">
             <div className="flex items-center justify-center gap-2 text-muted-foreground text-xs">
               <KeyRound className="w-3.5 h-3.5" /> Código de Autenticação
             </div>
-            <div className="text-3xl font-bold tracking-[0.3em] text-foreground" style={{ fontFamily: "monospace" }}>
+            <div className="text-3xl font-bold tracking-widest text-foreground font-mono">
               {revealed ? code : "••••••"}
             </div>
-            <div className="relative w-48 h-1.5 mx-auto rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
-              <motion.div className="absolute inset-y-0 left-0 rounded-full bg-primary" animate={{ width: `${progressPercent}%` }} transition={{ duration: 0.5, ease: "linear" }} />
+            <div className="grid grid-cols-[repeat(30,minmax(0,1fr))] gap-0.5 w-48 h-1.5 mx-auto" aria-hidden="true">
+              {Array.from({ length: TOTP_PERIOD }, (_, index) => (
+                <span key={index} className={`rounded-full ${index < timeLeft ? "bg-primary" : "bg-muted"}`} />
+              ))}
             </div>
             <p className="text-xs text-muted-foreground">Expira em {timeLeft}s</p>
             <button
@@ -234,7 +217,7 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
             </button>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: "hsla(270, 100%, 50%, 0.08)", border: "1px solid hsla(270, 100%, 50%, 0.25)" }}>
+          <div className="flex items-start gap-3 rounded-xl p-3.5 border border-primary/25 bg-primary/10">
             <AlertTriangle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <p className="text-xs font-semibold text-foreground/90 leading-snug">
               Se aparecer <span className="text-primary">código incorreto</span>, atualize a página e copie o novo código.
@@ -243,13 +226,13 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
         </div>
 
         {/* Step 5 */}
-        <div className="rounded-2xl p-5 space-y-2" style={glassStyle}>
+        <div className="rounded-2xl p-5 space-y-2 border border-border/60 bg-card/80 shadow-lg">
           <StepHeader num={5} title="Pronto! Acesse o painel" icon="check" />
           <p className="text-sm text-muted-foreground pl-9">
             Basta acessar o painel com as ferramentas. Em caso de dúvidas, entre em contato que auxiliamos todo o acesso!
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -267,11 +250,11 @@ function StepHeader({ num, title, icon }: { num: number; title: string; icon?: s
 
 function CredentialRow({ label, value, onCopy }: { label: string; value: string; onCopy: () => void }) {
   return (
-    <div className="flex items-center justify-between rounded-lg px-3 py-2.5" style={{ background: "rgba(255,255,255,0.04)" }}>
+    <div className="flex items-center justify-between rounded-lg px-3 py-2.5 bg-muted/40">
       <span className="text-sm text-muted-foreground">
         <strong className="text-foreground">{label}:</strong> {value}
       </span>
-      <button onClick={onCopy} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-foreground transition-all duration-200 hover:bg-primary/20" style={{ background: "rgba(255,255,255,0.08)" }}>
+      <button onClick={onCopy} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-foreground transition-all duration-200 bg-muted hover:bg-primary/20">
         <Copy className="w-3.5 h-3.5 inline mr-1" /> Copiar
       </button>
     </div>
