@@ -27,6 +27,7 @@ import DashboardAssinaturas from "./pages/DashboardAssinaturas";
 import DashboardAcessoClientes from "./pages/DashboardAcessoClientes";
 import DashboardPixels from "./pages/DashboardPixels";
 import DashboardVturb from "./pages/DashboardVturb";
+import DashboardFinanceiro from "./pages/DashboardFinanceiro";
 import SalesPageEN from "./pages/SalesPageEN";
 import PainelTemp from "./pages/PainelTemp";
 import FerramentasTemp from "./pages/FerramentasTemp";
@@ -53,7 +54,7 @@ const App = () => (
               <Route path="/dashboard-ferramentas/:toolId" element={<FerramentaGerenciamento />} />
               <Route path="/dashboard-equipe" element={<DashboardEquipe />} />
               <Route path="/dashboard/gmail" element={<DashboardGmail />} />
-              <Route path="/dashboard/financeiro" element={<UnderDevelopment />} />
+              <Route path="/dashboard/financeiro" element={<DashboardFinanceiro />} />
               <Route path="/dashboard/vendas" element={<UnderDevelopment />} />
               <Route path="/dashboard/assinaturas" element={<DashboardAssinaturas />} />
               <Route path="/dashboard/clientes" element={<UnderDevelopment />} />
