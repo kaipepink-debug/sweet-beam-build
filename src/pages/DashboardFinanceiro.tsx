@@ -42,32 +42,42 @@ export default function DashboardFinanceiro() {
   const { user } = useAuth();
   const [range, setRange] = useState<RangeFilterValue>({ preset: "30d" });
   const [custos, setCustos] = useState<Custo[]>([]);
+  const [receitas, setReceitas] = useState<Receita[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savingRec, setSavingRec] = useState(false);
 
-  // form
+  // form custo
   const [data, setData] = useState(new Date().toISOString().slice(0, 10));
   const [categoria, setCategoria] = useState<Categoria>("Ferramentas");
   const [descricao, setDescricao] = useState("");
   const [valor, setValor] = useState("");
 
+  // form receita
+  const [dataR, setDataR] = useState(new Date().toISOString().slice(0, 10));
+  const [origem, setOrigem] = useState<Origem>("Pix");
+  const [descricaoR, setDescricaoR] = useState("");
+  const [valorR, setValorR] = useState("");
+
   const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
 
-  const fetchCustos = async () => {
+  const fetchAll = async () => {
     setLoading(true);
-    const { data: rows, error } = await supabase
-      .from("custos")
-      .select("*")
-      .gte("data", r.from.toISOString().slice(0, 10))
-      .lte("data", r.to.toISOString().slice(0, 10))
-      .order("data", { ascending: false });
-    if (error) toast.error("Erro ao carregar custos");
-    setCustos((rows as any) || []);
+    const fromStr = r.from.toISOString().slice(0, 10);
+    const toStr = r.to.toISOString().slice(0, 10);
+    const [{ data: cRows, error: cErr }, { data: rRows, error: rErr }] = await Promise.all([
+      supabase.from("custos").select("*").gte("data", fromStr).lte("data", toStr).order("data", { ascending: false }),
+      supabase.from("receitas").select("*").gte("data", fromStr).lte("data", toStr).order("data", { ascending: false }),
+    ]);
+    if (cErr) toast.error("Erro ao carregar custos");
+    if (rErr) toast.error("Erro ao carregar receitas");
+    setCustos((cRows as any) || []);
+    setReceitas((rRows as any) || []);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchCustos();
+    fetchAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [r.from.getTime(), r.to.getTime()]);
 
@@ -95,7 +105,34 @@ export default function DashboardFinanceiro() {
     toast.success("Custo lançado");
     setDescricao("");
     setValor("");
-    fetchCustos();
+    fetchAll();
+  };
+
+  const handleSubmitReceita = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    const v = parseFloat(valorR.replace(",", "."));
+    if (isNaN(v) || v <= 0) {
+      toast.error("Valor inválido");
+      return;
+    }
+    setSavingRec(true);
+    const { error } = await supabase.from("receitas").insert({
+      data: dataR,
+      origem,
+      descricao: descricaoR || null,
+      valor: v,
+      created_by: user.id,
+    });
+    setSavingRec(false);
+    if (error) {
+      toast.error("Erro ao salvar receita");
+      return;
+    }
+    toast.success("Receita lançada");
+    setDescricaoR("");
+    setValorR("");
+    fetchAll();
   };
 
   const handleDelete = async (id: string) => {
@@ -105,7 +142,17 @@ export default function DashboardFinanceiro() {
       return;
     }
     toast.success("Excluído");
-    fetchCustos();
+    fetchAll();
+  };
+
+  const handleDeleteReceita = async (id: string) => {
+    const { error } = await supabase.from("receitas").delete().eq("id", id);
+    if (error) {
+      toast.error("Erro ao excluir");
+      return;
+    }
+    toast.success("Excluído");
+    fetchAll();
   };
 
   const totalPorCategoria = useMemo(() => {
@@ -117,6 +164,8 @@ export default function DashboardFinanceiro() {
   }, [custos]);
 
   const total = useMemo(() => custos.reduce((s, c) => s + Number(c.valor), 0), [custos]);
+  const totalReceitas = useMemo(() => receitas.reduce((s, c) => s + Number(c.valor), 0), [receitas]);
+  const saldo = totalReceitas - total;
 
   return (
     <div className="space-y-6">
