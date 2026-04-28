@@ -20,10 +20,18 @@ interface Custo {
   categoria: string;
 }
 
+interface Receita {
+  id: string;
+  data: string;
+  valor: number;
+  origem: string;
+}
+
 export default function Dashboard() {
   const [range, setRange] = useState<RangeFilterValue>({ preset: "hoje" });
   const [vendas, setVendas] = useState<Assinante[]>([]);
   const [custos, setCustos] = useState<Custo[]>([]);
+  const [receitas, setReceitas] = useState<Receita[]>([]);
   const [loading, setLoading] = useState(true);
 
   const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
@@ -34,7 +42,7 @@ export default function Dashboard() {
       const fromStr = r.from.toISOString().slice(0, 10);
       const toStr = r.to.toISOString().slice(0, 10);
 
-      const [vRes, cRes] = await Promise.all([
+      const [vRes, cRes, rRes] = await Promise.all([
         supabase
           .from("assinantes")
           .select("id,valor,data_criacao,status,email")
@@ -45,10 +53,16 @@ export default function Dashboard() {
           .select("id,data,valor,categoria")
           .gte("data", fromStr)
           .lte("data", toStr),
+        supabase
+          .from("receitas")
+          .select("id,data,valor,origem")
+          .gte("data", fromStr)
+          .lte("data", toStr),
       ]);
 
       setVendas((vRes.data as any) || []);
       setCustos((cRes.data as any) || []);
+      setReceitas((rRes.data as any) || []);
       setLoading(false);
     };
     load();
@@ -62,8 +76,13 @@ export default function Dashboard() {
     () => custos.reduce((s, c) => s + Number(c.valor || 0), 0),
     [custos]
   );
-  const lucro = totalVendas - totalCustos;
-  const margem = totalVendas > 0 ? (lucro / totalVendas) * 100 : 0;
+  const totalReceitasOutras = useMemo(
+    () => receitas.reduce((s, c) => s + Number(c.valor || 0), 0),
+    [receitas]
+  );
+  const receitaTotal = totalVendas + totalReceitasOutras;
+  const lucro = receitaTotal - totalCustos;
+  const margem = receitaTotal > 0 ? (lucro / receitaTotal) * 100 : 0;
   const numClientes = useMemo(() => new Set(vendas.map((v) => v.email)).size, [vendas]);
 
   const chartData = useMemo(() => {
@@ -73,6 +92,10 @@ export default function Dashboard() {
     vendas.forEach((v) => {
       const k = dateKey(v.data_criacao);
       vMap[k] = (vMap[k] || 0) + Number(v.valor || 0);
+    });
+    receitas.forEach((rc) => {
+      const k = dateKey(rc.data);
+      vMap[k] = (vMap[k] || 0) + Number(rc.valor || 0);
     });
     custos.forEach((c) => {
       const k = dateKey(c.data);
@@ -89,10 +112,10 @@ export default function Dashboard() {
         lucro: v - c,
       };
     });
-  }, [vendas, custos, r.from, r.to]);
+  }, [vendas, receitas, custos, r.from, r.to]);
 
   const metrics = [
-    { title: "Vendas no período", value: formatBRL(totalVendas), icon: DollarSign, color: "hsl(142, 71%, 45%)" },
+    { title: "Receita total", value: formatBRL(receitaTotal), icon: DollarSign, color: "hsl(142, 71%, 45%)" },
     { title: "Custos no período", value: formatBRL(totalCustos), icon: TrendingDown, color: "hsl(0, 84%, 60%)" },
     { title: "Lucro líquido", value: formatBRL(lucro), icon: Wallet, color: lucro >= 0 ? "hsl(142, 71%, 45%)" : "hsl(0, 84%, 60%)", highlight: true },
     { title: "Margem", value: `${margem.toFixed(1)}%`, icon: TrendingUp, color: "hsl(270, 100%, 65%)" },
