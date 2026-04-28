@@ -209,15 +209,17 @@ export default function Dashboard() {
                 <Tooltip
                   cursor={{ stroke: "hsl(270, 100%, 65%)", strokeWidth: 1, strokeDasharray: "3 3", opacity: 0.5 }}
                   contentStyle={{
-                    backgroundColor: "hsl(0, 0%, 4%)",
-                    border: "1px solid hsl(0, 0%, 18%)",
+                    backgroundColor: "hsl(var(--card))",
+                    border: "1px solid hsl(var(--border))",
                     borderRadius: 8,
-                    fontSize: 11,
-                    fontWeight: 300,
+                    fontSize: 12,
+                    fontWeight: 500,
                     padding: "10px 12px",
-                    boxShadow: "0 8px 24px rgba(0,0,0,0.6)",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                    color: "hsl(var(--foreground))",
                   }}
-                  labelStyle={{ color: "hsl(0, 0%, 60%)", fontSize: 10, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.1em" }}
+                  itemStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }}
+                  labelStyle={{ color: "hsl(var(--muted-foreground))", fontSize: 10, fontWeight: 600, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.1em" }}
                   formatter={(v: number, name: string) => [formatBRL(v), name]}
                 />
                 <Line
