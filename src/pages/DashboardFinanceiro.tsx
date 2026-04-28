@@ -25,6 +25,12 @@ interface Receita {
   valor: number;
 }
 
+interface Venda {
+  id: string;
+  valor: number;
+  data_criacao: string;
+}
+
 const ORIGENS = ["Pix", "Transferência", "Dinheiro", "Cartão", "Boleto", "Outros"] as const;
 type Origem = typeof ORIGENS[number];
 
