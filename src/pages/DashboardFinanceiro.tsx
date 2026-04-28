@@ -49,6 +49,7 @@ export default function DashboardFinanceiro() {
   const [range, setRange] = useState<RangeFilterValue>({ preset: "30d" });
   const [custos, setCustos] = useState<Custo[]>([]);
   const [receitas, setReceitas] = useState<Receita[]>([]);
+  const [vendas, setVendas] = useState<Venda[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savingRec, setSavingRec] = useState(false);
@@ -71,14 +72,17 @@ export default function DashboardFinanceiro() {
     setLoading(true);
     const fromStr = r.from.toISOString().slice(0, 10);
     const toStr = r.to.toISOString().slice(0, 10);
-    const [{ data: cRows, error: cErr }, { data: rRows, error: rErr }] = await Promise.all([
+    const [{ data: cRows, error: cErr }, { data: rRows, error: rErr }, { data: vRows, error: vErr }] = await Promise.all([
       supabase.from("custos").select("*").gte("data", fromStr).lte("data", toStr).order("data", { ascending: false }),
       supabase.from("receitas").select("*").gte("data", fromStr).lte("data", toStr).order("data", { ascending: false }),
+      supabase.from("assinantes").select("id,valor,data_criacao").gte("data_criacao", fromStr).lte("data_criacao", toStr),
     ]);
     if (cErr) toast.error("Erro ao carregar custos");
     if (rErr) toast.error("Erro ao carregar receitas");
+    if (vErr) toast.error("Erro ao carregar vendas");
     setCustos((cRows as any) || []);
     setReceitas((rRows as any) || []);
+    setVendas((vRows as any) || []);
     setLoading(false);
   };
 
