@@ -177,16 +177,36 @@ export default function DashboardFinanceiro() {
         <RangeFilter value={range} onChange={setRange} />
       </div>
 
-      {/* Resumo por categoria */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 col-span-2 md:col-span-1 relative overflow-hidden">
+      {/* Resumo geral: Receitas, Custos, Saldo */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="h-3.5 w-3.5 text-emerald-400" strokeWidth={1.5} />
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Receitas (outros meios)</p>
+          </div>
+          <p className="text-2xl font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(totalReceitas)}</p>
+        </div>
+        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-400/60 to-transparent" />
           <div className="flex items-center gap-2 mb-3">
             <TrendingDown className="h-3.5 w-3.5 text-red-400" strokeWidth={1.5} />
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Total no período</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Custos totais</p>
           </div>
           <p className="text-2xl font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(total)}</p>
         </div>
+        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+          <div className="flex items-center gap-2 mb-3">
+            <Wallet className="h-3.5 w-3.5 text-primary" strokeWidth={1.5} />
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Saldo (Receitas − Custos)</p>
+          </div>
+          <p className={`text-2xl font-extralight tracking-tight tabular-nums ${saldo >= 0 ? "text-emerald-400" : "text-red-400"}`}>{formatBRL(saldo)}</p>
+        </div>
+      </div>
+
+      {/* Resumo por categoria de custo */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {CATEGORIAS.map((cat) => (
           <div key={cat} className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden transition-all duration-300 hover:border-border hover:bg-card">
             <div className="absolute inset-x-0 top-0 h-px opacity-60" style={{ background: `linear-gradient(90deg, transparent, ${CAT_COLORS[cat]}, transparent)` }} />
