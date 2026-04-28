@@ -267,6 +267,39 @@ export type Database = {
         }
         Relationships: []
       }
+      custos: {
+        Row: {
+          categoria: string
+          created_at: string
+          created_by: string
+          data: string
+          descricao: string | null
+          id: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          categoria: string
+          created_at?: string
+          created_by: string
+          data?: string
+          descricao?: string | null
+          id?: string
+          updated_at?: string
+          valor?: number
+        }
+        Update: {
+          categoria?: string
+          created_at?: string
+          created_by?: string
+          data?: string
+          descricao?: string | null
+          id?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: []
+      }
       ferramentas_banner: {
         Row: {
           cor_tema: string | null
