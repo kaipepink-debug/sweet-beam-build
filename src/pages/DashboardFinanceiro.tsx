@@ -17,6 +17,17 @@ interface Custo {
   valor: number;
 }
 
+interface Receita {
+  id: string;
+  data: string;
+  origem: string;
+  descricao: string | null;
+  valor: number;
+}
+
+const ORIGENS = ["Pix", "Transferência", "Dinheiro", "Cartão", "Boleto", "Outros"] as const;
+type Origem = typeof ORIGENS[number];
+
 const CAT_COLORS: Record<Categoria, string> = {
   Ferramentas: "hsl(270, 100%, 65%)",
   "Anúncios": "hsl(24, 95%, 53%)",
@@ -24,6 +35,8 @@ const CAT_COLORS: Record<Categoria, string> = {
   Infraestrutura: "hsl(142, 71%, 45%)",
   Outros: "hsl(0, 0%, 60%)",
 };
+
+const ORIGEM_COLOR = "hsl(142, 71%, 45%)";
 
 export default function DashboardFinanceiro() {
   const { user } = useAuth();
