@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { DollarSign, TrendingUp, TrendingDown, Wallet, Users } from "lucide-react";
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
 import { getRange, formatBRL, eachDay, dateKey } from "@/lib/dateRanges";
-import { cn } from "@/lib/utils";
 
 interface Assinante {
   id: string;
@@ -95,80 +94,163 @@ export default function Dashboard() {
   const metrics = [
     { title: "Vendas no período", value: formatBRL(totalVendas), icon: DollarSign, color: "hsl(142, 71%, 45%)" },
     { title: "Custos no período", value: formatBRL(totalCustos), icon: TrendingDown, color: "hsl(0, 84%, 60%)" },
-    { title: "Lucro líquido", value: formatBRL(lucro), icon: Wallet, color: lucro >= 0 ? "hsl(142, 71%, 45%)" : "hsl(0, 84%, 60%)" },
+    { title: "Lucro líquido", value: formatBRL(lucro), icon: Wallet, color: lucro >= 0 ? "hsl(142, 71%, 45%)" : "hsl(0, 84%, 60%)", highlight: true },
     { title: "Margem", value: `${margem.toFixed(1)}%`, icon: TrendingUp, color: "hsl(270, 100%, 65%)" },
     { title: "Clientes únicos", value: String(numClientes), icon: Users, color: "hsl(217, 91%, 60%)" },
   ];
 
+  const formatAxis = (v: number) => {
+    if (v >= 1_000_000) return `R$${(v / 1_000_000).toFixed(1)}M`;
+    if (v >= 1_000) return `R$${(v / 1_000).toFixed(1)}k`;
+    return `R$${v}`;
+  };
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <p className="text-xs text-muted-foreground mb-1">Acompanhe vendas, custos e lucro da operação</p>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Dashboard</h1>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-1.5 font-light">Visão geral</p>
+          <h1 className="text-3xl md:text-4xl font-extralight text-foreground tracking-tight">Dashboard</h1>
         </div>
         <RangeFilter value={range} onChange={setRange} />
       </div>
 
-      {/* Métricas principais */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      {/* Métricas — cards finos */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {metrics.map((m) => (
-          <div key={m.title} className="rounded-2xl border border-border bg-card p-4 relative overflow-hidden purple-hover-glow">
-            <div className="absolute top-0 right-0 w-20 h-20 rounded-full blur-3xl opacity-15 translate-x-4 -translate-y-4" style={{ backgroundColor: m.color }} />
-            <div className="flex items-center justify-between mb-3 relative z-10">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${m.color}20` }}>
-                <m.icon className="h-4 w-4" style={{ color: m.color }} />
-              </div>
+          <div
+            key={m.title}
+            className="group rounded-xl border border-border/40 bg-card/40 backdrop-blur-sm p-4 relative overflow-hidden transition-all duration-300 hover:border-border hover:bg-card/60"
+          >
+            <div
+              className="absolute inset-x-0 top-0 h-px opacity-60"
+              style={{ background: `linear-gradient(90deg, transparent, ${m.color}, transparent)` }}
+            />
+            <div className="flex items-center gap-2 mb-3">
+              <m.icon className="h-3.5 w-3.5" style={{ color: m.color }} strokeWidth={1.5} />
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">{m.title}</p>
             </div>
-            <p className="text-[11px] text-muted-foreground mb-0.5 relative z-10">{m.title}</p>
-            <p className={cn("text-xl font-bold tracking-tight relative z-10")} style={{ color: m.title === "Lucro líquido" ? m.color : undefined }}>
-              {loading ? "..." : m.value}
+            <p
+              className="text-2xl font-extralight tracking-tight tabular-nums"
+              style={{ color: m.highlight ? m.color : "hsl(var(--foreground))" }}
+            >
+              {loading ? "—" : m.value}
             </p>
           </div>
         ))}
       </div>
 
-      {/* Gráfico vendas vs custos vs lucro */}
-      <div className="rounded-2xl border border-border bg-card p-5">
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+      {/* Gráfico — linha futurista */}
+      <div className="rounded-xl border border-border/40 bg-card/40 backdrop-blur-sm p-6 relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+        <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Evolução financeira</h3>
-            <p className="text-xs text-muted-foreground mt-0.5">Vendas, custos e lucro por dia</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 font-light mb-1.5">Evolução financeira</p>
+            <p className="text-3xl md:text-4xl font-extralight tracking-tight tabular-nums text-foreground">
+              {loading ? "—" : formatBRL(lucro)}
+            </p>
+            <p className="text-xs text-muted-foreground/80 font-light mt-1">
+              Lucro do período • {vendas.length} {vendas.length === 1 ? "venda" : "vendas"}
+            </p>
+          </div>
+          <div className="flex items-center gap-5 text-[11px] font-light">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "hsl(142, 71%, 45%)", boxShadow: "0 0 8px hsl(142, 71%, 45%)" }} />
+              <span className="text-muted-foreground">Vendas</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "hsl(0, 84%, 60%)", boxShadow: "0 0 8px hsl(0, 84%, 60%)" }} />
+              <span className="text-muted-foreground">Custos</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "hsl(270, 100%, 65%)", boxShadow: "0 0 8px hsl(270, 100%, 65%)" }} />
+              <span className="text-muted-foreground">Lucro</span>
+            </div>
           </div>
         </div>
 
-        <div className="h-[320px]">
+        <div className="h-[340px]">
           {chartData.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-sm text-muted-foreground">Sem dados no período</div>
+            <div className="h-full flex items-center justify-center text-xs text-muted-foreground/60 font-light">Sem dados no período</div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="g-vendas" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="g-custos" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="g-lucro" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(270, 100%, 65%)" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="hsl(270, 100%, 65%)" stopOpacity={0} />
-                  </linearGradient>
+                  <filter id="glow-vendas" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                  <filter id="glow-custos" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                  <filter id="glow-lucro" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 10%)" vertical={false} />
-                <XAxis dataKey="day" tick={{ fill: "hsl(0, 0%, 50%)", fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: "hsl(0, 0%, 50%)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `R$${v >= 1000 ? (v / 1000).toFixed(1) + "k" : v}`} />
+                <CartesianGrid strokeDasharray="2 4" stroke="hsl(0, 0%, 14%)" vertical={false} />
+                <XAxis
+                  dataKey="day"
+                  tick={{ fill: "hsl(0, 0%, 45%)", fontSize: 10, fontWeight: 300 }}
+                  axisLine={false}
+                  tickLine={false}
+                  dy={8}
+                />
+                <YAxis
+                  tick={{ fill: "hsl(0, 0%, 45%)", fontSize: 10, fontWeight: 300 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={formatAxis}
+                  width={55}
+                />
                 <Tooltip
-                  contentStyle={{ backgroundColor: "hsl(0, 0%, 6%)", border: "1px solid hsl(0, 0%, 15%)", borderRadius: 10, fontSize: 12 }}
+                  cursor={{ stroke: "hsl(270, 100%, 65%)", strokeWidth: 1, strokeDasharray: "3 3", opacity: 0.5 }}
+                  contentStyle={{
+                    backgroundColor: "hsl(0, 0%, 4%)",
+                    border: "1px solid hsl(0, 0%, 18%)",
+                    borderRadius: 8,
+                    fontSize: 11,
+                    fontWeight: 300,
+                    padding: "10px 12px",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.6)",
+                  }}
+                  labelStyle={{ color: "hsl(0, 0%, 60%)", fontSize: 10, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.1em" }}
                   formatter={(v: number, name: string) => [formatBRL(v), name]}
                 />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Area type="monotone" dataKey="vendas" name="Vendas" stroke="hsl(142, 71%, 45%)" strokeWidth={2} fill="url(#g-vendas)" />
-                <Area type="monotone" dataKey="custos" name="Custos" stroke="hsl(0, 84%, 60%)" strokeWidth={2} fill="url(#g-custos)" />
-                <Area type="monotone" dataKey="lucro" name="Lucro" stroke="hsl(270, 100%, 65%)" strokeWidth={2.5} fill="url(#g-lucro)" />
-              </AreaChart>
+                <Line
+                  type="monotone"
+                  dataKey="vendas"
+                  name="Vendas"
+                  stroke="hsl(142, 71%, 45%)"
+                  strokeWidth={1.5}
+                  dot={false}
+                  activeDot={{ r: 4, fill: "hsl(142, 71%, 45%)", stroke: "hsl(0, 0%, 4%)", strokeWidth: 2 }}
+                  filter="url(#glow-vendas)"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="custos"
+                  name="Custos"
+                  stroke="hsl(0, 84%, 60%)"
+                  strokeWidth={1.5}
+                  dot={false}
+                  activeDot={{ r: 4, fill: "hsl(0, 84%, 60%)", stroke: "hsl(0, 0%, 4%)", strokeWidth: 2 }}
+                  filter="url(#glow-custos)"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="lucro"
+                  name="Lucro"
+                  stroke="hsl(270, 100%, 65%)"
+                  strokeWidth={2}
+                  dot={false}
+                  activeDot={{ r: 5, fill: "hsl(270, 100%, 65%)", stroke: "hsl(0, 0%, 4%)", strokeWidth: 2 }}
+                  filter="url(#glow-lucro)"
+                />
+              </LineChart>
             </ResponsiveContainer>
           )}
         </div>
