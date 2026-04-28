@@ -465,6 +465,39 @@ export type Database = {
         }
         Relationships: []
       }
+      receitas: {
+        Row: {
+          created_at: string
+          created_by: string
+          data: string
+          descricao: string | null
+          id: string
+          origem: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          data?: string
+          descricao?: string | null
+          id?: string
+          origem: string
+          updated_at?: string
+          valor?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          data?: string
+          descricao?: string | null
+          id?: string
+          origem?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: []
+      }
       team_permissions: {
         Row: {
           acesso_clientes: boolean
