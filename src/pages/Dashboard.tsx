@@ -20,10 +20,18 @@ interface Custo {
   categoria: string;
 }
 
+interface Receita {
+  id: string;
+  data: string;
+  valor: number;
+  origem: string;
+}
+
 export default function Dashboard() {
   const [range, setRange] = useState<RangeFilterValue>({ preset: "hoje" });
   const [vendas, setVendas] = useState<Assinante[]>([]);
   const [custos, setCustos] = useState<Custo[]>([]);
+  const [receitas, setReceitas] = useState<Receita[]>([]);
   const [loading, setLoading] = useState(true);
 
   const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
