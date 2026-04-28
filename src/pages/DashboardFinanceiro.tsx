@@ -175,7 +175,9 @@ export default function DashboardFinanceiro() {
 
   const total = useMemo(() => custos.reduce((s, c) => s + Number(c.valor), 0), [custos]);
   const totalReceitas = useMemo(() => receitas.reduce((s, c) => s + Number(c.valor), 0), [receitas]);
-  const saldo = totalReceitas - total;
+  const totalVendas = useMemo(() => vendas.reduce((s, v) => s + Number(v.valor || 0), 0), [vendas]);
+  const receitaTotal = totalVendas + totalReceitas;
+  const saldo = receitaTotal - total;
 
   return (
     <div className="space-y-6">
@@ -187,15 +189,18 @@ export default function DashboardFinanceiro() {
         <RangeFilter value={range} onChange={setRange} />
       </div>
 
-      {/* Resumo geral: Receitas, Custos, Saldo */}
+      {/* Resumo geral: Receita Total, Custos, Saldo */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="h-3.5 w-3.5 text-emerald-400" strokeWidth={1.5} />
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Receitas (outros meios)</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Receita total</p>
           </div>
-          <p className="text-2xl font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(totalReceitas)}</p>
+          <p className="text-2xl font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(receitaTotal)}</p>
+          <p className="text-[10px] text-muted-foreground/60 font-light mt-1.5 tabular-nums">
+            Vendas {formatBRL(totalVendas)} + Outros {formatBRL(totalReceitas)}
+          </p>
         </div>
         <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-400/60 to-transparent" />
@@ -209,7 +214,7 @@ export default function DashboardFinanceiro() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
           <div className="flex items-center gap-2 mb-3">
             <Wallet className="h-3.5 w-3.5 text-primary" strokeWidth={1.5} />
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Saldo (Receitas − Custos)</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Saldo (Receita − Custos)</p>
           </div>
           <p className={`text-2xl font-extralight tracking-tight tabular-nums ${saldo >= 0 ? "text-emerald-400" : "text-red-400"}`}>{formatBRL(saldo)}</p>
         </div>
