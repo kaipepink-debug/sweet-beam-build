@@ -106,71 +106,74 @@ export default function DashboardFinanceiro() {
   const total = useMemo(() => custos.reduce((s, c) => s + Number(c.valor), 0), [custos]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <p className="text-xs text-muted-foreground mb-1">Lance os gastos do dia para apurar o lucro</p>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Financeiro</h1>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-1.5 font-light">Lance os gastos do dia</p>
+          <h1 className="text-3xl md:text-4xl font-extralight text-foreground tracking-tight">Financeiro</h1>
         </div>
         <RangeFilter value={range} onChange={setRange} />
       </div>
 
       {/* Resumo por categoria */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="rounded-2xl border border-border bg-card p-4 col-span-2 md:col-span-1">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingDown className="h-4 w-4 text-red-400" />
-            <p className="text-[11px] text-muted-foreground">Total no período</p>
+        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 col-span-2 md:col-span-1 relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-400/60 to-transparent" />
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingDown className="h-3.5 w-3.5 text-red-400" strokeWidth={1.5} />
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Total no período</p>
           </div>
-          <p className="text-xl font-bold text-foreground">{formatBRL(total)}</p>
+          <p className="text-2xl font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(total)}</p>
         </div>
         {CATEGORIAS.map((cat) => (
-          <div key={cat} className="rounded-2xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: CAT_COLORS[cat] }} />
-              <p className="text-[11px] text-muted-foreground truncate">{cat}</p>
+          <div key={cat} className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden transition-all duration-300 hover:border-border hover:bg-card">
+            <div className="absolute inset-x-0 top-0 h-px opacity-60" style={{ background: `linear-gradient(90deg, transparent, ${CAT_COLORS[cat]}, transparent)` }} />
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: CAT_COLORS[cat], boxShadow: `0 0 8px ${CAT_COLORS[cat]}` }} />
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light truncate">{cat}</p>
             </div>
-            <p className="text-base font-semibold text-foreground">{formatBRL(totalPorCategoria[cat])}</p>
+            <p className="text-lg font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(totalPorCategoria[cat])}</p>
           </div>
         ))}
       </div>
 
       {/* Form de lançamento */}
-      <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-5">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Lançar novo custo</h3>
+      <form onSubmit={handleSubmit} className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-5 relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <h3 className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/80 mb-4 font-light">Lançar novo custo</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           <div>
-            <label className="text-[11px] text-muted-foreground mb-1 block">Data</label>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Data</label>
             <input
               type="date"
               value={data}
               onChange={(e) => setData(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg bg-background border border-border text-sm text-foreground focus:outline-none focus:border-primary"
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-primary"
               required
             />
           </div>
           <div>
-            <label className="text-[11px] text-muted-foreground mb-1 block">Categoria</label>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Categoria</label>
             <select
               value={categoria}
               onChange={(e) => setCategoria(e.target.value as Categoria)}
-              className="w-full h-10 px-3 rounded-lg bg-background border border-border text-sm text-foreground focus:outline-none focus:border-primary"
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-primary"
             >
               {CATEGORIAS.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
           <div className="md:col-span-2">
-            <label className="text-[11px] text-muted-foreground mb-1 block">Descrição (opcional)</label>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Descrição (opcional)</label>
             <input
               type="text"
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
               placeholder="Ex: Anúncio Facebook campanha X"
-              className="w-full h-10 px-3 rounded-lg bg-background border border-border text-sm text-foreground focus:outline-none focus:border-primary"
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-primary"
             />
           </div>
           <div>
-            <label className="text-[11px] text-muted-foreground mb-1 block">Valor (R$)</label>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Valor (R$)</label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -178,13 +181,13 @@ export default function DashboardFinanceiro() {
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
                 placeholder="0,00"
-                className="flex-1 h-10 px-3 rounded-lg bg-background border border-border text-sm text-foreground focus:outline-none focus:border-primary"
+                className="flex-1 h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-primary"
                 required
               />
               <button
                 type="submit"
                 disabled={saving}
-                className="h-10 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition disabled:opacity-50 flex items-center gap-1"
+                className="h-10 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-light hover:opacity-90 transition disabled:opacity-50 flex items-center gap-1"
               >
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
               </button>
@@ -194,19 +197,20 @@ export default function DashboardFinanceiro() {
       </form>
 
       {/* Lista de lançamentos */}
-      <div className="rounded-2xl border border-border bg-card overflow-hidden">
-        <div className="p-5 border-b border-border">
-          <h3 className="text-sm font-semibold text-foreground">Lançamentos do período ({custos.length})</h3>
+      <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden relative">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="p-5 border-b border-border/40">
+          <h3 className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/80 font-light">Lançamentos do período ({custos.length})</h3>
         </div>
         {loading ? (
-          <div className="p-8 text-center text-muted-foreground text-sm">Carregando...</div>
+          <div className="p-8 text-center text-muted-foreground/60 text-xs font-light">Carregando...</div>
         ) : custos.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground text-sm">Nenhum custo lançado neste período</div>
+          <div className="p-8 text-center text-muted-foreground/60 text-xs font-light">Nenhum custo lançado neste período</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-background/50">
-                <tr className="text-left text-[11px] text-muted-foreground uppercase tracking-wider">
+              <thead className="bg-background/40">
+                <tr className="text-left text-[10px] text-muted-foreground/70 uppercase tracking-wider font-light">
                   <th className="px-4 py-3">Data</th>
                   <th className="px-4 py-3">Categoria</th>
                   <th className="px-4 py-3">Descrição</th>
@@ -216,23 +220,23 @@ export default function DashboardFinanceiro() {
               </thead>
               <tbody>
                 {custos.map((c) => (
-                  <tr key={c.id} className="border-t border-border hover:bg-background/30">
-                    <td className="px-4 py-3 text-foreground">{new Date(c.data + "T00:00:00").toLocaleDateString("pt-BR")}</td>
+                  <tr key={c.id} className="border-t border-border/30 hover:bg-background/30 transition-colors">
+                    <td className="px-4 py-3 text-foreground font-light tabular-nums">{new Date(c.data + "T00:00:00").toLocaleDateString("pt-BR")}</td>
                     <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium" style={{ backgroundColor: `${CAT_COLORS[c.categoria]}20`, color: CAT_COLORS[c.categoria] }}>
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-light" style={{ backgroundColor: `${CAT_COLORS[c.categoria]}18`, color: CAT_COLORS[c.categoria] }}>
                         <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: CAT_COLORS[c.categoria] }} />
                         {c.categoria}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">{c.descricao || "-"}</td>
-                    <td className="px-4 py-3 text-right text-foreground font-medium">{formatBRL(Number(c.valor))}</td>
+                    <td className="px-4 py-3 text-muted-foreground font-light">{c.descricao || "-"}</td>
+                    <td className="px-4 py-3 text-right text-foreground font-light tabular-nums">{formatBRL(Number(c.valor))}</td>
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => handleDelete(c.id)}
-                        className="text-muted-foreground hover:text-destructive transition p-1"
+                        className="text-muted-foreground/60 hover:text-destructive transition p-1"
                         title="Excluir"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
                       </button>
                     </td>
                   </tr>
