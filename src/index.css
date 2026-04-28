@@ -12,10 +12,10 @@ All colors MUST be HSL.
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
 
-    --card: 0 0% 9%;
+    --card: 0 0% 15%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 9%;
+    --popover: 0 0% 15%;
     --popover-foreground: 0 0% 95%;
 
     --primary: 270 100% 55%;
@@ -52,9 +52,9 @@ All colors MUST be HSL.
   .dark {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
-    --card: 0 0% 9%;
+    --card: 0 0% 15%;
     --card-foreground: 0 0% 95%;
-    --popover: 0 0% 9%;
+    --popover: 0 0% 15%;
     --popover-foreground: 0 0% 95%;
     --primary: 270 100% 55%;
     --primary-foreground: 0 0% 100%;
