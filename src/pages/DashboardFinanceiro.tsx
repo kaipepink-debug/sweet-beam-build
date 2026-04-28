@@ -171,7 +171,7 @@ export default function DashboardFinanceiro() {
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-1.5 font-light">Lance os gastos do dia</p>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-1.5 font-light">Custos e receitas do período</p>
           <h1 className="text-3xl md:text-4xl font-extralight text-foreground tracking-tight">Financeiro</h1>
         </div>
         <RangeFilter value={range} onChange={setRange} />
