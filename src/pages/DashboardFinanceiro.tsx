@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Plus, Trash2, Loader2, TrendingDown } from "lucide-react";
+import { Plus, Trash2, Loader2, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
@@ -17,6 +17,17 @@ interface Custo {
   valor: number;
 }
 
+interface Receita {
+  id: string;
+  data: string;
+  origem: string;
+  descricao: string | null;
+  valor: number;
+}
+
+const ORIGENS = ["Pix", "Transferência", "Dinheiro", "Cartão", "Boleto", "Outros"] as const;
+type Origem = typeof ORIGENS[number];
+
 const CAT_COLORS: Record<Categoria, string> = {
   Ferramentas: "hsl(270, 100%, 65%)",
   "Anúncios": "hsl(24, 95%, 53%)",
@@ -25,36 +36,48 @@ const CAT_COLORS: Record<Categoria, string> = {
   Outros: "hsl(0, 0%, 60%)",
 };
 
+const ORIGEM_COLOR = "hsl(142, 71%, 45%)";
+
 export default function DashboardFinanceiro() {
   const { user } = useAuth();
   const [range, setRange] = useState<RangeFilterValue>({ preset: "30d" });
   const [custos, setCustos] = useState<Custo[]>([]);
+  const [receitas, setReceitas] = useState<Receita[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savingRec, setSavingRec] = useState(false);
 
-  // form
+  // form custo
   const [data, setData] = useState(new Date().toISOString().slice(0, 10));
   const [categoria, setCategoria] = useState<Categoria>("Ferramentas");
   const [descricao, setDescricao] = useState("");
   const [valor, setValor] = useState("");
 
+  // form receita
+  const [dataR, setDataR] = useState(new Date().toISOString().slice(0, 10));
+  const [origem, setOrigem] = useState<Origem>("Pix");
+  const [descricaoR, setDescricaoR] = useState("");
+  const [valorR, setValorR] = useState("");
+
   const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
 
-  const fetchCustos = async () => {
+  const fetchAll = async () => {
     setLoading(true);
-    const { data: rows, error } = await supabase
-      .from("custos")
-      .select("*")
-      .gte("data", r.from.toISOString().slice(0, 10))
-      .lte("data", r.to.toISOString().slice(0, 10))
-      .order("data", { ascending: false });
-    if (error) toast.error("Erro ao carregar custos");
-    setCustos((rows as any) || []);
+    const fromStr = r.from.toISOString().slice(0, 10);
+    const toStr = r.to.toISOString().slice(0, 10);
+    const [{ data: cRows, error: cErr }, { data: rRows, error: rErr }] = await Promise.all([
+      supabase.from("custos").select("*").gte("data", fromStr).lte("data", toStr).order("data", { ascending: false }),
+      supabase.from("receitas").select("*").gte("data", fromStr).lte("data", toStr).order("data", { ascending: false }),
+    ]);
+    if (cErr) toast.error("Erro ao carregar custos");
+    if (rErr) toast.error("Erro ao carregar receitas");
+    setCustos((cRows as any) || []);
+    setReceitas((rRows as any) || []);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchCustos();
+    fetchAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [r.from.getTime(), r.to.getTime()]);
 
@@ -82,7 +105,34 @@ export default function DashboardFinanceiro() {
     toast.success("Custo lançado");
     setDescricao("");
     setValor("");
-    fetchCustos();
+    fetchAll();
+  };
+
+  const handleSubmitReceita = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    const v = parseFloat(valorR.replace(",", "."));
+    if (isNaN(v) || v <= 0) {
+      toast.error("Valor inválido");
+      return;
+    }
+    setSavingRec(true);
+    const { error } = await supabase.from("receitas").insert({
+      data: dataR,
+      origem,
+      descricao: descricaoR || null,
+      valor: v,
+      created_by: user.id,
+    });
+    setSavingRec(false);
+    if (error) {
+      toast.error("Erro ao salvar receita");
+      return;
+    }
+    toast.success("Receita lançada");
+    setDescricaoR("");
+    setValorR("");
+    fetchAll();
   };
 
   const handleDelete = async (id: string) => {
@@ -92,7 +142,17 @@ export default function DashboardFinanceiro() {
       return;
     }
     toast.success("Excluído");
-    fetchCustos();
+    fetchAll();
+  };
+
+  const handleDeleteReceita = async (id: string) => {
+    const { error } = await supabase.from("receitas").delete().eq("id", id);
+    if (error) {
+      toast.error("Erro ao excluir");
+      return;
+    }
+    toast.success("Excluído");
+    fetchAll();
   };
 
   const totalPorCategoria = useMemo(() => {
@@ -104,27 +164,49 @@ export default function DashboardFinanceiro() {
   }, [custos]);
 
   const total = useMemo(() => custos.reduce((s, c) => s + Number(c.valor), 0), [custos]);
+  const totalReceitas = useMemo(() => receitas.reduce((s, c) => s + Number(c.valor), 0), [receitas]);
+  const saldo = totalReceitas - total;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-1.5 font-light">Lance os gastos do dia</p>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-1.5 font-light">Custos e receitas do período</p>
           <h1 className="text-3xl md:text-4xl font-extralight text-foreground tracking-tight">Financeiro</h1>
         </div>
         <RangeFilter value={range} onChange={setRange} />
       </div>
 
-      {/* Resumo por categoria */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 col-span-2 md:col-span-1 relative overflow-hidden">
+      {/* Resumo geral: Receitas, Custos, Saldo */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="h-3.5 w-3.5 text-emerald-400" strokeWidth={1.5} />
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Receitas (outros meios)</p>
+          </div>
+          <p className="text-2xl font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(totalReceitas)}</p>
+        </div>
+        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-400/60 to-transparent" />
           <div className="flex items-center gap-2 mb-3">
             <TrendingDown className="h-3.5 w-3.5 text-red-400" strokeWidth={1.5} />
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Total no período</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Custos totais</p>
           </div>
           <p className="text-2xl font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(total)}</p>
         </div>
+        <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+          <div className="flex items-center gap-2 mb-3">
+            <Wallet className="h-3.5 w-3.5 text-primary" strokeWidth={1.5} />
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Saldo (Receitas − Custos)</p>
+          </div>
+          <p className={`text-2xl font-extralight tracking-tight tabular-nums ${saldo >= 0 ? "text-emerald-400" : "text-red-400"}`}>{formatBRL(saldo)}</p>
+        </div>
+      </div>
+
+      {/* Resumo por categoria de custo */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {CATEGORIAS.map((cat) => (
           <div key={cat} className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden transition-all duration-300 hover:border-border hover:bg-card">
             <div className="absolute inset-x-0 top-0 h-px opacity-60" style={{ background: `linear-gradient(90deg, transparent, ${CAT_COLORS[cat]}, transparent)` }} />
@@ -233,6 +315,119 @@ export default function DashboardFinanceiro() {
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => handleDelete(c.id)}
+                        className="text-muted-foreground/60 hover:text-destructive transition p-1"
+                        title="Excluir"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Form de receita */}
+      <form onSubmit={handleSubmitReceita} className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-5 relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
+        <h3 className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/80 mb-4 font-light flex items-center gap-2">
+          <TrendingUp className="h-3 w-3 text-emerald-400" strokeWidth={1.5} />
+          Lançar pagamento recebido (outros meios)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+          <div>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Data</label>
+            <input
+              type="date"
+              value={dataR}
+              onChange={(e) => setDataR(e.target.value)}
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-emerald-400"
+              required
+            />
+          </div>
+          <div>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Origem</label>
+            <select
+              value={origem}
+              onChange={(e) => setOrigem(e.target.value as Origem)}
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-emerald-400"
+            >
+              {ORIGENS.map((o) => <option key={o} value={o}>{o}</option>)}
+            </select>
+          </div>
+          <div className="md:col-span-2">
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Descrição (opcional)</label>
+            <input
+              type="text"
+              value={descricaoR}
+              onChange={(e) => setDescricaoR(e.target.value)}
+              placeholder="Ex: Cliente João - Pix manual"
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-emerald-400"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Valor (R$)</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                inputMode="decimal"
+                value={valorR}
+                onChange={(e) => setValorR(e.target.value)}
+                placeholder="0,00"
+                className="flex-1 h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-emerald-400"
+                required
+              />
+              <button
+                type="submit"
+                disabled={savingRec}
+                className="h-10 px-4 rounded-lg bg-emerald-500 text-white text-sm font-light hover:opacity-90 transition disabled:opacity-50 flex items-center gap-1"
+              >
+                {savingRec ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      {/* Lista de receitas */}
+      <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden relative">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
+        <div className="p-5 border-b border-border/40">
+          <h3 className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/80 font-light">Pagamentos recebidos no período ({receitas.length})</h3>
+        </div>
+        {loading ? (
+          <div className="p-8 text-center text-muted-foreground/60 text-xs font-light">Carregando...</div>
+        ) : receitas.length === 0 ? (
+          <div className="p-8 text-center text-muted-foreground/60 text-xs font-light">Nenhuma receita lançada neste período</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-background/40">
+                <tr className="text-left text-[10px] text-muted-foreground/70 uppercase tracking-wider font-light">
+                  <th className="px-4 py-3">Data</th>
+                  <th className="px-4 py-3">Origem</th>
+                  <th className="px-4 py-3">Descrição</th>
+                  <th className="px-4 py-3 text-right">Valor</th>
+                  <th className="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {receitas.map((c) => (
+                  <tr key={c.id} className="border-t border-border/30 hover:bg-background/30 transition-colors">
+                    <td className="px-4 py-3 text-foreground font-light tabular-nums">{new Date(c.data + "T00:00:00").toLocaleDateString("pt-BR")}</td>
+                    <td className="px-4 py-3">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-light" style={{ backgroundColor: `${ORIGEM_COLOR}18`, color: ORIGEM_COLOR }}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ORIGEM_COLOR }} />
+                        {c.origem}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground font-light">{c.descricao || "-"}</td>
+                    <td className="px-4 py-3 text-right text-emerald-400 font-light tabular-nums">+ {formatBRL(Number(c.valor))}</td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => handleDeleteReceita(c.id)}
                         className="text-muted-foreground/60 hover:text-destructive transition p-1"
                         title="Excluir"
                       >
