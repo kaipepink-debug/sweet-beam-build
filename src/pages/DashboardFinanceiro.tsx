@@ -328,6 +328,119 @@ export default function DashboardFinanceiro() {
           </div>
         )}
       </div>
+
+      {/* Form de receita */}
+      <form onSubmit={handleSubmitReceita} className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-5 relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
+        <h3 className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/80 mb-4 font-light flex items-center gap-2">
+          <TrendingUp className="h-3 w-3 text-emerald-400" strokeWidth={1.5} />
+          Lançar pagamento recebido (outros meios)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+          <div>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Data</label>
+            <input
+              type="date"
+              value={dataR}
+              onChange={(e) => setDataR(e.target.value)}
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-emerald-400"
+              required
+            />
+          </div>
+          <div>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Origem</label>
+            <select
+              value={origem}
+              onChange={(e) => setOrigem(e.target.value as Origem)}
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-emerald-400"
+            >
+              {ORIGENS.map((o) => <option key={o} value={o}>{o}</option>)}
+            </select>
+          </div>
+          <div className="md:col-span-2">
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Descrição (opcional)</label>
+            <input
+              type="text"
+              value={descricaoR}
+              onChange={(e) => setDescricaoR(e.target.value)}
+              placeholder="Ex: Cliente João - Pix manual"
+              className="w-full h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-emerald-400"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground/70 mb-1.5 block font-light">Valor (R$)</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                inputMode="decimal"
+                value={valorR}
+                onChange={(e) => setValorR(e.target.value)}
+                placeholder="0,00"
+                className="flex-1 h-10 px-3 rounded-lg bg-background/60 border border-border/60 text-sm text-foreground font-light focus:outline-none focus:border-emerald-400"
+                required
+              />
+              <button
+                type="submit"
+                disabled={savingRec}
+                className="h-10 px-4 rounded-lg bg-emerald-500 text-white text-sm font-light hover:opacity-90 transition disabled:opacity-50 flex items-center gap-1"
+              >
+                {savingRec ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      {/* Lista de receitas */}
+      <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden relative">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
+        <div className="p-5 border-b border-border/40">
+          <h3 className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/80 font-light">Pagamentos recebidos no período ({receitas.length})</h3>
+        </div>
+        {loading ? (
+          <div className="p-8 text-center text-muted-foreground/60 text-xs font-light">Carregando...</div>
+        ) : receitas.length === 0 ? (
+          <div className="p-8 text-center text-muted-foreground/60 text-xs font-light">Nenhuma receita lançada neste período</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-background/40">
+                <tr className="text-left text-[10px] text-muted-foreground/70 uppercase tracking-wider font-light">
+                  <th className="px-4 py-3">Data</th>
+                  <th className="px-4 py-3">Origem</th>
+                  <th className="px-4 py-3">Descrição</th>
+                  <th className="px-4 py-3 text-right">Valor</th>
+                  <th className="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {receitas.map((c) => (
+                  <tr key={c.id} className="border-t border-border/30 hover:bg-background/30 transition-colors">
+                    <td className="px-4 py-3 text-foreground font-light tabular-nums">{new Date(c.data + "T00:00:00").toLocaleDateString("pt-BR")}</td>
+                    <td className="px-4 py-3">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-light" style={{ backgroundColor: `${ORIGEM_COLOR}18`, color: ORIGEM_COLOR }}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ORIGEM_COLOR }} />
+                        {c.origem}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground font-light">{c.descricao || "-"}</td>
+                    <td className="px-4 py-3 text-right text-emerald-400 font-light tabular-nums">+ {formatBRL(Number(c.valor))}</td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => handleDeleteReceita(c.id)}
+                        className="text-muted-foreground/60 hover:text-destructive transition p-1"
+                        title="Excluir"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
