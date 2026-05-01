@@ -1,0 +1,1 @@
+UPDATE public.assinantes SET valor = 67, plano = 'Mensal' WHERE meio_pagamento = 'Naut' AND (valor = 0 OR valor IS NULL) AND (plano = 'N/A' OR plano = 'Naut');
