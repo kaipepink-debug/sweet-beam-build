@@ -36,6 +36,9 @@ export default function DashboardAssinaturas() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [produtoFilter, setProdutoFilter] = useState("all");
+  const [origemFilter, setOrigemFilter] = useState<"all" | "naut" | "manual">("all");
+  const [range, setRange] = useState<RangeFilterValue>({ preset: "30d" });
+  const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
   const [tempDialogOpen, setTempDialogOpen] = useState(false);
