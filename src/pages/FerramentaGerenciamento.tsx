@@ -42,6 +42,7 @@ import capcutLogo from "@/assets/tools/capcut.png";
 import perplexityLogo from "@/assets/tools/perplexity.png";
 import digenLogo from "@/assets/tools/digen.png";
 import nanobananaLogo from "@/assets/tools/nanobanana.png";
+import gammaLogo from "@/assets/tools/gamma.png";
 
 const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: number }> = {
   grok: { name: "SuperGrok", logo: grokLogo, expiracaoDias: 3 },
@@ -68,6 +69,7 @@ const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: n
   perplexity: { name: "Perplexity AI", logo: perplexityLogo, expiracaoDias: 30 },
   digen: { name: "Digen", logo: digenLogo, expiracaoDias: 30 },
   nanobanana: { name: "Nano Banana", logo: nanobananaLogo, expiracaoDias: 30 },
+  gamma: { name: "Gamma", logo: gammaLogo, expiracaoDias: 30 },
 };
 
 // Ferramentas vinculadas: compartilham o mesmo login (1:N)
