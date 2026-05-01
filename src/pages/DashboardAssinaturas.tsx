@@ -242,6 +242,29 @@ export default function DashboardAssinaturas() {
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline" className="gap-2"><Columns3 className="h-4 w-4" /> Colunas</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {COLUMNS.map(c => (
+                <DropdownMenuCheckboxItem
+                  key={c.key}
+                  checked={visibleCols[c.key]}
+                  onCheckedChange={(v) => setVisibleCols(prev => ({ ...prev, [c.key]: !!v }))}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  {c.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setVisibleCols(COLUMNS.reduce((acc, c) => ({ ...acc, [c.key]: true }), {} as any)); }}>
+                Mostrar todas
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline" className="gap-2"><Download className="h-4 w-4" /> Exportar</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
