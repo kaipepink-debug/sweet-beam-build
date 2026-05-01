@@ -20,6 +20,16 @@ function determineStatus(sub: any): string {
   return "Cancelada";
 }
 
+// Infer price from plan name when Naut doesn't return it
+function inferPriceFromPlan(planName: string | null | undefined): number {
+  if (!planName) return 0;
+  const p = planName.toLowerCase();
+  if (p.includes("semestral")) return 497;
+  if (p.includes("mensal") || p === "naut") return 67;
+  if (p.includes("semanal")) return 39.99;
+  return 0;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
