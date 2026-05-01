@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { DollarSign, TrendingUp, TrendingDown, Wallet, Users } from "lucide-react";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
 import { getRange, formatBRL, eachDay, dateKey } from "@/lib/dateRanges";
@@ -199,7 +199,23 @@ export default function Dashboard() {
             <div className="h-full flex items-center justify-center text-xs text-muted-foreground/60 font-light">Sem dados no período</div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              {chartData.length === 1 ? (
+                <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="2 4" stroke="hsl(0, 0%, 14%)" vertical={false} />
+                  <XAxis dataKey="day" tick={{ fill: "hsl(0, 0%, 45%)", fontSize: 10, fontWeight: 300 }} axisLine={false} tickLine={false} dy={8} />
+                  <YAxis tick={{ fill: "hsl(0, 0%, 45%)", fontSize: 10, fontWeight: 300 }} axisLine={false} tickLine={false} tickFormatter={formatAxis} width={55} />
+                  <Tooltip
+                    cursor={{ fill: "hsl(0, 0%, 8%)" }}
+                    contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12, color: "hsl(var(--foreground))" }}
+                    formatter={(v: number, name: string) => [formatBRL(v), name]}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                  <Bar dataKey="vendas" name="Vendas" fill="hsl(142, 71%, 45%)" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="custos" name="Custos" fill="hsl(0, 84%, 60%)" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="lucro" name="Lucro" fill="hsl(270, 100%, 65%)" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              ) : (
+                <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <filter id="glow-vendas" x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur stdDeviation="2.5" result="blur" />
@@ -251,7 +267,7 @@ export default function Dashboard() {
                   name="Vendas"
                   stroke="hsl(142, 71%, 45%)"
                   strokeWidth={1.5}
-                  dot={false}
+                  dot={{ r: 3, fill: "hsl(142, 71%, 45%)" }}
                   activeDot={{ r: 4, fill: "hsl(142, 71%, 45%)", stroke: "hsl(0, 0%, 4%)", strokeWidth: 2 }}
                   filter="url(#glow-vendas)"
                 />
@@ -261,7 +277,7 @@ export default function Dashboard() {
                   name="Custos"
                   stroke="hsl(0, 84%, 60%)"
                   strokeWidth={1.5}
-                  dot={false}
+                  dot={{ r: 3, fill: "hsl(0, 84%, 60%)" }}
                   activeDot={{ r: 4, fill: "hsl(0, 84%, 60%)", stroke: "hsl(0, 0%, 4%)", strokeWidth: 2 }}
                   filter="url(#glow-custos)"
                 />
@@ -271,11 +287,12 @@ export default function Dashboard() {
                   name="Lucro"
                   stroke="hsl(270, 100%, 65%)"
                   strokeWidth={2}
-                  dot={false}
+                  dot={{ r: 3, fill: "hsl(270, 100%, 65%)" }}
                   activeDot={{ r: 5, fill: "hsl(270, 100%, 65%)", stroke: "hsl(0, 0%, 4%)", strokeWidth: 2 }}
                   filter="url(#glow-lucro)"
                 />
               </LineChart>
+              )}
             </ResponsiveContainer>
           )}
         </div>

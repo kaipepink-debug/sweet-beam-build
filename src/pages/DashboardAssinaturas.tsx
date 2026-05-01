@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, MoreHorizontal, Plus, UserPlus, Download, Clock, DollarSign, Users } from "lucide-react";
+import { Search, MoreHorizontal, Plus, UserPlus, Download, Clock, DollarSign, Users, Columns3 } from "lucide-react";
 import * as XLSX from "xlsx";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,29 @@ export default function DashboardAssinaturas() {
   const [produtoFilter, setProdutoFilter] = useState("all");
   const [origemFilter, setOrigemFilter] = useState<"all" | "naut" | "manual">("all");
   const [range, setRange] = useState<RangeFilterValue>({ preset: "30d" });
+
+  const COLUMNS = [
+    { key: "assinante", label: "Assinante" },
+    { key: "produto", label: "Produto" },
+    { key: "status", label: "Status" },
+    { key: "valor", label: "Valor" },
+    { key: "proxima_cobranca", label: "Próx. cobrança" },
+    { key: "data_criacao", label: "Criada em" },
+    { key: "meio_pagamento", label: "Meio de Pagamento" },
+    { key: "data_renovacao", label: "Data de Renovação" },
+  ] as const;
+  type ColKey = typeof COLUMNS[number]["key"];
+  const [visibleCols, setVisibleCols] = useState<Record<ColKey, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem("assinaturas_cols_v1");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return COLUMNS.reduce((acc, c) => ({ ...acc, [c.key]: true }), {} as Record<ColKey, boolean>);
+  });
+  useEffect(() => {
+    localStorage.setItem("assinaturas_cols_v1", JSON.stringify(visibleCols));
+  }, [visibleCols]);
+  const isVisible = (k: ColKey) => visibleCols[k];
   const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
@@ -219,6 +242,29 @@ export default function DashboardAssinaturas() {
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline" className="gap-2"><Columns3 className="h-4 w-4" /> Colunas</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {COLUMNS.map(c => (
+                <DropdownMenuCheckboxItem
+                  key={c.key}
+                  checked={visibleCols[c.key]}
+                  onCheckedChange={(v) => setVisibleCols(prev => ({ ...prev, [c.key]: !!v }))}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  {c.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setVisibleCols(COLUMNS.reduce((acc, c) => ({ ...acc, [c.key]: true }), {} as any)); }}>
+                Mostrar todas
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline" className="gap-2"><Download className="h-4 w-4" /> Exportar</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -380,14 +426,14 @@ export default function DashboardAssinaturas() {
         <Table>
           <TableHeader>
             <TableRow className="border-border">
-              <TableHead className="text-muted-foreground">Assinante</TableHead>
-              <TableHead className="text-muted-foreground">Produto</TableHead>
-              <TableHead className="text-muted-foreground">Status</TableHead>
-              <TableHead className="text-muted-foreground">Valor</TableHead>
-              <TableHead className="text-muted-foreground">Próx. cobrança</TableHead>
-              <TableHead className="text-muted-foreground">Criada em</TableHead>
-              <TableHead className="text-muted-foreground">Meio de Pagamento</TableHead>
-              <TableHead className="text-muted-foreground">Data de Renovação</TableHead>
+              {isVisible("assinante") && <TableHead className="text-muted-foreground">Assinante</TableHead>}
+              {isVisible("produto") && <TableHead className="text-muted-foreground">Produto</TableHead>}
+              {isVisible("status") && <TableHead className="text-muted-foreground">Status</TableHead>}
+              {isVisible("valor") && <TableHead className="text-muted-foreground">Valor</TableHead>}
+              {isVisible("proxima_cobranca") && <TableHead className="text-muted-foreground">Próx. cobrança</TableHead>}
+              {isVisible("data_criacao") && <TableHead className="text-muted-foreground">Criada em</TableHead>}
+              {isVisible("meio_pagamento") && <TableHead className="text-muted-foreground">Meio de Pagamento</TableHead>}
+              {isVisible("data_renovacao") && <TableHead className="text-muted-foreground">Data de Renovação</TableHead>}
               <TableHead className="w-10"></TableHead>
             </TableRow>
           </TableHeader>
@@ -399,27 +445,35 @@ export default function DashboardAssinaturas() {
             ) : (
               filtered.map(a => (
                 <TableRow key={a.id} className="border-border hover:bg-muted/30">
-                  <TableCell>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{a.nome}</p>
-                      <p className="text-xs text-muted-foreground">{a.email}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <p className="text-sm font-semibold text-foreground">{a.produto}</p>
-                    <p className="text-xs text-muted-foreground">{a.plano}</p>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={statusColor(a.status)}>{a.status}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <p className="text-sm font-semibold text-foreground">{formatCurrency(a.valor)}</p>
-                    <p className="text-xs text-muted-foreground">N/A</p>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_criacao)}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_renovacao)}</TableCell>
+                  {isVisible("assinante") && (
+                    <TableCell>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{a.nome}</p>
+                        <p className="text-xs text-muted-foreground">{a.email}</p>
+                      </div>
+                    </TableCell>
+                  )}
+                  {isVisible("produto") && (
+                    <TableCell>
+                      <p className="text-sm font-semibold text-foreground">{a.produto}</p>
+                      <p className="text-xs text-muted-foreground">{a.plano}</p>
+                    </TableCell>
+                  )}
+                  {isVisible("status") && (
+                    <TableCell>
+                      <Badge className={statusColor(a.status)}>{a.status}</Badge>
+                    </TableCell>
+                  )}
+                  {isVisible("valor") && (
+                    <TableCell>
+                      <p className="text-sm font-semibold text-foreground">{formatCurrency(a.valor)}</p>
+                      <p className="text-xs text-muted-foreground">N/A</p>
+                    </TableCell>
+                  )}
+                  {isVisible("proxima_cobranca") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>}
+                  {isVisible("data_criacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_criacao)}</TableCell>}
+                  {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
+                  {isVisible("data_renovacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_renovacao)}</TableCell>}
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
