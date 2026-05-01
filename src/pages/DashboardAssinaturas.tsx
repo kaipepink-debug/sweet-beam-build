@@ -151,12 +151,26 @@ export default function DashboardAssinaturas() {
     fetchAssinantes();
   };
 
-  const filtered = assinantes.filter(a => {
+  const isManual = (a: Assinante) => a.meio_pagamento === "Manual" || a.meio_pagamento === "Temporário";
+
+  const filtered = useMemo(() => assinantes.filter(a => {
     const matchSearch = a.nome.toLowerCase().includes(search.toLowerCase()) || a.email.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || a.status === statusFilter;
     const matchProduto = produtoFilter === "all" || a.produto === produtoFilter;
-    return matchSearch && matchStatus && matchProduto;
-  });
+    const matchOrigem = origemFilter === "all" || (origemFilter === "manual" ? isManual(a) : !isManual(a));
+    const created = a.data_criacao ? new Date(a.data_criacao) : null;
+    const matchRange = !created || (created >= r.from && created <= r.to);
+    return matchSearch && matchStatus && matchProduto && matchOrigem && matchRange;
+  }), [assinantes, search, statusFilter, produtoFilter, origemFilter, r.from, r.to]);
+
+  const totalAtivasValor = useMemo(
+    () => filtered.filter(a => a.status === "Ativa").reduce((s, a) => s + Number(a.valor || 0), 0),
+    [filtered]
+  );
+  const totalAtivasCount = useMemo(
+    () => filtered.filter(a => a.status === "Ativa").length,
+    [filtered]
+  );
 
   const produtos = [...new Set(assinantes.map(a => a.produto))];
 
