@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { DollarSign, TrendingUp, TrendingDown, Wallet, Users } from "lucide-react";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
 import { getRange, formatBRL, eachDay, dateKey } from "@/lib/dateRanges";
