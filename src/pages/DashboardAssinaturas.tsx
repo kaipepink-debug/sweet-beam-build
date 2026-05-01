@@ -313,12 +313,50 @@ export default function DashboardAssinaturas() {
         </div>
       </div>
 
+      {/* Range Filter */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <RangeFilter value={range} onChange={setRange} />
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
+            <DollarSign className="h-4 w-4" /> Valor de Assinaturas Ativas
+          </div>
+          <p className="text-2xl font-semibold text-foreground">{formatBRL(totalAtivasValor)}</p>
+          <p className="text-xs text-muted-foreground mt-1">No período selecionado</p>
+        </div>
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
+            <Users className="h-4 w-4" /> Assinaturas Ativas
+          </div>
+          <p className="text-2xl font-semibold text-foreground">{totalAtivasCount}</p>
+          <p className="text-xs text-muted-foreground mt-1">Filtro: {origemFilter === "all" ? "Todas" : origemFilter === "naut" ? "Naut" : "Manual"}</p>
+        </div>
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
+            <Users className="h-4 w-4" /> Total no Período
+          </div>
+          <p className="text-2xl font-semibold text-foreground">{filtered.length}</p>
+          <p className="text-xs text-muted-foreground mt-1">Considera todos os status</p>
+        </div>
+      </div>
+
       {/* Filters */}
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1">
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="relative flex-1 min-w-[220px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar por nome ou email..." className="pl-9" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
+        <Select value={origemFilter} onValueChange={(v: any) => setOrigemFilter(v)}>
+          <SelectTrigger className="w-[160px]"><SelectValue placeholder="Origem" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas as origens</SelectItem>
+            <SelectItem value="naut">Naut</SelectItem>
+            <SelectItem value="manual">Manual</SelectItem>
+          </SelectContent>
+        </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[180px]"><SelectValue placeholder="Todos os status" /></SelectTrigger>
           <SelectContent>
