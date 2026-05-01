@@ -38,6 +38,29 @@ export default function DashboardAssinaturas() {
   const [produtoFilter, setProdutoFilter] = useState("all");
   const [origemFilter, setOrigemFilter] = useState<"all" | "naut" | "manual">("all");
   const [range, setRange] = useState<RangeFilterValue>({ preset: "30d" });
+
+  const COLUMNS = [
+    { key: "assinante", label: "Assinante" },
+    { key: "produto", label: "Produto" },
+    { key: "status", label: "Status" },
+    { key: "valor", label: "Valor" },
+    { key: "proxima_cobranca", label: "Próx. cobrança" },
+    { key: "data_criacao", label: "Criada em" },
+    { key: "meio_pagamento", label: "Meio de Pagamento" },
+    { key: "data_renovacao", label: "Data de Renovação" },
+  ] as const;
+  type ColKey = typeof COLUMNS[number]["key"];
+  const [visibleCols, setVisibleCols] = useState<Record<ColKey, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem("assinaturas_cols_v1");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return COLUMNS.reduce((acc, c) => ({ ...acc, [c.key]: true }), {} as Record<ColKey, boolean>);
+  });
+  useEffect(() => {
+    localStorage.setItem("assinaturas_cols_v1", JSON.stringify(visibleCols));
+  }, [visibleCols]);
+  const isVisible = (k: ColKey) => visibleCols[k];
   const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
