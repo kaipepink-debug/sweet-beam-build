@@ -20,6 +20,16 @@ function determineStatus(sub: any): string {
   return "Cancelada";
 }
 
+// Infer price from plan name when Naut doesn't return it
+function inferPriceFromPlan(planName: string | null | undefined): number {
+  if (!planName) return 0;
+  const p = planName.toLowerCase();
+  if (p.includes("semestral")) return 497;
+  if (p.includes("mensal") || p === "naut") return 67;
+  if (p.includes("semanal")) return 39.99;
+  return 0;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -83,9 +93,9 @@ serve(async (req) => {
             email: nautEmail,
             nome: nautName,
             produto: "RatarIA",
-            plano: "Naut",
+            plano: "Mensal",
             status: "Ativa",
-            valor: 0,
+            valor: 67,
             meio_pagamento: "Naut",
             data_criacao: new Date().toISOString().split("T")[0],
             data_renovacao: expiresAt.split("T")[0],
@@ -132,27 +142,29 @@ serve(async (req) => {
           const expiresAt = sub.expiresAt ? new Date(sub.expiresAt).toISOString().split("T")[0] : null;
           const createdAt = sub.createdAt ? new Date(sub.createdAt).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
           const productName = sub.productName || "RatarIA";
-          const planName = sub.planName || "N/A";
-          const price = sub.price || sub.amount || 0;
+          const planName = sub.planName || "Mensal";
+          const rawPrice = Number(sub.price ?? sub.amount ?? 0);
+          const price = rawPrice > 0 ? rawPrice : inferPriceFromPlan(planName);
           const paymentMethod = sub.paymentMethod || "Naut";
 
           // Check if already exists
           const { data: existing } = await supabaseAdmin
             .from("assinantes")
-            .select("id")
+            .select("id, valor")
             .eq("email", nautEmail)
             .eq("produto", productName)
             .limit(1);
 
           if (existing && existing.length > 0) {
-            // Update with latest Naut data + recalculated status
+            // Preserve existing valor if Naut returns 0/missing
+            const finalPrice = price > 0 ? price : Number(existing[0].valor || 0) || inferPriceFromPlan(planName);
             await supabaseAdmin
               .from("assinantes")
               .update({
                 status,
                 nome: nautName,
                 plano: planName,
-                valor: price,
+                valor: finalPrice,
                 data_renovacao: expiresAt,
                 proxima_cobranca: expiresAt,
                 meio_pagamento: paymentMethod,
