@@ -142,27 +142,29 @@ serve(async (req) => {
           const expiresAt = sub.expiresAt ? new Date(sub.expiresAt).toISOString().split("T")[0] : null;
           const createdAt = sub.createdAt ? new Date(sub.createdAt).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
           const productName = sub.productName || "RatarIA";
-          const planName = sub.planName || "N/A";
-          const price = sub.price || sub.amount || 0;
+          const planName = sub.planName || "Mensal";
+          const rawPrice = Number(sub.price ?? sub.amount ?? 0);
+          const price = rawPrice > 0 ? rawPrice : inferPriceFromPlan(planName);
           const paymentMethod = sub.paymentMethod || "Naut";
 
           // Check if already exists
           const { data: existing } = await supabaseAdmin
             .from("assinantes")
-            .select("id")
+            .select("id, valor")
             .eq("email", nautEmail)
             .eq("produto", productName)
             .limit(1);
 
           if (existing && existing.length > 0) {
-            // Update with latest Naut data + recalculated status
+            // Preserve existing valor if Naut returns 0/missing
+            const finalPrice = price > 0 ? price : Number(existing[0].valor || 0) || inferPriceFromPlan(planName);
             await supabaseAdmin
               .from("assinantes")
               .update({
                 status,
                 nome: nautName,
                 plano: planName,
-                valor: price,
+                valor: finalPrice,
                 data_renovacao: expiresAt,
                 proxima_cobranca: expiresAt,
                 meio_pagamento: paymentMethod,
