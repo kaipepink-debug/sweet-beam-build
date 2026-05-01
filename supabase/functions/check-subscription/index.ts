@@ -56,18 +56,56 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Try Naut API
-    const response = await fetch('https://navenaut.com/api/public/v1/subscriptions/check', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Public-Key': NAUT_PUBLIC_KEY,
-        'X-Secret-Key': NAUT_SECRET_KEY,
-      },
-      body: JSON.stringify({ email }),
-    });
+    // Try Naut API with retry to handle race condition (recent purchase
+    // not yet propagated). We retry up to 3 times with a 2s delay if Naut
+    // returns "active: false" with no subscriptions but recognizes the email.
+    const callNaut = async () => {
+      const r = await fetch('https://navenaut.com/api/public/v1/subscriptions/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Public-Key': NAUT_PUBLIC_KEY,
+          'X-Secret-Key': NAUT_SECRET_KEY,
+        },
+        body: JSON.stringify({ email }),
+      });
+      const d = await r.json();
+      return { r, d };
+    };
 
-    const data = await response.json();
+    let response: Response;
+    let data: any;
+    {
+      const first = await callNaut();
+      response = first.r;
+      data = first.d;
+
+      // Retry only when Naut returned a known customer (has name) but
+      // no active subscriptions yet — likely a just-finished purchase.
+      const looksLikeRace = response.ok
+        && data?.success
+        && data?.data?.active === false
+        && (!data?.data?.subscriptions || data.data.subscriptions.length === 0)
+        && !!data?.data?.name;
+
+      if (looksLikeRace) {
+        for (let i = 0; i < 2; i++) {
+          await new Promise((res) => setTimeout(res, 2000));
+          const next = await callNaut();
+          if (
+            next.d?.success
+            && (next.d?.data?.active === true
+              || (next.d?.data?.subscriptions && next.d.data.subscriptions.length > 0))
+          ) {
+            response = next.r;
+            data = next.d;
+            break;
+          }
+          response = next.r;
+          data = next.d;
+        }
+      }
+    }
 
     // If Naut says the customer is active but returns no subscription detail,
     // grant access using a synthesized subscription (handles cases where Naut

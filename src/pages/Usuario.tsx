@@ -46,11 +46,39 @@ const Usuario = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription", {
-        body: { email: email.trim() },
-      });
+      // Poll up to 6 times (every 3s) when Naut recognizes the email but
+      // has no active subscriptions yet — handles race condition with
+      // recent purchases that haven't propagated to Naut yet.
+      const maxAttempts = 6;
+      const pollInterval = 3000;
+      let data: any = null;
+      let lastError: any = null;
 
-      if (error) {
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        const res = await supabase.functions.invoke("check-subscription", {
+          body: { email: email.trim() },
+        });
+
+        if (res.error) {
+          lastError = res.error;
+          break;
+        }
+
+        data = res.data;
+
+        // If we have any subscription (active or not), stop polling.
+        if (data?.data?.subscriptions?.length) break;
+
+        // Naut doesn't recognize email at all — stop polling.
+        if (!data?.data?.name) break;
+
+        // Naut knows the email but no subs yet — wait and retry.
+        if (attempt < maxAttempts - 1) {
+          await new Promise((r) => setTimeout(r, pollInterval));
+        }
+      }
+
+      if (lastError) {
         toast({
           title: "Erro",
           description: "Não foi possível verificar sua assinatura. Tente novamente.",
