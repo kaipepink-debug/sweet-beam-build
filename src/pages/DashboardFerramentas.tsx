@@ -28,8 +28,10 @@ import capcutLogo from "@/assets/tools/capcut.png";
 import perplexityLogo from "@/assets/tools/perplexity.png";
 import digenLogo from "@/assets/tools/digen.png";
 import nanobananaLogo from "@/assets/tools/nanobanana.png";
+import gammaLogo from "@/assets/tools/gamma.png";
 
 const tools = [
+  { name: "Gamma", ferramenta: "gamma", logo: gammaLogo, expiracaoDias: 30 },
   { name: "Digen", ferramenta: "digen", logo: digenLogo, expiracaoDias: 30 },
   { name: "Nano Banana", ferramenta: "nanobanana", logo: nanobananaLogo, expiracaoDias: 30 },
   { name: "SuperGrok", ferramenta: "grok", logo: grokLogo, expiracaoDias: 3 },
