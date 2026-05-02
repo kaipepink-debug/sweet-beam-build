@@ -109,11 +109,9 @@ export default function DashboardAfiliados() {
         });
         setCounts(cmap);
 
-        const rmap: Record<string, number> = {};
-        (hist || []).forEach((h: any) => {
-          rmap[h.afiliado_id] = (rmap[h.afiliado_id] || 0) + Number(h.valor_total);
-        });
-        setRevenueByAfiliado(rmap);
+        setAllHistory((hist as any) || []);
+      } else {
+        setAllHistory([]);
       }
     }
     setLoading(false);
