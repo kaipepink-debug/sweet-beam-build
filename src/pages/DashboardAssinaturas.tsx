@@ -136,6 +136,8 @@ export default function DashboardAssinaturas() {
       toast.error("Preencha nome e email");
       return;
     }
+    const existing = findExistingByEmail(ativarForm.email);
+    if (existing) { setDuplicateInfo(existing); return; }
     const config = PLAN_CONFIG[ativarForm.plano];
     const expiration = calcExpiration(ativarForm.data_inicio, ativarForm.plano);
     const nextCharge = expiration;
