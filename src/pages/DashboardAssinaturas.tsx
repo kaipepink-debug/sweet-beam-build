@@ -189,6 +189,7 @@ export default function DashboardAssinaturas() {
       toast.error("Preencha nome e email");
       return;
     }
+    if (!checkAfiliadoLimit()) return;
     const existing = findExistingByEmail(ativarForm.email);
     if (existing) { setDuplicateInfo(existing); return; }
     const config = PLAN_CONFIG[ativarForm.plano];
