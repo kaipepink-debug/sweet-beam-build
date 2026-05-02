@@ -78,7 +78,8 @@ export default function DashboardEquipe() {
 
     if (response.ok) {
       const data = await response.json();
-      setTeam(data.team || []);
+      const filtered = (data.team || []).filter((m: TeamMember) => !(m.permissions as any)?.is_afiliado);
+      setTeam(filtered);
     }
     setLoading(false);
   }, []);
