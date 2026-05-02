@@ -16,6 +16,7 @@ export interface TeamPermissions {
   analytics: boolean;
   configuracoes: boolean;
   equipe: boolean;
+  afiliados: boolean;
   is_afiliado: boolean;
 }
 
