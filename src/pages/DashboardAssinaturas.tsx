@@ -153,11 +153,13 @@ export default function DashboardAssinaturas() {
 
   useEffect(() => { fetchAssinantes(); fetchAfiliados(); }, [isAfiliado, user?.id]);
 
+  const [limitDialogOpen, setLimitDialogOpen] = useState(false);
+
   const checkAfiliadoLimit = (): boolean => {
     if (!isAfiliado) return true;
     const limit = permissions.max_assinaturas ?? 10;
     if (assinantes.length >= limit) {
-      toast.error(`Limite de ${limit} assinaturas atingido. Solicite ao administrador para aumentar.`);
+      setLimitDialogOpen(true);
       return false;
     }
     return true;
