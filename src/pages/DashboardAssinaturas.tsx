@@ -61,6 +61,18 @@ export default function DashboardAssinaturas() {
   }, [visibleCols]);
   const isVisible = (k: ColKey) => visibleCols[k];
   const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
+
+  // Retorna data atual no fuso de Brasília no formato YYYY-MM-DD
+  const todayBR = () => {
+    const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit" });
+    return fmt.format(new Date()); // en-CA produz YYYY-MM-DD
+  };
+  const addDaysBR = (baseISO: string, days: number) => {
+    const [y, m, d] = baseISO.split("-").map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    dt.setUTCDate(dt.getUTCDate() + days);
+    return dt.toISOString().split("T")[0];
+  };
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
   const [tempDialogOpen, setTempDialogOpen] = useState(false);
