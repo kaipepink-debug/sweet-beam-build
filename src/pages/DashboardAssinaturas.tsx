@@ -116,6 +116,8 @@ export default function DashboardAssinaturas() {
       toast.error("Preencha nome, email e valor");
       return;
     }
+    const existing = findExistingByEmail(form.email);
+    if (existing) { setDuplicateInfo(existing); return; }
     const { error } = await supabase.from("assinantes").insert({
       nome: form.nome, email: form.email, produto: form.produto, plano: form.plano,
       status: form.status, valor: parseFloat(form.valor), meio_pagamento: form.meio_pagamento,
