@@ -68,22 +68,19 @@ export default function Dashboard() {
     load();
   }, [r.from.getTime(), r.to.getTime()]);
 
+  // Receita total = soma das ASSINATURAS ATIVAS no período (mesmo critério de Assinaturas/Financeiro)
   const totalVendas = useMemo(
-    () => vendas.reduce((s, v) => s + Number(v.valor || 0), 0),
+    () => vendas.filter((v) => v.status === "Ativa").reduce((s, v) => s + Number(v.valor || 0), 0),
     [vendas]
   );
   const totalCustos = useMemo(
     () => custos.reduce((s, c) => s + Number(c.valor || 0), 0),
     [custos]
   );
-  const totalReceitasOutras = useMemo(
-    () => receitas.reduce((s, c) => s + Number(c.valor || 0), 0),
-    [receitas]
-  );
-  const receitaTotal = totalVendas + totalReceitasOutras;
+  const receitaTotal = totalVendas;
   const lucro = receitaTotal - totalCustos;
   const margem = receitaTotal > 0 ? (lucro / receitaTotal) * 100 : 0;
-  const numClientes = useMemo(() => new Set(vendas.map((v) => v.email)).size, [vendas]);
+  const numClientes = useMemo(() => new Set(vendas.filter((v) => v.status === "Ativa").map((v) => v.email)).size, [vendas]);
 
   const chartData = useMemo(() => {
     const days = eachDay(r.from, r.to);
@@ -171,7 +168,10 @@ export default function Dashboard() {
         <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
           <div>
             <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 font-light mb-1.5">Evolução financeira</p>
-            <p className="text-3xl md:text-4xl font-extralight tracking-tight tabular-nums text-foreground">
+            <p
+              className="text-3xl md:text-4xl font-extralight tracking-tight tabular-nums"
+              style={{ color: lucro >= 0 ? "hsl(142, 71%, 45%)" : "hsl(0, 84%, 60%)" }}
+            >
               {loading ? "—" : formatBRL(lucro)}
             </p>
             <p className="text-xs text-muted-foreground/80 font-light mt-1">
