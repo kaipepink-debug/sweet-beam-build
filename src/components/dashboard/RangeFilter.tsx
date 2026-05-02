@@ -47,19 +47,44 @@ export function RangeFilter({ value, onChange }: Props) {
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 bg-popover" align="end">
-                <Calendar
-                  mode="range"
-                  selected={{ from: value.from, to: value.to }}
-                  onSelect={(r) => {
-                    if (r?.from && r?.to) {
-                      onChange({ preset: "custom", from: r.from, to: r.to });
-                    } else if (r?.from) {
-                      onChange({ preset: "custom", from: r.from, to: r.from });
-                    }
-                  }}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
+                <div className="flex flex-col">
+                  <Calendar
+                    mode="range"
+                    selected={{ from: value.from, to: value.to }}
+                    onSelect={(r) => {
+                      if (r?.from && r?.to) {
+                        onChange({ preset: "custom", from: r.from, to: r.to });
+                      } else if (r?.from) {
+                        onChange({ preset: "custom", from: r.from, to: r.from });
+                      }
+                    }}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                  <div className="flex items-center justify-between gap-2 px-3 pb-3 pt-1 border-t border-border">
+                    <span className="text-[11px] text-muted-foreground">
+                      Clique 1x para selecionar um único dia
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (value.from) {
+                          onChange({ preset: "custom", from: value.from, to: value.from });
+                          setOpen(false);
+                        }
+                      }}
+                      disabled={!value.from}
+                      className={cn(
+                        "px-2.5 h-7 rounded-md text-[11px] font-medium border transition-all",
+                        value.from
+                          ? "bg-primary/20 text-primary border-primary/40 hover:bg-primary/30"
+                          : "bg-card text-muted-foreground border-border opacity-50 cursor-not-allowed"
+                      )}
+                    >
+                      Aplicar dia único
+                    </button>
+                  </div>
+                </div>
               </PopoverContent>
             </Popover>
           );
