@@ -423,7 +423,7 @@ export default function DashboardAssinaturas() {
                 <Clock className="h-4 w-4 mr-2" /> Criar Acesso de 30 minutos
               </Button>
             </DialogContent>
-          </Dialog>
+          </Dialog>}
 
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
