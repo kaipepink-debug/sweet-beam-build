@@ -490,7 +490,7 @@ export default function DashboardAssinaturas() {
                   )}
                   {isVisible("valor") && (
                     <TableCell>
-                      <p className="text-sm font-semibold text-foreground">{formatCurrency(a.valor)}</p>
+                      <p className="text-sm font-semibold text-emerald-600">{formatCurrency(a.valor)}</p>
                       {(() => {
                         const p = (a.plano || "").toLowerCase();
                         let label: string | null = null;
