@@ -47,7 +47,6 @@ export default function DashboardAssinaturas() {
     { key: "proxima_cobranca", label: "Próx. cobrança" },
     { key: "data_criacao", label: "Criada em" },
     { key: "meio_pagamento", label: "Meio de Pagamento" },
-    { key: "data_renovacao", label: "Data de Renovação" },
   ] as const;
   type ColKey = typeof COLUMNS[number]["key"];
   const [visibleCols, setVisibleCols] = useState<Record<ColKey, boolean>>(() => {
@@ -433,7 +432,7 @@ export default function DashboardAssinaturas() {
               {isVisible("proxima_cobranca") && <TableHead className="text-muted-foreground">Próx. cobrança</TableHead>}
               {isVisible("data_criacao") && <TableHead className="text-muted-foreground">Criada em</TableHead>}
               {isVisible("meio_pagamento") && <TableHead className="text-muted-foreground">Meio de Pagamento</TableHead>}
-              {isVisible("data_renovacao") && <TableHead className="text-muted-foreground">Data de Renovação</TableHead>}
+              
               <TableHead className="w-10"></TableHead>
             </TableRow>
           </TableHeader>
@@ -473,7 +472,7 @@ export default function DashboardAssinaturas() {
                   {isVisible("proxima_cobranca") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>}
                   {isVisible("data_criacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_criacao)}</TableCell>}
                   {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
-                  {isVisible("data_renovacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_renovacao)}</TableCell>}
+                  
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
