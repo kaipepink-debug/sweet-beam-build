@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Handshake, Plus, Trash2, UserCheck, X, DollarSign, History } from "lucide-react";
+import { Handshake, Plus, Trash2, UserCheck, X, DollarSign, History, Search } from "lucide-react";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
+import { getRange } from "@/lib/dateRanges";
 
 const createAfiliadoSchema = z.object({
   email: z.string().trim().email("Email inválido").max(255),
