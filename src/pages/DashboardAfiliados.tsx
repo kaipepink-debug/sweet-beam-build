@@ -257,7 +257,34 @@ export default function DashboardAfiliados() {
     }
   };
 
+  const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
+
+  const filteredHistory = useMemo(() => {
+    return allHistory.filter((h) => {
+      const d = new Date(h.created_at);
+      return d >= r.from && d <= r.to;
+    });
+  }, [allHistory, r.from, r.to]);
+
+  const revenueByAfiliado = useMemo(() => {
+    const map: Record<string, number> = {};
+    filteredHistory.forEach((h) => {
+      map[h.afiliado_id] = (map[h.afiliado_id] || 0) + Number(h.valor_total);
+    });
+    return map;
+  }, [filteredHistory]);
+
   const totalRevenue = Object.values(revenueByAfiliado).reduce((s, v) => s + v, 0);
+
+  const filteredAfiliados = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return afiliados;
+    return afiliados.filter(
+      (m) =>
+        (m.display_name || "").toLowerCase().includes(q) ||
+        (m.email || "").toLowerCase().includes(q)
+    );
+  }, [afiliados, search]);
 
   return (
     <div className="space-y-5">
