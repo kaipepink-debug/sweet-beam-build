@@ -33,6 +33,8 @@ interface Assinante {
 
 export default function DashboardAssinaturas() {
   const { user } = useAuth();
+  const { permissions } = usePermissions();
+  const isAfiliado = permissions.is_afiliado;
   const [assinantes, setAssinantes] = useState<Assinante[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
