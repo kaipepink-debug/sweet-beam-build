@@ -473,7 +473,7 @@ export default function DashboardAssinaturas() {
                   {isVisible("data_criacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_criacao)}</TableCell>}
                   {isVisible("proxima_cobranca") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>}
                   {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
-                  {isVisible("data_renovacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_renovacao)}</TableCell>}
+                  {isVisible("data_renovacao" as any) && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_renovacao)}</TableCell>}
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
