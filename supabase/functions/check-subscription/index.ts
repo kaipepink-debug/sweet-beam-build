@@ -6,6 +6,23 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Retorna data atual em Brasília no formato YYYY-MM-DD
+function todayBR(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
+}
+
+// Converte um ISO/Date string para data YYYY-MM-DD em Brasília
+function toBRDate(input: string | number | Date): string {
+  const d = input instanceof Date ? input : new Date(input);
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(d);
+}
+
 function determineStatus(sub: any): string {
   // Check expiration date first
   if (sub.expiresAt) {
@@ -135,9 +152,9 @@ serve(async (req) => {
             status: "Ativa",
             valor: 67,
             meio_pagamento: "Naut",
-            data_criacao: new Date().toISOString().split("T")[0],
-            data_renovacao: expiresAt.split("T")[0],
-            proxima_cobranca: expiresAt.split("T")[0],
+            data_criacao: todayBR(),
+            data_renovacao: toBRDate(expiresAt),
+            proxima_cobranca: toBRDate(expiresAt),
             created_by: "00000000-0000-0000-0000-000000000000",
           });
         } else {
@@ -177,8 +194,8 @@ serve(async (req) => {
       for (const sub of data.data.subscriptions) {
         try {
           const status = determineStatus(sub);
-          const expiresAt = sub.expiresAt ? new Date(sub.expiresAt).toISOString().split("T")[0] : null;
-          const createdAt = sub.createdAt ? new Date(sub.createdAt).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
+          const expiresAt = sub.expiresAt ? toBRDate(sub.expiresAt) : null;
+          const createdAt = sub.createdAt ? toBRDate(sub.createdAt) : todayBR();
           const productName = sub.productName || "RatarIA";
           const planName = sub.planName || "Mensal";
           const rawPrice = Number(sub.price ?? sub.amount ?? 0);
