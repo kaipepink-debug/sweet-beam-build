@@ -44,8 +44,8 @@ export default function DashboardAssinaturas() {
     { key: "produto", label: "Produto" },
     { key: "status", label: "Status" },
     { key: "valor", label: "Valor" },
-    { key: "proxima_cobranca", label: "Próx. cobrança" },
     { key: "data_criacao", label: "Criada em" },
+    { key: "proxima_cobranca", label: "Próx. cobrança" },
     { key: "meio_pagamento", label: "Meio de Pagamento" },
     { key: "data_renovacao", label: "Data de Renovação" },
   ] as const;
