@@ -595,14 +595,16 @@ export default function DashboardAssinaturas() {
                   {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
                   
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="p-1 rounded hover:bg-muted/50 text-muted-foreground"><MoreHorizontal className="h-4 w-4" /></button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(a.id)}>Remover</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    {!isAfiliado && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-1 rounded hover:bg-muted/50 text-muted-foreground"><MoreHorizontal className="h-4 w-4" /></button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(a.id)}>Remover</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </TableCell>
                 </TableRow>
               ))
