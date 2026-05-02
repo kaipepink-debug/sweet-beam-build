@@ -429,8 +429,8 @@ export default function DashboardAssinaturas() {
               {isVisible("produto") && <TableHead className="text-muted-foreground">Produto</TableHead>}
               {isVisible("status") && <TableHead className="text-muted-foreground">Status</TableHead>}
               {isVisible("valor") && <TableHead className="text-muted-foreground">Valor</TableHead>}
-              {isVisible("proxima_cobranca") && <TableHead className="text-muted-foreground">Próx. cobrança</TableHead>}
               {isVisible("data_criacao") && <TableHead className="text-muted-foreground">Criada em</TableHead>}
+              {isVisible("proxima_cobranca") && <TableHead className="text-muted-foreground">Próx. cobrança</TableHead>}
               {isVisible("meio_pagamento") && <TableHead className="text-muted-foreground">Meio de Pagamento</TableHead>}
               
               <TableHead className="w-10"></TableHead>
@@ -469,8 +469,8 @@ export default function DashboardAssinaturas() {
                       <p className="text-xs text-muted-foreground">N/A</p>
                     </TableCell>
                   )}
-                  {isVisible("proxima_cobranca") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>}
                   {isVisible("data_criacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_criacao)}</TableCell>}
+                  {isVisible("proxima_cobranca") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>}
                   {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
                   
                   <TableCell>
