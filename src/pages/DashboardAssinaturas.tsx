@@ -241,11 +241,11 @@ export default function DashboardAssinaturas() {
     toast.success(`Exportado como .${format}`);
   };
 
-  const statusColor = (s: string) => {
-    if (s === "Ativa") return "bg-emerald-600 text-white hover:bg-emerald-700";
-    if (s === "Cancelada") return "bg-red-600 text-white hover:bg-red-700";
-    if (s === "Pendente") return "bg-yellow-600 text-white hover:bg-yellow-700";
-    return "bg-muted text-muted-foreground";
+  const statusStyle = (s: string) => {
+    if (s === "Ativa") return { wrap: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400", dot: "bg-emerald-400" };
+    if (s === "Cancelada") return { wrap: "border-red-500/30 bg-red-500/10 text-red-400", dot: "bg-red-400" };
+    if (s === "Pendente") return { wrap: "border-yellow-500/30 bg-yellow-500/10 text-yellow-400", dot: "bg-yellow-400" };
+    return { wrap: "border-border bg-muted/30 text-muted-foreground", dot: "bg-muted-foreground" };
   };
 
   return (
@@ -477,7 +477,15 @@ export default function DashboardAssinaturas() {
                   )}
                   {isVisible("status") && (
                     <TableCell>
-                      <Badge className={statusColor(a.status)}>{a.status}</Badge>
+                      {(() => {
+                        const st = statusStyle(a.status);
+                        return (
+                          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${st.wrap}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${st.dot}`} />
+                            {a.status}
+                          </span>
+                        );
+                      })()}
                     </TableCell>
                   )}
                   {isVisible("valor") && (
