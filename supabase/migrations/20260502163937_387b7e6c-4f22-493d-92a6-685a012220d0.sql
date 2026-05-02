@@ -1,0 +1,1 @@
+UPDATE public.team_permissions SET afiliados = true WHERE user_id IN (SELECT id FROM auth.users WHERE email = 'mandarrari@rataria.io');
