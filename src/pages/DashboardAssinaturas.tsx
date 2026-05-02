@@ -153,11 +153,22 @@ export default function DashboardAssinaturas() {
 
   useEffect(() => { fetchAssinantes(); fetchAfiliados(); }, [isAfiliado, user?.id]);
 
+  const checkAfiliadoLimit = (): boolean => {
+    if (!isAfiliado) return true;
+    const limit = permissions.max_assinaturas ?? 10;
+    if (assinantes.length >= limit) {
+      toast.error(`Limite de ${limit} assinaturas atingido. Solicite ao administrador para aumentar.`);
+      return false;
+    }
+    return true;
+  };
+
   const handleAdd = async () => {
     if (!user || !form.nome || !form.email || !form.valor) {
       toast.error("Preencha nome, email e valor");
       return;
     }
+    if (!checkAfiliadoLimit()) return;
     const existing = findExistingByEmail(form.email);
     if (existing) { setDuplicateInfo(existing); return; }
     const { error } = await supabase.from("assinantes").insert({
