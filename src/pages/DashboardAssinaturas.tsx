@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, MoreHorizontal, Plus, UserPlus, Download, Clock, DollarSign, Users, Columns3 } from "lucide-react";
+import { Search, MoreHorizontal, Plus, UserPlus, Download, Clock, DollarSign, Users, Columns3, Calendar } from "lucide-react";
 import * as XLSX from "xlsx";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -486,8 +486,22 @@ export default function DashboardAssinaturas() {
                       <p className="text-xs text-muted-foreground">N/A</p>
                     </TableCell>
                   )}
-                  {isVisible("data_criacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_criacao)}</TableCell>}
-                  {isVisible("proxima_cobranca") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>}
+                  {isVisible("data_criacao") && (
+                    <TableCell>
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400">
+                        <Calendar className="h-3 w-3" />
+                        {formatDate(a.data_criacao)}
+                      </span>
+                    </TableCell>
+                  )}
+                  {isVisible("proxima_cobranca") && (
+                    <TableCell>
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-400">
+                        <Calendar className="h-3 w-3" />
+                        {formatDate(a.proxima_cobranca)}
+                      </span>
+                    </TableCell>
+                  )}
                   {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
                   
                   <TableCell>
