@@ -86,14 +86,12 @@ export default function Dashboard() {
     const days = eachDay(r.from, r.to);
     const vMap: Record<string, number> = {};
     const cMap: Record<string, number> = {};
-    vendas.forEach((v) => {
-      const k = dateKey(v.data_criacao);
-      vMap[k] = (vMap[k] || 0) + Number(v.valor || 0);
-    });
-    receitas.forEach((rc) => {
-      const k = dateKey(rc.data);
-      vMap[k] = (vMap[k] || 0) + Number(rc.valor || 0);
-    });
+    vendas
+      .filter((v) => v.status === "Ativa")
+      .forEach((v) => {
+        const k = dateKey(v.data_criacao);
+        vMap[k] = (vMap[k] || 0) + Number(v.valor || 0);
+      });
     custos.forEach((c) => {
       const k = dateKey(c.data);
       cMap[k] = (cMap[k] || 0) + Number(c.valor || 0);
@@ -109,7 +107,7 @@ export default function Dashboard() {
         lucro: v - c,
       };
     });
-  }, [vendas, receitas, custos, r.from, r.to]);
+  }, [vendas, custos, r.from, r.to]);
 
   const metrics = [
     { title: "Receita total", value: formatBRL(receitaTotal), icon: DollarSign, color: "hsl(142, 71%, 45%)" },
