@@ -16,6 +16,7 @@ export interface TeamPermissions {
   analytics: boolean;
   configuracoes: boolean;
   equipe: boolean;
+  is_afiliado: boolean;
 }
 
 const defaultPermissions: TeamPermissions = {
