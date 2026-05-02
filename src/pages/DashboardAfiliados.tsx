@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Handshake, Plus, Trash2, UserCheck, X, Pencil, Check } from "lucide-react";
+import { Handshake, Plus, Trash2, UserCheck, X, DollarSign, History } from "lucide-react";
 import { z } from "zod";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const createAfiliadoSchema = z.object({
   email: z.string().trim().email("Email inválido").max(255),
@@ -19,6 +20,21 @@ interface AfiliadoMember {
   created_at: string;
 }
 
+interface LimiteHistorico {
+  id: string;
+  afiliado_id: string;
+  quantidade: number;
+  valor_unitario: number;
+  valor_total: number;
+  created_at: string;
+}
+
+const MIN_PURCHASE = 5;
+const PRICE_LOW = 45; // < 10
+const PRICE_HIGH = 40; // >= 10
+
+const calcUnitPrice = (qty: number) => (qty >= 10 ? PRICE_HIGH : PRICE_LOW);
+
 const AFILIADO_PERMISSIONS = {
   dashboard: false,
   financeiro: false,
@@ -34,22 +50,27 @@ const AFILIADO_PERMISSIONS = {
   configuracoes: false,
   equipe: false,
   is_afiliado: true,
-  max_assinaturas: 10,
+  max_assinaturas: 0,
 };
 
 export default function DashboardAfiliados() {
   const [afiliados, setAfiliados] = useState<AfiliadoMember[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
+  const [revenueByAfiliado, setRevenueByAfiliado] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [maxAssinaturas, setMaxAssinaturas] = useState(10);
+  const [initialQty, setInitialQty] = useState(5);
   const [submitting, setSubmitting] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState<number>(10);
+
+  const [purchaseDialog, setPurchaseDialog] = useState<{ open: boolean; member: AfiliadoMember | null; qty: number }>({ open: false, member: null, qty: 5 });
+  const [historyDialog, setHistoryDialog] = useState<{ open: boolean; member: AfiliadoMember | null; rows: LimiteHistorico[] }>({ open: false, member: null, rows: [] });
+
   const { toast } = useToast();
+
+  const formatBRL = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
   const fetchAfiliados = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -72,18 +93,23 @@ export default function DashboardAfiliados() {
       );
       setAfiliados(onlyAfiliados);
 
-      // Buscar contagem de assinantes por afiliado
       const ids = onlyAfiliados.map((m: AfiliadoMember) => m.id);
       if (ids.length > 0) {
-        const { data: assinantes } = await supabase
-          .from("assinantes")
-          .select("created_by")
-          .in("created_by", ids);
-        const map: Record<string, number> = {};
+        const [{ data: assinantes }, { data: hist }] = await Promise.all([
+          supabase.from("assinantes").select("created_by").in("created_by", ids),
+          supabase.from("afiliado_limite_historico" as any).select("*").in("afiliado_id", ids),
+        ]);
+        const cmap: Record<string, number> = {};
         (assinantes || []).forEach((a: any) => {
-          if (a.created_by) map[a.created_by] = (map[a.created_by] || 0) + 1;
+          if (a.created_by) cmap[a.created_by] = (cmap[a.created_by] || 0) + 1;
         });
-        setCounts(map);
+        setCounts(cmap);
+
+        const rmap: Record<string, number> = {};
+        (hist || []).forEach((h: any) => {
+          rmap[h.afiliado_id] = (rmap[h.afiliado_id] || 0) + Number(h.valor_total);
+        });
+        setRevenueByAfiliado(rmap);
       }
     }
     setLoading(false);
@@ -97,6 +123,10 @@ export default function DashboardAfiliados() {
     const result = createAfiliadoSchema.safeParse({ email, password, displayName });
     if (!result.success) {
       toast({ title: "Erro", description: result.error.errors[0].message, variant: "destructive" });
+      return;
+    }
+    if (initialQty < MIN_PURCHASE) {
+      toast({ title: "Erro", description: `Mínimo de ${MIN_PURCHASE} assinaturas.`, variant: "destructive" });
       return;
     }
 
@@ -116,7 +146,7 @@ export default function DashboardAfiliados() {
           email: result.data.email,
           password: result.data.password,
           display_name: result.data.displayName,
-          permissions: { ...AFILIADO_PERMISSIONS, max_assinaturas: maxAssinaturas },
+          permissions: { ...AFILIADO_PERMISSIONS, max_assinaturas: initialQty },
         }),
       }
     );
@@ -129,16 +159,37 @@ export default function DashboardAfiliados() {
       return;
     }
 
+    // Registrar histórico inicial
+    const unit = calcUnitPrice(initialQty);
+    const newId = data.user?.id;
+    if (newId) {
+      const { data: { user } } = await supabase.auth.getUser();
+      await supabase.from("afiliado_limite_historico" as any).insert({
+        afiliado_id: newId,
+        quantidade: initialQty,
+        valor_unitario: unit,
+        valor_total: unit * initialQty,
+        created_by: user!.id,
+      });
+    }
+
     toast({ title: "Afiliado adicionado!", className: "bg-green-600 text-white border-green-600" });
-    setEmail("");
-    setPassword("");
-    setDisplayName("");
-    setMaxAssinaturas(10);
+    setEmail(""); setPassword(""); setDisplayName(""); setInitialQty(5);
     setShowForm(false);
     fetchAfiliados();
   };
 
-  const handleSaveLimit = async (userId: string) => {
+  const handlePurchase = async () => {
+    const m = purchaseDialog.member;
+    const qty = purchaseDialog.qty;
+    if (!m || qty < MIN_PURCHASE) {
+      toast({ title: "Erro", description: `Mínimo de ${MIN_PURCHASE} assinaturas por compra.`, variant: "destructive" });
+      return;
+    }
+    const currentLimit = m.permissions?.max_assinaturas ?? 0;
+    const newLimit = currentLimit + qty;
+    const unit = calcUnitPrice(qty);
+
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
     const response = await fetch(
@@ -150,16 +201,34 @@ export default function DashboardAfiliados() {
           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ user_id: userId, permissions: { max_assinaturas: editValue } }),
+        body: JSON.stringify({ user_id: m.id, permissions: { max_assinaturas: newLimit } }),
       }
     );
-    if (response.ok) {
-      toast({ title: "Limite atualizado", className: "bg-green-600 text-white border-green-600" });
-      setEditingId(null);
-      fetchAfiliados();
-    } else {
+    if (!response.ok) {
       toast({ title: "Erro ao atualizar", variant: "destructive" });
+      return;
     }
+    const { data: { user } } = await supabase.auth.getUser();
+    await supabase.from("afiliado_limite_historico" as any).insert({
+      afiliado_id: m.id,
+      quantidade: qty,
+      valor_unitario: unit,
+      valor_total: unit * qty,
+      created_by: user!.id,
+    });
+
+    toast({ title: `+${qty} adicionados · ${formatBRL(unit * qty)}`, className: "bg-green-600 text-white border-green-600" });
+    setPurchaseDialog({ open: false, member: null, qty: 5 });
+    fetchAfiliados();
+  };
+
+  const openHistory = async (m: AfiliadoMember) => {
+    const { data } = await supabase
+      .from("afiliado_limite_historico" as any)
+      .select("*")
+      .eq("afiliado_id", m.id)
+      .order("created_at", { ascending: false });
+    setHistoryDialog({ open: true, member: m, rows: (data as any) || [] });
   };
 
   const handleRemove = async (userId: string, memberName: string) => {
@@ -186,9 +255,11 @@ export default function DashboardAfiliados() {
     }
   };
 
+  const totalRevenue = Object.values(revenueByAfiliado).reduce((s, v) => s + v, 0);
+
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <p className="text-xs text-muted-foreground mb-1">Gerencie seus afiliados</p>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Afiliados</h1>
@@ -202,8 +273,20 @@ export default function DashboardAfiliados() {
         </button>
       </div>
 
-      <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3 text-xs text-muted-foreground">
-        Afiliados têm acesso apenas à aba <strong className="text-foreground">Assinaturas</strong>. Defina abaixo quantos assinantes cada afiliado pode cadastrar no painel dele.
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Receita Total</p>
+          <p className="text-xl font-bold text-emerald-400">{formatBRL(totalRevenue)}</p>
+        </div>
+        <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Preço por slot</p>
+          <p className="text-xs text-foreground">Lote &lt; 10 → <strong className="text-primary">R$ 45</strong> · Lote ≥ 10 → <strong className="text-primary">R$ 40</strong></p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Mínimo {MIN_PURCHASE} por compra</p>
+        </div>
+        <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Afiliados ativos</p>
+          <p className="text-xl font-bold text-foreground">{afiliados.length}</p>
+        </div>
       </div>
 
       {showForm && (
@@ -216,52 +299,24 @@ export default function DashboardAfiliados() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5">Nome</label>
-              <input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors"
-                placeholder="Nome do afiliado"
-              />
+              <input type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors" placeholder="Nome do afiliado" />
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors"
-                placeholder="afiliado@exemplo.com"
-              />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors" placeholder="afiliado@exemplo.com" />
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5">Senha</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors"
-                placeholder="Mínimo 8 caracteres"
-              />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors" placeholder="Mínimo 8 caracteres" />
             </div>
             <div>
-              <label className="block text-xs text-muted-foreground mb-1.5">Limite de assinaturas</label>
-              <input
-                type="number"
-                min={0}
-                value={maxAssinaturas}
-                onChange={(e) => setMaxAssinaturas(parseInt(e.target.value) || 0)}
-                className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors"
-                placeholder="10"
-              />
+              <label className="block text-xs text-muted-foreground mb-1.5">Limite inicial (mín. {MIN_PURCHASE})</label>
+              <input type="number" min={MIN_PURCHASE} value={initialQty} onChange={(e) => setInitialQty(parseInt(e.target.value) || 0)} className="w-full px-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors" />
+              <p className="text-[10px] text-emerald-400 mt-1">{initialQty >= MIN_PURCHASE ? `${initialQty} × ${formatBRL(calcUnitPrice(initialQty))} = ${formatBRL(initialQty * calcUnitPrice(initialQty))}` : `Mínimo ${MIN_PURCHASE}`}</p>
             </div>
           </div>
 
-          <button
-            onClick={handleCreate}
-            disabled={submitting}
-            className="bg-primary text-primary-foreground px-6 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-          >
+          <button onClick={handleCreate} disabled={submitting} className="bg-primary text-primary-foreground px-6 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
             {submitting ? "Criando..." : "Adicionar Afiliado"}
           </button>
         </div>
@@ -279,13 +334,13 @@ export default function DashboardAfiliados() {
           </div>
         ) : (
           afiliados.map((member) => {
-            const limit = member.permissions?.max_assinaturas ?? 10;
+            const limit = member.permissions?.max_assinaturas ?? 0;
             const used = counts[member.id] || 0;
-            const isEditing = editingId === member.id;
+            const revenue = revenueByAfiliado[member.id] || 0;
             return (
               <div key={member.id} className="rounded-2xl border border-border bg-card p-5 purple-hover-glow">
                 <div className="flex items-center justify-between gap-4 flex-wrap">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-[200px]">
                     <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center">
                       <Handshake className="h-4 w-4 text-primary" />
                     </div>
@@ -296,48 +351,33 @@ export default function DashboardAfiliados() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/30 px-3 py-2">
-                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Assinaturas</span>
-                      <span className="text-sm font-semibold text-foreground">{used}</span>
-                      <span className="text-xs text-muted-foreground">/</span>
-                      {isEditing ? (
-                        <>
-                          <input
-                            type="number"
-                            min={0}
-                            value={editValue}
-                            onChange={(e) => setEditValue(parseInt(e.target.value) || 0)}
-                            className="w-16 px-2 py-1 rounded-lg text-sm bg-background border border-border text-foreground outline-none focus:border-primary"
-                          />
-                          <button
-                            onClick={() => handleSaveLimit(member.id)}
-                            className="text-emerald-500 hover:text-emerald-400 p-1"
-                            title="Salvar"
-                          >
-                            <Check className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => setEditingId(null)}
-                            className="text-muted-foreground hover:text-foreground p-1"
-                            title="Cancelar"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <span className="text-sm font-semibold text-primary">{limit}</span>
-                          <button
-                            onClick={() => { setEditingId(member.id); setEditValue(limit); }}
-                            className="text-muted-foreground hover:text-primary p-1 ml-1"
-                            title="Editar limite"
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                          </button>
-                        </>
-                      )}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border bg-muted/30 px-3 py-2 min-w-[100px]">
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Uso</span>
+                      <span className="text-sm font-semibold text-foreground"><span className="text-foreground">{used}</span><span className="text-muted-foreground"> / </span><span className="text-primary">{limit}</span></span>
                     </div>
+
+                    <div className="flex flex-col items-center gap-0.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 min-w-[120px]">
+                      <span className="text-[10px] uppercase tracking-wider text-emerald-300/80">Receita gerada</span>
+                      <span className="text-sm font-bold text-emerald-400">{formatBRL(revenue)}</span>
+                    </div>
+
+                    <button
+                      onClick={() => setPurchaseDialog({ open: true, member, qty: MIN_PURCHASE })}
+                      className="flex items-center gap-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 px-3 py-2 text-xs font-semibold transition-colors"
+                      title="Adicionar slots"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Slots
+                    </button>
+
+                    <button
+                      onClick={() => openHistory(member)}
+                      className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/30 hover:bg-muted/50 text-foreground px-3 py-2 text-xs font-semibold transition-colors"
+                      title="Histórico"
+                    >
+                      <History className="h-3.5 w-3.5" /> Histórico
+                    </button>
+
                     <button
                       onClick={() => handleRemove(member.id, member.display_name || member.email)}
                       className="text-destructive/60 hover:text-destructive transition-colors p-2"
@@ -352,6 +392,72 @@ export default function DashboardAfiliados() {
           })
         )}
       </div>
+
+      {/* Dialog de compra de slots */}
+      <Dialog open={purchaseDialog.open} onOpenChange={(o) => !o && setPurchaseDialog({ open: false, member: null, qty: MIN_PURCHASE })}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Adicionar slots para {purchaseDialog.member?.display_name || purchaseDialog.member?.email}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1.5">Quantidade (mín. {MIN_PURCHASE})</label>
+              <input
+                type="number"
+                min={MIN_PURCHASE}
+                value={purchaseDialog.qty}
+                onChange={(e) => setPurchaseDialog((p) => ({ ...p, qty: parseInt(e.target.value) || 0 }))}
+                className="w-full px-3 py-2 rounded-xl text-base bg-muted border border-border text-foreground outline-none focus:border-primary"
+              />
+            </div>
+
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 space-y-1">
+              <div className="flex justify-between text-xs"><span className="text-muted-foreground">Preço por slot</span><span className="font-semibold text-foreground">{formatBRL(calcUnitPrice(purchaseDialog.qty))}</span></div>
+              <div className="flex justify-between text-xs"><span className="text-muted-foreground">Quantidade</span><span className="font-semibold text-foreground">{purchaseDialog.qty}</span></div>
+              <div className="flex justify-between text-sm pt-1 border-t border-emerald-500/30 mt-1"><span className="text-emerald-300">Total a receber</span><span className="font-bold text-emerald-400">{formatBRL(calcUnitPrice(purchaseDialog.qty) * purchaseDialog.qty)}</span></div>
+            </div>
+
+            <p className="text-[10px] text-muted-foreground">Limite atual: <strong>{purchaseDialog.member?.permissions?.max_assinaturas ?? 0}</strong> → Novo limite: <strong className="text-primary">{(purchaseDialog.member?.permissions?.max_assinaturas ?? 0) + purchaseDialog.qty}</strong></p>
+
+            <button onClick={handlePurchase} className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+              <DollarSign className="h-4 w-4" /> Confirmar compra
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Histórico */}
+      <Dialog open={historyDialog.open} onOpenChange={(o) => !o && setHistoryDialog({ open: false, member: null, rows: [] })}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Histórico — {historyDialog.member?.display_name || historyDialog.member?.email}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+            {historyDialog.rows.length === 0 ? (
+              <p className="text-center text-xs text-muted-foreground py-6">Sem registros</p>
+            ) : (
+              historyDialog.rows.map((h) => (
+                <div key={h.id} className="flex items-center justify-between rounded-xl border border-border bg-muted/20 px-3 py-2.5">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">+{h.quantidade} slots</p>
+                    <p className="text-[10px] text-muted-foreground">{new Date(h.created_at).toLocaleString("pt-BR")}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-emerald-400">{formatBRL(Number(h.valor_total))}</p>
+                    <p className="text-[10px] text-muted-foreground">{formatBRL(Number(h.valor_unitario))}/slot</p>
+                  </div>
+                </div>
+              ))
+            )}
+            {historyDialog.rows.length > 0 && (
+              <div className="flex justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2.5 mt-2">
+                <span className="text-sm font-semibold text-emerald-300">Total</span>
+                <span className="text-sm font-bold text-emerald-400">{formatBRL(historyDialog.rows.reduce((s, h) => s + Number(h.valor_total), 0))}</span>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
