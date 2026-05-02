@@ -85,6 +85,13 @@ export default function DashboardAssinaturas() {
     nome: "", email: "", plano: "mensal", data_inicio: todayBR()
   });
   const [tempForm, setTempForm] = useState({ nome: "", email: "" });
+  const [duplicateInfo, setDuplicateInfo] = useState<Assinante | null>(null);
+
+  const findExistingByEmail = (email: string): Assinante | null => {
+    const e = email.trim().toLowerCase();
+    if (!e) return null;
+    return assinantes.find(a => (a.email || "").trim().toLowerCase() === e) ?? null;
+  };
 
   const PLAN_CONFIG: Record<string, { days: number; label: string; valor: number }> = {
     semanal: { days: 7, label: "Semanal", valor: 39.99 },
