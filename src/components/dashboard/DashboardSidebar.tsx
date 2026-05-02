@@ -1,9 +1,10 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
 import ratariaLogoBlack from "@/assets/rataria-icon-black.png";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useRole } from "@/hooks/useRole";
 import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -24,6 +25,7 @@ const menuItems = [
   { title: "VTurb", url: "/dashboard/vturb", icon: Video, permKey: "dashboard" },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
   { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
+  { title: "Afiliados", url: "/dashboard/afiliados", icon: Handshake, permKey: "afiliados" },
   { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, permKey: "configuracoes" },
 ];
 
@@ -31,6 +33,7 @@ export function DashboardSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { permissions, loading } = usePermissions();
+  const { isAdmin } = useRole();
   const { displayName } = useProfile();
   const [isLight, setIsLight] = useState(document.documentElement.classList.contains("light"));
 
@@ -91,7 +94,9 @@ export function DashboardSidebar() {
       {/* Menu items */}
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2 overflow-auto">
         {menuItems.map((item) => {
-          const hasPermission = loading ? true : permissions[item.permKey as keyof typeof permissions];
+          const hasPermission = item.permKey === "afiliados"
+            ? isAdmin
+            : (loading ? true : permissions[item.permKey as keyof typeof permissions]);
           if (!hasPermission) return null;
 
           const isActive = location.pathname === item.url || (item.url === "/dashboard-ferramentas" && location.pathname.startsWith("/dashboard-ferramentas/") && location.pathname !== "/dashboard/gerar-avisos");

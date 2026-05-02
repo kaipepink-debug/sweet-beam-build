@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
 import { getRange, formatBRL } from "@/lib/dateRanges";
+import { usePermissions } from "@/hooks/usePermissions";
 
 
 interface Assinante {
@@ -32,6 +33,8 @@ interface Assinante {
 
 export default function DashboardAssinaturas() {
   const { user } = useAuth();
+  const { permissions } = usePermissions();
+  const isAfiliado = permissions.is_afiliado;
   const [assinantes, setAssinantes] = useState<Assinante[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -104,12 +107,16 @@ export default function DashboardAssinaturas() {
   };
 
   const fetchAssinantes = async () => {
-    const { data } = await supabase.from("assinantes").select("*").order("created_at", { ascending: false });
+    let query = supabase.from("assinantes").select("*").order("created_at", { ascending: false });
+    if (isAfiliado && user) {
+      query = query.eq("created_by", user.id);
+    }
+    const { data } = await query;
     setAssinantes((data as any[]) ?? []);
     setLoading(false);
   };
 
-  useEffect(() => { fetchAssinantes(); }, []);
+  useEffect(() => { fetchAssinantes(); }, [isAfiliado, user?.id]);
 
   const handleAdd = async () => {
     if (!user || !form.nome || !form.email || !form.valor) {
