@@ -14,7 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
 import { getRange, formatBRL } from "@/lib/dateRanges";
-import nautLogo from "@/assets/naut-logo.png";
+
 
 interface Assinante {
   id: string;
@@ -492,7 +492,13 @@ export default function DashboardAssinaturas() {
                   {isVisible("valor") && (
                     <TableCell>
                       <p className="text-sm font-semibold text-foreground">{formatCurrency(a.valor)}</p>
-                      <p className="text-xs text-muted-foreground">N/A</p>
+                      {(() => {
+                        const p = (a.plano || "").toLowerCase();
+                        if (p.includes("semanal")) return <p className="text-xs text-muted-foreground">Semanal</p>;
+                        if (p.includes("semestral")) return <p className="text-xs text-muted-foreground">Semestral</p>;
+                        if (p.includes("mensal")) return <p className="text-xs text-muted-foreground">Mensal</p>;
+                        return null;
+                      })()}
                     </TableCell>
                   )}
                   {isVisible("data_criacao") && (
@@ -511,18 +517,7 @@ export default function DashboardAssinaturas() {
                       </span>
                     </TableCell>
                   )}
-                  {isVisible("meio_pagamento") && (
-                    <TableCell>
-                      {a.meio_pagamento === "Naut" ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-300">
-                          <img src={nautLogo} alt="Naut" className="h-4 w-4 object-contain" />
-                          Naut
-                        </span>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</span>
-                      )}
-                    </TableCell>
-                  )}
+                  {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
                   
                   <TableCell>
                     <DropdownMenu>
