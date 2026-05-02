@@ -106,6 +106,36 @@ export type Database = {
         }
         Relationships: []
       }
+      afiliado_limite_historico: {
+        Row: {
+          afiliado_id: string
+          created_at: string
+          created_by: string
+          id: string
+          quantidade: number
+          valor_total: number
+          valor_unitario: number
+        }
+        Insert: {
+          afiliado_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          quantidade: number
+          valor_total: number
+          valor_unitario: number
+        }
+        Update: {
+          afiliado_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          quantidade?: number
+          valor_total?: number
+          valor_unitario?: number
+        }
+        Relationships: []
+      }
       assinantes: {
         Row: {
           created_at: string
