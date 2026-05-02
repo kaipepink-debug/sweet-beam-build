@@ -38,7 +38,7 @@ export default function DashboardAssinaturas() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [produtoFilter, setProdutoFilter] = useState("all");
   const [origemFilter, setOrigemFilter] = useState<"all" | "naut" | "manual">("all");
-  const [range, setRange] = useState<RangeFilterValue>({ preset: "30d" });
+  const [range, setRange] = useState<RangeFilterValue>({ preset: "7d" });
 
   const COLUMNS = [
     { key: "assinante", label: "Assinante" },
