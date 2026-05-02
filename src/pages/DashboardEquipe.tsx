@@ -34,6 +34,7 @@ const PERMISSION_LABELS: Record<string, string> = {
   pixels: "Pixels",
   analytics: "Analytics",
   equipe: "Equipe",
+  afiliados: "Afiliados",
   configuracoes: "Configurações",
 };
 
