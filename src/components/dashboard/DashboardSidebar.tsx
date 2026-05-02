@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
 import ratariaLogoBlack from "@/assets/rataria-icon-black.png";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useRole } from "@/hooks/useRole";
 import { useProfile } from "@/hooks/useProfile";
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
