@@ -236,3 +236,14 @@ All colors MUST be HSL.
     zoom: 0.9;
   }
 }
+
+/* Dashboard typography weight overrides — improve readability */
+.dashboard-area .font-extralight { font-weight: 500 !important; }
+.dashboard-area .font-light { font-weight: 500 !important; }
+.dashboard-area .font-thin { font-weight: 500 !important; }
+.dashboard-area .font-normal { font-weight: 500 !important; }
+.dashboard-area .tabular-nums { font-weight: 600 !important; }
+.dashboard-area h1,
+.dashboard-area h2,
+.dashboard-area h3 { font-weight: 700 !important; }
+.dashboard-area .text-muted-foreground { font-weight: 500; }
