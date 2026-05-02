@@ -501,6 +501,7 @@ export type Database = {
       team_permissions: {
         Row: {
           acesso_clientes: boolean
+          afiliados: boolean
           analytics: boolean
           assinaturas: boolean
           clientes: boolean
@@ -521,6 +522,7 @@ export type Database = {
         }
         Insert: {
           acesso_clientes?: boolean
+          afiliados?: boolean
           analytics?: boolean
           assinaturas?: boolean
           clientes?: boolean
@@ -541,6 +543,7 @@ export type Database = {
         }
         Update: {
           acesso_clientes?: boolean
+          afiliados?: boolean
           analytics?: boolean
           assinaturas?: boolean
           clientes?: boolean
