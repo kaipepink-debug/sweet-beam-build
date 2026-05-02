@@ -513,6 +513,7 @@ export type Database = {
           financeiro: boolean
           gerar_avisos: boolean
           id: string
+          is_afiliado: boolean
           pixels: boolean
           updated_at: string
           user_id: string
@@ -532,6 +533,7 @@ export type Database = {
           financeiro?: boolean
           gerar_avisos?: boolean
           id?: string
+          is_afiliado?: boolean
           pixels?: boolean
           updated_at?: string
           user_id: string
@@ -551,6 +553,7 @@ export type Database = {
           financeiro?: boolean
           gerar_avisos?: boolean
           id?: string
+          is_afiliado?: boolean
           pixels?: boolean
           updated_at?: string
           user_id?: string

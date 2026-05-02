@@ -1,0 +1,1 @@
+ALTER TABLE public.team_permissions ADD COLUMN IF NOT EXISTS is_afiliado boolean NOT NULL DEFAULT false;
