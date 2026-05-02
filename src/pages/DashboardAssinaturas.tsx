@@ -29,6 +29,13 @@ interface Assinante {
   proxima_cobranca: string | null;
   data_criacao: string;
   data_renovacao: string | null;
+  created_by?: string | null;
+}
+
+interface AfiliadoInfo {
+  user_id: string;
+  display_name: string;
+  email: string;
 }
 
 export default function DashboardAssinaturas() {
@@ -106,6 +113,8 @@ export default function DashboardAssinaturas() {
     return addDaysBR(startDate, PLAN_CONFIG[plan]?.days || 30);
   };
 
+  const [afiliadosMap, setAfiliadosMap] = useState<Record<string, AfiliadoInfo>>({});
+
   const fetchAssinantes = async () => {
     let query = supabase.from("assinantes").select("*").order("created_at", { ascending: false });
     if (isAfiliado && user) {
@@ -116,7 +125,33 @@ export default function DashboardAssinaturas() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchAssinantes(); }, [isAfiliado, user?.id]);
+  const fetchAfiliados = async () => {
+    if (isAfiliado) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=list`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+        }
+      );
+      if (!response.ok) return;
+      const data = await response.json();
+      const map: Record<string, AfiliadoInfo> = {};
+      (data.team || []).forEach((m: any) => {
+        if (m.permissions?.is_afiliado) {
+          map[m.id] = { user_id: m.id, display_name: m.display_name || m.email, email: m.email };
+        }
+      });
+      setAfiliadosMap(map);
+    } catch {}
+  };
+
+  useEffect(() => { fetchAssinantes(); fetchAfiliados(); }, [isAfiliado, user?.id]);
 
   const handleAdd = async () => {
     if (!user || !form.nome || !form.email || !form.valor) {
@@ -485,8 +520,23 @@ export default function DashboardAssinaturas() {
                   {isVisible("assinante") && (
                     <TableCell>
                       <div>
-                        <p className="text-sm font-medium text-foreground">{a.nome}</p>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <p className="text-sm font-medium text-foreground">{a.nome}</p>
+                          {a.created_by && afiliadosMap[a.created_by] && (
+                            <span
+                              className="inline-flex items-center rounded-full border border-purple-500/40 bg-purple-500/15 px-2 py-0.5 text-[10px] font-semibold text-purple-300"
+                              title={`Afiliado: ${afiliadosMap[a.created_by].display_name} (${afiliadosMap[a.created_by].email})`}
+                            >
+                              Afiliado
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-muted-foreground">{a.email}</p>
+                        {a.created_by && afiliadosMap[a.created_by] && (
+                          <p className="text-[10px] text-purple-300/80 mt-0.5">
+                            por {afiliadosMap[a.created_by].display_name} · {afiliadosMap[a.created_by].email}
+                          </p>
+                        )}
                       </div>
                     </TableCell>
                   )}
