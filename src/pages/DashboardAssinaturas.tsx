@@ -47,7 +47,6 @@ export default function DashboardAssinaturas() {
     { key: "proxima_cobranca", label: "Próx. cobrança" },
     { key: "data_criacao", label: "Criada em" },
     { key: "meio_pagamento", label: "Meio de Pagamento" },
-    { key: "data_renovacao", label: "Data de Renovação" },
   ] as const;
   type ColKey = typeof COLUMNS[number]["key"];
   const [visibleCols, setVisibleCols] = useState<Record<ColKey, boolean>>(() => {
