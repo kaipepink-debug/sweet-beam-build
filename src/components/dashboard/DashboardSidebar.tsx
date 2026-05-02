@@ -24,6 +24,7 @@ const menuItems = [
   { title: "VTurb", url: "/dashboard/vturb", icon: Video, permKey: "dashboard" },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
   { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
+  { title: "Afiliados", url: "/dashboard/afiliados", icon: Handshake, permKey: "afiliados" },
   { title: "Configurações", url: "/dashboard/configuracoes", icon: Settings, permKey: "configuracoes" },
 ];
 
