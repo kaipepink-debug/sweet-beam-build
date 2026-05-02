@@ -81,7 +81,7 @@ export default function DashboardAssinaturas() {
     valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: ""
   });
   const [ativarForm, setAtivarForm] = useState({
-    nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0]
+    nome: "", email: "", plano: "mensal", data_inicio: todayBR()
   });
   const [tempForm, setTempForm] = useState({ nome: "", email: "" });
 
@@ -92,9 +92,7 @@ export default function DashboardAssinaturas() {
   };
 
   const calcExpiration = (startDate: string, plan: string) => {
-    const date = new Date(startDate);
-    date.setDate(date.getDate() + (PLAN_CONFIG[plan]?.days || 30));
-    return date.toISOString().split("T")[0];
+    return addDaysBR(startDate, PLAN_CONFIG[plan]?.days || 30);
   };
 
   const fetchAssinantes = async () => {
@@ -113,7 +111,7 @@ export default function DashboardAssinaturas() {
     const { error } = await supabase.from("assinantes").insert({
       nome: form.nome, email: form.email, produto: form.produto, plano: form.plano,
       status: form.status, valor: parseFloat(form.valor), meio_pagamento: form.meio_pagamento,
-      proxima_cobranca: form.proxima_cobranca || null, data_criacao: form.data_criacao || new Date().toISOString().split("T")[0],
+      proxima_cobranca: form.proxima_cobranca || null, data_criacao: form.data_criacao || todayBR(),
       data_renovacao: form.data_renovacao || null, created_by: user.id,
     } as any);
     if (error) { toast.error("Erro ao adicionar"); return; }
@@ -149,7 +147,7 @@ export default function DashboardAssinaturas() {
     if (error) { toast.error("Erro ao ativar login"); return; }
     toast.success(`Login ativado! Expira em ${new Date(expiration).toLocaleDateString("pt-BR")}`);
     setAtivarDialogOpen(false);
-    setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0] });
+    setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: todayBR() });
     fetchAssinantes();
   };
 
@@ -158,7 +156,7 @@ export default function DashboardAssinaturas() {
       toast.error("Preencha nome e email");
       return;
     }
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayBR();
     const { error } = await supabase.from("assinantes").insert({
       nome: tempForm.nome,
       email: tempForm.email,
@@ -210,8 +208,12 @@ export default function DashboardAssinaturas() {
 
   const formatDate = (d: string | null) => {
     if (!d) return "N/A";
-    const date = new Date(d);
-    return date.toLocaleDateString("pt-BR");
+    // Datas em formato YYYY-MM-DD: parsear manualmente para evitar shift de fuso (UTC->BR)
+    const onlyDate = d.length >= 10 ? d.slice(0, 10) : d;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(onlyDate);
+    if (m) return `${m[3]}/${m[2]}/${m[1]}`;
+    // Fallback para timestamps completos
+    return new Date(d).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
   };
 
   const formatCurrency = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
@@ -305,7 +307,7 @@ export default function DashboardAssinaturas() {
                 </div>
                 <div><Label>Data de Início</Label><Input type="date" value={ativarForm.data_inicio} onChange={e => setAtivarForm(f => ({ ...f, data_inicio: e.target.value }))} /></div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-                  <p><strong>Expira em:</strong> {ativarForm.data_inicio ? new Date(calcExpiration(ativarForm.data_inicio, ativarForm.plano)).toLocaleDateString("pt-BR") : "—"}</p>
+                  <p><strong>Expira em:</strong> {ativarForm.data_inicio ? formatDate(calcExpiration(ativarForm.data_inicio, ativarForm.plano)) : "—"}</p>
                 </div>
               </div>
               <Button onClick={handleAtivarLogin} className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700">Ativar Login</Button>
