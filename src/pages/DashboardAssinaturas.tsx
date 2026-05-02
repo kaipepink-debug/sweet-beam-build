@@ -107,12 +107,16 @@ export default function DashboardAssinaturas() {
   };
 
   const fetchAssinantes = async () => {
-    const { data } = await supabase.from("assinantes").select("*").order("created_at", { ascending: false });
+    let query = supabase.from("assinantes").select("*").order("created_at", { ascending: false });
+    if (isAfiliado && user) {
+      query = query.eq("created_by", user.id);
+    }
+    const { data } = await query;
     setAssinantes((data as any[]) ?? []);
     setLoading(false);
   };
 
-  useEffect(() => { fetchAssinantes(); }, []);
+  useEffect(() => { fetchAssinantes(); }, [isAfiliado, user?.id]);
 
   const handleAdd = async () => {
     if (!user || !form.nome || !form.email || !form.valor) {
