@@ -37,6 +37,7 @@ const defaultPermissions: TeamPermissions = {
   equipe: false,
   afiliados: false,
   is_afiliado: false,
+  max_assinaturas: 10,
 };
 
 export function usePermissions() {
