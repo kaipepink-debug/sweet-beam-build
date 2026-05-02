@@ -18,6 +18,7 @@ export interface TeamPermissions {
   equipe: boolean;
   afiliados: boolean;
   is_afiliado: boolean;
+  max_assinaturas: number;
 }
 
 const defaultPermissions: TeamPermissions = {
