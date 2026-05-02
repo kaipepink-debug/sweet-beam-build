@@ -473,7 +473,6 @@ export default function DashboardAssinaturas() {
                   {isVisible("produto") && (
                     <TableCell>
                       <p className="text-sm font-semibold text-foreground">{a.produto}</p>
-                      <p className="text-xs text-muted-foreground">{a.plano}</p>
                     </TableCell>
                   )}
                   {isVisible("status") && (
@@ -494,10 +493,16 @@ export default function DashboardAssinaturas() {
                       <p className="text-sm font-semibold text-foreground">{formatCurrency(a.valor)}</p>
                       {(() => {
                         const p = (a.plano || "").toLowerCase();
-                        if (p.includes("semanal")) return <p className="text-xs text-muted-foreground">Semanal</p>;
-                        if (p.includes("semestral")) return <p className="text-xs text-muted-foreground">Semestral</p>;
-                        if (p.includes("mensal")) return <p className="text-xs text-muted-foreground">Mensal</p>;
-                        return null;
+                        let label: string | null = null;
+                        if (p.includes("semanal")) label = "Semanal";
+                        else if (p.includes("semestral")) label = "Semestral";
+                        else if (p.includes("mensal")) label = "Mensal";
+                        if (!label) return null;
+                        return (
+                          <span className="mt-1 inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 text-[11px] font-medium text-purple-300">
+                            {label}
+                          </span>
+                        );
                       })()}
                     </TableCell>
                   )}
