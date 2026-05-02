@@ -553,6 +553,42 @@ export default function DashboardAssinaturas() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Dialog de e-mail já cadastrado */}
+      <Dialog open={!!duplicateInfo} onOpenChange={(o) => !o && setDuplicateInfo(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-amber-400">Cliente já cadastrado</DialogTitle>
+          </DialogHeader>
+          {duplicateInfo && (
+            <div className="space-y-3">
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
+                Este e-mail já possui uma assinatura registrada. Veja os dados abaixo antes de criar um novo cadastro.
+              </div>
+              <div className="rounded-lg border border-border bg-muted/20 divide-y divide-border text-sm">
+                {[
+                  ["Nome", duplicateInfo.nome],
+                  ["E-mail", duplicateInfo.email],
+                  ["Produto", duplicateInfo.produto],
+                  ["Plano", duplicateInfo.plano || "N/A"],
+                  ["Status", duplicateInfo.status],
+                  ["Valor", formatCurrency(Number(duplicateInfo.valor || 0))],
+                  ["Meio de pagamento", duplicateInfo.meio_pagamento || "N/A"],
+                  ["Data de criação", formatDate(duplicateInfo.data_criacao)],
+                  ["Próx. cobrança", formatDate(duplicateInfo.proxima_cobranca)],
+                  ["Renovação", formatDate(duplicateInfo.data_renovacao)],
+                ].map(([k, v]) => (
+                  <div key={k as string} className="flex justify-between gap-3 px-3 py-2">
+                    <span className="text-muted-foreground">{k}</span>
+                    <span className="font-medium text-foreground text-right">{v as string}</span>
+                  </div>
+                ))}
+              </div>
+              <Button onClick={() => setDuplicateInfo(null)} className="w-full" variant="outline">Fechar</Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
