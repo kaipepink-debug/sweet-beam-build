@@ -511,18 +511,7 @@ export default function DashboardAssinaturas() {
                       </span>
                     </TableCell>
                   )}
-                  {isVisible("meio_pagamento") && (
-                    <TableCell>
-                      {a.meio_pagamento === "Naut" ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-300">
-                          <img src={nautLogo} alt="Naut" className="h-4 w-4 object-contain" />
-                          Naut
-                        </span>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</span>
-                      )}
-                    </TableCell>
-                  )}
+                  {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
                   
                   <TableCell>
                     <DropdownMenu>
