@@ -59,6 +59,7 @@ export default function DashboardEquipe() {
     analytics: false,
     configuracoes: false,
     equipe: false,
+    afiliados: false,
   });
   const [submitting, setSubmitting] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
