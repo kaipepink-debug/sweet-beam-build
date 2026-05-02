@@ -29,6 +29,13 @@ interface Assinante {
   proxima_cobranca: string | null;
   data_criacao: string;
   data_renovacao: string | null;
+  created_by?: string | null;
+}
+
+interface AfiliadoInfo {
+  user_id: string;
+  display_name: string;
+  email: string;
 }
 
 export default function DashboardAssinaturas() {
