@@ -492,7 +492,13 @@ export default function DashboardAssinaturas() {
                   {isVisible("valor") && (
                     <TableCell>
                       <p className="text-sm font-semibold text-foreground">{formatCurrency(a.valor)}</p>
-                      <p className="text-xs text-muted-foreground">N/A</p>
+                      {(() => {
+                        const p = (a.plano || "").toLowerCase();
+                        if (p.includes("semanal")) return <p className="text-xs text-muted-foreground">Semanal</p>;
+                        if (p.includes("semestral")) return <p className="text-xs text-muted-foreground">Semestral</p>;
+                        if (p.includes("mensal")) return <p className="text-xs text-muted-foreground">Mensal</p>;
+                        return null;
+                      })()}
                     </TableCell>
                   )}
                   {isVisible("data_criacao") && (
