@@ -401,8 +401,8 @@ export default function DashboardAssinaturas() {
             </DialogContent>
           </Dialog>
 
-          {/* Login Temporário (30 min) */}
-          <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
+          {/* Login Temporário (30 min) — bloqueado para afiliados */}
+          {!isAfiliado && <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
             <DialogTrigger asChild>
               <Button size="sm" className="gap-2 bg-amber-600 hover:bg-amber-700 text-white">
                 <Clock className="h-4 w-4" /> Login Temporário (30min)
