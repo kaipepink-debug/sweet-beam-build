@@ -40,7 +40,7 @@ interface AfiliadoInfo {
 
 export default function DashboardAssinaturas() {
   const { user } = useAuth();
-  const { permissions } = usePermissions();
+  const { permissions, loading: permsLoading } = usePermissions();
   const isAfiliado = permissions.is_afiliado;
   const [assinantes, setAssinantes] = useState<Assinante[]>([]);
   const [loading, setLoading] = useState(true);
@@ -151,7 +151,11 @@ export default function DashboardAssinaturas() {
     } catch {}
   };
 
-  useEffect(() => { fetchAssinantes(); fetchAfiliados(); }, [isAfiliado, user?.id]);
+  useEffect(() => {
+    if (permsLoading) return;
+    fetchAssinantes();
+    fetchAfiliados();
+  }, [isAfiliado, user?.id, permsLoading]);
 
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
 
