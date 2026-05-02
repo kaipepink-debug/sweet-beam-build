@@ -58,7 +58,9 @@ const AFILIADO_PERMISSIONS = {
 export default function DashboardAfiliados() {
   const [afiliados, setAfiliados] = useState<AfiliadoMember[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
-  const [revenueByAfiliado, setRevenueByAfiliado] = useState<Record<string, number>>({});
+  const [allHistory, setAllHistory] = useState<LimiteHistorico[]>([]);
+  const [search, setSearch] = useState("");
+  const [range, setRange] = useState<RangeFilterValue>({ preset: "max" });
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState("");
