@@ -116,6 +116,7 @@ export default function DashboardAssinaturas() {
   const [afiliadosMap, setAfiliadosMap] = useState<Record<string, AfiliadoInfo>>({});
 
   const fetchAssinantes = async () => {
+    setLoading(true);
     let query = supabase.from("assinantes").select("*").order("created_at", { ascending: false });
     if (isAfiliado && user) {
       query = query.eq("created_by", user.id);
