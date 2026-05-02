@@ -1,0 +1,1 @@
+ALTER TABLE public.team_permissions ADD COLUMN IF NOT EXISTS max_assinaturas integer NOT NULL DEFAULT 10;

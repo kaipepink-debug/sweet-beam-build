@@ -515,6 +515,7 @@ export type Database = {
           gerar_avisos: boolean
           id: string
           is_afiliado: boolean
+          max_assinaturas: number
           pixels: boolean
           updated_at: string
           user_id: string
@@ -536,6 +537,7 @@ export type Database = {
           gerar_avisos?: boolean
           id?: string
           is_afiliado?: boolean
+          max_assinaturas?: number
           pixels?: boolean
           updated_at?: string
           user_id: string
@@ -557,6 +559,7 @@ export type Database = {
           gerar_avisos?: boolean
           id?: string
           is_afiliado?: boolean
+          max_assinaturas?: number
           pixels?: boolean
           updated_at?: string
           user_id?: string
