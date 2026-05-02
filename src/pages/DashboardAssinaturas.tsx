@@ -113,6 +113,8 @@ export default function DashboardAssinaturas() {
     return addDaysBR(startDate, PLAN_CONFIG[plan]?.days || 30);
   };
 
+  const [afiliadosMap, setAfiliadosMap] = useState<Record<string, AfiliadoInfo>>({});
+
   const fetchAssinantes = async () => {
     let query = supabase.from("assinantes").select("*").order("created_at", { ascending: false });
     if (isAfiliado && user) {
@@ -123,7 +125,33 @@ export default function DashboardAssinaturas() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchAssinantes(); }, [isAfiliado, user?.id]);
+  const fetchAfiliados = async () => {
+    if (isAfiliado) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=list`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+        }
+      );
+      if (!response.ok) return;
+      const data = await response.json();
+      const map: Record<string, AfiliadoInfo> = {};
+      (data.team || []).forEach((m: any) => {
+        if (m.permissions?.is_afiliado) {
+          map[m.id] = { user_id: m.id, display_name: m.display_name || m.email, email: m.email };
+        }
+      });
+      setAfiliadosMap(map);
+    } catch {}
+  };
+
+  useEffect(() => { fetchAssinantes(); fetchAfiliados(); }, [isAfiliado, user?.id]);
 
   const handleAdd = async () => {
     if (!user || !form.nome || !form.email || !form.valor) {
