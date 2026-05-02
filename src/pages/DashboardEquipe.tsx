@@ -34,6 +34,7 @@ const PERMISSION_LABELS: Record<string, string> = {
   pixels: "Pixels",
   analytics: "Analytics",
   equipe: "Equipe",
+  afiliados: "Afiliados",
   configuracoes: "Configurações",
 };
 
@@ -58,6 +59,7 @@ export default function DashboardEquipe() {
     analytics: false,
     configuracoes: false,
     equipe: false,
+    afiliados: false,
   });
   const [submitting, setSubmitting] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState<string | null>(null);

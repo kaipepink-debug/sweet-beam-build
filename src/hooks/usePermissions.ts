@@ -16,6 +16,7 @@ export interface TeamPermissions {
   analytics: boolean;
   configuracoes: boolean;
   equipe: boolean;
+  afiliados: boolean;
   is_afiliado: boolean;
 }
 
@@ -33,6 +34,7 @@ const defaultPermissions: TeamPermissions = {
   analytics: false,
   configuracoes: false,
   equipe: false,
+  afiliados: false,
   is_afiliado: false,
 };
 
@@ -69,6 +71,7 @@ export function usePermissions() {
             analytics: data.analytics,
             configuracoes: data.configuracoes,
             equipe: data.equipe,
+            afiliados: (data as any).afiliados ?? false,
             is_afiliado: (data as any).is_afiliado ?? false,
           });
         }
