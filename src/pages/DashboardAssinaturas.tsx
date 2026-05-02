@@ -151,7 +151,11 @@ export default function DashboardAssinaturas() {
     } catch {}
   };
 
-  useEffect(() => { fetchAssinantes(); fetchAfiliados(); }, [isAfiliado, user?.id]);
+  useEffect(() => {
+    if (permsLoading) return;
+    fetchAssinantes();
+    fetchAfiliados();
+  }, [isAfiliado, user?.id, permsLoading]);
 
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
 
