@@ -34,6 +34,7 @@ const defaultPermissions: TeamPermissions = {
   analytics: false,
   configuracoes: false,
   equipe: false,
+  afiliados: false,
   is_afiliado: false,
 };
 
