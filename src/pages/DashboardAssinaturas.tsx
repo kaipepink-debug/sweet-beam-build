@@ -190,7 +190,10 @@ export default function DashboardAssinaturas() {
     const matchStatus = statusFilter === "all" || a.status === statusFilter;
     const matchProduto = produtoFilter === "all" || a.produto === produtoFilter;
     const matchOrigem = origemFilter === "all" || (origemFilter === "manual" ? isManual(a) : !isManual(a));
-    const created = a.data_criacao ? new Date(a.data_criacao) : null;
+    const created = a.data_criacao ? (() => {
+      const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(a.data_criacao);
+      return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date(a.data_criacao);
+    })() : null;
     const matchRange = !created || (created >= r.from && created <= r.to);
     return matchSearch && matchStatus && matchProduto && matchOrigem && matchRange;
   }), [assinantes, search, statusFilter, produtoFilter, origemFilter, r.from, r.to]);
