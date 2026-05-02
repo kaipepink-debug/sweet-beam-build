@@ -351,18 +351,36 @@ export default function DashboardAfiliados() {
         </div>
       )}
 
+      {/* Filtros */}
+      <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar por nome ou e-mail..."
+            className="w-full pl-9 pr-3 py-2 rounded-xl text-sm bg-muted border border-border text-foreground outline-none focus:border-primary transition-colors"
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground mr-1">Período da receita</span>
+          <RangeFilter value={range} onChange={setRange} />
+        </div>
+      </div>
+
       <div className="space-y-3">
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : afiliados.length === 0 ? (
+        ) : filteredAfiliados.length === 0 ? (
           <div className="rounded-2xl border border-border bg-card p-12 text-center">
             <Handshake className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">Nenhum afiliado cadastrado</p>
+            <p className="text-sm text-muted-foreground">{afiliados.length === 0 ? "Nenhum afiliado cadastrado" : "Nenhum afiliado encontrado"}</p>
           </div>
         ) : (
-          afiliados.map((member) => {
+          filteredAfiliados.map((member) => {
             const limit = member.permissions?.max_assinaturas ?? 0;
             const used = counts[member.id] || 0;
             const revenue = revenueByAfiliado[member.id] || 0;
