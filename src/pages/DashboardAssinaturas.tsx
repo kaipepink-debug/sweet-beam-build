@@ -433,7 +433,7 @@ export default function DashboardAssinaturas() {
               {isVisible("data_criacao") && <TableHead className="text-muted-foreground">Criada em</TableHead>}
               {isVisible("proxima_cobranca") && <TableHead className="text-muted-foreground">Próx. cobrança</TableHead>}
               {isVisible("meio_pagamento") && <TableHead className="text-muted-foreground">Meio de Pagamento</TableHead>}
-              {isVisible("data_renovacao") && <TableHead className="text-muted-foreground">Data de Renovação</TableHead>}
+              
               <TableHead className="w-10"></TableHead>
             </TableRow>
           </TableHeader>
