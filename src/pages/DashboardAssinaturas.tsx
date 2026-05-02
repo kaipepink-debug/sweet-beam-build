@@ -153,11 +153,13 @@ export default function DashboardAssinaturas() {
 
   useEffect(() => { fetchAssinantes(); fetchAfiliados(); }, [isAfiliado, user?.id]);
 
+  const [limitDialogOpen, setLimitDialogOpen] = useState(false);
+
   const checkAfiliadoLimit = (): boolean => {
     if (!isAfiliado) return true;
     const limit = permissions.max_assinaturas ?? 10;
     if (assinantes.length >= limit) {
-      toast.error(`Limite de ${limit} assinaturas atingido. Solicite ao administrador para aumentar.`);
+      setLimitDialogOpen(true);
       return false;
     }
     return true;
@@ -625,6 +627,30 @@ export default function DashboardAssinaturas() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Dialog de limite de assinaturas */}
+      <Dialog open={limitDialogOpen} onOpenChange={setLimitDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-red-500">Limite de assinaturas excedido</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-xs text-red-400">
+              Você atingiu o limite de <strong>{permissions.max_assinaturas ?? 10}</strong> assinaturas no seu painel de afiliado. Para aumentar seu limite, entre em contato com o suporte via WhatsApp.
+            </div>
+            <a
+              href="https://wa.me/5511922926559?text=Ol%C3%A1%2C%20preciso%20aumentar%20meu%20limite%20de%20assinaturas%20no%20painel%20de%20afiliado."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-3 text-sm font-semibold transition-colors"
+            >
+              Falar com suporte no WhatsApp
+            </a>
+            <p className="text-center text-xs text-muted-foreground">+55 11 92292-6559</p>
+            <Button onClick={() => setLimitDialogOpen(false)} variant="outline" className="w-full">Fechar</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog de e-mail já cadastrado */}
       <Dialog open={!!duplicateInfo} onOpenChange={(o) => !o && setDuplicateInfo(null)}>
