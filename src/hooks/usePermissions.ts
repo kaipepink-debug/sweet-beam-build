@@ -71,6 +71,7 @@ export function usePermissions() {
             analytics: data.analytics,
             configuracoes: data.configuracoes,
             equipe: data.equipe,
+            afiliados: (data as any).afiliados ?? false,
             is_afiliado: (data as any).is_afiliado ?? false,
           });
         }
