@@ -558,11 +558,11 @@ export default function DashboardAssinaturas() {
       <Dialog open={!!duplicateInfo} onOpenChange={(o) => !o && setDuplicateInfo(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-amber-400">Cliente já cadastrado</DialogTitle>
+            <DialogTitle className="text-red-600">Cliente já cadastrado</DialogTitle>
           </DialogHeader>
           {duplicateInfo && (
             <div className="space-y-3">
-              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
+              <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-xs text-red-600 dark:text-red-400">
                 Este e-mail já possui uma assinatura registrada. Veja os dados abaixo antes de criar um novo cadastro.
               </div>
               <div className="rounded-lg border border-border bg-muted/20 divide-y divide-border text-sm">
