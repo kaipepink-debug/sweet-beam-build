@@ -520,8 +520,23 @@ export default function DashboardAssinaturas() {
                   {isVisible("assinante") && (
                     <TableCell>
                       <div>
-                        <p className="text-sm font-medium text-foreground">{a.nome}</p>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <p className="text-sm font-medium text-foreground">{a.nome}</p>
+                          {a.created_by && afiliadosMap[a.created_by] && (
+                            <span
+                              className="inline-flex items-center rounded-full border border-purple-500/40 bg-purple-500/15 px-2 py-0.5 text-[10px] font-semibold text-purple-300"
+                              title={`Afiliado: ${afiliadosMap[a.created_by].display_name} (${afiliadosMap[a.created_by].email})`}
+                            >
+                              Afiliado
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-muted-foreground">{a.email}</p>
+                        {a.created_by && afiliadosMap[a.created_by] && (
+                          <p className="text-[10px] text-purple-300/80 mt-0.5">
+                            por {afiliadosMap[a.created_by].display_name} · {afiliadosMap[a.created_by].email}
+                          </p>
+                        )}
                       </div>
                     </TableCell>
                   )}
