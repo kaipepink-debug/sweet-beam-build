@@ -44,8 +44,8 @@ export default function DashboardAssinaturas() {
     { key: "produto", label: "Produto" },
     { key: "status", label: "Status" },
     { key: "valor", label: "Valor" },
-    { key: "proxima_cobranca", label: "Próx. cobrança" },
     { key: "data_criacao", label: "Criada em" },
+    { key: "proxima_cobranca", label: "Próx. cobrança" },
     { key: "meio_pagamento", label: "Meio de Pagamento" },
   ] as const;
   type ColKey = typeof COLUMNS[number]["key"];
@@ -61,6 +61,18 @@ export default function DashboardAssinaturas() {
   }, [visibleCols]);
   const isVisible = (k: ColKey) => visibleCols[k];
   const r = useMemo(() => getRange(range.preset, { from: range.from, to: range.to }), [range]);
+
+  // Retorna data atual no fuso de Brasília no formato YYYY-MM-DD
+  const todayBR = () => {
+    const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit" });
+    return fmt.format(new Date()); // en-CA produz YYYY-MM-DD
+  };
+  const addDaysBR = (baseISO: string, days: number) => {
+    const [y, m, d] = baseISO.split("-").map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    dt.setUTCDate(dt.getUTCDate() + days);
+    return dt.toISOString().split("T")[0];
+  };
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
   const [tempDialogOpen, setTempDialogOpen] = useState(false);
@@ -69,7 +81,7 @@ export default function DashboardAssinaturas() {
     valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: ""
   });
   const [ativarForm, setAtivarForm] = useState({
-    nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0]
+    nome: "", email: "", plano: "mensal", data_inicio: todayBR()
   });
   const [tempForm, setTempForm] = useState({ nome: "", email: "" });
 
@@ -80,9 +92,7 @@ export default function DashboardAssinaturas() {
   };
 
   const calcExpiration = (startDate: string, plan: string) => {
-    const date = new Date(startDate);
-    date.setDate(date.getDate() + (PLAN_CONFIG[plan]?.days || 30));
-    return date.toISOString().split("T")[0];
+    return addDaysBR(startDate, PLAN_CONFIG[plan]?.days || 30);
   };
 
   const fetchAssinantes = async () => {
@@ -101,7 +111,7 @@ export default function DashboardAssinaturas() {
     const { error } = await supabase.from("assinantes").insert({
       nome: form.nome, email: form.email, produto: form.produto, plano: form.plano,
       status: form.status, valor: parseFloat(form.valor), meio_pagamento: form.meio_pagamento,
-      proxima_cobranca: form.proxima_cobranca || null, data_criacao: form.data_criacao || new Date().toISOString().split("T")[0],
+      proxima_cobranca: form.proxima_cobranca || null, data_criacao: form.data_criacao || todayBR(),
       data_renovacao: form.data_renovacao || null, created_by: user.id,
     } as any);
     if (error) { toast.error("Erro ao adicionar"); return; }
@@ -137,7 +147,7 @@ export default function DashboardAssinaturas() {
     if (error) { toast.error("Erro ao ativar login"); return; }
     toast.success(`Login ativado! Expira em ${new Date(expiration).toLocaleDateString("pt-BR")}`);
     setAtivarDialogOpen(false);
-    setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: new Date().toISOString().split("T")[0] });
+    setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: todayBR() });
     fetchAssinantes();
   };
 
@@ -146,7 +156,7 @@ export default function DashboardAssinaturas() {
       toast.error("Preencha nome e email");
       return;
     }
-    const today = new Date().toISOString().split("T")[0];
+    const today = todayBR();
     const { error } = await supabase.from("assinantes").insert({
       nome: tempForm.nome,
       email: tempForm.email,
@@ -180,7 +190,10 @@ export default function DashboardAssinaturas() {
     const matchStatus = statusFilter === "all" || a.status === statusFilter;
     const matchProduto = produtoFilter === "all" || a.produto === produtoFilter;
     const matchOrigem = origemFilter === "all" || (origemFilter === "manual" ? isManual(a) : !isManual(a));
-    const created = a.data_criacao ? new Date(a.data_criacao) : null;
+    const created = a.data_criacao ? (() => {
+      const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(a.data_criacao);
+      return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date(a.data_criacao);
+    })() : null;
     const matchRange = !created || (created >= r.from && created <= r.to);
     return matchSearch && matchStatus && matchProduto && matchOrigem && matchRange;
   }), [assinantes, search, statusFilter, produtoFilter, origemFilter, r.from, r.to]);
@@ -198,8 +211,12 @@ export default function DashboardAssinaturas() {
 
   const formatDate = (d: string | null) => {
     if (!d) return "N/A";
-    const date = new Date(d);
-    return date.toLocaleDateString("pt-BR");
+    // Datas em formato YYYY-MM-DD: parsear manualmente para evitar shift de fuso (UTC->BR)
+    const onlyDate = d.length >= 10 ? d.slice(0, 10) : d;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(onlyDate);
+    if (m) return `${m[3]}/${m[2]}/${m[1]}`;
+    // Fallback para timestamps completos
+    return new Date(d).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
   };
 
   const formatCurrency = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
@@ -293,7 +310,7 @@ export default function DashboardAssinaturas() {
                 </div>
                 <div><Label>Data de Início</Label><Input type="date" value={ativarForm.data_inicio} onChange={e => setAtivarForm(f => ({ ...f, data_inicio: e.target.value }))} /></div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-                  <p><strong>Expira em:</strong> {ativarForm.data_inicio ? new Date(calcExpiration(ativarForm.data_inicio, ativarForm.plano)).toLocaleDateString("pt-BR") : "—"}</p>
+                  <p><strong>Expira em:</strong> {ativarForm.data_inicio ? formatDate(calcExpiration(ativarForm.data_inicio, ativarForm.plano)) : "—"}</p>
                 </div>
               </div>
               <Button onClick={handleAtivarLogin} className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700">Ativar Login</Button>
@@ -429,8 +446,8 @@ export default function DashboardAssinaturas() {
               {isVisible("produto") && <TableHead className="text-muted-foreground">Produto</TableHead>}
               {isVisible("status") && <TableHead className="text-muted-foreground">Status</TableHead>}
               {isVisible("valor") && <TableHead className="text-muted-foreground">Valor</TableHead>}
-              {isVisible("proxima_cobranca") && <TableHead className="text-muted-foreground">Próx. cobrança</TableHead>}
               {isVisible("data_criacao") && <TableHead className="text-muted-foreground">Criada em</TableHead>}
+              {isVisible("proxima_cobranca") && <TableHead className="text-muted-foreground">Próx. cobrança</TableHead>}
               {isVisible("meio_pagamento") && <TableHead className="text-muted-foreground">Meio de Pagamento</TableHead>}
               
               <TableHead className="w-10"></TableHead>
@@ -469,8 +486,8 @@ export default function DashboardAssinaturas() {
                       <p className="text-xs text-muted-foreground">N/A</p>
                     </TableCell>
                   )}
-                  {isVisible("proxima_cobranca") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>}
                   {isVisible("data_criacao") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.data_criacao)}</TableCell>}
+                  {isVisible("proxima_cobranca") && <TableCell className="text-sm text-muted-foreground">{formatDate(a.proxima_cobranca)}</TableCell>}
                   {isVisible("meio_pagamento") && <TableCell className="text-sm text-muted-foreground">{a.meio_pagamento || "N/A"}</TableCell>}
                   
                   <TableCell>
