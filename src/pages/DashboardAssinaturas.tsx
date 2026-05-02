@@ -329,6 +329,14 @@ export default function DashboardAssinaturas() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Assinaturas</h1>
           <p className="text-xs text-muted-foreground">Gerencie todos os assinantes da plataforma</p>
+          {isAfiliado && (
+            <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5">
+              <Users className="h-3.5 w-3.5 text-primary" />
+              <span className="text-xs font-semibold text-foreground">
+                Limite: <span className="text-primary">{assinantes.length}</span>/{permissions.max_assinaturas ?? 10}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
