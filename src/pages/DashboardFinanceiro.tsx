@@ -29,6 +29,7 @@ interface Venda {
   id: string;
   valor: number;
   data_criacao: string;
+  status: string;
 }
 
 const ORIGENS = ["Pix", "Transferência", "Dinheiro", "Cartão", "Boleto", "Outros"] as const;
@@ -75,7 +76,7 @@ export default function DashboardFinanceiro() {
     const [{ data: cRows, error: cErr }, { data: rRows, error: rErr }, { data: vRows, error: vErr }] = await Promise.all([
       supabase.from("custos").select("*").gte("data", fromStr).lte("data", toStr).order("data", { ascending: false }),
       supabase.from("receitas").select("*").gte("data", fromStr).lte("data", toStr).order("data", { ascending: false }),
-      supabase.from("assinantes").select("id,valor,data_criacao").gte("data_criacao", fromStr).lte("data_criacao", toStr),
+      supabase.from("assinantes").select("id,valor,data_criacao,status").gte("data_criacao", fromStr).lte("data_criacao", toStr),
     ]);
     if (cErr) toast.error("Erro ao carregar custos");
     if (rErr) toast.error("Erro ao carregar receitas");
@@ -175,9 +176,13 @@ export default function DashboardFinanceiro() {
 
   const total = useMemo(() => custos.reduce((s, c) => s + Number(c.valor), 0), [custos]);
   const totalReceitas = useMemo(() => receitas.reduce((s, c) => s + Number(c.valor), 0), [receitas]);
-  const totalVendas = useMemo(() => vendas.reduce((s, v) => s + Number(v.valor || 0), 0), [vendas]);
-  const receitaTotal = totalVendas + totalReceitas;
-  const saldo = receitaTotal - total;
+  // Receita total = soma das ASSINATURAS ATIVAS no período (mesmo critério da tela Assinaturas)
+  const totalVendas = useMemo(
+    () => vendas.filter(v => v.status === "Ativa").reduce((s, v) => s + Number(v.valor || 0), 0),
+    [vendas]
+  );
+  const receitaTotal = totalVendas;
+  const lucro = receitaTotal - total;
 
   return (
     <div className="space-y-6">
@@ -199,7 +204,7 @@ export default function DashboardFinanceiro() {
           </div>
           <p className="text-2xl font-extralight tracking-tight tabular-nums text-foreground">{formatBRL(receitaTotal)}</p>
           <p className="text-[10px] text-muted-foreground/60 font-light mt-1.5 tabular-nums">
-            Vendas {formatBRL(totalVendas)} + Outros {formatBRL(totalReceitas)}
+            Assinaturas ativas no período
           </p>
         </div>
         <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm p-4 relative overflow-hidden">
@@ -214,9 +219,9 @@ export default function DashboardFinanceiro() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
           <div className="flex items-center gap-2 mb-3">
             <Wallet className="h-3.5 w-3.5 text-primary" strokeWidth={1.5} />
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Saldo (Receita − Custos)</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-light">Lucro</p>
           </div>
-          <p className={`text-2xl font-extralight tracking-tight tabular-nums ${saldo >= 0 ? "text-emerald-400" : "text-red-400"}`}>{formatBRL(saldo)}</p>
+          <p className={`text-2xl font-extralight tracking-tight tabular-nums ${lucro >= 0 ? "text-emerald-400" : "text-red-400"}`}>{formatBRL(lucro)}</p>
         </div>
       </div>
 
