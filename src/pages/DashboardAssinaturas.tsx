@@ -297,6 +297,17 @@ export default function DashboardAssinaturas() {
     return new Date(d).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
   };
 
+  const formatDateTime = (d: string | null | undefined) => {
+    if (!d) return "—";
+    try {
+      return new Date(d).toLocaleString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+        day: "2-digit", month: "2-digit", year: "numeric",
+        hour: "2-digit", minute: "2-digit",
+      });
+    } catch { return "—"; }
+  };
+
   const formatCurrency = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
   const handleExport = (format: "xlsx" | "xls") => {
