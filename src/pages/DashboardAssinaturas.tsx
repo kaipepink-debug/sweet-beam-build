@@ -539,6 +539,7 @@ export default function DashboardAssinaturas() {
         <Table>
           <TableHeader>
             <TableRow className="border-border">
+              {isVisible("data_venda") && <TableHead className="text-muted-foreground">Data da venda</TableHead>}
               {isVisible("assinante") && <TableHead className="text-muted-foreground">Assinante</TableHead>}
               {isVisible("produto") && <TableHead className="text-muted-foreground">Produto</TableHead>}
               {isVisible("status") && <TableHead className="text-muted-foreground">Status</TableHead>}
