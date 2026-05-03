@@ -52,6 +52,7 @@ export default function DashboardAssinaturas() {
   const [range, setRange] = useState<RangeFilterValue>({ preset: "7d" });
 
   const COLUMNS = [
+    { key: "data_venda", label: "Data da venda" },
     { key: "assinante", label: "Assinante" },
     { key: "produto", label: "Produto" },
     { key: "status", label: "Status" },
