@@ -43,6 +43,8 @@ import perplexityLogo from "@/assets/tools/perplexity.png";
 import digenLogo from "@/assets/tools/digen.png";
 import nanobananaLogo from "@/assets/tools/nanobanana.png";
 import gammaLogo from "@/assets/tools/gamma.png";
+import flowaiLogo from "@/assets/tools/flowai.png";
+import ideogramLogo from "@/assets/tools/ideogram.png";
 
 const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: number }> = {
   grok: { name: "SuperGrok", logo: grokLogo, expiracaoDias: 3 },
@@ -70,6 +72,8 @@ const toolsConfig: Record<string, { name: string; logo: string; expiracaoDias: n
   digen: { name: "Digen", logo: digenLogo, expiracaoDias: 30 },
   nanobanana: { name: "Nano Banana", logo: nanobananaLogo, expiracaoDias: 30 },
   gamma: { name: "Gamma", logo: gammaLogo, expiracaoDias: 30 },
+  flowai: { name: "Flow.AI", logo: flowaiLogo, expiracaoDias: 30 },
+  ideogram: { name: "Ideogram", logo: ideogramLogo, expiracaoDias: 30 },
 };
 
 // Ferramentas vinculadas: compartilham o mesmo login (1:N)
