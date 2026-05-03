@@ -54,6 +54,7 @@ export default function DashboardAssinaturas() {
   const COLUMNS = [
     { key: "data_venda", label: "Data da venda" },
     { key: "assinante", label: "Assinante" },
+    { key: "email", label: "E-mail" },
     { key: "produto", label: "Produto" },
     { key: "status", label: "Status" },
     { key: "valor", label: "Valor" },
