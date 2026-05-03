@@ -240,46 +240,80 @@ serve(async (req) => {
 
           const paymentMethod = sub.paymentMethod || "Naut";
 
-          // Check if already exists
-          const { data: existing } = await supabaseAdmin
+          // Look up ALL records of this email+product to detect renewals.
+          // We treat each record as one billing cycle. A new cycle is detected
+          // when Naut's createdAt is strictly newer than every existing
+          // data_criacao for this email+product (different purchase event).
+          const { data: existingRows } = await supabaseAdmin
             .from("assinantes")
-            .select("id, valor")
+            .select("id, valor, data_criacao, plano")
             .eq("email", nautEmail)
             .eq("produto", productName)
-            .limit(1);
+            .order("data_criacao", { ascending: false });
 
-          if (existing && existing.length > 0) {
-            // Preserve existing valor if Naut returns 0/missing
-            const finalPrice = price > 0 ? price : Number(existing[0].valor || 0) || inferPriceFromPlan(planName);
+          const cycleCount = existingRows?.length ?? 0;
+          const latest = existingRows?.[0];
+
+          // Compare dates as YYYY-MM-DD strings (already in BR tz).
+          const isNewerCycle = latest && createdAt && latest.data_criacao
+            ? createdAt > String(latest.data_criacao).slice(0, 10)
+            : false;
+
+          // Strip any previous "(Nª renovação)" suffix from the plan label
+          const stripRenewalTag = (p: string) => p.replace(/\s*\(\d+ª\s*renovação\)\s*$/i, "").trim();
+          const cleanPlan = stripRenewalTag(planName);
+
+          if (cycleCount === 0) {
+            // First time seeing this subscriber — insert as the first cycle
+            await supabaseAdmin.from("assinantes").insert({
+              email: nautEmail,
+              nome: nautName,
+              produto: productName,
+              plano: cleanPlan,
+              status,
+              valor: price,
+              meio_pagamento: paymentMethod,
+              data_criacao: createdAt,
+              data_renovacao: expiresAt,
+              proxima_cobranca: expiresAt,
+              created_by: "00000000-0000-0000-0000-000000000000",
+            });
+          } else if (isNewerCycle) {
+            // New billing event detected → insert a renewal row with a tag.
+            // cycleCount already counts previous cycles, so the new one is N+1.
+            const renewalNumber = cycleCount + 1; // 2 = 2ª renovação, 3 = 3ª, ...
+            const planWithTag = `${cleanPlan} (${renewalNumber}ª renovação)`;
+            await supabaseAdmin.from("assinantes").insert({
+              email: nautEmail,
+              nome: nautName,
+              produto: productName,
+              plano: planWithTag,
+              status,
+              valor: price,
+              meio_pagamento: paymentMethod,
+              data_criacao: createdAt,
+              data_renovacao: expiresAt,
+              proxima_cobranca: expiresAt,
+              created_by: "00000000-0000-0000-0000-000000000000",
+            });
+          } else {
+            // Same cycle as the latest record → just keep it up to date
+            const finalPrice = price > 0 ? price : Number(latest!.valor || 0) || inferPriceFromPlan(cleanPlan);
+            // Preserve existing renewal tag if any, otherwise use clean plan
+            const existingPlan = String(latest!.plano || "");
+            const keepTag = /\(\d+ª\s*renovação\)/i.test(existingPlan);
             await supabaseAdmin
               .from("assinantes")
               .update({
                 status,
                 nome: nautName,
-                plano: planName,
+                plano: keepTag ? existingPlan : cleanPlan,
                 valor: finalPrice,
                 data_renovacao: expiresAt,
                 proxima_cobranca: expiresAt,
                 meio_pagamento: paymentMethod,
               })
-              .eq("id", existing[0].id);
-          } else {
-            // Insert new subscriber from Naut
-            await supabaseAdmin
-              .from("assinantes")
-              .insert({
-                email: nautEmail,
-                nome: nautName,
-                produto: productName,
-                plano: planName,
-                status,
-                valor: price,
-                meio_pagamento: paymentMethod,
-                data_criacao: createdAt,
-                data_renovacao: expiresAt,
-                proxima_cobranca: expiresAt,
-                created_by: "00000000-0000-0000-0000-000000000000",
-              });
+              .eq("id", latest!.id);
           }
         } catch (syncErr) {
           console.error("Error syncing subscription:", syncErr);
