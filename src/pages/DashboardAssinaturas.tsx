@@ -29,6 +29,7 @@ interface Assinante {
   proxima_cobranca: string | null;
   data_criacao: string;
   data_renovacao: string | null;
+  created_at?: string;
   created_by?: string | null;
 }
 
