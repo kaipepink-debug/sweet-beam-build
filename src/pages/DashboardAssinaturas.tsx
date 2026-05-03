@@ -29,6 +29,7 @@ interface Assinante {
   proxima_cobranca: string | null;
   data_criacao: string;
   data_renovacao: string | null;
+  created_at?: string;
   created_by?: string | null;
 }
 
@@ -51,6 +52,7 @@ export default function DashboardAssinaturas() {
   const [range, setRange] = useState<RangeFilterValue>({ preset: "7d" });
 
   const COLUMNS = [
+    { key: "data_venda", label: "Data da venda" },
     { key: "assinante", label: "Assinante" },
     { key: "produto", label: "Produto" },
     { key: "status", label: "Status" },
@@ -295,6 +297,17 @@ export default function DashboardAssinaturas() {
     return new Date(d).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
   };
 
+  const formatDateTime = (d: string | null | undefined) => {
+    if (!d) return "—";
+    try {
+      return new Date(d).toLocaleString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+        day: "2-digit", month: "2-digit", year: "numeric",
+        hour: "2-digit", minute: "2-digit",
+      });
+    } catch { return "—"; }
+  };
+
   const formatCurrency = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
   const handleExport = (format: "xlsx" | "xls") => {
@@ -526,6 +539,7 @@ export default function DashboardAssinaturas() {
         <Table>
           <TableHeader>
             <TableRow className="border-border">
+              {isVisible("data_venda") && <TableHead className="text-muted-foreground">Data da venda</TableHead>}
               {isVisible("assinante") && <TableHead className="text-muted-foreground">Assinante</TableHead>}
               {isVisible("produto") && <TableHead className="text-muted-foreground">Produto</TableHead>}
               {isVisible("status") && <TableHead className="text-muted-foreground">Status</TableHead>}
@@ -545,6 +559,14 @@ export default function DashboardAssinaturas() {
             ) : (
               filtered.map(a => (
                 <TableRow key={a.id} className="border-border hover:bg-muted/30">
+                  {isVisible("data_venda") && (
+                    <TableCell>
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary whitespace-nowrap">
+                        <Calendar className="h-3 w-3" />
+                        {formatDateTime(a.created_at)}
+                      </span>
+                    </TableCell>
+                  )}
                   {isVisible("assinante") && (
                     <TableCell>
                       <div>
