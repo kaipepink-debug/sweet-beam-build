@@ -54,6 +54,7 @@ export default function DashboardAssinaturas() {
   const COLUMNS = [
     { key: "data_venda", label: "Data da venda" },
     { key: "assinante", label: "Assinante" },
+    { key: "email", label: "E-mail" },
     { key: "produto", label: "Produto" },
     { key: "status", label: "Status" },
     { key: "valor", label: "Valor" },
@@ -541,6 +542,7 @@ export default function DashboardAssinaturas() {
             <TableRow className="border-border">
               {isVisible("data_venda") && <TableHead className="text-muted-foreground">Data da venda</TableHead>}
               {isVisible("assinante") && <TableHead className="text-muted-foreground">Assinante</TableHead>}
+              {isVisible("email") && <TableHead className="text-muted-foreground">E-mail</TableHead>}
               {isVisible("produto") && <TableHead className="text-muted-foreground">Produto</TableHead>}
               {isVisible("status") && <TableHead className="text-muted-foreground">Status</TableHead>}
               {isVisible("valor") && <TableHead className="text-muted-foreground">Valor</TableHead>}
@@ -588,6 +590,11 @@ export default function DashboardAssinaturas() {
                           </p>
                         )}
                       </div>
+                    </TableCell>
+                  )}
+                  {isVisible("email") && (
+                    <TableCell>
+                      <p className="text-xs text-foreground break-all">{a.email}</p>
                     </TableCell>
                   )}
                   {isVisible("produto") && (
