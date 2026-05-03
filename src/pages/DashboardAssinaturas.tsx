@@ -583,7 +583,7 @@ export default function DashboardAssinaturas() {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground">{a.email}</p>
+                        
                         {a.created_by && afiliadosMap[a.created_by] && (
                           <p className="text-[10px] text-purple-300/80 mt-0.5">
                             por {afiliadosMap[a.created_by].display_name} · {afiliadosMap[a.created_by].email}
