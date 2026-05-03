@@ -592,6 +592,11 @@ export default function DashboardAssinaturas() {
                       </div>
                     </TableCell>
                   )}
+                  {isVisible("email") && (
+                    <TableCell>
+                      <p className="text-xs text-foreground break-all">{a.email}</p>
+                    </TableCell>
+                  )}
                   {isVisible("produto") && (
                     <TableCell>
                       <p className="text-sm font-semibold text-foreground">{a.produto}</p>
