@@ -47,6 +47,31 @@ function inferPriceFromPlan(planName: string | null | undefined): number {
   return 0;
 }
 
+// Infer plan + price from duration (in days) between created and expires.
+// Used when Naut returns a generic planName like "Principal" or the product name.
+function inferPlanFromDuration(createdAt: string | Date | null | undefined, expiresAt: string | Date | null | undefined): { plan: string; price: number } | null {
+  if (!createdAt || !expiresAt) return null;
+  const c = new Date(createdAt).getTime();
+  const e = new Date(expiresAt).getTime();
+  if (!c || !e || e <= c) return null;
+  const days = Math.round((e - c) / (1000 * 60 * 60 * 24));
+  if (days >= 160 && days <= 200) return { plan: "Semestral", price: 497 };
+  if (days >= 25 && days <= 35) return { plan: "Mensal", price: 67 };
+  if (days >= 5 && days <= 10) return { plan: "Semanal", price: 39.99 };
+  return null;
+}
+
+// Decide if a Naut planName is generic/non-informative and should be replaced
+function isGenericPlan(planName: string | null | undefined, productName: string | null | undefined): boolean {
+  if (!planName) return true;
+  const p = planName.toLowerCase().trim();
+  if (p === "principal" || p === "naut" || p === "default" || p === "padrão" || p === "padrao") return true;
+  if (productName && p === productName.toLowerCase().trim()) return true;
+  // If it doesn't match any known cycle keyword, treat as generic
+  if (!p.includes("mensal") && !p.includes("semanal") && !p.includes("semestral") && !p.includes("anual") && !p.includes("trimestr")) return true;
+  return false;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -197,9 +222,22 @@ serve(async (req) => {
           const expiresAt = sub.expiresAt ? toBRDate(sub.expiresAt) : null;
           const createdAt = sub.createdAt ? toBRDate(sub.createdAt) : todayBR();
           const productName = sub.productName || "RatarIA";
-          const planName = sub.planName || "Mensal";
+          const rawPlan = sub.planName || "Mensal";
           const rawPrice = Number(sub.price ?? sub.amount ?? 0);
-          const price = rawPrice > 0 ? rawPrice : inferPriceFromPlan(planName);
+
+          // If Naut returned a generic plan name (e.g. "Principal" or the product name),
+          // try to infer the actual plan from the duration between created and expires.
+          let planName = rawPlan;
+          let price = rawPrice > 0 ? rawPrice : 0;
+          if (isGenericPlan(rawPlan, productName)) {
+            const inferred = inferPlanFromDuration(sub.createdAt, sub.expiresAt);
+            if (inferred) {
+              planName = inferred.plan;
+              if (price <= 0) price = inferred.price;
+            }
+          }
+          if (price <= 0) price = inferPriceFromPlan(planName);
+
           const paymentMethod = sub.paymentMethod || "Naut";
 
           // Check if already exists
