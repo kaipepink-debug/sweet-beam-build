@@ -222,9 +222,22 @@ serve(async (req) => {
           const expiresAt = sub.expiresAt ? toBRDate(sub.expiresAt) : null;
           const createdAt = sub.createdAt ? toBRDate(sub.createdAt) : todayBR();
           const productName = sub.productName || "RatarIA";
-          const planName = sub.planName || "Mensal";
+          const rawPlan = sub.planName || "Mensal";
           const rawPrice = Number(sub.price ?? sub.amount ?? 0);
-          const price = rawPrice > 0 ? rawPrice : inferPriceFromPlan(planName);
+
+          // If Naut returned a generic plan name (e.g. "Principal" or the product name),
+          // try to infer the actual plan from the duration between created and expires.
+          let planName = rawPlan;
+          let price = rawPrice > 0 ? rawPrice : 0;
+          if (isGenericPlan(rawPlan, productName)) {
+            const inferred = inferPlanFromDuration(sub.createdAt, sub.expiresAt);
+            if (inferred) {
+              planName = inferred.plan;
+              if (price <= 0) price = inferred.price;
+            }
+          }
+          if (price <= 0) price = inferPriceFromPlan(planName);
+
           const paymentMethod = sub.paymentMethod || "Naut";
 
           // Check if already exists
