@@ -202,8 +202,9 @@ export default function DashboardAssinaturas() {
     if (!checkAfiliadoLimit()) return;
     const existing = findExistingByEmail(ativarForm.email);
     if (existing) { setDuplicateInfo(existing); return; }
-    const config = PLAN_CONFIG[ativarForm.plano];
-    const expiration = calcExpiration(ativarForm.data_inicio, ativarForm.plano);
+    const planoKey = isAfiliado ? "mensal" : ativarForm.plano;
+    const config = PLAN_CONFIG[planoKey];
+    const expiration = calcExpiration(ativarForm.data_inicio, planoKey);
     const nextCharge = expiration;
 
     const { error } = await supabase.from("assinantes").insert({
