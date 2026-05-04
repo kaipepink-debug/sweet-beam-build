@@ -225,16 +225,20 @@ serve(async (req) => {
           const rawPlan = sub.planName || "Mensal";
           const rawPrice = Number(sub.price ?? sub.amount ?? 0);
 
-          // If Naut returned a generic plan name (e.g. "Principal" or the product name),
-          // try to infer the actual plan from the duration between created and expires.
+          // Always prefer duration-based inference (Naut frequently returns
+          // an incorrect planName like "Mensal" for what is actually a
+          // Semanal/Semestral cycle). Fall back to the raw plan only when
+          // we can't infer from duration.
           let planName = rawPlan;
           let price = rawPrice > 0 ? rawPrice : 0;
-          if (isGenericPlan(rawPlan, productName)) {
-            const inferred = inferPlanFromDuration(sub.createdAt, sub.expiresAt);
-            if (inferred) {
-              planName = inferred.plan;
-              if (price <= 0) price = inferred.price;
-            }
+          const inferred = inferPlanFromDuration(sub.createdAt, sub.expiresAt);
+          if (inferred) {
+            planName = inferred.plan;
+            // Override price too — the price returned by Naut is often the
+            // generic product price (R$ 67) regardless of the real cycle.
+            price = inferred.price;
+          } else if (isGenericPlan(rawPlan, productName)) {
+            // No duration info and plan is generic → keep rawPlan as-is
           }
           if (price <= 0) price = inferPriceFromPlan(planName);
 
