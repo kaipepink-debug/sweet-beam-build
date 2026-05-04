@@ -764,6 +764,41 @@ export default function DashboardAssinaturas() {
           )}
         </DialogContent>
       </Dialog>
+      {/* Dialog de adicionar dias */}
+      <Dialog open={extendDialog.open} onOpenChange={(o) => setExtendDialog(s => ({ ...s, open: o }))}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Adicionar dias ao acesso</DialogTitle>
+          </DialogHeader>
+          {extendDialog.sub && (
+            <div className="space-y-3">
+              <div className="rounded-lg border border-border bg-muted/20 p-3 text-xs text-muted-foreground">
+                <p><strong className="text-foreground">{extendDialog.sub.nome}</strong> · {extendDialog.sub.email}</p>
+                <p className="mt-1">Expiração atual: <strong className="text-foreground">{formatDate(extendDialog.sub.data_renovacao || extendDialog.sub.proxima_cobranca)}</strong></p>
+              </div>
+              <div>
+                <Label>Dias adicionais</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  value={extendDialog.days}
+                  onChange={e => setExtendDialog(s => ({ ...s, days: e.target.value }))}
+                />
+              </div>
+              <div className="flex gap-2">
+                {[7, 15, 30, 60, 90].map(d => (
+                  <Button key={d} type="button" size="sm" variant="outline" onClick={() => setExtendDialog(s => ({ ...s, days: String(d) }))}>
+                    +{d}
+                  </Button>
+                ))}
+              </div>
+              <Button onClick={handleExtendDays} className="w-full bg-emerald-600 hover:bg-emerald-700">
+                Adicionar dias
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
