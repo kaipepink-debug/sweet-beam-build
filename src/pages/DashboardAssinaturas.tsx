@@ -43,6 +43,7 @@ export default function DashboardAssinaturas() {
   const { user } = useAuth();
   const { permissions, loading: permsLoading } = usePermissions();
   const isAfiliado = permissions.is_afiliado;
+  const isMaster = user?.email === "mandarrari@rataria.io";
   const [assinantes, setAssinantes] = useState<Assinante[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -692,9 +693,11 @@ export default function DashboardAssinaturas() {
                           <button className="p-1 rounded hover:bg-muted/50 text-muted-foreground"><MoreHorizontal className="h-4 w-4" /></button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setExtendDialog({ open: true, sub: a, days: "7" })}>
-                            Adicionar dias
-                          </DropdownMenuItem>
+                          {isMaster && (
+                            <DropdownMenuItem onClick={() => setExtendDialog({ open: true, sub: a, days: "7" })}>
+                              Adicionar dias
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(a)}>Remover</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
