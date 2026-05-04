@@ -256,9 +256,41 @@ export default function DashboardAssinaturas() {
     fetchAssinantes();
   };
 
-  const handleDelete = async (id: string) => {
-    await supabase.from("assinantes").delete().eq("id", id);
+  const handleDelete = async (a: Assinante) => {
+    // Remove TODAS as linhas com o mesmo email+produto para que o cliente
+    // possa ser cadastrado novamente sem disparar o aviso de "já cadastrado".
+    const { error } = await supabase
+      .from("assinantes")
+      .delete()
+      .eq("email", a.email)
+      .eq("produto", a.produto);
+    if (error) { toast.error("Erro ao remover"); return; }
     toast.success("Assinante removido");
+    await fetchAssinantes();
+  };
+
+  const [extendDialog, setExtendDialog] = useState<{ open: boolean; sub: Assinante | null; days: string }>({ open: false, sub: null, days: "7" });
+
+  const handleExtendDays = async () => {
+    const sub = extendDialog.sub;
+    const days = parseInt(extendDialog.days, 10);
+    if (!sub || !days || days <= 0) { toast.error("Informe uma quantidade válida de dias"); return; }
+    const baseISO = (sub.data_renovacao || sub.proxima_cobranca || todayBR()).slice(0, 10);
+    // Se já expirou, soma a partir de hoje; senão, soma a partir da expiração atual
+    const today = todayBR();
+    const start = baseISO < today ? today : baseISO;
+    const newExpiration = addDaysBR(start, days);
+    const { error } = await supabase
+      .from("assinantes")
+      .update({
+        data_renovacao: newExpiration,
+        proxima_cobranca: newExpiration,
+        status: "Ativa",
+      })
+      .eq("id", sub.id);
+    if (error) { toast.error("Erro ao adicionar dias"); return; }
+    toast.success(`+${days} dias. Nova expiração: ${formatDate(newExpiration)}`);
+    setExtendDialog({ open: false, sub: null, days: "7" });
     fetchAssinantes();
   };
 
