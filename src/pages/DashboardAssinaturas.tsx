@@ -429,14 +429,15 @@ export default function DashboardAssinaturas() {
                 <div><Label>Nome</Label><Input value={ativarForm.nome} onChange={e => setAtivarForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
                 <div><Label>E-mail</Label><Input type="email" value={ativarForm.email} onChange={e => setAtivarForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
                 <div><Label>Plano</Label>
-                  <Select value={ativarForm.plano} onValueChange={v => setAtivarForm(f => ({ ...f, plano: v }))}>
+                  <Select value={isAfiliado ? "mensal" : ativarForm.plano} onValueChange={v => setAtivarForm(f => ({ ...f, plano: v }))} disabled={isAfiliado}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="semanal">Semanal (7 dias) — R$ 39,99</SelectItem>
+                      {!isAfiliado && <SelectItem value="semanal">Semanal (7 dias) — R$ 39,99</SelectItem>}
                       <SelectItem value="mensal">Mensal (30 dias) — R$ 67</SelectItem>
-                      <SelectItem value="semestral">Semestral (180 dias) — R$ 497</SelectItem>
+                      {!isAfiliado && <SelectItem value="semestral">Semestral (180 dias) — R$ 497</SelectItem>}
                     </SelectContent>
                   </Select>
+                  {isAfiliado && <p className="text-xs text-muted-foreground mt-1">Afiliados podem cadastrar apenas no plano Mensal.</p>}
                 </div>
                 <div><Label>Data de Início</Label><Input type="date" value={ativarForm.data_inicio} onChange={e => setAtivarForm(f => ({ ...f, data_inicio: e.target.value }))} /></div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
