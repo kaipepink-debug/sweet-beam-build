@@ -43,6 +43,7 @@ export default function DashboardAssinaturas() {
   const { user } = useAuth();
   const { permissions, loading: permsLoading } = usePermissions();
   const isAfiliado = permissions.is_afiliado;
+  const isMaster = user?.email === "mandarrari@rataria.io";
   const [assinantes, setAssinantes] = useState<Assinante[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
