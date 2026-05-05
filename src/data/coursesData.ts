@@ -102,34 +102,5 @@ export const courses: Course[] = [
     ],
   },
 ];
-      {
-        id: "afs-m1",
-        title: "Como se afiliar",
-        lessons: [
-          {
-            id: "afs-m1-l1",
-            title: "Como se afiliar no sistema - Método 1",
-            duration: "—",
-            videoUrl: "/aulas/aula-1.mp4",
-            description: "Passo a passo para solicitar sua afiliação à RatarIA pela plataforma Naut.",
-            completed: false,
-            cta: {
-              label: "Solicitar afiliação pela Naut",
-              url: "https://navenaut.com/affiliates/products",
-            },
-          },
-          {
-            id: "afs-m1-l2",
-            title: "Como se afiliar no sistema - Método 2",
-            duration: "—",
-            videoUrl: "/aulas/aula-2.mp4",
-            description: "Nesse outro método ensinamos como se tornar um afiliado mais profissional, com seu próprio painel.",
-            completed: false,
-          },
-        ],
-      },
-    ],
-  },
-];
 
 export const categories = ["Todos", "Afiliados"];
