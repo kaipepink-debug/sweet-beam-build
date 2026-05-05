@@ -51,7 +51,7 @@ export const courses: Course[] = [
     category: "Afiliados",
     featured: true,
     tag: "Destaque",
-    totalLessons: 1,
+    totalLessons: 2,
     totalDuration: "—",
     modules: [
       {
@@ -69,6 +69,14 @@ export const courses: Course[] = [
               label: "Solicitar afiliação pela Naut",
               url: "https://navenaut.com/affiliates/products",
             },
+          },
+          {
+            id: "afs-m1-l2",
+            title: "Como se afiliar no sistema - Método 2",
+            duration: "—",
+            videoUrl: "/aulas/aula-2.mp4",
+            description: "Nesse outro método ensinamos como se tornar um afiliado mais profissional, com seu próprio painel.",
+            completed: false,
           },
         ],
       },
