@@ -7,6 +7,7 @@ export interface TeamPermissions {
   financeiro: boolean;
   vendas: boolean;
   assinaturas: boolean;
+  verificacao_login: boolean;
   clientes: boolean;
   email_acesso: boolean;
   ferramentas_ia: boolean;
@@ -26,6 +27,7 @@ const defaultPermissions: TeamPermissions = {
   financeiro: false,
   vendas: false,
   assinaturas: false,
+  verificacao_login: false,
   clientes: false,
   email_acesso: true,
   ferramentas_ia: true,
@@ -64,6 +66,7 @@ export function usePermissions() {
             financeiro: data.financeiro,
             vendas: data.vendas,
             assinaturas: data.assinaturas,
+            verificacao_login: (data as any).verificacao_login ?? false,
             clientes: data.clientes,
             email_acesso: (data as any).email_acesso ?? true,
             ferramentas_ia: data.ferramentas_ia,

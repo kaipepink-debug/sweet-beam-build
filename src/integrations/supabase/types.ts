@@ -580,6 +580,7 @@ export type Database = {
           updated_at: string
           user_id: string
           vendas: boolean
+          verificacao_login: boolean
         }
         Insert: {
           acesso_clientes?: boolean
@@ -602,6 +603,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           vendas?: boolean
+          verificacao_login?: boolean
         }
         Update: {
           acesso_clientes?: boolean
@@ -624,6 +626,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           vendas?: boolean
+          verificacao_login?: boolean
         }
         Relationships: []
       }
