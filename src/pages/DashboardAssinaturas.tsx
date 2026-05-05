@@ -525,7 +525,7 @@ export default function DashboardAssinaturas() {
             <Button onClick={handleAdd} className="w-full mt-2">Salvar</Button>
           </DialogContent>
           </Dialog>
-        </div>
+        </div>}
       </div>
 
       {/* Range Filter */}
