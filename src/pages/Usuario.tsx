@@ -133,6 +133,17 @@ const Usuario = () => {
       };
       localStorage.setItem("naut_subscription", JSON.stringify(subscriptionInfo));
 
+      // Registrar login no histórico (não bloqueia o fluxo se falhar)
+      try {
+        await supabase.from("client_logins").insert({
+          email: data.data.email,
+          nome: data.data.name,
+          plano: activeSub.planName,
+          status: "Ativa",
+          source: "painel",
+        });
+      } catch (e) { /* noop */ }
+
       toast({
         title: "Bem-vindo!",
         description: `Acesso liberado, ${data.data.name || "usuário"}!`,
