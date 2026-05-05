@@ -460,9 +460,10 @@ export default function DashboardAssinaturas() {
           </Dialog>
 
           {/* Login Temporário (30 min) — disponível para todos */}
+          {/* Login Temporário (30 min) — disponível para todos */}
           <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="gap-2">
+              <Button size="sm" className="gap-2 bg-orange-500 hover:bg-orange-600 text-white">
                 <Clock className="h-4 w-4" /> Login Temporário (30min)
               </Button>
             </DialogTrigger>
