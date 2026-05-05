@@ -31,8 +31,8 @@ interface LimiteHistorico {
   created_at: string;
 }
 
-const MIN_PURCHASE = 5;
-const PRICE_LOW = 45; // < 10
+const MIN_PURCHASE = 1;
+const PRICE_LOW = 45; // < 10 (inclui acessos unitários)
 const PRICE_HIGH = 40; // >= 10
 
 const calcUnitPrice = (qty: number) => (qty >= 10 ? PRICE_HIGH : PRICE_LOW);
