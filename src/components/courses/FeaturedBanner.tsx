@@ -9,7 +9,7 @@ interface FeaturedBannerProps {
 
 export default function FeaturedBanner({ course, onPlay }: FeaturedBannerProps) {
   return (
-    <div className="relative w-full h-[340px] md:h-[440px] overflow-hidden">
+    <div className="relative w-full h-[420px] md:h-[560px] overflow-hidden">
       <img
         src={course.thumbnail}
         alt={course.title}
