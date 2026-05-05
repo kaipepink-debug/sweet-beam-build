@@ -7,6 +7,7 @@ export interface TeamPermissions {
   financeiro: boolean;
   vendas: boolean;
   assinaturas: boolean;
+  verificacao_login: boolean;
   clientes: boolean;
   email_acesso: boolean;
   ferramentas_ia: boolean;
