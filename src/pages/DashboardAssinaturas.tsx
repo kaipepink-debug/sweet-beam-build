@@ -396,7 +396,7 @@ export default function DashboardAssinaturas() {
             </div>
           )}
         </div>
-        <div className="flex gap-2">{!permsLoading && (<></>)}
+        {permsLoading ? <div className="flex gap-2 h-9" /> : <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline" className="gap-2"><Columns3 className="h-4 w-4" /> Colunas</Button>
