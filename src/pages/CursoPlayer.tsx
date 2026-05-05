@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { courses, Lesson } from "@/data/coursesData";
 import CourseSidebar from "@/components/courses/CourseSidebar";
@@ -11,6 +11,12 @@ export default function CursoPlayer() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebar, setMobileSidebar] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!localStorage.getItem("naut_subscription")) {
+      navigate(`/usuario?redirect=/cursos/${courseId || ""}`, { replace: true });
+    }
+  }, [navigate, courseId]);
 
   const course = courses.find((c) => c.id === courseId);
 
