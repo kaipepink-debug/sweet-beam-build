@@ -29,6 +29,7 @@ import DashboardPixels from "./pages/DashboardPixels";
 import DashboardVturb from "./pages/DashboardVturb";
 import DashboardFinanceiro from "./pages/DashboardFinanceiro";
 import DashboardAfiliados from "./pages/DashboardAfiliados";
+import DashboardLogins from "./pages/DashboardLogins";
 import SalesPageEN from "./pages/SalesPageEN";
 import PainelTemp from "./pages/PainelTemp";
 import FerramentasTemp from "./pages/FerramentasTemp";
