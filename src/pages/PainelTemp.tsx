@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Wrench, Clock, Shield, ChevronRight, AlertTriangle, ArrowUpCircle, MessageCircle } from "lucide-react";
+import { Wrench, Clock, Shield, ChevronRight, AlertTriangle, ArrowUpCircle, MessageCircle, LogOut } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 import PlansPopup from "@/components/painel/PlansPopup";
