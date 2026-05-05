@@ -420,11 +420,11 @@ export default function DashboardAssinaturas() {
               <DropdownMenuItem onClick={() => handleExport("xls")}>Exportar .xls</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Ativar Login Dialog */}
+          {/* Ativar Login Dialog — oculto para afiliados */}
           <Dialog open={ativarDialogOpen} onOpenChange={setAtivarDialogOpen}>
-            <DialogTrigger asChild>
+            {!isAfiliado && <DialogTrigger asChild>
               <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700"><UserPlus className="h-4 w-4" /> Ativar Login</Button>
-            </DialogTrigger>
+            </DialogTrigger>}
             <DialogContent className="max-w-md">
               <DialogHeader><DialogTitle>Ativar Login de Usuário</DialogTitle></DialogHeader>
               <div className="space-y-3">
