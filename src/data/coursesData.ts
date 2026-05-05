@@ -11,6 +11,7 @@ export interface Lesson {
   description: string;
   completed: boolean;
   cta?: LessonCta;
+  ctas?: LessonCta[];
 }
 
 export interface Module {
@@ -51,7 +52,7 @@ export const courses: Course[] = [
     category: "Afiliados",
     featured: true,
     tag: "Destaque",
-    totalLessons: 2,
+    totalLessons: 3,
     totalDuration: "—",
     modules: [
       {
@@ -77,6 +78,24 @@ export const courses: Course[] = [
             videoUrl: "/aulas/aula-2.mp4",
             description: "Nesse outro método ensinamos como se tornar um afiliado mais profissional, com seu próprio painel.",
             completed: false,
+          },
+          {
+            id: "afs-m1-l3",
+            title: "Estratégia de vendas no X1",
+            duration: "—",
+            videoUrl: "/aulas/aula-3.mp4",
+            description: "Aprenda a estratégia de vendas no X1 para aumentar suas conversões como afiliado.",
+            completed: false,
+            ctas: [
+              {
+                label: "🚀 Material de afiliados",
+                url: "https://drive.google.com/drive/folders/1YIdsFL1CkqZgjT4_fcbStttoMR1Ic2C3?usp=sharing",
+              },
+              {
+                label: "Canal de afiliados no WhatsApp",
+                url: "https://chat.whatsapp.com/JiM0iguikk9HFF1tmPvW0N",
+              },
+            ],
           },
         ],
       },
