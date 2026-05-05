@@ -11,6 +11,7 @@ export interface Lesson {
   description: string;
   completed: boolean;
   cta?: LessonCta;
+  ctas?: LessonCta[];
 }
 
 export interface Module {
