@@ -176,7 +176,7 @@ export default function DashboardAfiliados() {
     }
 
     toast({ title: "Afiliado adicionado!", className: "bg-green-600 text-white border-green-600" });
-    setEmail(""); setPassword(""); setDisplayName(""); setInitialQty(5);
+    setEmail(""); setPassword(""); setDisplayName(""); setInitialQty(1);
     setShowForm(false);
     fetchAfiliados();
   };
