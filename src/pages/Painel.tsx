@@ -126,7 +126,7 @@ export default function Painel() {
   const menuItems = [
     { icon: Wrench, label: "Acessar ferramentas de IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
     
-    { icon: GraduationCap, label: "eBook Monetizando com IA", desc: "Em breve", id: "ebook", color: "16, 185, 129", locked: true },
+    { icon: GraduationCap, label: "Faça R$2.500 há R$3000 por mês", desc: "Assistir método", id: "cursos", color: "16, 185, 129", locked: false },
     { icon: MessageCircle, label: "Fale conosco", desc: "Abrir WhatsApp", id: "suporte", color: "34, 197, 94", locked: false },
   ];
 
