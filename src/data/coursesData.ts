@@ -52,7 +52,7 @@ export const courses: Course[] = [
     category: "Afiliados",
     featured: true,
     tag: "Destaque",
-    totalLessons: 3,
+    totalLessons: 4,
     totalDuration: "—",
     modules: [
       {
