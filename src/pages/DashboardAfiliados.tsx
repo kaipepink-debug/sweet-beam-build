@@ -69,7 +69,7 @@ export default function DashboardAfiliados() {
   const [initialQty, setInitialQty] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
-  const [purchaseDialog, setPurchaseDialog] = useState<{ open: boolean; member: AfiliadoMember | null; qty: number }>({ open: false, member: null, qty: 5 });
+  const [purchaseDialog, setPurchaseDialog] = useState<{ open: boolean; member: AfiliadoMember | null; qty: number }>({ open: false, member: null, qty: 1 });
   const [historyDialog, setHistoryDialog] = useState<{ open: boolean; member: AfiliadoMember | null; rows: LimiteHistorico[] }>({ open: false, member: null, rows: [] });
 
   const { toast } = useToast();
