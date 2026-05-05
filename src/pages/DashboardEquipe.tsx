@@ -26,6 +26,7 @@ const PERMISSION_LABELS: Record<string, string> = {
   financeiro: "Financeiro",
   vendas: "Vendas",
   assinaturas: "Assinaturas",
+  verificacao_login: "Verificação de Login",
   clientes: "Clientes",
   email_acesso: "E-mail - Acesso",
   ferramentas_ia: "Ferramentas IA",
