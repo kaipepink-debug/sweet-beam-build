@@ -250,7 +250,7 @@ serve(async (req) => {
           // data_criacao for this email+product (different purchase event).
           const { data: existingRows } = await supabaseAdmin
             .from("assinantes")
-            .select("id, valor, data_criacao, plano")
+            .select("id, valor, data_criacao, data_renovacao, plano")
             .eq("email", nautEmail)
             .eq("produto", productName)
             .order("data_criacao", { ascending: false });
@@ -258,10 +258,21 @@ serve(async (req) => {
           const cycleCount = existingRows?.length ?? 0;
           const latest = existingRows?.[0];
 
-          // Compare dates as YYYY-MM-DD strings (already in BR tz).
-          const isNewerCycle = latest && createdAt && latest.data_criacao
-            ? createdAt > String(latest.data_criacao).slice(0, 10)
-            : false;
+          // Detect a NEW billing cycle by checking if the expiration date
+          // advanced significantly compared to the latest stored record.
+          // We do NOT trust Naut's `createdAt` because it can change on
+          // re-access/login events (returning customers were getting
+          // duplicated rows with today's data_criacao).
+          // A new cycle requires expiresAt to extend by at least 3 days
+          // beyond the latest data_renovacao.
+          let isNewerCycle = false;
+          if (latest && expiresAt && latest.data_renovacao) {
+            const prevExp = new Date(String(latest.data_renovacao)).getTime();
+            const newExp = new Date(expiresAt).getTime();
+            if (prevExp && newExp && (newExp - prevExp) > 3 * 24 * 60 * 60 * 1000) {
+              isNewerCycle = true;
+            }
+          }
 
           // Strip any previous "(Nª renovação)" suffix from the plan label
           const stripRenewalTag = (p: string) => p.replace(/\s*\(\d+ª\s*renovação\)\s*$/i, "").trim();
