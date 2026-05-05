@@ -69,6 +69,18 @@ export default function CoursePlayer({
         {/* Description */}
         <p className="text-sm text-muted-foreground leading-relaxed">{currentLesson.description}</p>
 
+        {/* CTA personalizado da aula */}
+        {currentLesson.cta && (
+          <a
+            href={currentLesson.cta.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-semibold bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:opacity-90 transition-opacity shadow-[0_0_20px_hsl(270_100%_55%/0.35)]"
+          >
+            {currentLesson.cta.label}
+          </a>
+        )}
+
         {/* Actions */}
         <div className="flex flex-wrap items-center gap-3">
           <button
