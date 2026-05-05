@@ -66,6 +66,7 @@ const App = () => (
               <Route path="/dashboard/vturb" element={<DashboardVturb />} />
               <Route path="/dashboard/configuracoes" element={<UnderDevelopment />} />
               <Route path="/dashboard/afiliados" element={<DashboardAfiliados />} />
+              <Route path="/dashboard/logins" element={<DashboardLogins />} />
             </Route>
 
             <Route path="/cod" element={<Cod />} />
