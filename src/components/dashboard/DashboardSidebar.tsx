@@ -35,7 +35,7 @@ export function DashboardSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { permissions, loading } = usePermissions();
-  const { isAdmin } = useRole();
+  const { isAdmin, loading: roleLoading } = useRole();
   const { displayName } = useProfile();
   const [isLight, setIsLight] = useState(document.documentElement.classList.contains("light"));
 
@@ -95,13 +95,13 @@ export function DashboardSidebar() {
 
       {/* Menu items */}
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2 overflow-auto">
-        {menuItems.map((item) => {
+        {(loading || roleLoading) ? null : menuItems.map((item) => {
           const isAreaMembros = item.url === "/dashboard/area-membros";
           const hasPermission = item.permKey === "afiliados"
-            ? (isAdmin || (loading ? false : (permissions as any).afiliados))
+            ? (isAdmin || (permissions as any).afiliados)
             : isAreaMembros
-              ? (isAdmin || (loading ? false : (permissions.dashboard || (permissions as any).is_afiliado)))
-              : (loading ? true : permissions[item.permKey as keyof typeof permissions]);
+              ? (isAdmin || permissions.dashboard || (permissions as any).is_afiliado)
+              : (isAdmin || permissions[item.permKey as keyof typeof permissions]);
           if (!hasPermission) return null;
 
           const isActive = location.pathname === item.url || (item.url === "/dashboard-ferramentas" && location.pathname.startsWith("/dashboard-ferramentas/") && location.pathname !== "/dashboard/gerar-avisos");
