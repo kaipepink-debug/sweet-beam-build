@@ -420,11 +420,11 @@ export default function DashboardAssinaturas() {
               <DropdownMenuItem onClick={() => handleExport("xls")}>Exportar .xls</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Ativar Login Dialog */}
+          {/* Ativar Login Dialog — oculto para afiliados */}
           <Dialog open={ativarDialogOpen} onOpenChange={setAtivarDialogOpen}>
-            <DialogTrigger asChild>
+            {!isAfiliado && <DialogTrigger asChild>
               <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700"><UserPlus className="h-4 w-4" /> Ativar Login</Button>
-            </DialogTrigger>
+            </DialogTrigger>}
             <DialogContent className="max-w-md">
               <DialogHeader><DialogTitle>Ativar Login de Usuário</DialogTitle></DialogHeader>
               <div className="space-y-3">
@@ -450,10 +450,10 @@ export default function DashboardAssinaturas() {
             </DialogContent>
           </Dialog>
 
-          {/* Login Temporário (30 min) — bloqueado para afiliados */}
-          {!isAfiliado && <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
+          {/* Login Temporário (30 min) — disponível para todos */}
+          <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" className="gap-2 bg-amber-600 hover:bg-amber-700 text-white">
+              <Button size="sm" variant="outline" className="gap-2">
                 <Clock className="h-4 w-4" /> Login Temporário (30min)
               </Button>
             </DialogTrigger>
@@ -472,11 +472,11 @@ export default function DashboardAssinaturas() {
                 <Clock className="h-4 w-4 mr-2" /> Criar Acesso de 30 minutos
               </Button>
             </DialogContent>
-          </Dialog>}
+          </Dialog>
 
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="gap-2"><Plus className="h-4 w-4" /> Novo Assinante</Button>
+              <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700"><Plus className="h-4 w-4" /> Novo Assinante</Button>
             </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader><DialogTitle>Adicionar Assinante</DialogTitle></DialogHeader>
