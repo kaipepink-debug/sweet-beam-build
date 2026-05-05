@@ -182,11 +182,20 @@ export default function DashboardAssinaturas() {
     if (!checkAfiliadoLimit()) return;
     const existing = findExistingByEmail(form.email);
     if (existing) { setDuplicateInfo(existing); return; }
+    let dataRenovacao = form.data_renovacao || null;
+    if (isAfiliado && form.data_criacao) {
+      const d = new Date(form.data_criacao);
+      d.setDate(d.getDate() + 30);
+      dataRenovacao = d.toISOString().slice(0, 10);
+    }
     const { error } = await supabase.from("assinantes").insert({
-      nome: form.nome, email: form.email, produto: form.produto, plano: form.plano,
+      nome: form.nome, email: form.email,
+      produto: isAfiliado ? "RatarIA" : form.produto,
+      plano: isAfiliado ? "Mensal" : form.plano,
       status: form.status, valor: parseFloat(form.valor), meio_pagamento: form.meio_pagamento,
-      proxima_cobranca: form.proxima_cobranca || null, data_criacao: form.data_criacao || todayBR(),
-      data_renovacao: form.data_renovacao || null, created_by: user.id,
+      proxima_cobranca: isAfiliado ? null : (form.proxima_cobranca || null),
+      data_criacao: form.data_criacao || todayBR(),
+      data_renovacao: dataRenovacao, created_by: user.id,
     } as any);
     if (error) { toast.error("Erro ao adicionar"); return; }
     toast.success("Assinante adicionado");
@@ -483,8 +492,8 @@ export default function DashboardAssinaturas() {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2"><Label>Nome</Label><Input value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} /></div>
               <div className="col-span-2"><Label>Email</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} /></div>
-              <div><Label>Produto</Label><Input value={form.produto} onChange={e => setForm(f => ({ ...f, produto: e.target.value }))} /></div>
-              <div><Label>Plano</Label><Input value={form.plano} onChange={e => setForm(f => ({ ...f, plano: e.target.value }))} /></div>
+              <div><Label>Produto</Label><Input value={isAfiliado ? "RatarIA" : form.produto} onChange={e => setForm(f => ({ ...f, produto: e.target.value }))} disabled={isAfiliado} /></div>
+              <div><Label>Plano</Label><Input value={isAfiliado ? "Mensal" : form.plano} onChange={e => setForm(f => ({ ...f, plano: e.target.value }))} disabled={isAfiliado} /></div>
               <div><Label>Valor</Label><Input type="number" value={form.valor} onChange={e => setForm(f => ({ ...f, valor: e.target.value }))} /></div>
               <div><Label>Status</Label>
                 <Select value={form.status} onValueChange={v => setForm(f => ({ ...f, status: v }))}>
@@ -498,9 +507,20 @@ export default function DashboardAssinaturas() {
                   <SelectContent><SelectItem value="Cartão">Cartão</SelectItem><SelectItem value="Pix">Pix</SelectItem><SelectItem value="Boleto">Boleto</SelectItem></SelectContent>
                 </Select>
               </div>
-              <div><Label>Próx. Cobrança</Label><Input type="date" value={form.proxima_cobranca} onChange={e => setForm(f => ({ ...f, proxima_cobranca: e.target.value }))} /></div>
-              <div><Label>Data Criação</Label><Input type="date" value={form.data_criacao} onChange={e => setForm(f => ({ ...f, data_criacao: e.target.value }))} /></div>
-              <div><Label>Data Renovação</Label><Input type="date" value={form.data_renovacao} onChange={e => setForm(f => ({ ...f, data_renovacao: e.target.value }))} /></div>
+              {!isAfiliado && <div><Label>Próx. Cobrança</Label><Input type="date" value={form.proxima_cobranca} onChange={e => setForm(f => ({ ...f, proxima_cobranca: e.target.value }))} /></div>}
+              <div><Label>Data Criação</Label><Input type="date" value={form.data_criacao} onChange={e => {
+                const v = e.target.value;
+                setForm(f => {
+                  const next: any = { ...f, data_criacao: v };
+                  if (isAfiliado && v) {
+                    const d = new Date(v);
+                    d.setDate(d.getDate() + 30);
+                    next.data_renovacao = d.toISOString().slice(0, 10);
+                  }
+                  return next;
+                });
+              }} /></div>
+              {!isAfiliado && <div><Label>Data Renovação</Label><Input type="date" value={form.data_renovacao} onChange={e => setForm(f => ({ ...f, data_renovacao: e.target.value }))} /></div>}
             </div>
             <Button onClick={handleAdd} className="w-full mt-2">Salvar</Button>
           </DialogContent>
