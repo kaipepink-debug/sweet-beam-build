@@ -107,15 +107,9 @@ export default function Cursos() {
             </div>
           )
         ) : (
-          <>
-            <CourseRow title="🔥 Novos Cursos" courses={courses.filter((c) => c.tag === "Novo")} onCourseClick={handleCourseClick} />
-            <CourseRow title="⭐ Mais Acessados" courses={courses.filter((c) => c.tag === "Mais Popular" || c.category === "Vendas")} onCourseClick={handleCourseClick} />
-            <CourseRow title="📞 SDR & Agendamento" courses={courses.filter((c) => c.category === "SDR" || c.category === "Agendamento")} onCourseClick={handleCourseClick} />
-            <CourseRow title="💬 Suporte" courses={courses.filter((c) => c.category === "Suporte")} onCourseClick={handleCourseClick} />
-            <CourseRow title="🤖 Engenharia de Prompt" courses={courses.filter((c) => c.category === "Engenharia de Prompt")} onCourseClick={handleCourseClick} />
-            <CourseRow title="🎓 Credenciais" courses={courses.filter((c) => c.category === "Credenciais")} onCourseClick={handleCourseClick} />
-            <CourseRow title="🎁 Bônus" courses={courses.filter((c) => c.category === "Bônus")} onCourseClick={handleCourseClick} />
-          </>
+          <CourseRow title="Afiliados" courses={courses} onCourseClick={handleCourseClick} />
+        </>
+
         )}
       </motion.div>
     </div>
