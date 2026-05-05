@@ -182,11 +182,20 @@ export default function DashboardAssinaturas() {
     if (!checkAfiliadoLimit()) return;
     const existing = findExistingByEmail(form.email);
     if (existing) { setDuplicateInfo(existing); return; }
+    let dataRenovacao = form.data_renovacao || null;
+    if (isAfiliado && form.data_criacao) {
+      const d = new Date(form.data_criacao);
+      d.setDate(d.getDate() + 30);
+      dataRenovacao = d.toISOString().slice(0, 10);
+    }
     const { error } = await supabase.from("assinantes").insert({
-      nome: form.nome, email: form.email, produto: form.produto, plano: form.plano,
+      nome: form.nome, email: form.email,
+      produto: isAfiliado ? "RatarIA" : form.produto,
+      plano: isAfiliado ? "Mensal" : form.plano,
       status: form.status, valor: parseFloat(form.valor), meio_pagamento: form.meio_pagamento,
-      proxima_cobranca: form.proxima_cobranca || null, data_criacao: form.data_criacao || todayBR(),
-      data_renovacao: form.data_renovacao || null, created_by: user.id,
+      proxima_cobranca: isAfiliado ? null : (form.proxima_cobranca || null),
+      data_criacao: form.data_criacao || todayBR(),
+      data_renovacao: dataRenovacao, created_by: user.id,
     } as any);
     if (error) { toast.error("Erro ao adicionar"); return; }
     toast.success("Assinante adicionado");
