@@ -396,7 +396,7 @@ export default function DashboardAssinaturas() {
             </div>
           )}
         </div>
-        <div className="flex gap-2">
+        {permsLoading ? <div className="flex gap-2 h-9" /> : <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline" className="gap-2"><Columns3 className="h-4 w-4" /> Colunas</Button>
@@ -460,9 +460,10 @@ export default function DashboardAssinaturas() {
           </Dialog>
 
           {/* Login Temporário (30 min) — disponível para todos */}
+          {/* Login Temporário (30 min) — disponível para todos */}
           <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="gap-2">
+              <Button size="sm" className="gap-2 bg-orange-500 hover:bg-orange-600 text-white">
                 <Clock className="h-4 w-4" /> Login Temporário (30min)
               </Button>
             </DialogTrigger>
@@ -525,7 +526,7 @@ export default function DashboardAssinaturas() {
             <Button onClick={handleAdd} className="w-full mt-2">Salvar</Button>
           </DialogContent>
           </Dialog>
-        </div>
+        </div>}
       </div>
 
       {/* Range Filter */}
