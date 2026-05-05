@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, permKey: "dashboard" },
   { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, permKey: "assinaturas" },
+  { title: "Verificação de Login", url: "/dashboard/verificacao-login", icon: ShieldCheck, permKey: "assinaturas" },
   { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard, permKey: "financeiro" },
   { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, permKey: "vendas" },
   { title: "Clientes", url: "/dashboard/clientes", icon: Users2, permKey: "clientes" },
