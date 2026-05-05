@@ -309,8 +309,8 @@ export default function DashboardAfiliados() {
         </div>
         <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Preço por slot</p>
-          <p className="text-xs text-foreground">Lote &lt; 10 → <strong className="text-primary">R$ 45</strong> · Lote ≥ 10 → <strong className="text-primary">R$ 40</strong></p>
-          <p className="text-[10px] text-muted-foreground mt-0.5">Mínimo {MIN_PURCHASE} por compra</p>
+          <p className="text-xs text-foreground">Unitário / Lote &lt; 10 → <strong className="text-primary">R$ 45</strong> · Lote ≥ 10 → <strong className="text-primary">R$ 40</strong></p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Mínimo {MIN_PURCHASE} por compra (acessos unitários permitidos)</p>
         </div>
         <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Afiliados ativos</p>
