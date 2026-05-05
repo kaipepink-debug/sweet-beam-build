@@ -231,6 +231,36 @@ export type Database = {
           },
         ]
       }
+      client_logins: {
+        Row: {
+          email: string
+          id: string
+          login_at: string
+          nome: string | null
+          plano: string | null
+          source: string | null
+          status: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          login_at?: string
+          nome?: string | null
+          plano?: string | null
+          source?: string | null
+          status?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          login_at?: string
+          nome?: string | null
+          plano?: string | null
+          source?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       configuracoes_acesso: {
         Row: {
           dicloak_url: string
