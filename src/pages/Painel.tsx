@@ -305,6 +305,7 @@ export default function Painel() {
                     }}
                     onClick={() => {
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
+                      if (!item.locked && item.id === "cursos") navigate("/cursos");
                       if (!item.locked && item.id === "suporte") window.open("https://wa.me/5511922926559?text=Ol%C3%A1%2C%20preciso%20de%20ajuda!", "_blank");
                     }}
                    >
