@@ -88,8 +88,8 @@ export default function CoursePlayer({
             className={cn(
               "inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
               isCompleted
-                ? "bg-primary/20 text-primary border border-primary/30"
-                : "bg-primary text-primary-foreground hover:bg-primary/90"
+                ? "bg-green-500/20 text-green-400 border border-green-500/40"
+                : "bg-green-600 text-white hover:bg-green-500 shadow-[0_0_20px_hsl(142_71%_45%/0.35)]"
             )}
           >
             <CheckCircle2 className="w-4 h-4" />
