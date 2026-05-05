@@ -66,7 +66,7 @@ export default function DashboardAfiliados() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [initialQty, setInitialQty] = useState(5);
+  const [initialQty, setInitialQty] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
   const [purchaseDialog, setPurchaseDialog] = useState<{ open: boolean; member: AfiliadoMember | null; qty: number }>({ open: false, member: null, qty: 5 });
