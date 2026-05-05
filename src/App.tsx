@@ -34,6 +34,7 @@ import DashboardAreaMembros from "./pages/DashboardAreaMembros";
 import SalesPageEN from "./pages/SalesPageEN";
 import PainelTemp from "./pages/PainelTemp";
 import FerramentasTemp from "./pages/FerramentasTemp";
+import DashboardVerificacaoLogin from "./pages/DashboardVerificacaoLogin";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const App = () => (
               <Route path="/dashboard/financeiro" element={<DashboardFinanceiro />} />
               <Route path="/dashboard/vendas" element={<UnderDevelopment />} />
               <Route path="/dashboard/assinaturas" element={<DashboardAssinaturas />} />
+              <Route path="/dashboard/verificacao-login" element={<DashboardVerificacaoLogin />} />
               <Route path="/dashboard/clientes" element={<UnderDevelopment />} />
               <Route path="/dashboard/analytics" element={<UnderDevelopment />} />
               <Route path="/dashboard/acesso-clientes" element={<DashboardAcessoClientes />} />

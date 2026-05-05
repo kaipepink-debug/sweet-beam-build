@@ -459,31 +459,6 @@ export default function DashboardAssinaturas() {
             </DialogContent>
           </Dialog>
 
-          {/* Login Temporário (30 min) — disponível para todos */}
-          {/* Login Temporário (30 min) — disponível para todos */}
-          <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="gap-2 bg-orange-500 hover:bg-orange-600 text-white">
-                <Clock className="h-4 w-4" /> Login Temporário (30min)
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
-              <DialogHeader>
-                <DialogTitle>Criar Login Temporário</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-3">
-                <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-xs text-red-600 dark:text-red-400">
-                  <p>⏱️ Este acesso dura apenas <strong>30 minutos</strong>. Após esse período, o usuário será expirado automaticamente e precisará assinar um plano para continuar.</p>
-                </div>
-                <div><Label>Nome</Label><Input value={tempForm.nome} onChange={e => setTempForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
-                <div><Label>E-mail</Label><Input type="email" value={tempForm.email} onChange={e => setTempForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
-              </div>
-              <Button onClick={handleTempLogin} className="w-full mt-2 bg-amber-600 hover:bg-amber-700 text-white">
-                <Clock className="h-4 w-4 mr-2" /> Criar Acesso de 30 minutos
-              </Button>
-            </DialogContent>
-          </Dialog>
-
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700"><Plus className="h-4 w-4" /> Novo Assinante</Button>
