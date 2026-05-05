@@ -31,8 +31,8 @@ interface LimiteHistorico {
   created_at: string;
 }
 
-const MIN_PURCHASE = 5;
-const PRICE_LOW = 45; // < 10
+const MIN_PURCHASE = 1;
+const PRICE_LOW = 45; // < 10 (inclui acessos unitários)
 const PRICE_HIGH = 40; // >= 10
 
 const calcUnitPrice = (qty: number) => (qty >= 10 ? PRICE_HIGH : PRICE_LOW);
@@ -66,10 +66,10 @@ export default function DashboardAfiliados() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [initialQty, setInitialQty] = useState(5);
+  const [initialQty, setInitialQty] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
-  const [purchaseDialog, setPurchaseDialog] = useState<{ open: boolean; member: AfiliadoMember | null; qty: number }>({ open: false, member: null, qty: 5 });
+  const [purchaseDialog, setPurchaseDialog] = useState<{ open: boolean; member: AfiliadoMember | null; qty: number }>({ open: false, member: null, qty: 1 });
   const [historyDialog, setHistoryDialog] = useState<{ open: boolean; member: AfiliadoMember | null; rows: LimiteHistorico[] }>({ open: false, member: null, rows: [] });
 
   const { toast } = useToast();
@@ -176,7 +176,7 @@ export default function DashboardAfiliados() {
     }
 
     toast({ title: "Afiliado adicionado!", className: "bg-green-600 text-white border-green-600" });
-    setEmail(""); setPassword(""); setDisplayName(""); setInitialQty(5);
+    setEmail(""); setPassword(""); setDisplayName(""); setInitialQty(1);
     setShowForm(false);
     fetchAfiliados();
   };
@@ -220,7 +220,7 @@ export default function DashboardAfiliados() {
     });
 
     toast({ title: `+${qty} adicionados · ${formatBRL(unit * qty)}`, className: "bg-green-600 text-white border-green-600" });
-    setPurchaseDialog({ open: false, member: null, qty: 5 });
+    setPurchaseDialog({ open: false, member: null, qty: 1 });
     fetchAfiliados();
   };
 
@@ -309,8 +309,8 @@ export default function DashboardAfiliados() {
         </div>
         <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Preço por slot</p>
-          <p className="text-xs text-foreground">Lote &lt; 10 → <strong className="text-primary">R$ 45</strong> · Lote ≥ 10 → <strong className="text-primary">R$ 40</strong></p>
-          <p className="text-[10px] text-muted-foreground mt-0.5">Mínimo {MIN_PURCHASE} por compra</p>
+          <p className="text-xs text-foreground">Unitário / Lote &lt; 10 → <strong className="text-primary">R$ 45</strong> · Lote ≥ 10 → <strong className="text-primary">R$ 40</strong></p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Mínimo {MIN_PURCHASE} por compra (acessos unitários permitidos)</p>
         </div>
         <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Afiliados ativos</p>
