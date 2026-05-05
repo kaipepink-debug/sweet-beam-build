@@ -156,11 +156,11 @@ function FerramentasContent({ config, navigate }: { config: { login: string; sen
               <video
                 controls
                 playsInline
-                preload="metadata"
+                muted
+                preload="auto"
                 className="w-full rounded-xl"
-                poster=""
+                src={`${config.video_url}#t=0.1`}
               >
-                <source src={config.video_url} type="video/mp4" />
                 Seu navegador não suporta vídeos.
               </video>
             </div>

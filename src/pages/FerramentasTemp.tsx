@@ -241,8 +241,7 @@ function FerramentasTempContent({
           <p className="text-sm text-muted-foreground pl-9">Veja o vídeo abaixo para entender como acessar as ferramentas.</p>
           <div className="pl-9">
             <div className="rounded-xl overflow-hidden bg-muted/40">
-              <video controls playsInline preload="metadata" className="w-full rounded-xl" poster="">
-                <source src={config.video_url} type="video/mp4" />
+              <video controls playsInline muted preload="auto" className="w-full rounded-xl" src={`${config.video_url}#t=0.1`}>
                 Seu navegador não suporta vídeos.
               </video>
             </div>
