@@ -312,11 +312,22 @@ serve(async (req) => {
               created_by: "00000000-0000-0000-0000-000000000000",
             });
           } else {
-            // Same cycle as the latest record → just keep it up to date
+            // Same cycle as the latest record → just keep it up to date.
+            // IMPORTANT: never shrink data_renovacao. Admin may have added
+            // extra days manually — preserve the later expiration.
             const finalPrice = price > 0 ? price : Number(latest!.valor || 0) || inferPriceFromPlan(cleanPlan);
-            // Preserve existing renewal tag if any, otherwise use clean plan
             const existingPlan = String(latest!.plano || "");
             const keepTag = /\(\d+ª\s*renovação\)/i.test(existingPlan);
+
+            const prevExpStr = latest!.data_renovacao ? String(latest!.data_renovacao).slice(0, 10) : null;
+            const keepLocalExp = prevExpStr && expiresAt && prevExpStr > expiresAt;
+            const finalExpiresAt = keepLocalExp ? prevExpStr : expiresAt;
+
+            // Reflect the extended expiration back to the client response
+            sub.expiresAt = finalExpiresAt
+              ? new Date(`${finalExpiresAt}T23:59:59-03:00`).toISOString()
+              : sub.expiresAt;
+
             await supabaseAdmin
               .from("assinantes")
               .update({
@@ -324,8 +335,8 @@ serve(async (req) => {
                 nome: nautName,
                 plano: keepTag ? existingPlan : cleanPlan,
                 valor: finalPrice,
-                data_renovacao: expiresAt,
-                proxima_cobranca: expiresAt,
+                data_renovacao: finalExpiresAt,
+                proxima_cobranca: finalExpiresAt,
                 meio_pagamento: paymentMethod,
               })
               .eq("id", latest!.id);
