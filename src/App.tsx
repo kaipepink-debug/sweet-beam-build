@@ -30,6 +30,7 @@ import DashboardVturb from "./pages/DashboardVturb";
 import DashboardFinanceiro from "./pages/DashboardFinanceiro";
 import DashboardAfiliados from "./pages/DashboardAfiliados";
 import DashboardLogins from "./pages/DashboardLogins";
+import DashboardAreaMembros from "./pages/DashboardAreaMembros";
 import SalesPageEN from "./pages/SalesPageEN";
 import PainelTemp from "./pages/PainelTemp";
 import FerramentasTemp from "./pages/FerramentasTemp";
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="/dashboard/configuracoes" element={<UnderDevelopment />} />
               <Route path="/dashboard/afiliados" element={<DashboardAfiliados />} />
               <Route path="/dashboard/logins" element={<DashboardLogins />} />
+              <Route path="/dashboard/area-membros" element={<DashboardAreaMembros />} />
             </Route>
 
             <Route path="/cod" element={<Cod />} />
