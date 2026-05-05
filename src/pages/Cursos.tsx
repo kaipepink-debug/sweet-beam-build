@@ -108,8 +108,6 @@ export default function Cursos() {
           )
         ) : (
           <CourseRow title="Afiliados" courses={courses} onCourseClick={handleCourseClick} />
-        </>
-
         )}
       </motion.div>
     </div>
