@@ -220,7 +220,7 @@ export default function DashboardAfiliados() {
     });
 
     toast({ title: `+${qty} adicionados · ${formatBRL(unit * qty)}`, className: "bg-green-600 text-white border-green-600" });
-    setPurchaseDialog({ open: false, member: null, qty: 5 });
+    setPurchaseDialog({ open: false, member: null, qty: 1 });
     fetchAfiliados();
   };
 
