@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Wrench, Clock, Shield, ChevronRight, AlertTriangle, ArrowUpCircle, MessageCircle } from "lucide-react";
+import { Wrench, Clock, Shield, ChevronRight, AlertTriangle, ArrowUpCircle, MessageCircle, LogOut } from "lucide-react";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
 import PlansPopup from "@/components/painel/PlansPopup";
@@ -217,6 +217,25 @@ export default function PainelTemp() {
               Após os 30 minutos, seu acesso será encerrado automaticamente. Para continuar utilizando, assine um plano.
             </p>
           </div>
+
+          {/* Logout */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => {
+              localStorage.removeItem("naut_subscription");
+              navigate("/usuario", { replace: true });
+            }}
+            className="w-full flex items-center justify-center gap-2 rounded-2xl px-5 py-3"
+            style={{
+              background: "rgba(239, 68, 68, 0.08)",
+              border: "1px solid rgba(239, 68, 68, 0.25)",
+              color: "rgba(248, 113, 113, 0.95)",
+            }}
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm font-semibold">Sair</span>
+          </motion.button>
         </motion.div>
       </div>
 
