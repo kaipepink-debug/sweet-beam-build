@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, X } from "lucide-react";
 import { motion } from "framer-motion";
@@ -10,6 +10,12 @@ export default function Cursos() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Todos");
+
+  useEffect(() => {
+    if (!localStorage.getItem("naut_subscription")) {
+      navigate("/usuario?redirect=/cursos", { replace: true });
+    }
+  }, [navigate]);
 
   const featured = courses.find((c) => c.featured) || courses[0];
 
