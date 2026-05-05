@@ -66,6 +66,7 @@ export function usePermissions() {
             financeiro: data.financeiro,
             vendas: data.vendas,
             assinaturas: data.assinaturas,
+            verificacao_login: (data as any).verificacao_login ?? false,
             clientes: data.clientes,
             email_acesso: (data as any).email_acesso ?? true,
             ferramentas_ia: data.ferramentas_ia,
