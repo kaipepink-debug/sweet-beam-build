@@ -1,3 +1,8 @@
+export interface LessonCta {
+  label: string;
+  url: string;
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -5,6 +10,7 @@ export interface Lesson {
   videoUrl: string;
   description: string;
   completed: boolean;
+  cta?: LessonCta;
 }
 
 export interface Module {
