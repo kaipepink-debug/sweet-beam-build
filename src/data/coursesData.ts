@@ -48,7 +48,7 @@ export const courses: Course[] = [
     id: "afiliado-de-sucesso",
     title: "Afiliado de sucesso - Faça R$2500 há R$3000 por mês",
     description: "Aprenda na prática como se afiliar à RatarIA pela Naut e começar a faturar entre R$2.500 e R$3.000 por mês como afiliado oficial.",
-    thumbnail: "/src/assets/afiliado-banner.png",
+    thumbnail: "/afiliado-banner.png",
     category: "Afiliados",
     featured: true,
     tag: "Destaque",
