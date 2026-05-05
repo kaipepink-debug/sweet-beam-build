@@ -27,6 +27,7 @@ const defaultPermissions: TeamPermissions = {
   financeiro: false,
   vendas: false,
   assinaturas: false,
+  verificacao_login: false,
   clientes: false,
   email_acesso: true,
   ferramentas_ia: true,
