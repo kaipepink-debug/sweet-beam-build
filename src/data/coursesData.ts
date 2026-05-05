@@ -192,6 +192,7 @@ export const courses: Course[] = [
 
 export const categories = [
   "Todos",
+  "Afiliados",
   "Vendas",
   "SDR",
   "Suporte",
