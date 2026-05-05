@@ -29,6 +29,7 @@ import DashboardPixels from "./pages/DashboardPixels";
 import DashboardVturb from "./pages/DashboardVturb";
 import DashboardFinanceiro from "./pages/DashboardFinanceiro";
 import DashboardAfiliados from "./pages/DashboardAfiliados";
+import DashboardLogins from "./pages/DashboardLogins";
 import SalesPageEN from "./pages/SalesPageEN";
 import PainelTemp from "./pages/PainelTemp";
 import FerramentasTemp from "./pages/FerramentasTemp";
@@ -65,6 +66,7 @@ const App = () => (
               <Route path="/dashboard/vturb" element={<DashboardVturb />} />
               <Route path="/dashboard/configuracoes" element={<UnderDevelopment />} />
               <Route path="/dashboard/afiliados" element={<DashboardAfiliados />} />
+              <Route path="/dashboard/logins" element={<DashboardLogins />} />
             </Route>
 
             <Route path="/cod" element={<Cod />} />

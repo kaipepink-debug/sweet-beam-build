@@ -248,11 +248,12 @@ serve(async (req) => {
           // We treat each record as one billing cycle. A new cycle is detected
           // when Naut's createdAt is strictly newer than every existing
           // data_criacao for this email+product (different purchase event).
+          // Lookup by email only (ignoring produto) to avoid duplicates
+          // when Naut sends a different productName for the same customer.
           const { data: existingRows } = await supabaseAdmin
             .from("assinantes")
-            .select("id, valor, data_criacao, data_renovacao, plano")
+            .select("id, valor, data_criacao, data_renovacao, plano, produto")
             .eq("email", nautEmail)
-            .eq("produto", productName)
             .order("data_criacao", { ascending: false });
 
           const cycleCount = existingRows?.length ?? 0;
