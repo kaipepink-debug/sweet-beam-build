@@ -307,7 +307,12 @@ export default function DashboardAssinaturas() {
 
   const isManual = (a: Assinante) => a.meio_pagamento === "Manual" || a.meio_pagamento === "Temporário";
 
+  const isTemp = (a: Assinante) =>
+    (a.meio_pagamento || "").toLowerCase().includes("temporár") ||
+    (a.plano || "").toLowerCase().includes("temporár");
+
   const filtered = useMemo(() => assinantes.filter(a => {
+    if (isTemp(a)) return false;
     const matchSearch = a.nome.toLowerCase().includes(search.toLowerCase()) || a.email.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || a.status === statusFilter;
     const matchProduto = produtoFilter === "all" || a.produto === produtoFilter;
