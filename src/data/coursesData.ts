@@ -52,7 +52,7 @@ export const courses: Course[] = [
     category: "Afiliados",
     featured: true,
     tag: "Destaque",
-    totalLessons: 3,
+    totalLessons: 4,
     totalDuration: "—",
     modules: [
       {
@@ -96,6 +96,14 @@ export const courses: Course[] = [
                 url: "https://chat.whatsapp.com/JiM0iguikk9HFF1tmPvW0N",
               },
             ],
+          },
+          {
+            id: "afs-m1-l4",
+            title: "Como gerar leads infinitos através de tráfego pago",
+            duration: "—",
+            videoUrl: "/aulas/aula-4.mp4",
+            description: "Aprenda a gerar leads infinitos através de tráfego pago para escalar suas vendas como afiliado.",
+            completed: false,
           },
         ],
       },
