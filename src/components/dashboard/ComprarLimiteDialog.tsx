@@ -125,7 +125,7 @@ export default function ComprarLimiteDialog({ open, onOpenChange, onPaid }: Prop
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{paid ? "Limite liberado!" : step === "form" ? "Comprar limite de assinaturas" : "Pague via PIX"}</DialogTitle>
