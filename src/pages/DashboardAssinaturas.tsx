@@ -148,7 +148,7 @@ export default function DashboardAssinaturas() {
       const data = await response.json();
       const map: Record<string, AfiliadoInfo> = {};
       (data.team || []).forEach((m: any) => {
-        if (m.permissions?.is_afiliado) {
+        if (m.role !== "admin" && (m.permissions?.is_afiliado || m.permissions?.afiliados)) {
           map[m.id] = { user_id: m.id, display_name: m.display_name || m.email, email: m.email };
         }
       });
