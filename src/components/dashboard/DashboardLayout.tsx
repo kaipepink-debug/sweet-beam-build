@@ -4,6 +4,8 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { ToolAlerts } from "@/components/dashboard/ToolAlerts";
 import { usePermissions } from "@/hooks/usePermissions";
 import { getFirstPermittedRoute } from "@/lib/getFirstPermittedRoute";
+import ComprarLimiteDialog from "@/components/dashboard/ComprarLimiteDialog";
+import { useComprarLimite } from "@/hooks/useComprarLimite";
 
 const routePermMap: Record<string, string> = {
   "/dashboard": "dashboard",
