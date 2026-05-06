@@ -471,6 +471,29 @@ export default function DashboardAssinaturas() {
             </DialogContent>
           </Dialog>
 
+          {isAfiliado && (
+            <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="gap-2 bg-orange-500 hover:bg-orange-600 text-white">
+                  <Clock className="h-4 w-4" /> Teste 30min
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader><DialogTitle>Criar Login Temporário</DialogTitle></DialogHeader>
+                <div className="space-y-3">
+                  <div className="rounded-lg border border-orange-500/40 bg-orange-500/10 p-3 text-xs text-orange-400">
+                    Este acesso dura <strong>30 minutos</strong> e <strong>não consome seu limite</strong>.
+                  </div>
+                  <div><Label>Nome</Label><Input value={tempForm.nome} onChange={e => setTempForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
+                  <div><Label>E-mail</Label><Input type="email" value={tempForm.email} onChange={e => setTempForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
+                </div>
+                <Button onClick={handleTempLogin} className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white">
+                  <Clock className="h-4 w-4 mr-2" /> Criar Acesso de 30 minutos
+                </Button>
+              </DialogContent>
+            </Dialog>
+          )}
+
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700"><Plus className="h-4 w-4" /> Novo Assinante</Button>
