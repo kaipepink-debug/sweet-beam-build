@@ -354,6 +354,7 @@ serve(async (req) => {
               .update({
                 status,
                 nome: nautName,
+                ...(nautPhone ? { whatsapp: nautPhone } : {}),
                 plano: keepTag ? existingPlan : cleanPlan,
                 valor: finalPrice,
                 data_renovacao: finalExpiresAt,
