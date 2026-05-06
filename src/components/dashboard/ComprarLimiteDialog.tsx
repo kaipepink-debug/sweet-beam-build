@@ -103,9 +103,19 @@ export default function ComprarLimiteDialog({ open, onOpenChange, onPaid }: Prop
         toast.error(data?.error || error?.message || "Erro ao gerar PIX");
         return;
       }
-      setPix({ paymentId: data.paymentId, qrCode: data.qrCode, copyPasteCode: data.copyPasteCode, amount: data.amount, qty: data.qty });
+      const newPix = { paymentId: data.paymentId, qrCode: data.qrCode, copyPasteCode: data.copyPasteCode, amount: data.amount, qty: data.qty };
+      setPix(newPix);
       setStep("pix");
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...newPix, userId: user?.id })); } catch {}
     } finally { setLoading(false); }
+  };
+
+  const handleClose = (o: boolean) => {
+    onOpenChange(o);
+    if (!o && paid) {
+      // limpa estado após sucesso
+      setPaid(false); setPix(null); setStep("form");
+    }
   };
 
   const copyCode = () => {
