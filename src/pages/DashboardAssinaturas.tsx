@@ -629,7 +629,7 @@ export default function DashboardAssinaturas() {
                 <TableRow key={a.id} className="border-border hover:bg-muted/30">
                   {isVisible("data_venda") && (
                     <TableCell>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/60 bg-primary/70 px-2.5 py-1 text-xs font-medium text-white whitespace-nowrap">
                         <Calendar className="h-3 w-3" />
                         {formatDateTime(a.created_at)}
                       </span>
