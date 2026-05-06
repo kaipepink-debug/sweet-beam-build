@@ -250,7 +250,7 @@ export default function DashboardAssinaturas() {
       toast.error("Preencha nome e email");
       return;
     }
-    if (!checkAfiliadoLimit()) return;
+    // Logins temporários não consomem o limite do afiliado
     const existing = findExistingByEmail(tempForm.email);
     if (existing) { setDuplicateInfo(existing); return; }
     const today = todayBR();
