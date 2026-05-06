@@ -801,12 +801,6 @@ export default function DashboardAssinaturas() {
         </DialogContent>
       </Dialog>
 
-      <ComprarLimiteDialog
-        open={comprarLimiteOpen}
-        onOpenChange={setComprarLimiteOpen}
-        onPaid={() => { /* permissions hook recarrega na próxima nav; fechar é o suficiente */ }}
-      />
-
       {/* Dialog de e-mail já cadastrado */}
       <Dialog open={!!duplicateInfo} onOpenChange={(o) => !o && setDuplicateInfo(null)}>
         <DialogContent className="max-w-md">
