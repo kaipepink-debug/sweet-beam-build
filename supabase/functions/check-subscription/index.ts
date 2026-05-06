@@ -170,6 +170,7 @@ serve(async (req) => {
     if (response.ok && data?.success && data?.data?.active === true && (!data?.data?.subscriptions || data.data.subscriptions.length === 0)) {
       const nautEmail = data.data.email || email.trim();
       const nautName = data.data.name || nautEmail;
+      const nautPhone = extractNautPhone(data);
 
       // Default expiration: 31 days from now (covers monthly plans by default)
       const expiresAt = new Date(Date.now() + 31 * 24 * 60 * 60 * 1000).toISOString();
