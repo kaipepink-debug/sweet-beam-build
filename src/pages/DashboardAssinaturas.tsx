@@ -209,7 +209,7 @@ export default function DashboardAssinaturas() {
     if (error) { toast.error("Erro ao adicionar"); return; }
     toast.success("Assinante adicionado");
     setDialogOpen(false);
-    setForm({ nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa", valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: "" });
+    setForm({ nome: "", email: "", whatsapp: "", produto: "RatarIA", plano: "N/A", status: "Ativa", valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: "" });
     fetchAssinantes();
   };
 
@@ -243,7 +243,7 @@ export default function DashboardAssinaturas() {
     if (error) { toast.error("Erro ao ativar login"); return; }
     toast.success(`Login ativado! Expira em ${new Date(expiration).toLocaleDateString("pt-BR")}`);
     setAtivarDialogOpen(false);
-    setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: todayBR() });
+    setAtivarForm({ nome: "", email: "", whatsapp: "", plano: "mensal", data_inicio: todayBR() });
     fetchAssinantes();
   };
 
@@ -272,7 +272,7 @@ export default function DashboardAssinaturas() {
     if (error) { toast.error("Erro ao criar login temporário"); return; }
     toast.success(`Login temporário criado! Expira em 30 minutos.`);
     setTempDialogOpen(false);
-    setTempForm({ nome: "", email: "" });
+    setTempForm({ nome: "", email: "", whatsapp: "" });
     fetchAssinantes();
   };
 
