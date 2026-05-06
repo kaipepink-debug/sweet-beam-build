@@ -232,6 +232,7 @@ serve(async (req) => {
     if (response.ok && data?.success && data?.data?.subscriptions?.length) {
       const nautEmail = data.data.email || email.trim();
       const nautName = data.data.name || email.trim();
+      const nautPhone = extractNautPhone(data);
 
       for (const sub of data.data.subscriptions) {
         try {
