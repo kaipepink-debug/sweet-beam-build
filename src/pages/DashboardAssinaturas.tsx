@@ -164,10 +164,15 @@ export default function DashboardAssinaturas() {
 
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
 
+  const isTempSub = (a: Assinante) =>
+    (a.meio_pagamento || "").toLowerCase().includes("temporár") ||
+    (a.plano || "").toLowerCase().includes("temporár");
+  const usedCount = useMemo(() => assinantes.filter(a => !isTempSub(a)).length, [assinantes]);
+
   const checkAfiliadoLimit = (): boolean => {
     if (!isAfiliado) return true;
     const limit = permissions.max_assinaturas ?? 10;
-    if (assinantes.length >= limit) {
+    if (usedCount >= limit) {
       setLimitDialogOpen(true);
       return false;
     }
