@@ -119,21 +119,10 @@ export default function DashboardAssinaturas() {
 
   const [afiliadosMap, setAfiliadosMap] = useState<Record<string, AfiliadoInfo>>({});
 
-  const fetchAssinantes = async () => {
-    setLoading(true);
-    let query = supabase.from("assinantes").select("*").order("data_criacao", { ascending: false }).order("created_at", { ascending: false });
-    if (isAfiliado && user) {
-      query = query.eq("created_by", user.id);
-    }
-    const { data } = await query;
-    setAssinantes((data as any[]) ?? []);
-    setLoading(false);
-  };
-
-  const fetchAfiliados = async () => {
-    if (isAfiliado) return;
+  const fetchAfiliadosMap = async (): Promise<Record<string, AfiliadoInfo>> => {
+    if (isAfiliado) return {};
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
+    if (!session) return {};
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=list`,
@@ -144,7 +133,7 @@ export default function DashboardAssinaturas() {
           },
         }
       );
-      if (!response.ok) return;
+      if (!response.ok) return {};
       const data = await response.json();
       const map: Record<string, AfiliadoInfo> = {};
       (data.team || []).forEach((m: any) => {
@@ -152,14 +141,27 @@ export default function DashboardAssinaturas() {
           map[m.id] = { user_id: m.id, display_name: m.display_name || m.email, email: m.email };
         }
       });
-      setAfiliadosMap(map);
-    } catch {}
+      return map;
+    } catch { return {}; }
   };
+
+  const fetchAll = async () => {
+    setLoading(true);
+    let query = supabase.from("assinantes").select("*").order("data_criacao", { ascending: false }).order("created_at", { ascending: false });
+    if (isAfiliado && user) {
+      query = query.eq("created_by", user.id);
+    }
+    const [{ data }, map] = await Promise.all([query, fetchAfiliadosMap()]);
+    setAfiliadosMap(map);
+    setAssinantes((data as any[]) ?? []);
+    setLoading(false);
+  };
+
+  const fetchAssinantes = fetchAll;
 
   useEffect(() => {
     if (permsLoading) return;
-    fetchAssinantes();
-    fetchAfiliados();
+    fetchAll();
   }, [isAfiliado, user?.id, permsLoading]);
 
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
