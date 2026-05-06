@@ -21,6 +21,7 @@ interface Assinante {
   id: string;
   nome: string;
   email: string;
+  whatsapp?: string | null;
   produto: string;
   plano: string;
   status: string;
