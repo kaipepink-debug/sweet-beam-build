@@ -1,1 +1,4 @@
 project_id = "oovykpbrsbkromluhddp"
+
+[functions.naut-pix-webhook]
+verify_jwt = false

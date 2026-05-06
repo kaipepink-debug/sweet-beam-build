@@ -471,6 +471,57 @@ export type Database = {
         }
         Relationships: []
       }
+      limite_compras: {
+        Row: {
+          copy_paste_code: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          paid_at: string | null
+          payment_id: string
+          processed: boolean
+          qr_code: string | null
+          qty: number
+          status: string
+          updated_at: string
+          user_id: string
+          valor_total: number
+          valor_unitario: number
+        }
+        Insert: {
+          copy_paste_code?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          paid_at?: string | null
+          payment_id: string
+          processed?: boolean
+          qr_code?: string | null
+          qty: number
+          status?: string
+          updated_at?: string
+          user_id: string
+          valor_total: number
+          valor_unitario: number
+        }
+        Update: {
+          copy_paste_code?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          paid_at?: string | null
+          payment_id?: string
+          processed?: boolean
+          qr_code?: string | null
+          qty?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+          valor_total?: number
+          valor_unitario?: number
+        }
+        Relationships: []
+      }
       pixels: {
         Row: {
           api_token: string
@@ -504,6 +555,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          cpf: string | null
           created_at: string
           display_name: string | null
           id: string
@@ -512,6 +564,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          cpf?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
@@ -520,6 +573,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          cpf?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
