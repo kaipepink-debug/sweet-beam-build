@@ -26,6 +26,7 @@ export default function DashboardLayout() {
   const { permissions, loading } = usePermissions();
   const location = useLocation();
   const navigate = useNavigate();
+  const { open: comprarOpen, setOpen: setComprarOpen } = useComprarLimite();
 
   useEffect(() => {
     const saved = localStorage.getItem("dashboard-theme");
