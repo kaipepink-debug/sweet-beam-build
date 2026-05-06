@@ -72,6 +72,20 @@ function isGenericPlan(planName: string | null | undefined, productName: string 
   return false;
 }
 
+// Try to extract a phone/whatsapp number from various Naut response shapes
+function extractNautPhone(data: any): string | null {
+  const root = data?.data || data || {};
+  const candidates = [
+    root.phone, root.phoneNumber, root.whatsapp, root.whatsApp, root.cellphone,
+    root.mobile, root.mobilePhone, root.celular, root.telefone,
+    root.customer?.phone, root.customer?.whatsapp, root.customer?.phoneNumber,
+    root.user?.phone, root.user?.whatsapp,
+  ];
+  for (const c of candidates) {
+    if (c && typeof c === "string" && c.trim()) return c.trim();
+  }
+  return null;
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
