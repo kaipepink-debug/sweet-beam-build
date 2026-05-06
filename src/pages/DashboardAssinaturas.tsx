@@ -692,7 +692,7 @@ export default function DashboardAssinaturas() {
                         else if (p.includes("mensal")) label = "Mensal";
                         if (!label) return null;
                         return (
-                          <span className="mt-1 inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 text-[11px] font-medium text-purple-300">
+                          <span className="mt-1 inline-flex items-center rounded-full border border-purple-500/60 bg-purple-500/80 px-2 py-0.5 text-[11px] font-medium text-white">
                             {label}
                           </span>
                         );
