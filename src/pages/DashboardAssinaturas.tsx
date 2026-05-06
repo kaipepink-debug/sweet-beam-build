@@ -249,8 +249,8 @@ export default function DashboardAssinaturas() {
   };
 
   const handleTempLogin = async () => {
-    if (!user || !tempForm.nome || !tempForm.email) {
-      toast.error("Preencha nome e email");
+    if (!user || !tempForm.nome || !tempForm.email || !tempForm.whatsapp) {
+      toast.error("Preencha nome, email e WhatsApp");
       return;
     }
     // Logins temporários não consomem o limite do afiliado
@@ -260,6 +260,7 @@ export default function DashboardAssinaturas() {
     const { error } = await supabase.from("assinantes").insert({
       nome: tempForm.nome,
       email: tempForm.email,
+      whatsapp: tempForm.whatsapp,
       produto: "RatarIA",
       plano: "Temporário (30min)",
       status: "Ativa",
