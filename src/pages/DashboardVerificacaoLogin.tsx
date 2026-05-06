@@ -204,7 +204,7 @@ export default function DashboardVerificacaoLogin() {
                 return (
                   <TableRow key={a.id} className="border-border hover:bg-muted/30">
                     <TableCell>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/60 bg-primary/70 px-2.5 py-1 text-xs font-medium text-white whitespace-nowrap">
                         <Calendar className="h-3 w-3" />
                         {formatDateTime(a.created_at)}
                       </span>
@@ -214,7 +214,7 @@ export default function DashboardVerificacaoLogin() {
                         <p className="text-sm font-medium text-foreground">{a.nome}</p>
                         {a.created_by && afiliadosMap[a.created_by] && (
                           <span
-                            className="inline-flex items-center rounded-full border border-orange-500/40 bg-orange-500/15 px-2 py-0.5 text-[10px] font-semibold text-orange-300"
+                            className="inline-flex items-center rounded-full border border-orange-500/70 bg-orange-500/80 px-2 py-0.5 text-[10px] font-semibold text-white"
                             title={`Afiliado: ${afiliadosMap[a.created_by].display_name} (${afiliadosMap[a.created_by].email})`}
                           >
                             Afiliado
@@ -229,7 +229,7 @@ export default function DashboardVerificacaoLogin() {
                     </TableCell>
                     <TableCell><p className="text-xs text-foreground break-all">{a.email}</p></TableCell>
                     <TableCell>
-                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${expired ? "border-red-500/30 bg-red-500/10 text-red-400" : "border-orange-500/30 bg-orange-500/10 text-orange-400"}`}>
+                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${expired ? "border-red-500/60 bg-red-500/80 text-white" : "border-orange-500/60 bg-orange-500/80 text-white"}`}>
                         <Clock className="h-3 w-3" />
                         {label}
                       </span>

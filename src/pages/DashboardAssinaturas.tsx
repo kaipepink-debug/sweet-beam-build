@@ -387,10 +387,10 @@ export default function DashboardAssinaturas() {
   };
 
   const statusStyle = (s: string) => {
-    if (s === "Ativa") return { wrap: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400", dot: "bg-emerald-400" };
-    if (s === "Cancelada") return { wrap: "border-red-500/30 bg-red-500/10 text-red-400", dot: "bg-red-400" };
-    if (s === "Pendente") return { wrap: "border-yellow-500/30 bg-yellow-500/10 text-yellow-400", dot: "bg-yellow-400" };
-    return { wrap: "border-border bg-muted/30 text-muted-foreground", dot: "bg-muted-foreground" };
+    if (s === "Ativa") return { wrap: "border-emerald-500/60 bg-emerald-500/80 text-white", dot: "bg-white" };
+    if (s === "Cancelada") return { wrap: "border-red-500/60 bg-red-500/80 text-white", dot: "bg-white" };
+    if (s === "Pendente") return { wrap: "border-yellow-500/60 bg-yellow-500/80 text-white", dot: "bg-white" };
+    return { wrap: "border-border bg-muted text-foreground", dot: "bg-muted-foreground" };
   };
 
   return (
@@ -629,7 +629,7 @@ export default function DashboardAssinaturas() {
                 <TableRow key={a.id} className="border-border hover:bg-muted/30">
                   {isVisible("data_venda") && (
                     <TableCell>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/60 bg-primary/70 px-2.5 py-1 text-xs font-medium text-white whitespace-nowrap">
                         <Calendar className="h-3 w-3" />
                         {formatDateTime(a.created_at)}
                       </span>
@@ -642,7 +642,7 @@ export default function DashboardAssinaturas() {
                           <p className="text-sm font-medium text-foreground">{a.nome}</p>
                           {a.created_by && afiliadosMap[a.created_by] && (
                             <span
-                              className="inline-flex items-center rounded-full border border-orange-500/40 bg-orange-500/15 px-2 py-0.5 text-[10px] font-semibold text-orange-300"
+                              className="inline-flex items-center rounded-full border border-orange-500/70 bg-orange-500/80 px-2 py-0.5 text-[10px] font-semibold text-white"
                               title={`Afiliado: ${afiliadosMap[a.created_by].display_name} (${afiliadosMap[a.created_by].email})`}
                             >
                               Afiliado
@@ -692,7 +692,7 @@ export default function DashboardAssinaturas() {
                         else if (p.includes("mensal")) label = "Mensal";
                         if (!label) return null;
                         return (
-                          <span className="mt-1 inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 text-[11px] font-medium text-purple-300">
+                          <span className="mt-1 inline-flex items-center rounded-full border border-purple-500/60 bg-purple-500/80 px-2 py-0.5 text-[11px] font-medium text-white">
                             {label}
                           </span>
                         );
@@ -701,7 +701,7 @@ export default function DashboardAssinaturas() {
                   )}
                   {isVisible("data_criacao") && (
                     <TableCell>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/60 bg-emerald-500/80 px-2.5 py-1 text-xs font-medium text-white">
                         <Calendar className="h-3 w-3" />
                         {formatDate(a.data_criacao)}
                       </span>
@@ -709,7 +709,7 @@ export default function DashboardAssinaturas() {
                   )}
                   {isVisible("proxima_cobranca") && (
                     <TableCell>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-400">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/60 bg-red-500/80 px-2.5 py-1 text-xs font-medium text-white">
                         <Calendar className="h-3 w-3" />
                         {formatDate(a.proxima_cobranca)}
                       </span>
