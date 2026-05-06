@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake, LogIn, GraduationCap, ShieldCheck } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake, LogIn, GraduationCap, ShieldCheck, AlertCircle } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
@@ -15,6 +15,7 @@ const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, permKey: "dashboard" },
   { title: "Assinaturas", url: "/dashboard/assinaturas", icon: Activity, permKey: "assinaturas" },
   { title: "Verificação de Login", url: "/dashboard/verificacao-login", icon: ShieldCheck, permKey: "verificacao_login" },
+  { title: "Inadimplência", url: "/dashboard/inadimplencia", icon: AlertCircle, permKey: "assinaturas" },
   { title: "Financeiro", url: "/dashboard/financeiro", icon: CreditCard, permKey: "financeiro" },
   { title: "Vendas", url: "/dashboard/vendas", icon: ShoppingBag, permKey: "vendas" },
   { title: "Clientes", url: "/dashboard/clientes", icon: Users2, permKey: "clientes" },

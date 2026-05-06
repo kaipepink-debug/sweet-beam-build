@@ -46,26 +46,16 @@ export default function DashboardVerificacaoLogin() {
     return fmt.format(new Date());
   };
 
-  const fetchItems = async () => {
-    setLoading(true);
-    let query = supabase.from("assinantes").select("*").order("created_at", { ascending: false });
-    if (isAfiliado && user) query = query.eq("created_by", user.id);
-    const { data } = await query;
-    const all = (data as any[]) ?? [];
-    setItems(all.filter(isTemp));
-    setLoading(false);
-  };
-
-  const fetchAfiliados = async () => {
-    if (isAfiliado) return;
+  const fetchAfiliados = async (): Promise<Record<string, AfiliadoInfo>> => {
+    if (isAfiliado) return {};
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
+    if (!session) return {};
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=list`,
         { headers: { Authorization: `Bearer ${session.access_token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
       );
-      if (!response.ok) return;
+      if (!response.ok) return {};
       const data = await response.json();
       const map: Record<string, AfiliadoInfo> = {};
       (data.team || []).forEach((m: any) => {
@@ -73,14 +63,24 @@ export default function DashboardVerificacaoLogin() {
           map[m.id] = { user_id: m.id, display_name: m.display_name || m.email, email: m.email };
         }
       });
-      setAfiliadosMap(map);
-    } catch {}
+      return map;
+    } catch { return {}; }
+  };
+
+  const fetchAll = async () => {
+    setLoading(true);
+    let query = supabase.from("assinantes").select("*").order("created_at", { ascending: false });
+    if (isAfiliado && user) query = query.eq("created_by", user.id);
+    const [{ data }, map] = await Promise.all([query, fetchAfiliados()]);
+    const all = (data as any[]) ?? [];
+    setAfiliadosMap(map);
+    setItems(all.filter(isTemp));
+    setLoading(false);
   };
 
   useEffect(() => {
     if (permsLoading) return;
-    fetchItems();
-    fetchAfiliados();
+    fetchAll();
   }, [permsLoading, isAfiliado, user?.id]);
 
   const handleCreate = async () => {
@@ -106,14 +106,14 @@ export default function DashboardVerificacaoLogin() {
     toast.success("Login temporário criado! Expira em 30 minutos.");
     setDialogOpen(false);
     setForm({ nome: "", email: "" });
-    fetchItems();
+    fetchAll();
   };
 
   const handleDelete = async (a: Assinante) => {
     const { error } = await supabase.from("assinantes").delete().eq("id", a.id);
     if (error) { toast.error("Erro ao remover"); return; }
     toast.success("Removido");
-    fetchItems();
+    fetchAll();
   };
 
   const filtered = useMemo(() => items.filter(a =>
