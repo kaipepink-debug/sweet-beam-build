@@ -455,6 +455,7 @@ export default function DashboardAssinaturas() {
               <div className="space-y-3">
                 <div><Label>Nome</Label><Input value={ativarForm.nome} onChange={e => setAtivarForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
                 <div><Label>E-mail</Label><Input type="email" value={ativarForm.email} onChange={e => setAtivarForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
+                <div><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={ativarForm.whatsapp} onChange={e => setAtivarForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
                 <div><Label>Plano</Label>
                   <Select value={isAfiliado ? "mensal" : ativarForm.plano} onValueChange={v => setAtivarForm(f => ({ ...f, plano: v }))} disabled={isAfiliado}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
