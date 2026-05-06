@@ -119,21 +119,10 @@ export default function DashboardAssinaturas() {
 
   const [afiliadosMap, setAfiliadosMap] = useState<Record<string, AfiliadoInfo>>({});
 
-  const fetchAssinantes = async () => {
-    setLoading(true);
-    let query = supabase.from("assinantes").select("*").order("data_criacao", { ascending: false }).order("created_at", { ascending: false });
-    if (isAfiliado && user) {
-      query = query.eq("created_by", user.id);
-    }
-    const { data } = await query;
-    setAssinantes((data as any[]) ?? []);
-    setLoading(false);
-  };
-
-  const fetchAfiliados = async () => {
-    if (isAfiliado) return;
+  const fetchAfiliadosMap = async (): Promise<Record<string, AfiliadoInfo>> => {
+    if (isAfiliado) return {};
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
+    if (!session) return {};
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=list`,
@@ -144,7 +133,7 @@ export default function DashboardAssinaturas() {
           },
         }
       );
-      if (!response.ok) return;
+      if (!response.ok) return {};
       const data = await response.json();
       const map: Record<string, AfiliadoInfo> = {};
       (data.team || []).forEach((m: any) => {
@@ -152,14 +141,27 @@ export default function DashboardAssinaturas() {
           map[m.id] = { user_id: m.id, display_name: m.display_name || m.email, email: m.email };
         }
       });
-      setAfiliadosMap(map);
-    } catch {}
+      return map;
+    } catch { return {}; }
   };
+
+  const fetchAll = async () => {
+    setLoading(true);
+    let query = supabase.from("assinantes").select("*").order("data_criacao", { ascending: false }).order("created_at", { ascending: false });
+    if (isAfiliado && user) {
+      query = query.eq("created_by", user.id);
+    }
+    const [{ data }, map] = await Promise.all([query, fetchAfiliadosMap()]);
+    setAfiliadosMap(map);
+    setAssinantes((data as any[]) ?? []);
+    setLoading(false);
+  };
+
+  const fetchAssinantes = fetchAll;
 
   useEffect(() => {
     if (permsLoading) return;
-    fetchAssinantes();
-    fetchAfiliados();
+    fetchAll();
   }, [isAfiliado, user?.id, permsLoading]);
 
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
@@ -617,7 +619,7 @@ export default function DashboardAssinaturas() {
                           <p className="text-sm font-medium text-foreground">{a.nome}</p>
                           {a.created_by && afiliadosMap[a.created_by] && (
                             <span
-                              className="inline-flex items-center rounded-full border border-purple-500/40 bg-purple-500/15 px-2 py-0.5 text-[10px] font-semibold text-purple-300"
+                              className="inline-flex items-center rounded-full border border-orange-500/40 bg-orange-500/15 px-2 py-0.5 text-[10px] font-semibold text-orange-300"
                               title={`Afiliado: ${afiliadosMap[a.created_by].display_name} (${afiliadosMap[a.created_by].email})`}
                             >
                               Afiliado
@@ -626,7 +628,7 @@ export default function DashboardAssinaturas() {
                         </div>
                         
                         {a.created_by && afiliadosMap[a.created_by] && (
-                          <p className="text-[10px] text-purple-300/80 mt-0.5">
+                          <p className="text-[10px] text-orange-300/80 mt-0.5">
                             por {afiliadosMap[a.created_by].display_name} · {afiliadosMap[a.created_by].email}
                           </p>
                         )}
