@@ -33,14 +33,29 @@ export default function ComprarLimiteDialog({ open, onOpenChange, onPaid }: Prop
 
   const { unit, total } = priceFor(qty);
 
-  // Carrega CPF/nome do perfil
+  // Restaura PIX pendente do localStorage ao montar/abrir
+  useEffect(() => {
+    if (!user) return;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const p = JSON.parse(saved);
+        if (p && p.paymentId && p.userId === user.id) {
+          setPix({ paymentId: p.paymentId, qrCode: p.qrCode, copyPasteCode: p.copyPasteCode, amount: p.amount, qty: p.qty });
+          setQty(p.qty);
+          setStep("pix");
+        }
+      }
+    } catch {}
+  }, [user]);
+
+  // Carrega CPF/nome do perfil ao abrir
   useEffect(() => {
     if (!open || !user) return;
-    setStep("form"); setPix(null); setPaid(false);
     (async () => {
       const { data } = await supabase.from("profiles").select("cpf, display_name").eq("user_id", user.id).maybeSingle();
       if (data?.cpf) setCpf(data.cpf);
-      if (data?.display_name) setNome(data.display_name);
+      if (data?.display_name && !nome) setNome(data.display_name);
     })();
   }, [open, user]);
 
