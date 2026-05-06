@@ -152,6 +152,7 @@ export type Database = {
           status: string
           updated_at: string
           valor: number
+          whatsapp: string | null
         }
         Insert: {
           created_at?: string
@@ -168,6 +169,7 @@ export type Database = {
           status?: string
           updated_at?: string
           valor?: number
+          whatsapp?: string | null
         }
         Update: {
           created_at?: string
@@ -184,6 +186,7 @@ export type Database = {
           status?: string
           updated_at?: string
           valor?: number
+          whatsapp?: string | null
         }
         Relationships: []
       }
