@@ -35,6 +35,7 @@ import SalesPageEN from "./pages/SalesPageEN";
 import PainelTemp from "./pages/PainelTemp";
 import FerramentasTemp from "./pages/FerramentasTemp";
 import DashboardVerificacaoLogin from "./pages/DashboardVerificacaoLogin";
+import DashboardInadimplencia from "./pages/DashboardInadimplencia";
 
 const queryClient = new QueryClient();
 
