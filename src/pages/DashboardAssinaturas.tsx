@@ -671,6 +671,22 @@ export default function DashboardAssinaturas() {
                       <p className="text-xs text-foreground break-all">{a.email}</p>
                     </TableCell>
                   )}
+                  {isVisible("whatsapp") && (
+                    <TableCell>
+                      {a.whatsapp ? (
+                        <a
+                          href={`https://wa.me/${(a.whatsapp || "").replace(/\D/g, "")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-emerald-400 hover:underline whitespace-nowrap"
+                        >
+                          {a.whatsapp}
+                        </a>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                  )}
                   {isVisible("produto") && (
                     <TableCell>
                       <p className="text-sm font-semibold text-foreground">{a.produto}</p>
