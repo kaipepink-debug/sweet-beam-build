@@ -407,9 +407,9 @@ export default function DashboardAfiliados() {
                       <span className="text-sm font-semibold text-foreground"><span className="text-foreground">{used}</span><span className="text-muted-foreground"> / </span><span className="text-primary">{limit}</span></span>
                     </div>
 
-                    <div className="flex flex-col items-center gap-0.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 min-w-[120px]">
-                      <span className="text-[10px] uppercase tracking-wider text-emerald-300/80">Receita gerada</span>
-                      <span className="text-sm font-bold text-emerald-400">{formatBRL(revenue)}</span>
+                    <div className="flex flex-col items-center gap-0.5 rounded-xl border border-emerald-500/60 bg-emerald-500/80 px-3 py-2 min-w-[120px]">
+                      <span className="text-[10px] uppercase tracking-wider text-white/90">Receita gerada</span>
+                      <span className="text-sm font-bold text-white">{formatBRL(revenue)}</span>
                     </div>
 
                     <button
