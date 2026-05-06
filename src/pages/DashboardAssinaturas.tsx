@@ -57,6 +57,7 @@ export default function DashboardAssinaturas() {
     { key: "data_venda", label: "Data da venda" },
     { key: "assinante", label: "Assinante" },
     { key: "email", label: "E-mail" },
+    { key: "whatsapp", label: "WhatsApp" },
     { key: "produto", label: "Produto" },
     { key: "status", label: "Status" },
     { key: "valor", label: "Valor" },
