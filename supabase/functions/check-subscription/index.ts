@@ -85,6 +85,7 @@ function extractNautPhone(data: any): string | null {
     if (c && typeof c === "string" && c.trim()) return c.trim();
   }
   return null;
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
