@@ -72,6 +72,21 @@ function isGenericPlan(planName: string | null | undefined, productName: string 
   return false;
 }
 
+// Try to extract a phone/whatsapp number from various Naut response shapes
+function extractNautPhone(data: any): string | null {
+  const root = data?.data || data || {};
+  const candidates = [
+    root.phone, root.phoneNumber, root.whatsapp, root.whatsApp, root.cellphone,
+    root.mobile, root.mobilePhone, root.celular, root.telefone,
+    root.customer?.phone, root.customer?.whatsapp, root.customer?.phoneNumber,
+    root.user?.phone, root.user?.whatsapp,
+  ];
+  for (const c of candidates) {
+    if (c && typeof c === "string" && c.trim()) return c.trim();
+  }
+  return null;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -155,6 +170,7 @@ serve(async (req) => {
     if (response.ok && data?.success && data?.data?.active === true && (!data?.data?.subscriptions || data.data.subscriptions.length === 0)) {
       const nautEmail = data.data.email || email.trim();
       const nautName = data.data.name || nautEmail;
+      const nautPhone = extractNautPhone(data);
 
       // Default expiration: 31 days from now (covers monthly plans by default)
       const expiresAt = new Date(Date.now() + 31 * 24 * 60 * 60 * 1000).toISOString();
@@ -172,6 +188,7 @@ serve(async (req) => {
           await supabaseAdmin.from("assinantes").insert({
             email: nautEmail,
             nome: nautName,
+            whatsapp: nautPhone,
             produto: "RatarIA",
             plano: "Mensal",
             status: "Ativa",
@@ -185,7 +202,7 @@ serve(async (req) => {
         } else {
           await supabaseAdmin
             .from("assinantes")
-            .update({ status: "Ativa", nome: nautName })
+            .update({ status: "Ativa", nome: nautName, ...(nautPhone ? { whatsapp: nautPhone } : {}) })
             .eq("id", existing[0].id);
         }
       } catch (syncErr) {
@@ -215,6 +232,7 @@ serve(async (req) => {
     if (response.ok && data?.success && data?.data?.subscriptions?.length) {
       const nautEmail = data.data.email || email.trim();
       const nautName = data.data.name || email.trim();
+      const nautPhone = extractNautPhone(data);
 
       for (const sub of data.data.subscriptions) {
         try {
@@ -282,6 +300,7 @@ serve(async (req) => {
           if (cycleCount === 0) {
             // First time seeing this subscriber — insert as the first cycle
             await supabaseAdmin.from("assinantes").insert({
+              whatsapp: nautPhone,
               email: nautEmail,
               nome: nautName,
               produto: productName,
@@ -300,6 +319,7 @@ serve(async (req) => {
             const renewalNumber = cycleCount + 1; // 2 = 2ª renovação, 3 = 3ª, ...
             const planWithTag = `${cleanPlan} (${renewalNumber}ª renovação)`;
             await supabaseAdmin.from("assinantes").insert({
+              whatsapp: nautPhone,
               email: nautEmail,
               nome: nautName,
               produto: productName,
@@ -334,6 +354,7 @@ serve(async (req) => {
               .update({
                 status,
                 nome: nautName,
+                ...(nautPhone ? { whatsapp: nautPhone } : {}),
                 plano: keepTag ? existingPlan : cleanPlan,
                 valor: finalPrice,
                 data_renovacao: finalExpiresAt,

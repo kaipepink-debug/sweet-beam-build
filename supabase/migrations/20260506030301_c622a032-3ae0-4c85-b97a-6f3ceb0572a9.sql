@@ -1,0 +1,1 @@
+ALTER TABLE public.assinantes ADD COLUMN IF NOT EXISTS whatsapp TEXT;

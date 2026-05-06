@@ -21,6 +21,7 @@ interface Assinante {
   id: string;
   nome: string;
   email: string;
+  whatsapp?: string | null;
   produto: string;
   plano: string;
   status: string;
@@ -56,6 +57,7 @@ export default function DashboardAssinaturas() {
     { key: "data_venda", label: "Data da venda" },
     { key: "assinante", label: "Assinante" },
     { key: "email", label: "E-mail" },
+    { key: "whatsapp", label: "WhatsApp" },
     { key: "produto", label: "Produto" },
     { key: "status", label: "Status" },
     { key: "valor", label: "Valor" },
@@ -92,13 +94,13 @@ export default function DashboardAssinaturas() {
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
   const [tempDialogOpen, setTempDialogOpen] = useState(false);
   const [form, setForm] = useState({
-    nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa",
+    nome: "", email: "", whatsapp: "", produto: "RatarIA", plano: "N/A", status: "Ativa",
     valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: ""
   });
   const [ativarForm, setAtivarForm] = useState({
-    nome: "", email: "", plano: "mensal", data_inicio: todayBR()
+    nome: "", email: "", whatsapp: "", plano: "mensal", data_inicio: todayBR()
   });
-  const [tempForm, setTempForm] = useState({ nome: "", email: "" });
+  const [tempForm, setTempForm] = useState({ nome: "", email: "", whatsapp: "" });
   const [duplicateInfo, setDuplicateInfo] = useState<Assinante | null>(null);
 
   const findExistingByEmail = (email: string): Assinante | null => {
@@ -182,8 +184,8 @@ export default function DashboardAssinaturas() {
   };
 
   const handleAdd = async () => {
-    if (!user || !form.nome || !form.email || !form.valor) {
-      toast.error("Preencha nome, email e valor");
+    if (!user || !form.nome || !form.email || !form.valor || !form.whatsapp) {
+      toast.error("Preencha nome, email, WhatsApp e valor");
       return;
     }
     if (!checkAfiliadoLimit()) return;
@@ -196,7 +198,7 @@ export default function DashboardAssinaturas() {
       dataRenovacao = d.toISOString().slice(0, 10);
     }
     const { error } = await supabase.from("assinantes").insert({
-      nome: form.nome, email: form.email,
+      nome: form.nome, email: form.email, whatsapp: form.whatsapp,
       produto: isAfiliado ? "RatarIA" : form.produto,
       plano: isAfiliado ? "Mensal" : form.plano,
       status: form.status, valor: parseFloat(form.valor), meio_pagamento: form.meio_pagamento,
@@ -207,13 +209,13 @@ export default function DashboardAssinaturas() {
     if (error) { toast.error("Erro ao adicionar"); return; }
     toast.success("Assinante adicionado");
     setDialogOpen(false);
-    setForm({ nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa", valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: "" });
+    setForm({ nome: "", email: "", whatsapp: "", produto: "RatarIA", plano: "N/A", status: "Ativa", valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: "" });
     fetchAssinantes();
   };
 
   const handleAtivarLogin = async () => {
-    if (!user || !ativarForm.nome || !ativarForm.email) {
-      toast.error("Preencha nome e email");
+    if (!user || !ativarForm.nome || !ativarForm.email || !ativarForm.whatsapp) {
+      toast.error("Preencha nome, email e WhatsApp");
       return;
     }
     if (!checkAfiliadoLimit()) return;
@@ -227,6 +229,7 @@ export default function DashboardAssinaturas() {
     const { error } = await supabase.from("assinantes").insert({
       nome: ativarForm.nome,
       email: ativarForm.email,
+      whatsapp: ativarForm.whatsapp,
       produto: "RatarIA",
       plano: config.label,
       status: "Ativa",
@@ -241,13 +244,13 @@ export default function DashboardAssinaturas() {
     if (error) { toast.error("Erro ao ativar login"); return; }
     toast.success(`Login ativado! Expira em ${new Date(expiration).toLocaleDateString("pt-BR")}`);
     setAtivarDialogOpen(false);
-    setAtivarForm({ nome: "", email: "", plano: "mensal", data_inicio: todayBR() });
+    setAtivarForm({ nome: "", email: "", whatsapp: "", plano: "mensal", data_inicio: todayBR() });
     fetchAssinantes();
   };
 
   const handleTempLogin = async () => {
-    if (!user || !tempForm.nome || !tempForm.email) {
-      toast.error("Preencha nome e email");
+    if (!user || !tempForm.nome || !tempForm.email || !tempForm.whatsapp) {
+      toast.error("Preencha nome, email e WhatsApp");
       return;
     }
     // Logins temporários não consomem o limite do afiliado
@@ -257,6 +260,7 @@ export default function DashboardAssinaturas() {
     const { error } = await supabase.from("assinantes").insert({
       nome: tempForm.nome,
       email: tempForm.email,
+      whatsapp: tempForm.whatsapp,
       produto: "RatarIA",
       plano: "Temporário (30min)",
       status: "Ativa",
@@ -270,7 +274,7 @@ export default function DashboardAssinaturas() {
     if (error) { toast.error("Erro ao criar login temporário"); return; }
     toast.success(`Login temporário criado! Expira em 30 minutos.`);
     setTempDialogOpen(false);
-    setTempForm({ nome: "", email: "" });
+    setTempForm({ nome: "", email: "", whatsapp: "" });
     fetchAssinantes();
   };
 
@@ -451,6 +455,7 @@ export default function DashboardAssinaturas() {
               <div className="space-y-3">
                 <div><Label>Nome</Label><Input value={ativarForm.nome} onChange={e => setAtivarForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
                 <div><Label>E-mail</Label><Input type="email" value={ativarForm.email} onChange={e => setAtivarForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
+                <div><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={ativarForm.whatsapp} onChange={e => setAtivarForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
                 <div><Label>Plano</Label>
                   <Select value={isAfiliado ? "mensal" : ativarForm.plano} onValueChange={v => setAtivarForm(f => ({ ...f, plano: v }))} disabled={isAfiliado}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
@@ -486,6 +491,7 @@ export default function DashboardAssinaturas() {
                   </div>
                   <div><Label>Nome</Label><Input value={tempForm.nome} onChange={e => setTempForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
                   <div><Label>E-mail</Label><Input type="email" value={tempForm.email} onChange={e => setTempForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
+                  <div><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={tempForm.whatsapp} onChange={e => setTempForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
                 </div>
                 <Button onClick={handleTempLogin} className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white">
                   <Clock className="h-4 w-4 mr-2" /> Criar Acesso de 30 minutos
@@ -503,6 +509,7 @@ export default function DashboardAssinaturas() {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2"><Label>Nome</Label><Input value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} /></div>
               <div className="col-span-2"><Label>Email</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} /></div>
+              <div className="col-span-2"><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={form.whatsapp} onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
               <div><Label>Produto</Label><Input value={isAfiliado ? "RatarIA" : form.produto} onChange={e => setForm(f => ({ ...f, produto: e.target.value }))} disabled={isAfiliado} /></div>
               <div><Label>Plano</Label><Input value={isAfiliado ? "Mensal" : form.plano} onChange={e => setForm(f => ({ ...f, plano: e.target.value }))} disabled={isAfiliado} /></div>
               <div><Label>Valor</Label><Input type="number" value={form.valor} onChange={e => setForm(f => ({ ...f, valor: e.target.value }))} /></div>
@@ -609,6 +616,7 @@ export default function DashboardAssinaturas() {
               {isVisible("data_venda") && <TableHead className="text-muted-foreground">Data da venda</TableHead>}
               {isVisible("assinante") && <TableHead className="text-muted-foreground">Assinante</TableHead>}
               {isVisible("email") && <TableHead className="text-muted-foreground">E-mail</TableHead>}
+              {isVisible("whatsapp") && <TableHead className="text-muted-foreground">WhatsApp</TableHead>}
               {isVisible("produto") && <TableHead className="text-muted-foreground">Produto</TableHead>}
               {isVisible("status") && <TableHead className="text-muted-foreground">Status</TableHead>}
               {isVisible("valor") && <TableHead className="text-muted-foreground">Valor</TableHead>}
@@ -661,6 +669,22 @@ export default function DashboardAssinaturas() {
                   {isVisible("email") && (
                     <TableCell>
                       <p className="text-xs text-foreground break-all">{a.email}</p>
+                    </TableCell>
+                  )}
+                  {isVisible("whatsapp") && (
+                    <TableCell>
+                      {a.whatsapp ? (
+                        <a
+                          href={`https://wa.me/${(a.whatsapp || "").replace(/\D/g, "")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-emerald-400 hover:underline whitespace-nowrap"
+                        >
+                          {a.whatsapp}
+                        </a>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
                     </TableCell>
                   )}
                   {isVisible("produto") && (
