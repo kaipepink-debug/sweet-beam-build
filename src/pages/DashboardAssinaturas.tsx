@@ -184,8 +184,8 @@ export default function DashboardAssinaturas() {
   };
 
   const handleAdd = async () => {
-    if (!user || !form.nome || !form.email || !form.valor) {
-      toast.error("Preencha nome, email e valor");
+    if (!user || !form.nome || !form.email || !form.valor || !form.whatsapp) {
+      toast.error("Preencha nome, email, WhatsApp e valor");
       return;
     }
     if (!checkAfiliadoLimit()) return;
@@ -198,7 +198,7 @@ export default function DashboardAssinaturas() {
       dataRenovacao = d.toISOString().slice(0, 10);
     }
     const { error } = await supabase.from("assinantes").insert({
-      nome: form.nome, email: form.email,
+      nome: form.nome, email: form.email, whatsapp: form.whatsapp,
       produto: isAfiliado ? "RatarIA" : form.produto,
       plano: isAfiliado ? "Mensal" : form.plano,
       status: form.status, valor: parseFloat(form.valor), meio_pagamento: form.meio_pagamento,
@@ -214,8 +214,8 @@ export default function DashboardAssinaturas() {
   };
 
   const handleAtivarLogin = async () => {
-    if (!user || !ativarForm.nome || !ativarForm.email) {
-      toast.error("Preencha nome e email");
+    if (!user || !ativarForm.nome || !ativarForm.email || !ativarForm.whatsapp) {
+      toast.error("Preencha nome, email e WhatsApp");
       return;
     }
     if (!checkAfiliadoLimit()) return;
@@ -229,6 +229,7 @@ export default function DashboardAssinaturas() {
     const { error } = await supabase.from("assinantes").insert({
       nome: ativarForm.nome,
       email: ativarForm.email,
+      whatsapp: ativarForm.whatsapp,
       produto: "RatarIA",
       plano: config.label,
       status: "Ativa",
