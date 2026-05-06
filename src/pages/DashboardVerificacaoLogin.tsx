@@ -209,7 +209,24 @@ export default function DashboardVerificacaoLogin() {
                         {formatDateTime(a.created_at)}
                       </span>
                     </TableCell>
-                    <TableCell><p className="text-sm font-medium text-foreground">{a.nome}</p></TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <p className="text-sm font-medium text-foreground">{a.nome}</p>
+                        {a.created_by && afiliadosMap[a.created_by] && (
+                          <span
+                            className="inline-flex items-center rounded-full border border-purple-500/40 bg-purple-500/15 px-2 py-0.5 text-[10px] font-semibold text-purple-300"
+                            title={`Afiliado: ${afiliadosMap[a.created_by].display_name} (${afiliadosMap[a.created_by].email})`}
+                          >
+                            Afiliado
+                          </span>
+                        )}
+                      </div>
+                      {a.created_by && afiliadosMap[a.created_by] && (
+                        <p className="text-[10px] text-purple-300/80 mt-0.5">
+                          por {afiliadosMap[a.created_by].display_name} · {afiliadosMap[a.created_by].email}
+                        </p>
+                      )}
+                    </TableCell>
                     <TableCell><p className="text-xs text-foreground break-all">{a.email}</p></TableCell>
                     <TableCell>
                       <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${expired ? "border-red-500/30 bg-red-500/10 text-red-400" : "border-orange-500/30 bg-orange-500/10 text-orange-400"}`}>
