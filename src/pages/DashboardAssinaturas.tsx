@@ -509,6 +509,7 @@ export default function DashboardAssinaturas() {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2"><Label>Nome</Label><Input value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} /></div>
               <div className="col-span-2"><Label>Email</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} /></div>
+              <div className="col-span-2"><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={form.whatsapp} onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
               <div><Label>Produto</Label><Input value={isAfiliado ? "RatarIA" : form.produto} onChange={e => setForm(f => ({ ...f, produto: e.target.value }))} disabled={isAfiliado} /></div>
               <div><Label>Plano</Label><Input value={isAfiliado ? "Mensal" : form.plano} onChange={e => setForm(f => ({ ...f, plano: e.target.value }))} disabled={isAfiliado} /></div>
               <div><Label>Valor</Label><Input type="number" value={form.valor} onChange={e => setForm(f => ({ ...f, valor: e.target.value }))} /></div>
