@@ -619,7 +619,7 @@ export default function DashboardAssinaturas() {
                           <p className="text-sm font-medium text-foreground">{a.nome}</p>
                           {a.created_by && afiliadosMap[a.created_by] && (
                             <span
-                              className="inline-flex items-center rounded-full border border-purple-500/40 bg-purple-500/15 px-2 py-0.5 text-[10px] font-semibold text-purple-300"
+                              className="inline-flex items-center rounded-full border border-orange-500/40 bg-orange-500/15 px-2 py-0.5 text-[10px] font-semibold text-orange-300"
                               title={`Afiliado: ${afiliadosMap[a.created_by].display_name} (${afiliadosMap[a.created_by].email})`}
                             >
                               Afiliado
