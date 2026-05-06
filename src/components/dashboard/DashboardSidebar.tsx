@@ -102,7 +102,9 @@ export function DashboardSidebar() {
             ? (isAdmin || (permissions as any).afiliados)
             : isAreaMembros
               ? (isAdmin || permissions.dashboard || (permissions as any).is_afiliado)
-              : (isAdmin || permissions[item.permKey as keyof typeof permissions]);
+              : item.permKey === "verificacao_login"
+                ? (isAdmin || permissions.verificacao_login || (permissions as any).is_afiliado)
+                : (isAdmin || permissions[item.permKey as keyof typeof permissions]);
           if (!hasPermission) return null;
 
           const isActive = location.pathname === item.url || (item.url === "/dashboard-ferramentas" && location.pathname.startsWith("/dashboard-ferramentas/") && location.pathname !== "/dashboard/gerar-avisos");
