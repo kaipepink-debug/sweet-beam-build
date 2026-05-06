@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
 import { getRange, formatBRL } from "@/lib/dateRanges";
 import { usePermissions } from "@/hooks/usePermissions";
-import ComprarLimiteDialog from "@/components/dashboard/ComprarLimiteDialog";
+import { useComprarLimite } from "@/hooks/useComprarLimite";
 
 
 interface Assinante {
@@ -168,7 +168,7 @@ export default function DashboardAssinaturas() {
   }, [isAfiliado, user?.id, permsLoading]);
 
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
-  const [comprarLimiteOpen, setComprarLimiteOpen] = useState(false);
+  const { setOpen: setComprarLimiteOpen } = useComprarLimite();
 
   const isTempSub = (a: Assinante) =>
     (a.meio_pagamento || "").toLowerCase().includes("temporár") ||
@@ -800,12 +800,6 @@ export default function DashboardAssinaturas() {
           </div>
         </DialogContent>
       </Dialog>
-
-      <ComprarLimiteDialog
-        open={comprarLimiteOpen}
-        onOpenChange={setComprarLimiteOpen}
-        onPaid={() => { /* permissions hook recarrega na próxima nav; fechar é o suficiente */ }}
-      />
 
       {/* Dialog de e-mail já cadastrado */}
       <Dialog open={!!duplicateInfo} onOpenChange={(o) => !o && setDuplicateInfo(null)}>

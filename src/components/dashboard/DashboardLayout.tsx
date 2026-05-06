@@ -4,6 +4,8 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { ToolAlerts } from "@/components/dashboard/ToolAlerts";
 import { usePermissions } from "@/hooks/usePermissions";
 import { getFirstPermittedRoute } from "@/lib/getFirstPermittedRoute";
+import ComprarLimiteDialog from "@/components/dashboard/ComprarLimiteDialog";
+import { useComprarLimite } from "@/hooks/useComprarLimite";
 
 const routePermMap: Record<string, string> = {
   "/dashboard": "dashboard",
@@ -24,6 +26,7 @@ export default function DashboardLayout() {
   const { permissions, loading } = usePermissions();
   const location = useLocation();
   const navigate = useNavigate();
+  const { open: comprarOpen, setOpen: setComprarOpen } = useComprarLimite();
 
   useEffect(() => {
     const saved = localStorage.getItem("dashboard-theme");
@@ -59,6 +62,9 @@ export default function DashboardLayout() {
           <Outlet />
         </main>
       </div>
+      {!loading && permissions.is_afiliado && (
+        <ComprarLimiteDialog open={comprarOpen} onOpenChange={setComprarOpen} />
+      )}
     </div>
   );
 }

@@ -14,6 +14,8 @@ interface Props {
   onPaid?: (novoLimite: number) => void;
 }
 
+const STORAGE_KEY = "comprar_limite_pix_v1";
+
 function priceFor(qty: number) {
   const unit = qty > 10 ? 40 : 45;
   return { unit, total: unit * qty };
@@ -31,35 +33,56 @@ export default function ComprarLimiteDialog({ open, onOpenChange, onPaid }: Prop
 
   const { unit, total } = priceFor(qty);
 
-  // Carrega CPF/nome do perfil
+  // Restaura PIX pendente do localStorage ao montar/abrir
+  useEffect(() => {
+    if (!user) return;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const p = JSON.parse(saved);
+        if (p && p.paymentId && p.userId === user.id) {
+          setPix({ paymentId: p.paymentId, qrCode: p.qrCode, copyPasteCode: p.copyPasteCode, amount: p.amount, qty: p.qty });
+          setQty(p.qty);
+          setStep("pix");
+        }
+      }
+    } catch {}
+  }, [user]);
+
+  // Carrega CPF/nome do perfil ao abrir
   useEffect(() => {
     if (!open || !user) return;
-    setStep("form"); setPix(null); setPaid(false);
     (async () => {
       const { data } = await supabase.from("profiles").select("cpf, display_name").eq("user_id", user.id).maybeSingle();
       if (data?.cpf) setCpf(data.cpf);
-      if (data?.display_name) setNome(data.display_name);
+      if (data?.display_name && !nome) setNome(data.display_name);
     })();
   }, [open, user]);
 
-  // Polling do pagamento
+  // Polling do pagamento — roda mesmo com o dialog fechado
   useEffect(() => {
     if (step !== "pix" || !pix || paid) return;
-    const interval = setInterval(async () => {
+    let cancelled = false;
+    const tick = async () => {
       try {
         const { data, error } = await supabase.functions.invoke("check-limite-payment", {
           body: { paymentId: pix.paymentId },
         });
+        if (cancelled) return;
         if (!error && data?.status === "paid") {
           setPaid(true);
-          toast.success("Pagamento aprovado! Limite liberado.");
+          localStorage.removeItem(STORAGE_KEY);
+          toast.success("Pagamento efetuado! Seu limite foi liberado.", { duration: 6000 });
           onPaid?.(data.novoLimite);
-          clearInterval(interval);
+          // Garante que o dialog abra para mostrar a confirmação
+          onOpenChange(true);
         }
-      } catch (e) { /* ignore */ }
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [step, pix, paid, onPaid]);
+      } catch { /* ignore */ }
+    };
+    const interval = setInterval(tick, 5000);
+    tick();
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [step, pix, paid, onPaid, onOpenChange]);
 
   const formatCpf = (v: string) => {
     const d = v.replace(/\D/g, "").slice(0, 11);
@@ -80,9 +103,19 @@ export default function ComprarLimiteDialog({ open, onOpenChange, onPaid }: Prop
         toast.error(data?.error || error?.message || "Erro ao gerar PIX");
         return;
       }
-      setPix({ paymentId: data.paymentId, qrCode: data.qrCode, copyPasteCode: data.copyPasteCode, amount: data.amount, qty: data.qty });
+      const newPix = { paymentId: data.paymentId, qrCode: data.qrCode, copyPasteCode: data.copyPasteCode, amount: data.amount, qty: data.qty };
+      setPix(newPix);
       setStep("pix");
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...newPix, userId: user?.id })); } catch {}
     } finally { setLoading(false); }
+  };
+
+  const handleClose = (o: boolean) => {
+    onOpenChange(o);
+    if (!o && paid) {
+      // limpa estado após sucesso
+      setPaid(false); setPix(null); setStep("form");
+    }
   };
 
   const copyCode = () => {
@@ -92,7 +125,7 @@ export default function ComprarLimiteDialog({ open, onOpenChange, onPaid }: Prop
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{paid ? "Limite liberado!" : step === "form" ? "Comprar limite de assinaturas" : "Pague via PIX"}</DialogTitle>
