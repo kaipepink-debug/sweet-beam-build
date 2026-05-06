@@ -387,10 +387,10 @@ export default function DashboardAssinaturas() {
   };
 
   const statusStyle = (s: string) => {
-    if (s === "Ativa") return { wrap: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400", dot: "bg-emerald-400" };
-    if (s === "Cancelada") return { wrap: "border-red-500/30 bg-red-500/10 text-red-400", dot: "bg-red-400" };
-    if (s === "Pendente") return { wrap: "border-yellow-500/30 bg-yellow-500/10 text-yellow-400", dot: "bg-yellow-400" };
-    return { wrap: "border-border bg-muted/30 text-muted-foreground", dot: "bg-muted-foreground" };
+    if (s === "Ativa") return { wrap: "border-emerald-500/60 bg-emerald-500/80 text-white", dot: "bg-white" };
+    if (s === "Cancelada") return { wrap: "border-red-500/60 bg-red-500/80 text-white", dot: "bg-white" };
+    if (s === "Pendente") return { wrap: "border-yellow-500/60 bg-yellow-500/80 text-white", dot: "bg-white" };
+    return { wrap: "border-border bg-muted text-foreground", dot: "bg-muted-foreground" };
   };
 
   return (
