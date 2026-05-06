@@ -406,11 +406,20 @@ export default function DashboardAssinaturas() {
           <h1 className="text-2xl font-bold text-foreground">Assinaturas</h1>
           <p className="text-xs text-muted-foreground">Gerencie todos os assinantes da plataforma</p>
           {isAfiliado && (
-            <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5">
-              <Users className="h-3.5 w-3.5 text-primary" />
-              <span className="text-xs font-semibold text-foreground">
-                Limite: <span className="text-primary">{usedCount}</span>/{permissions.max_assinaturas ?? 10}
-              </span>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5">
+                <Users className="h-3.5 w-3.5 text-primary" />
+                <span className="text-xs font-semibold text-foreground">
+                  Limite: <span className="text-primary">{usedCount}</span>/{permissions.max_assinaturas ?? 10}
+                </span>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => setComprarLimiteOpen(true)}
+                className="h-7 px-3 text-xs bg-emerald-600 hover:bg-emerald-500 text-white"
+              >
+                <Plus className="h-3 w-3 mr-1" /> Comprar limite
+              </Button>
             </div>
           )}
         </div>
