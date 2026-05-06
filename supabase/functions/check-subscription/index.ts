@@ -319,6 +319,7 @@ serve(async (req) => {
             const renewalNumber = cycleCount + 1; // 2 = 2ª renovação, 3 = 3ª, ...
             const planWithTag = `${cleanPlan} (${renewalNumber}ª renovação)`;
             await supabaseAdmin.from("assinantes").insert({
+              whatsapp: nautPhone,
               email: nautEmail,
               nome: nautName,
               produto: productName,
