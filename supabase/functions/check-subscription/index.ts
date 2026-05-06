@@ -188,6 +188,7 @@ serve(async (req) => {
           await supabaseAdmin.from("assinantes").insert({
             email: nautEmail,
             nome: nautName,
+            whatsapp: nautPhone,
             produto: "RatarIA",
             plano: "Mensal",
             status: "Ativa",
@@ -201,7 +202,7 @@ serve(async (req) => {
         } else {
           await supabaseAdmin
             .from("assinantes")
-            .update({ status: "Ativa", nome: nautName })
+            .update({ status: "Ativa", nome: nautName, ...(nautPhone ? { whatsapp: nautPhone } : {}) })
             .eq("id", existing[0].id);
         }
       } catch (syncErr) {
