@@ -300,6 +300,7 @@ serve(async (req) => {
           if (cycleCount === 0) {
             // First time seeing this subscriber — insert as the first cycle
             await supabaseAdmin.from("assinantes").insert({
+              whatsapp: nautPhone,
               email: nautEmail,
               nome: nautName,
               produto: productName,
