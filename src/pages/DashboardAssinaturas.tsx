@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
 import { getRange, formatBRL } from "@/lib/dateRanges";
 import { usePermissions } from "@/hooks/usePermissions";
+import ComprarLimiteDialog from "@/components/dashboard/ComprarLimiteDialog";
 
 
 interface Assinante {
