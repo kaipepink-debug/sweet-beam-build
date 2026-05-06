@@ -94,13 +94,13 @@ export default function DashboardAssinaturas() {
   const [ativarDialogOpen, setAtivarDialogOpen] = useState(false);
   const [tempDialogOpen, setTempDialogOpen] = useState(false);
   const [form, setForm] = useState({
-    nome: "", email: "", produto: "RatarIA", plano: "N/A", status: "Ativa",
+    nome: "", email: "", whatsapp: "", produto: "RatarIA", plano: "N/A", status: "Ativa",
     valor: "", meio_pagamento: "Cartão", proxima_cobranca: "", data_criacao: "", data_renovacao: ""
   });
   const [ativarForm, setAtivarForm] = useState({
-    nome: "", email: "", plano: "mensal", data_inicio: todayBR()
+    nome: "", email: "", whatsapp: "", plano: "mensal", data_inicio: todayBR()
   });
-  const [tempForm, setTempForm] = useState({ nome: "", email: "" });
+  const [tempForm, setTempForm] = useState({ nome: "", email: "", whatsapp: "" });
   const [duplicateInfo, setDuplicateInfo] = useState<Assinante | null>(null);
 
   const findExistingByEmail = (email: string): Assinante | null => {
