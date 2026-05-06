@@ -168,6 +168,7 @@ export default function DashboardAssinaturas() {
   }, [isAfiliado, user?.id, permsLoading]);
 
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
+  const [comprarLimiteOpen, setComprarLimiteOpen] = useState(false);
 
   const isTempSub = (a: Assinante) =>
     (a.meio_pagamento || "").toLowerCase().includes("temporár") ||
