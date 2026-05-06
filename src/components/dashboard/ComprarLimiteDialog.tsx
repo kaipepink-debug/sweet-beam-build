@@ -14,6 +14,8 @@ interface Props {
   onPaid?: (novoLimite: number) => void;
 }
 
+const STORAGE_KEY = "comprar_limite_pix_v1";
+
 function priceFor(qty: number) {
   const unit = qty > 10 ? 40 : 45;
   return { unit, total: unit * qty };
