@@ -709,7 +709,7 @@ export default function DashboardAssinaturas() {
                   )}
                   {isVisible("proxima_cobranca") && (
                     <TableCell>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-400">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/60 bg-red-500/80 px-2.5 py-1 text-xs font-medium text-white">
                         <Calendar className="h-3 w-3" />
                         {formatDate(a.proxima_cobranca)}
                       </span>
