@@ -100,12 +100,15 @@ export default function DashboardAfiliados() {
       const ids = onlyAfiliados.map((m: AfiliadoMember) => m.id);
       if (ids.length > 0) {
         const [{ data: assinantes }, { data: hist }] = await Promise.all([
-          supabase.from("assinantes").select("created_by").in("created_by", ids),
+          supabase.from("assinantes").select("created_by, plano, meio_pagamento").in("created_by", ids),
           supabase.from("afiliado_limite_historico" as any).select("*").in("afiliado_id", ids),
         ]);
+        const isTemp = (a: any) =>
+          (a.meio_pagamento || "").toLowerCase().includes("temporár") ||
+          (a.plano || "").toLowerCase().includes("temporár");
         const cmap: Record<string, number> = {};
         (assinantes || []).forEach((a: any) => {
-          if (a.created_by) cmap[a.created_by] = (cmap[a.created_by] || 0) + 1;
+          if (a.created_by && !isTemp(a)) cmap[a.created_by] = (cmap[a.created_by] || 0) + 1;
         });
         setCounts(cmap);
 
