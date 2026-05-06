@@ -106,14 +106,14 @@ export default function DashboardVerificacaoLogin() {
     toast.success("Login temporário criado! Expira em 30 minutos.");
     setDialogOpen(false);
     setForm({ nome: "", email: "" });
-    fetchItems();
+    fetchAll();
   };
 
   const handleDelete = async (a: Assinante) => {
     const { error } = await supabase.from("assinantes").delete().eq("id", a.id);
     if (error) { toast.error("Erro ao remover"); return; }
     toast.success("Removido");
-    fetchItems();
+    fetchAll();
   };
 
   const filtered = useMemo(() => items.filter(a =>
