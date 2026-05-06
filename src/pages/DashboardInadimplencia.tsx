@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertCircle, Search, Calendar, Mail } from "lucide-react";
 import { isTemporarySubscription } from "@/lib/isTemporarySub";
+import { useAuth } from "@/hooks/useAuth";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface Assinante {
   id: string;
@@ -21,12 +23,16 @@ interface Assinante {
 interface AfiliadoInfo { user_id: string; display_name: string; email: string; }
 
 export default function DashboardInadimplencia() {
+  const { user } = useAuth();
+  const { permissions, loading: permsLoading } = usePermissions();
+  const isAfiliado = permissions.is_afiliado;
   const [items, setItems] = useState<Assinante[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [afiliadosMap, setAfiliadosMap] = useState<Record<string, AfiliadoInfo>>({});
 
   const fetchAfiliados = async (): Promise<Record<string, AfiliadoInfo>> => {
+    if (isAfiliado) return {};
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return {};
     try {
@@ -49,10 +55,11 @@ export default function DashboardInadimplencia() {
   const fetchAll = async () => {
     setLoading(true);
     const todayStr = new Date().toISOString().slice(0, 10);
-    const [{ data }, map] = await Promise.all([
-      supabase.from("assinantes").select("*").lt("proxima_cobranca", todayStr).order("proxima_cobranca", { ascending: false }),
-      fetchAfiliados(),
-    ]);
+    let query = supabase.from("assinantes").select("*").lt("proxima_cobranca", todayStr).order("proxima_cobranca", { ascending: false });
+    if (isAfiliado && user) {
+      query = query.eq("created_by", user.id);
+    }
+    const [{ data }, map] = await Promise.all([query, fetchAfiliados()]);
     const all = (data as any[]) ?? [];
     const filtered = all.filter(a =>
       !isTemporarySubscription(a) &&
@@ -64,7 +71,7 @@ export default function DashboardInadimplencia() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => { if (!permsLoading) fetchAll(); }, [permsLoading, isAfiliado, user?.id]);
 
   const filtered = useMemo(() => items.filter(a =>
     a.nome.toLowerCase().includes(search.toLowerCase()) ||
