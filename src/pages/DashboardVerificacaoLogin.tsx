@@ -229,7 +229,7 @@ export default function DashboardVerificacaoLogin() {
                     </TableCell>
                     <TableCell><p className="text-xs text-foreground break-all">{a.email}</p></TableCell>
                     <TableCell>
-                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${expired ? "border-red-500/30 bg-red-500/10 text-red-400" : "border-orange-500/30 bg-orange-500/10 text-orange-400"}`}>
+                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${expired ? "border-red-500/60 bg-red-500/80 text-white" : "border-orange-500/60 bg-orange-500/80 text-white"}`}>
                         <Clock className="h-3 w-3" />
                         {label}
                       </span>
