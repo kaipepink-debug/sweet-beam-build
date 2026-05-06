@@ -28,6 +28,8 @@ const isTemp = (a: Assinante) =>
   (a.meio_pagamento || "").toLowerCase().includes("temporár") ||
   (a.plano || "").toLowerCase().includes("temporár");
 
+interface AfiliadoInfo { user_id: string; display_name: string; email: string; }
+
 export default function DashboardVerificacaoLogin() {
   const { user } = useAuth();
   const { permissions, loading: permsLoading } = usePermissions();
@@ -37,6 +39,7 @@ export default function DashboardVerificacaoLogin() {
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState({ nome: "", email: "" });
+  const [afiliadosMap, setAfiliadosMap] = useState<Record<string, AfiliadoInfo>>({});
 
   const todayBR = () => {
     const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit" });
@@ -53,9 +56,31 @@ export default function DashboardVerificacaoLogin() {
     setLoading(false);
   };
 
+  const fetchAfiliados = async () => {
+    if (isAfiliado) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=list`,
+        { headers: { Authorization: `Bearer ${session.access_token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
+      );
+      if (!response.ok) return;
+      const data = await response.json();
+      const map: Record<string, AfiliadoInfo> = {};
+      (data.team || []).forEach((m: any) => {
+        if (m.role !== "admin" && (m.permissions?.is_afiliado || m.permissions?.afiliados)) {
+          map[m.id] = { user_id: m.id, display_name: m.display_name || m.email, email: m.email };
+        }
+      });
+      setAfiliadosMap(map);
+    } catch {}
+  };
+
   useEffect(() => {
     if (permsLoading) return;
     fetchItems();
+    fetchAfiliados();
   }, [permsLoading, isAfiliado, user?.id]);
 
   const handleCreate = async () => {
