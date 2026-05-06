@@ -491,6 +491,7 @@ export default function DashboardAssinaturas() {
                   </div>
                   <div><Label>Nome</Label><Input value={tempForm.nome} onChange={e => setTempForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
                   <div><Label>E-mail</Label><Input type="email" value={tempForm.email} onChange={e => setTempForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
+                  <div><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={tempForm.whatsapp} onChange={e => setTempForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
                 </div>
                 <Button onClick={handleTempLogin} className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white">
                   <Clock className="h-4 w-4 mr-2" /> Criar Acesso de 30 minutos
