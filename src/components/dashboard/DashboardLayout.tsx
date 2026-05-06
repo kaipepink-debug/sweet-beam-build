@@ -62,6 +62,9 @@ export default function DashboardLayout() {
           <Outlet />
         </main>
       </div>
+      {!loading && permissions.is_afiliado && (
+        <ComprarLimiteDialog open={comprarOpen} onOpenChange={setComprarOpen} />
+      )}
     </div>
   );
 }
