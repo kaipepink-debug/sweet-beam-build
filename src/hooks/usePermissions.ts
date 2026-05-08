@@ -80,6 +80,7 @@ export function usePermissions() {
             equipe: data.equipe,
             afiliados: (data as any).afiliados ?? false,
             is_afiliado: (data as any).is_afiliado ?? false,
+            acesso_temp_30min: (data as any).acesso_temp_30min ?? false,
             max_assinaturas: (data as any).max_assinaturas ?? 10,
           });
         }
