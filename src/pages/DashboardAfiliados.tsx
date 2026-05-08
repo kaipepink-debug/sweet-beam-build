@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Handshake, Plus, Trash2, UserCheck, X, DollarSign, History, Search } from "lucide-react";
+import { Handshake, Plus, Trash2, UserCheck, X, DollarSign, History, Search, Clock } from "lucide-react";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
@@ -227,6 +227,31 @@ export default function DashboardAfiliados() {
     fetchAfiliados();
   };
 
+  const toggleAcessoTemp = async (m: AfiliadoMember) => {
+    const current = m.permissions?.acesso_temp_30min === true;
+    const next = !current;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=update-permissions`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: m.id, permissions: { acesso_temp_30min: next } }),
+      }
+    );
+    if (!response.ok) {
+      toast({ title: "Erro ao atualizar", variant: "destructive" });
+      return;
+    }
+    toast({ title: next ? "Acesso 30min liberado" : "Acesso 30min bloqueado", className: next ? "bg-green-600 text-white border-green-600" : undefined });
+    fetchAfiliados();
+  };
+
   const openHistory = async (m: AfiliadoMember) => {
     const { data } = await supabase
       .from("afiliado_limite_historico" as any)
@@ -418,6 +443,18 @@ export default function DashboardAfiliados() {
                       title="Adicionar slots"
                     >
                       <Plus className="h-3.5 w-3.5" /> Slots
+                    </button>
+
+                    <button
+                      onClick={() => toggleAcessoTemp(member)}
+                      className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-colors ${
+                        member.permissions?.acesso_temp_30min
+                          ? "bg-orange-500/15 border-orange-500/40 text-orange-400 hover:bg-orange-500/25"
+                          : "bg-muted/30 border-border text-muted-foreground hover:bg-muted/50"
+                      }`}
+                      title={member.permissions?.acesso_temp_30min ? "Bloquear acesso 30min" : "Liberar acesso 30min"}
+                    >
+                      <Clock className="h-3.5 w-3.5" /> 30min {member.permissions?.acesso_temp_30min ? "ON" : "OFF"}
                     </button>
 
                     <button

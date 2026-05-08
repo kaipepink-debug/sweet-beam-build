@@ -152,7 +152,7 @@ export default function DashboardVerificacaoLogin() {
           <p className="text-xs text-muted-foreground">Acessos temporários de 30 minutos para teste</p>
         </div>
 
-        {!permsLoading && (
+        {!permsLoading && (!isAfiliado || permissions.acesso_temp_30min) && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button size="sm" className="gap-2 bg-orange-500 hover:bg-orange-600 text-white">

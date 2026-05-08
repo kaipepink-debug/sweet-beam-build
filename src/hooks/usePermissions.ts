@@ -19,6 +19,7 @@ export interface TeamPermissions {
   equipe: boolean;
   afiliados: boolean;
   is_afiliado: boolean;
+  acesso_temp_30min: boolean;
   max_assinaturas: number;
 }
 
@@ -39,6 +40,7 @@ const defaultPermissions: TeamPermissions = {
   equipe: false,
   afiliados: false,
   is_afiliado: false,
+  acesso_temp_30min: false,
   max_assinaturas: 10,
 };
 
@@ -78,6 +80,7 @@ export function usePermissions() {
             equipe: data.equipe,
             afiliados: (data as any).afiliados ?? false,
             is_afiliado: (data as any).is_afiliado ?? false,
+            acesso_temp_30min: (data as any).acesso_temp_30min ?? false,
             max_assinaturas: (data as any).max_assinaturas ?? 10,
           });
         }

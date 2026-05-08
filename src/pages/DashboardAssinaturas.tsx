@@ -487,7 +487,7 @@ export default function DashboardAssinaturas() {
             </DialogContent>
           </Dialog>
 
-          {isAfiliado && (
+          {isAfiliado && permissions.acesso_temp_30min && (
             <Dialog open={tempDialogOpen} onOpenChange={setTempDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="sm" className="gap-2 bg-orange-500 hover:bg-orange-600 text-white">
