@@ -101,14 +101,17 @@ export function DashboardSidebar() {
         {(loading || roleLoading) ? null : menuItems.map((item) => {
           const isAreaMembros = item.url === "/dashboard/area-membros";
           const isMateriais = item.permKey === "materiais";
+          const isAfiliado = (permissions as any).is_afiliado;
+          // Bloquear E-mail Acesso e Ferramentas IA para afiliados
+          if (isAfiliado && !isAdmin && (item.permKey === "email_acesso" || item.permKey === "ferramentas_ia")) return null;
           const hasPermission = item.permKey === "afiliados"
             ? (isAdmin || (permissions as any).afiliados)
             : isMateriais
-              ? (isAdmin || permissions.dashboard || (permissions as any).is_afiliado)
+              ? (isAdmin || permissions.dashboard || isAfiliado)
             : isAreaMembros
-              ? (isAdmin || permissions.dashboard || (permissions as any).is_afiliado)
+              ? (isAdmin || permissions.dashboard || isAfiliado)
               : item.permKey === "verificacao_login"
-                ? (isAdmin || permissions.verificacao_login || (permissions as any).is_afiliado)
+                ? (isAdmin || permissions.verificacao_login || isAfiliado)
                 : (isAdmin || permissions[item.permKey as keyof typeof permissions]);
           if (!hasPermission) return null;
 
