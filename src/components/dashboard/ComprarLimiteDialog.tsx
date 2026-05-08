@@ -192,6 +192,19 @@ export default function ComprarLimiteDialog({ open, onOpenChange, onPaid }: Prop
               <Loader2 className="h-3 w-3 animate-spin" />
               Aguardando pagamento...
             </div>
+
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                try { localStorage.removeItem(STORAGE_KEY); } catch {}
+                setPix(null);
+                setStep("form");
+                onOpenChange(false);
+              }}
+            >
+              Cancelar PIX
+            </Button>
           </div>
         )}
 
