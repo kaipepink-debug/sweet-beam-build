@@ -123,10 +123,10 @@ const CadastroAfiliado = () => {
             <div>
               <label className="block text-xs uppercase tracking-widest mb-2 font-medium" style={{ color: "rgba(200,200,200,0.6)" }}>Telefone</label>
               <input
-                type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
+                type="tel" inputMode="numeric" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))}
                 onFocus={() => setFocused("phone")} onBlur={() => setFocused(null)}
                 className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-                style={inputStyle("phone")} placeholder="(00) 00000-0000" required
+                style={inputStyle("phone")} placeholder="(00) 00000-0000" required maxLength={15}
               />
             </div>
 
