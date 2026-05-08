@@ -37,6 +37,7 @@ import FerramentasTemp from "./pages/FerramentasTemp";
 import DashboardVerificacaoLogin from "./pages/DashboardVerificacaoLogin";
 import DashboardInadimplencia from "./pages/DashboardInadimplencia";
 import DashboardMateriais from "./pages/DashboardMateriais";
+import CadastroAfiliado from "./pages/CadastroAfiliado";
 
 const queryClient = new QueryClient();
 
