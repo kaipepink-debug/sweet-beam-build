@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
@@ -207,6 +207,12 @@ const Login = () => {
               </button>
             </motion.div>
           </form>
+
+          <div className="mt-6 text-center">
+            <Link to="/cadastro-afiliado" className="text-xs uppercase tracking-widest hover:text-white transition-colors" style={{ color: "rgba(180,180,180,0.6)" }}>
+              Quero ser afiliado · Criar conta
+            </Link>
+          </div>
 
           {/* Bottom accent line */}
           <motion.div
