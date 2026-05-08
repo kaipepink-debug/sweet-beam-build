@@ -177,7 +177,7 @@ export default function DashboardAssinaturas() {
 
   const checkAfiliadoLimit = (): boolean => {
     if (!isAfiliado) return true;
-    const limit = permissions.max_assinaturas ?? 10;
+    const limit = permissions.max_assinaturas ?? 0;
     if (usedCount >= limit) {
       setLimitDialogOpen(true);
       return false;
