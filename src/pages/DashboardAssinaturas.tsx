@@ -104,6 +104,16 @@ export default function DashboardAssinaturas() {
   const [tempForm, setTempForm] = useState({ nome: "", email: "", whatsapp: "" });
   const [duplicateInfo, setDuplicateInfo] = useState<Assinante | null>(null);
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    const ddd = digits.slice(0, 2);
+    const rest = digits.slice(2);
+    if (digits.length <= 2) return digits.length ? `(${ddd}` : "";
+    if (rest.length <= 4) return `(${ddd}) ${rest}`;
+    if (rest.length <= 8) return `(${ddd}) ${rest.slice(0, 4)}-${rest.slice(4)}`;
+    return `(${ddd}) ${rest.slice(0, 5)}-${rest.slice(5)}`;
+  };
+
   const findExistingByEmail = (email: string): Assinante | null => {
     const e = email.trim().toLowerCase();
     if (!e) return null;
