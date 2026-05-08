@@ -40,6 +40,7 @@ const defaultPermissions: TeamPermissions = {
   equipe: false,
   afiliados: false,
   is_afiliado: false,
+  acesso_temp_30min: false,
   max_assinaturas: 10,
 };
 
