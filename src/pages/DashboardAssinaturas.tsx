@@ -177,7 +177,7 @@ export default function DashboardAssinaturas() {
 
   const checkAfiliadoLimit = (): boolean => {
     if (!isAfiliado) return true;
-    const limit = permissions.max_assinaturas ?? 10;
+    const limit = permissions.max_assinaturas ?? 0;
     if (usedCount >= limit) {
       setLimitDialogOpen(true);
       return false;
@@ -410,7 +410,7 @@ export default function DashboardAssinaturas() {
               <div className="inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5">
                 <Users className="h-3.5 w-3.5 text-primary" />
                 <span className="text-xs font-semibold text-foreground">
-                  Limite: <span className="text-primary">{usedCount}</span>/{permissions.max_assinaturas ?? 10}
+                  Limite: <span className="text-primary">{usedCount}</span>/{permissions.max_assinaturas ?? 0}
                 </span>
               </div>
               <Button
@@ -780,11 +780,13 @@ export default function DashboardAssinaturas() {
       <Dialog open={limitDialogOpen} onOpenChange={setLimitDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-red-500">Limite de assinaturas atingido</DialogTitle>
+            <DialogTitle className="text-red-500">{(permissions.max_assinaturas ?? 0) === 0 ? "Você ainda não tem limite" : "Limite de assinaturas atingido"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-xs text-red-400">
-              Você atingiu o limite de <strong>{permissions.max_assinaturas ?? 10}</strong> assinaturas. Compre mais limites via PIX e libere automaticamente.
+              {(permissions.max_assinaturas ?? 0) === 0
+                ? <>Para adicionar clientes você precisa <strong>comprar limite</strong> primeiro. Compre via PIX e libere automaticamente.</>
+                : <>Você atingiu o limite de <strong>{permissions.max_assinaturas ?? 0}</strong> assinaturas. Compre mais limites via PIX e libere automaticamente.</>}
             </div>
             <div className="rounded-lg border border-primary/30 bg-primary/10 p-3 text-xs text-foreground">
               <p>Até 10 limites: <strong>R$ 45,00</strong> cada</p>
