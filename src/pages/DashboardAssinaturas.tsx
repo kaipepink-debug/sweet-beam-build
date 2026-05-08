@@ -476,7 +476,7 @@ export default function DashboardAssinaturas() {
               <div className="space-y-3">
                 <div><Label>Nome</Label><Input value={ativarForm.nome} onChange={e => setAtivarForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
                 <div><Label>E-mail</Label><Input type="email" value={ativarForm.email} onChange={e => setAtivarForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
-                <div><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={ativarForm.whatsapp} onChange={e => setAtivarForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
+                <div><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={ativarForm.whatsapp} onChange={e => setAtivarForm(f => ({ ...f, whatsapp: formatPhone(e.target.value) }))} placeholder="(11) 99999-9999" /></div>
                 <div><Label>Plano</Label>
                   <Select value={isAfiliado ? "mensal" : ativarForm.plano} onValueChange={v => setAtivarForm(f => ({ ...f, plano: v }))} disabled={isAfiliado}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
@@ -512,7 +512,7 @@ export default function DashboardAssinaturas() {
                   </div>
                   <div><Label>Nome</Label><Input value={tempForm.nome} onChange={e => setTempForm(f => ({ ...f, nome: e.target.value }))} placeholder="Nome do cliente" /></div>
                   <div><Label>E-mail</Label><Input type="email" value={tempForm.email} onChange={e => setTempForm(f => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.com" /></div>
-                  <div><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={tempForm.whatsapp} onChange={e => setTempForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
+                  <div><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={tempForm.whatsapp} onChange={e => setTempForm(f => ({ ...f, whatsapp: formatPhone(e.target.value) }))} placeholder="(11) 99999-9999" /></div>
                 </div>
                 <Button onClick={handleTempLogin} className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white">
                   <Clock className="h-4 w-4 mr-2" /> Criar Acesso de 30 minutos
@@ -535,7 +535,7 @@ export default function DashboardAssinaturas() {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2"><Label>Nome</Label><Input value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} /></div>
               <div className="col-span-2"><Label>Email</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} /></div>
-              <div className="col-span-2"><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={form.whatsapp} onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="(11) 99999-9999" /></div>
+              <div className="col-span-2"><Label>WhatsApp <span className="text-red-500">*</span></Label><Input value={form.whatsapp} onChange={e => setForm(f => ({ ...f, whatsapp: formatPhone(e.target.value) }))} placeholder="(11) 99999-9999" /></div>
               <div><Label>Produto</Label><Input value={isAfiliado ? "RatarIA" : form.produto} onChange={e => setForm(f => ({ ...f, produto: e.target.value }))} disabled={isAfiliado} /></div>
               <div><Label>Plano</Label><Input value={isAfiliado ? "Mensal" : form.plano} onChange={e => setForm(f => ({ ...f, plano: e.target.value }))} disabled={isAfiliado} /></div>
               <div><Label>Valor</Label><Input type="number" value={form.valor} onChange={e => setForm(f => ({ ...f, valor: e.target.value }))} /></div>
