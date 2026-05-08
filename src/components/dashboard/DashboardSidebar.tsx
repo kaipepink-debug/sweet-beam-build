@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake, LogIn, GraduationCap, ShieldCheck, AlertCircle } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake, LogIn, GraduationCap, ShieldCheck, AlertCircle, Megaphone } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
