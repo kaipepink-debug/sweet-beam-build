@@ -52,6 +52,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/en" element={<SalesPageEN />} />
             <Route path="/login" element={<div className="desktop-zoom"><Login /></div>} />
+            <Route path="/cadastro-afiliado" element={<CadastroAfiliado />} />
 
             {/* Dashboard routes with shared layout */}
             <Route element={<ProtectedRoute><div className="desktop-zoom"><DashboardLayout /></div></ProtectedRoute>}>
