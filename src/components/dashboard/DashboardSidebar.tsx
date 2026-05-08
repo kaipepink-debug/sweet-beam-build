@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake, LogIn, GraduationCap, ShieldCheck, AlertCircle } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake, LogIn, GraduationCap, ShieldCheck, AlertCircle, Megaphone } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
@@ -27,6 +27,7 @@ const menuItems = [
   { title: "VTurb", url: "/dashboard/vturb", icon: Video, permKey: "dashboard" },
   { title: "Logins Painel", url: "/dashboard/logins", icon: LogIn, permKey: "dashboard" },
   { title: "Área de Membros", url: "/dashboard/area-membros", icon: GraduationCap, permKey: "dashboard" },
+  { title: "Materiais de Divulgação", url: "/dashboard/materiais", icon: Megaphone, permKey: "materiais" },
   { title: "Analytics", url: "/dashboard/analytics", icon: LineChart, permKey: "analytics" },
   { title: "Equipe", url: "/dashboard-equipe", icon: Users2, permKey: "equipe" },
   { title: "Afiliados", url: "/dashboard/afiliados", icon: Handshake, permKey: "afiliados" },
@@ -99,8 +100,11 @@ export function DashboardSidebar() {
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2 overflow-auto">
         {(loading || roleLoading) ? null : menuItems.map((item) => {
           const isAreaMembros = item.url === "/dashboard/area-membros";
+          const isMateriais = item.permKey === "materiais";
           const hasPermission = item.permKey === "afiliados"
             ? (isAdmin || (permissions as any).afiliados)
+            : isMateriais
+              ? (isAdmin || permissions.dashboard || (permissions as any).is_afiliado)
             : isAreaMembros
               ? (isAdmin || permissions.dashboard || (permissions as any).is_afiliado)
               : item.permKey === "verificacao_login"
