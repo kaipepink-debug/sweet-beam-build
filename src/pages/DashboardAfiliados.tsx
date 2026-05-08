@@ -227,7 +227,31 @@ export default function DashboardAfiliados() {
     fetchAfiliados();
   };
 
-  const openHistory = async (m: AfiliadoMember) => {
+  const toggleAcessoTemp = async (m: AfiliadoMember) => {
+    const current = m.permissions?.acesso_temp_30min === true;
+    const next = !current;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-team?action=update-permissions`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: m.id, permissions: { acesso_temp_30min: next } }),
+      }
+    );
+    if (!response.ok) {
+      toast({ title: "Erro ao atualizar", variant: "destructive" });
+      return;
+    }
+    toast({ title: next ? "Acesso 30min liberado" : "Acesso 30min bloqueado", className: next ? "bg-green-600 text-white border-green-600" : undefined });
+    fetchAfiliados();
+  };
+
     const { data } = await supabase
       .from("afiliado_limite_historico" as any)
       .select("*")
