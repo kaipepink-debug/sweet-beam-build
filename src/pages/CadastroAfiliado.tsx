@@ -16,8 +16,23 @@ const CadastroAfiliado = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    const ddd = digits.slice(0, 2);
+    const rest = digits.slice(2);
+    if (digits.length <= 2) return digits.length ? `(${ddd}` : "";
+    if (rest.length <= 4) return `(${ddd}) ${rest}`;
+    if (rest.length <= 8) return `(${ddd}) ${rest.slice(0, 4)}-${rest.slice(4)}`;
+    return `(${ddd}) ${rest.slice(0, 5)}-${rest.slice(5)}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const phoneDigits = phone.replace(/\D/g, "");
+    if (phoneDigits.length !== 10 && phoneDigits.length !== 11) {
+      toast({ title: "Telefone inválido", description: "Use (xx) xxxx-xxxx ou (xx) xxxxx-xxxx.", variant: "destructive" });
+      return;
+    }
     if (password.length < 6) {
       toast({ title: "Senha muito curta", description: "Use pelo menos 6 caracteres.", variant: "destructive" });
       return;
