@@ -19,6 +19,7 @@ export interface TeamPermissions {
   equipe: boolean;
   afiliados: boolean;
   is_afiliado: boolean;
+  acesso_temp_30min: boolean;
   max_assinaturas: number;
 }
 
