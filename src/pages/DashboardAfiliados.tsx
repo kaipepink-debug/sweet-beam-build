@@ -252,6 +252,7 @@ export default function DashboardAfiliados() {
     fetchAfiliados();
   };
 
+  const openHistory = async (m: AfiliadoMember) => {
     const { data } = await supabase
       .from("afiliado_limite_historico" as any)
       .select("*")
