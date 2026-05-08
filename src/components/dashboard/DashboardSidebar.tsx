@@ -100,8 +100,11 @@ export function DashboardSidebar() {
       <nav className="flex-1 flex flex-col gap-0.5 w-full px-2 overflow-auto">
         {(loading || roleLoading) ? null : menuItems.map((item) => {
           const isAreaMembros = item.url === "/dashboard/area-membros";
+          const isMateriais = item.permKey === "materiais";
           const hasPermission = item.permKey === "afiliados"
             ? (isAdmin || (permissions as any).afiliados)
+            : isMateriais
+              ? (isAdmin || permissions.dashboard || (permissions as any).is_afiliado)
             : isAreaMembros
               ? (isAdmin || permissions.dashboard || (permissions as any).is_afiliado)
               : item.permKey === "verificacao_login"
