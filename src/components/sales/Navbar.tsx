@@ -55,15 +55,23 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* CTA */}
-        <a
-          href="/usuario"
-          className="neon-border-btn relative px-4 py-1.5 rounded-full text-xs font-semibold text-white/80 overflow-hidden"
-          style={{ border: "1px solid rgba(255,255,255,0.15)", background: "transparent" }}
-        >
-          <span className="relative z-10">Entrar</span>
-          <span className="neon-trail" />
-        </a>
+        {/* CTAs */}
+        <div className="flex items-center gap-2">
+          <a
+            href="/cadastro-afiliado"
+            className="hidden sm:inline-flex relative px-4 py-1.5 rounded-full text-xs font-semibold text-white/90 bg-primary/90 hover:bg-primary transition-colors"
+          >
+            Seja um afiliado
+          </a>
+          <a
+            href="/usuario"
+            className="neon-border-btn relative px-4 py-1.5 rounded-full text-xs font-semibold text-white/80 overflow-hidden"
+            style={{ border: "1px solid rgba(255,255,255,0.15)", background: "transparent" }}
+          >
+            <span className="relative z-10">Entrar</span>
+            <span className="neon-trail" />
+          </a>
+        </div>
       </div>
       </motion.nav>
     </div>
