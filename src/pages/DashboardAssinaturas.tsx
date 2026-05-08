@@ -522,9 +522,14 @@ export default function DashboardAssinaturas() {
           )}
 
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700"><Plus className="h-4 w-4" /> Novo Assinante</Button>
-            </DialogTrigger>
+            <Button
+              size="sm"
+              className="gap-2 bg-emerald-600 hover:bg-emerald-700"
+              onClick={() => {
+                if (!checkAfiliadoLimit()) return;
+                setDialogOpen(true);
+              }}
+            ><Plus className="h-4 w-4" /> Novo Assinante</Button>
           <DialogContent className="max-w-lg">
             <DialogHeader><DialogTitle>Adicionar Assinante</DialogTitle></DialogHeader>
             <div className="grid grid-cols-2 gap-3">
