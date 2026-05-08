@@ -446,6 +446,18 @@ export default function DashboardAfiliados() {
                     </button>
 
                     <button
+                      onClick={() => toggleAcessoTemp(member)}
+                      className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-colors ${
+                        member.permissions?.acesso_temp_30min
+                          ? "bg-orange-500/15 border-orange-500/40 text-orange-400 hover:bg-orange-500/25"
+                          : "bg-muted/30 border-border text-muted-foreground hover:bg-muted/50"
+                      }`}
+                      title={member.permissions?.acesso_temp_30min ? "Bloquear acesso 30min" : "Liberar acesso 30min"}
+                    >
+                      <Clock className="h-3.5 w-3.5" /> 30min {member.permissions?.acesso_temp_30min ? "ON" : "OFF"}
+                    </button>
+
+                    <button
                       onClick={() => openHistory(member)}
                       className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/30 hover:bg-muted/50 text-foreground px-3 py-2 text-xs font-semibold transition-colors"
                       title="Histórico"
