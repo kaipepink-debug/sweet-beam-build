@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Handshake, Plus, Trash2, UserCheck, X, DollarSign, History, Search } from "lucide-react";
+import { Handshake, Plus, Trash2, UserCheck, X, DollarSign, History, Search, Clock } from "lucide-react";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RangeFilter, RangeFilterValue } from "@/components/dashboard/RangeFilter";
