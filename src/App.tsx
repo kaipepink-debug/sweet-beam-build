@@ -21,6 +21,7 @@ import Cod from "./pages/Cod";
 import Usuario from "./pages/Usuario";
 import Painel from "./pages/Painel";
 import Ferramentas from "./pages/Ferramentas";
+import AcessarFerramentas from "./pages/AcessarFerramentas";
 import Cursos from "./pages/Cursos";
 import CursoPlayer from "./pages/CursoPlayer";
 import DashboardAssinaturas from "./pages/DashboardAssinaturas";
@@ -85,6 +86,7 @@ const App = () => (
             <Route path="/painel-temp" element={<PainelTemp />} />
             <Route path="/ferramentas" element={<Ferramentas />} />
             <Route path="/ferramentas-temp" element={<FerramentasTemp />} />
+            <Route path="/acessar-ferramentas" element={<AcessarFerramentas />} />
             <Route path="/cursos" element={<Cursos />} />
             <Route path="/cursos/:courseId" element={<CursoPlayer />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
