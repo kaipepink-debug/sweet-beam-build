@@ -15,7 +15,7 @@ import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import {
   Plus, Search, Copy, Pencil, Trash2,
-  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon, Video, CalendarIcon
+  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon, Video, CalendarIcon, KeyRound
 } from "lucide-react";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
@@ -612,6 +612,16 @@ export default function FerramentaGerenciamento() {
                               Fornecedor
                             </Badge>
                           )}
+                          {a.totp_secret && (
+                            <Badge
+                              variant="outline"
+                              className="rounded-full text-[10px] px-2.5 py-0.5 border border-violet-500/30 text-violet-300 bg-violet-500/10 flex items-center gap-1"
+                              title="Esse login tem chave de 2 fatores cadastrada — a extensão gera o código automaticamente"
+                            >
+                              <KeyRound className="w-2.5 h-2.5" />
+                              2FA ativo
+                            </Badge>
+                          )}
                         </div>
 
                         {/* Senha */}
@@ -776,6 +786,15 @@ export default function FerramentaGerenciamento() {
                 Cole o <strong className="text-foreground">seed Base32</strong> (string longa abaixo do QR code do Google Authenticator).
                 A extensão gera o código de 6 dígitos a cada 30s. Letras A-Z e dígitos 2-7.
               </p>
+              {form.totp_secret.trim() && (
+                <div className="flex items-center gap-2 rounded-lg border border-violet-500/25 bg-violet-500/8 px-3 py-2 text-xs text-violet-200">
+                  <KeyRound className="w-3.5 h-3.5 shrink-0 text-violet-300" />
+                  <span>
+                    <strong className="text-violet-100">2FA ativo:</strong> esse login vai gerar o código de 6 dígitos automaticamente
+                    na extensão. O cliente nem precisa abrir o Authenticator.
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Custom expiration days */}

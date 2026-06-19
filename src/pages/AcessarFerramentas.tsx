@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Download, AlertTriangle, Sparkles, ExternalLink, Loader2, CheckCircle2, KeyRound } from "lucide-react";
+import { ArrowLeft, Download, AlertTriangle, Sparkles, ExternalLink, Loader2, CheckCircle2, KeyRound, RefreshCcw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { getSubscriptionFromStorage, getActiveSubscription, isTemporarySubscription } from "@/lib/isTemporarySub";
@@ -115,7 +115,8 @@ export default function AcessarFerramentas() {
     };
   }, []);
 
-  // Carrega credenciais do Supabase
+  // Carrega credenciais do Supabase (busca inicial + refresh manual)
+  const [reloadKey, setReloadKey] = useState(0);
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -136,6 +137,18 @@ export default function AcessarFerramentas() {
     return () => {
       mounted = false;
     };
+  }, [reloadKey]);
+
+  // Re-busca acessos quando a aba volta a ficar visível (cliente foi cadastrar 2FA
+  // em outra aba e voltou)
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState === "visible") {
+        setReloadKey(k => k + 1);
+      }
+    };
+    document.addEventListener("visibilitychange", handler);
+    return () => document.removeEventListener("visibilitychange", handler);
   }, []);
 
   // Agrupa por ferramenta
@@ -263,12 +276,23 @@ export default function AcessarFerramentas() {
       <NeuralBackground />
       <div className="relative z-10 flex-1 px-5 md:px-8 pt-10 md:pt-14 pb-16">
         <div className="mx-auto w-full max-w-md md:max-w-2xl space-y-6">
-          <button
-            onClick={() => navigate("/painel")}
-            className="flex items-center gap-2 text-xs text-white/50 hover:text-white/90 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Voltar
-          </button>
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => navigate("/painel")}
+              className="flex items-center gap-2 text-xs text-white/50 hover:text-white/90 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> Voltar
+            </button>
+            <button
+              onClick={() => setReloadKey(k => k + 1)}
+              disabled={syncing || loadingAcessos}
+              className="flex items-center gap-1.5 text-xs text-white/55 hover:text-white/90 px-3 py-1.5 rounded-lg border border-white/8 hover:border-white/15 bg-white/3 transition-all disabled:opacity-50"
+              title="Recarregar e sincronizar com a extensão"
+            >
+              <RefreshCcw className={`w-3 h-3 ${syncing || loadingAcessos ? "animate-spin" : ""}`} />
+              Sincronizar
+            </button>
+          </div>
 
           <div className="text-center space-y-1.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold"
