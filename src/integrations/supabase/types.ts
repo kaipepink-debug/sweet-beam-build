@@ -26,6 +26,7 @@ export type Database = {
           id: string
           login: string
           senha: string
+          totp_secret: string | null
           updated_at: string
           video_url: string | null
         }
@@ -40,6 +41,7 @@ export type Database = {
           id?: string
           login: string
           senha: string
+          totp_secret?: string | null
           updated_at?: string
           video_url?: string | null
         }
@@ -54,6 +56,7 @@ export type Database = {
           id?: string
           login?: string
           senha?: string
+          totp_secret?: string | null
           updated_at?: string
           video_url?: string | null
         }
