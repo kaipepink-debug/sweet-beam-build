@@ -6,32 +6,103 @@
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-  <div class="card">
-    <header>
-      <img src="../icons/icon-48.png" alt="RatarIA" class="logo" />
+  <div class="app">
+    <!-- Topbar -->
+    <header class="topbar">
       <div class="brand">
-        <span class="kicker">RatarIA</span>
-        <h1>Acesso Rápido</h1>
+        <img src="../icons/icon-48.png" alt="RatarIA" class="brand-logo" />
+        <div class="brand-text">
+          <span class="brand-kicker">RatarIA</span>
+          <h1>Acesso Rápido</h1>
+        </div>
       </div>
+      <button class="topbar-action" id="open-panel-btn" title="Abrir painel">↗</button>
     </header>
 
-    <div class="status" id="status">
-      <div class="status-dot" id="status-dot"></div>
-      <div class="status-text">
-        <strong id="status-title">Verificando...</strong>
-        <span id="status-sub">Aguarde</span>
-      </div>
+    <!-- Status pill -->
+    <div class="sync-pill" id="sync-pill">
+      <span class="sync-dot" id="sync-dot"></span>
+      <span class="sync-text" id="sync-text">Verificando...</span>
     </div>
 
-    <div class="tools" id="tools-list"></div>
+    <!-- Conteúdo principal -->
+    <main class="content" id="content">
+      <!-- Estado de boas-vindas / detectando tab -->
+      <div class="state state-loading" id="state-loading">
+        <div class="spinner"></div>
+        <div class="state-text">Detectando ferramenta...</div>
+      </div>
+    </main>
 
-    <a class="cta" id="open-panel" href="https://rataria.io/acessar-ferramentas" target="_blank">Abrir painel da RatarIA</a>
-
-    <footer>
+    <!-- Footer -->
+    <footer class="footer">
       <span>v<span id="version">0.0.0</span></span>
-      <span>rataria.io</span>
+      <a href="https://rataria.io/acessar-ferramentas" target="_blank" class="footer-link">rataria.io</a>
     </footer>
   </div>
+
+  <!-- Templates -->
+  <template id="tpl-no-tool">
+    <div class="state state-empty">
+      <div class="state-icon">⌕</div>
+      <div class="state-title">Nenhuma ferramenta aqui</div>
+      <div class="state-text">Abre a página de login do <strong id="no-tool-list"></strong> e o popup mostra as contas disponíveis.</div>
+      <a class="state-cta" href="https://rataria.io/acessar-ferramentas" target="_blank">Abrir painel</a>
+    </div>
+  </template>
+
+  <template id="tpl-no-creds">
+    <div class="state state-empty">
+      <div class="state-icon">!</div>
+      <div class="state-title">Sem contas pra <span id="no-creds-tool"></span></div>
+      <div class="state-text" id="no-creds-msg">Abre o painel da RatarIA pra sincronizar suas contas.</div>
+      <a class="state-cta" href="https://rataria.io/acessar-ferramentas" target="_blank">Abrir painel</a>
+    </div>
+  </template>
+
+  <template id="tpl-credential-card">
+    <article class="cred-card">
+      <header class="cred-card-head">
+        <img class="cred-tool-logo" />
+        <div class="cred-head-text">
+          <h2 class="cred-tool-name"></h2>
+          <span class="cred-badge">ativo</span>
+        </div>
+        <button class="cred-fill-btn" title="Preencher na aba ativa">Preencher</button>
+      </header>
+
+      <div class="cred-field" data-field="login">
+        <label>E-mail / Usuário</label>
+        <div class="cred-field-row">
+          <span class="cred-value cred-value-login"></span>
+          <button class="cred-icon-btn cred-copy" title="Copiar">⎘</button>
+        </div>
+      </div>
+
+      <div class="cred-field" data-field="senha">
+        <label>Senha</label>
+        <div class="cred-field-row">
+          <span class="cred-value cred-value-senha cred-masked"></span>
+          <button class="cred-icon-btn cred-reveal" title="Mostrar senha">○</button>
+          <button class="cred-icon-btn cred-copy" title="Copiar">⎘</button>
+        </div>
+      </div>
+
+      <div class="cred-field cred-field-totp" data-field="totp" hidden>
+        <label>Código 2 fatores</label>
+        <div class="cred-field-row cred-totp-row">
+          <span class="cred-value cred-value-totp">------</span>
+          <div class="cred-totp-progress" title=""><span class="cred-totp-bar"></span></div>
+          <button class="cred-icon-btn cred-copy" title="Copiar código">⎘</button>
+        </div>
+      </div>
+
+      <footer class="cred-card-foot">
+        <span class="cred-foot-expiry"></span>
+      </footer>
+    </article>
+  </template>
+
   <script src="popup.js"></script>
 </body>
 </html>

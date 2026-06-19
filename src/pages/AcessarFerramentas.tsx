@@ -20,7 +20,9 @@ type Acesso = {
   ferramenta: string;
   login: string;
   senha: string;
+  email_cliente: string | null;
   data_expiracao: string;
+  totp_secret?: string | null;
 };
 
 type ExtensionStatus = {
@@ -119,7 +121,7 @@ export default function AcessarFerramentas() {
     (async () => {
       const { data, error } = await supabase
         .from("acessos")
-        .select("id, ferramenta, login, senha, data_expiracao")
+        .select("id, ferramenta, login, senha, email_cliente, data_expiracao")
         .in("ferramenta", MVP_TOOLS.map((t) => t.key))
         .gt("data_expiracao", new Date().toISOString())
         .order("data_expiracao", { ascending: false });
@@ -150,12 +152,20 @@ export default function AcessarFerramentas() {
     if (!extStatus?.ok) return;
     if (loadingAcessos) return;
 
-    const credentials: Record<string, Array<Pick<Acesso, "login" | "senha" | "data_expiracao">>> = {};
+    const credentials: Record<string, Array<{
+      login: string | null;
+      email_cliente: string | null;
+      senha: string;
+      data_expiracao: string;
+      totp_secret: string | null;
+    }>> = {};
     for (const tool of MVP_TOOLS) {
       credentials[tool.key] = (byFerramenta[tool.key] || []).map((a) => ({
         login: a.login,
+        email_cliente: a.email_cliente,
         senha: a.senha,
         data_expiracao: a.data_expiracao,
+        totp_secret: a.totp_secret ?? null,
       }));
     }
 
