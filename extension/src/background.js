@@ -195,13 +195,26 @@ if (chrome.webRequest && chrome.webRequest.onAuthRequired) {
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   (async () => {
     try {
-      // SYNC vindo do painel
+      // SYNC vindo do painel: credenciais + (opcional) proxy do admin
       if (msg?.action === 'rataria:sync-credentials') {
         if (sender.tab && !isOriginAllowed(sender.tab.url)) {
           sendResponse({ ok: false, error: 'origem não autorizada' });
           return;
         }
         const result = await syncCredentials(msg);
+
+        // Se o painel mandou um proxy do admin, aplica automaticamente.
+        // Quando não vem nada do admin OU o cliente desativou manual no popup,
+        // mantemos a configuração que estiver salva localmente.
+        if (msg.proxy && msg.proxy.host && msg.proxy.port) {
+          try {
+            await applyProxy(msg.proxy);
+            console.log('[RatarIA] Proxy aplicado via sync do admin:', msg.proxy.host);
+          } catch (e) {
+            console.warn('[RatarIA] Falha ao aplicar proxy do admin:', e);
+          }
+        }
+
         sendResponse(result);
         return;
       }

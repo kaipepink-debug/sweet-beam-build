@@ -147,7 +147,7 @@ export default function AcessarFerramentas() {
     return map;
   }, [acessos]);
 
-  // Sincroniza credenciais com a extensão (envia batch)
+  // Sincroniza credenciais + proxy ativo com a extensão (envia batch)
   useEffect(() => {
     if (!extStatus?.ok) return;
     if (loadingAcessos) return;
@@ -170,11 +170,43 @@ export default function AcessarFerramentas() {
     }
 
     setSyncing(true);
-    postToExtension<{ ok: boolean; totals?: string }>(
-      "sync-credentials",
-      { credentials },
-      "sync-response"
-    ).then((res) => {
+
+    (async () => {
+      // Busca proxy ativo (qualquer um, escolhe o primeiro)
+      let proxy: {
+        protocol: string;
+        host: string;
+        port: number;
+        username: string | null;
+        password: string | null;
+        enabled: boolean;
+      } | null = null;
+      try {
+        const { data } = await supabase
+          .from("proxies")
+          .select("protocol, host, port, username, password, ativo")
+          .eq("ativo", true)
+          .limit(1)
+          .maybeSingle();
+        if (data) {
+          proxy = {
+            protocol: data.protocol,
+            host: data.host,
+            port: data.port,
+            username: data.username,
+            password: data.password,
+            enabled: true,
+          };
+        }
+      } catch (e) {
+        console.error("[RatarIA] erro ao buscar proxy:", e);
+      }
+
+      const res = await postToExtension<{ ok: boolean }>(
+        "sync-credentials",
+        { credentials, proxy },
+        "sync-response"
+      );
       setSyncing(false);
       if (res?.ok) {
         setExtStatus((s) => (s ? { ...s, syncedAt: Date.now() } : s));
@@ -185,7 +217,7 @@ export default function AcessarFerramentas() {
           variant: "destructive",
         });
       }
-    });
+    })();
   }, [extStatus?.ok, loadingAcessos, byFerramenta]);
 
   async function handleOpen(ferramenta: string) {

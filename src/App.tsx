@@ -27,6 +27,7 @@ import CursoPlayer from "./pages/CursoPlayer";
 import DashboardAssinaturas from "./pages/DashboardAssinaturas";
 import DashboardAcessoClientes from "./pages/DashboardAcessoClientes";
 import DashboardPixels from "./pages/DashboardPixels";
+import DashboardProxies from "./pages/DashboardProxies";
 import DashboardVturb from "./pages/DashboardVturb";
 import DashboardFinanceiro from "./pages/DashboardFinanceiro";
 import DashboardAfiliados from "./pages/DashboardAfiliados";
@@ -72,6 +73,7 @@ const App = () => (
               <Route path="/dashboard/analytics" element={<UnderDevelopment />} />
               <Route path="/dashboard/acesso-clientes" element={<DashboardAcessoClientes />} />
               <Route path="/dashboard/pixels" element={<DashboardPixels />} />
+              <Route path="/dashboard/proxies" element={<DashboardProxies />} />
               <Route path="/dashboard/vturb" element={<DashboardVturb />} />
               <Route path="/dashboard/configuracoes" element={<UnderDevelopment />} />
               <Route path="/dashboard/afiliados" element={<DashboardAfiliados />} />
