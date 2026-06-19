@@ -234,6 +234,107 @@ export type Database = {
           },
         ]
       }
+      capcut_login_usuarios: {
+        Row: {
+          created_at: string
+          id: string
+          login_id: string
+          user_email: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          login_id: string
+          user_email: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          login_id?: string
+          user_email?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capcut_login_usuarios_login_id_fkey"
+            columns: ["login_id"]
+            isOneToOne: false
+            referencedRelation: "capcut_logins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capcut_logins: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          email: string
+          id: string
+          ordem: number
+          senha: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          ordem?: number
+          senha: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          ordem?: number
+          senha?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      client_access_devices: {
+        Row: {
+          access_count: number
+          device_fingerprint: string
+          email: string
+          first_seen: string
+          id: string
+          ip: string | null
+          last_seen: string
+          location: string | null
+          nome: string | null
+          plano: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          access_count?: number
+          device_fingerprint: string
+          email: string
+          first_seen?: string
+          id?: string
+          ip?: string | null
+          last_seen?: string
+          location?: string | null
+          nome?: string | null
+          plano?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          access_count?: number
+          device_fingerprint?: string
+          email?: string
+          first_seen?: string
+          id?: string
+          ip?: string | null
+          last_seen?: string
+          location?: string | null
+          nome?: string | null
+          plano?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       client_logins: {
         Row: {
           email: string
@@ -261,6 +362,27 @@ export type Database = {
           plano?: string | null
           source?: string | null
           status?: string | null
+        }
+        Relationships: []
+      }
+      code_reveal_logs: {
+        Row: {
+          email: string
+          id: string
+          revealed_at: string
+          source: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          revealed_at?: string
+          source?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          revealed_at?: string
+          source?: string | null
         }
         Relationships: []
       }
@@ -618,10 +740,35 @@ export type Database = {
         }
         Relationships: []
       }
+      suspended_clients: {
+        Row: {
+          email: string
+          id: string
+          reason: string | null
+          suspended_at: string
+          suspended_by: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          reason?: string | null
+          suspended_at?: string
+          suspended_by?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          reason?: string | null
+          suspended_at?: string
+          suspended_by?: string | null
+        }
+        Relationships: []
+      }
       team_permissions: {
         Row: {
           acesso_clientes: boolean
           acesso_temp_30min: boolean
+          afiliado_pro: boolean
           afiliados: boolean
           analytics: boolean
           assinaturas: boolean
@@ -646,6 +793,7 @@ export type Database = {
         Insert: {
           acesso_clientes?: boolean
           acesso_temp_30min?: boolean
+          afiliado_pro?: boolean
           afiliados?: boolean
           analytics?: boolean
           assinaturas?: boolean
@@ -670,6 +818,7 @@ export type Database = {
         Update: {
           acesso_clientes?: boolean
           acesso_temp_30min?: boolean
+          afiliado_pro?: boolean
           afiliados?: boolean
           analytics?: boolean
           assinaturas?: boolean
@@ -740,12 +889,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_capcut_login: {
+        Args: { _login_id: string; _user_email: string }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_max_assinaturas: {
+        Args: { _qty: number; _user_id: string }
+        Returns: number
+      }
+      process_limite_compra: {
+        Args: { _compra_id: string }
+        Returns: {
+          novo_limite: number
+          processed_now: boolean
+        }[]
       }
     }
     Enums: {
