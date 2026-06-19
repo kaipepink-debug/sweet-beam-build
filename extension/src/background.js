@@ -10,6 +10,12 @@ const ALLOWED_ORIGINS = [
   'https://lovableproject.com',
 ];
 
+// Pra Gemini, navegamos primeiro pelo /Logout do Google — ele desloga TODAS as contas
+// da sessão e em seguida redireciona pra tela de login limpa.
+const GEMINI_LOGIN = 'https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fgemini.google.com%2Fapp';
+const GEMINI_LOGOUT_THEN_LOGIN =
+  'https://accounts.google.com/Logout?continue=' + encodeURIComponent(GEMINI_LOGIN);
+
 const TOOLS = {
   chatgpt: {
     name: 'ChatGPT',
@@ -19,7 +25,7 @@ const TOOLS = {
   },
   gemini: {
     name: 'Gemini',
-    loginUrl: 'https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fgemini.google.com%2Fapp',
+    loginUrl: GEMINI_LOGOUT_THEN_LOGIN,
     successUrl: 'https://gemini.google.com/',
     flowKey: 'gemini',
   },
@@ -67,22 +73,31 @@ async function openToolWithCredentials({ ferramenta, login, senha, totpSecret })
 
 async function clearToolCookies(ferramenta) {
   const domains = {
-    chatgpt: ['chatgpt.com', 'openai.com', '.chatgpt.com', '.openai.com'],
-    gemini: ['google.com', '.google.com', 'gemini.google.com', 'accounts.google.com'],
+    chatgpt: ['chatgpt.com', 'openai.com', 'auth.openai.com'],
+    gemini: ['google.com', 'accounts.google.com', 'gemini.google.com', 'mail.google.com', 'myaccount.google.com'],
   };
   const targets = domains[ferramenta] || [];
+  let removed = 0;
+  let failed = 0;
 
   for (const domain of targets) {
     try {
       const cookies = await chrome.cookies.getAll({ domain });
       for (const cookie of cookies) {
-        const url = `${cookie.secure ? 'https' : 'http'}://${cookie.domain.replace(/^\./, '')}${cookie.path}`;
-        await chrome.cookies.remove({ url, name: cookie.name });
+        const cleanDomain = cookie.domain.replace(/^\./, '');
+        const url = `${cookie.secure ? 'https' : 'http'}://${cleanDomain}${cookie.path}`;
+        try {
+          await chrome.cookies.remove({ url, name: cookie.name, storeId: cookie.storeId });
+          removed++;
+        } catch (e) {
+          failed++;
+        }
       }
     } catch (e) {
-      console.warn(`[RatarIA] Falha ao limpar cookies de ${domain}:`, e);
+      console.warn(`[RatarIA] Falha ao listar cookies de ${domain}:`, e);
     }
   }
+  console.log(`[RatarIA] Cookies limpos pra ${ferramenta}: ${removed} removidos, ${failed} falharam`);
 }
 
 // Mensagens vindas dos content scripts (panel-bridge ou flow-runner)
