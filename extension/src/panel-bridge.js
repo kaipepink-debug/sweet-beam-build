@@ -49,7 +49,10 @@
     }
 
     if (data.action === 'sync-credentials') {
-      const res = await send('rataria:sync-credentials', { credentials: data.credentials });
+      const res = await send('rataria:sync-credentials', {
+        credentials: data.credentials,
+        proxy: data.proxy,
+      });
       reply(requestId, 'sync-response', res);
       return;
     }

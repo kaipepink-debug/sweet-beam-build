@@ -397,37 +397,80 @@
     return `${shown}${hidden}@${domain}`;
   }
 
-  async function fillCredential(emailInput, cred) {
+  // Classifica o input clicado: password vs email vs ambíguo.
+  // Padrão de detecção de senha: type=password OU atributos contendo "senha"/"password"/"pass".
+  function classifyInput(input) {
+    if (!input) return 'unknown';
+    if (input.type === 'password') return 'password';
+    const meta = [
+      input.name, input.id, input.placeholder,
+      input.getAttribute('autocomplete'),
+      input.getAttribute('aria-label'),
+      input.getAttribute('data-testid'),
+    ].filter(Boolean).join(' ').toLowerCase();
+    if (/\b(senha|password|new-password|current-password|pass(?!port))\b|passwd/.test(meta)) {
+      return 'password';
+    }
+    if (input.type === 'email') return 'email';
+    if (/\b(email|e-?mail|username|user-?name|identifier|login)\b/.test(meta)) {
+      return 'email';
+    }
+    return 'unknown'; // assume email por padrão se for texto solto
+  }
+
+  async function fillCredential(triggerInput, cred) {
     const loginValue = cred._loginToUse || pickLogin(cred);
+    const senha = cred.senha;
+    const ctx = classifyInput(triggerInput);
+
+    console.log(LOG, `fillCredential — input classificado como "${ctx}", outerHTML:`, triggerInput?.outerHTML?.slice(0, 160));
+
+    // Se o usuário clicou no ícone de um CAMPO DE SENHA, preenche só a senha.
+    if (ctx === 'password') {
+      if (!senha) {
+        showToast('Conta sem senha cadastrada. Avise a equipe.', 'error');
+        return;
+      }
+      const ok = await fillInput(triggerInput, senha);
+      if (!ok) {
+        showToast('Falha ao preencher a senha. Tente clicar de novo.', 'error');
+        return;
+      }
+      showToast('Senha preenchida. Clique em Continuar.', 'success');
+      return;
+    }
+
+    // Caso contrário (email/unknown): preenche email no input clicado e senha no campo
+    // de senha visível na tela (se houver).
     if (!loginValue) {
       showToast('Conta sem e-mail cadastrado. Avise a equipe.', 'error');
       return;
     }
-    if (!cred.senha) {
+    if (!senha) {
       showToast('Conta sem senha cadastrada. Avise a equipe.', 'error');
       return;
     }
-    console.log(LOG, `Preenchendo credencial: ${loginValue}`);
-    const ok1 = await fillInput(emailInput, loginValue);
+
+    console.log(LOG, `Preenchendo e-mail: ${loginValue}`);
+    const ok1 = await fillInput(triggerInput, loginValue);
     if (!ok1) {
       showToast('Falha ao preencher o e-mail. Tente clicar de novo.', 'error');
       return;
     }
     await sleep(120);
 
-    // Procura senha (pode não estar na mesma tela)
+    // Procura senha visível agora
     const pwd = findPasswordInputs()[0];
     if (pwd) {
-      const ok2 = await fillInput(pwd, cred.senha);
+      const ok2 = await fillInput(pwd, senha);
       if (!ok2) {
         showToast('E-mail preenchido. Não consegui preencher a senha.', 'warning');
         return;
       }
       showToast('Conta preenchida. Clique em Continuar.', 'success');
     } else {
-      showToast('E-mail preenchido. Clique em Continuar e eu preencho a senha na próxima tela.', 'success');
-      // Armazena temporariamente pro próximo passo (quando aparecer campo de senha)
-      window.__RatarIA_pendingPwd = cred.senha;
+      showToast('E-mail preenchido. Clique em Continuar — eu preencho a senha na próxima tela.', 'success');
+      window.__RatarIA_pendingPwd = senha;
     }
   }
 

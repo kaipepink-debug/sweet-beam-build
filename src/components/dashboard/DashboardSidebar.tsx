@@ -1,4 +1,4 @@
-import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake, LogIn, GraduationCap, ShieldCheck, AlertCircle, Megaphone } from "lucide-react";
+import { Activity, CreditCard, LayoutGrid, LineChart, Mail, Settings, ShoppingBag, Sparkles, Users2, Sun, Moon, Bell, LogOut, Image, KeyRound, Crosshair, Video, Handshake, LogIn, GraduationCap, ShieldCheck, AlertCircle, Megaphone, Network } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ratariaLogo from "@/assets/rataria-icon.png";
@@ -24,6 +24,7 @@ const menuItems = [
   { title: "Gerar Avisos", url: "/dashboard/gerar-avisos", icon: Image, permKey: "gerar_avisos" },
   { title: "Acesso Clientes", url: "/dashboard/acesso-clientes", icon: KeyRound, permKey: "acesso_clientes" },
   { title: "Pixels", url: "/dashboard/pixels", icon: Crosshair, permKey: "pixels" },
+  { title: "Proxies", url: "/dashboard/proxies", icon: Network, permKey: "dashboard" },
   { title: "VTurb", url: "/dashboard/vturb", icon: Video, permKey: "dashboard" },
   { title: "Logins Painel", url: "/dashboard/logins", icon: LogIn, permKey: "dashboard" },
   { title: "Área de Membros", url: "/dashboard/area-membros", icon: GraduationCap, permKey: "dashboard" },

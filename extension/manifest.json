@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "RatarIA - Acesso Rápido",
   "short_name": "RatarIA",
-  "version": "0.4.0",
+  "version": "0.6.1",
   "description": "Acesse as ferramentas de IA da RatarIA com um clique — login automático sem copiar e colar.",
   "author": "RatarIA",
 
@@ -10,7 +10,10 @@
     "storage",
     "tabs",
     "scripting",
-    "cookies"
+    "cookies",
+    "proxy",
+    "webRequest",
+    "webRequestAuthProvider"
   ],
 
   "host_permissions": [
