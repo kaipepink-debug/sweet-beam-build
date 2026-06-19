@@ -11,151 +11,216 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 200px;
-}
+.app { display: flex; flex-direction: column; min-height: 200px; }
 
 /* ============ TOPBAR ============ */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 14px 12px;
+  padding: 12px 14px 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 8px;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 
 .brand-logo {
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border-radius: 8px;
   background: #000;
   padding: 3px;
   box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.25), 0 3px 10px -3px rgba(168, 85, 247, 0.3);
 }
 
-.brand-text {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
+.brand-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 
 .brand-kicker {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
   color: rgba(168, 85, 247, 0.9);
 }
 
 h1 {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 13.5px; font-weight: 700;
   color: rgba(255, 255, 255, 0.96);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-.topbar-action {
-  width: 30px;
-  height: 30px;
+.topbar-nav { display: flex; gap: 4px; flex-shrink: 0; }
+
+.tnav-btn {
+  width: 30px; height: 30px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 140ms, border-color 140ms, color 140ms;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 140ms;
 }
 
-.topbar-action:hover {
+.tnav-btn:hover {
   background: rgba(168, 85, 247, 0.1);
   border-color: rgba(168, 85, 247, 0.3);
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.92);
 }
 
-/* ============ SYNC PILL ============ */
-.sync-pill {
-  margin: 12px 14px 4px;
-  padding: 8px 12px;
-  border-radius: 9px;
+.tnav-btn.active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(168, 85, 247, 0.08));
+  border-color: rgba(168, 85, 247, 0.55);
+  color: #fff;
+  box-shadow: 0 0 12px -3px rgba(168, 85, 247, 0.4);
+}
+
+/* ============ STATUS ROW ============ */
+.status-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px 4px;
+}
+
+.sync-pill, .proxy-pill {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.65);
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11px; color: rgba(255, 255, 255, 0.65);
+  min-width: 0;
 }
 
-.sync-dot {
-  width: 7px;
-  height: 7px;
+.sync-pill span:last-child, .proxy-pill span:last-child {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.sync-dot, .proxy-dot {
+  width: 6.5px; height: 6.5px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   flex-shrink: 0;
 }
 
-.sync-pill.synced .sync-dot {
+.sync-pill.synced .sync-dot, .proxy-pill.on .proxy-dot {
   background: rgba(34, 197, 94, 0.95);
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
 }
-.sync-pill.synced .sync-text { color: rgba(74, 222, 128, 0.95); }
+.sync-pill.synced .sync-text, .proxy-pill.on #proxy-text {
+  color: rgba(74, 222, 128, 0.95);
+}
 
 .sync-pill.stale .sync-dot { background: rgba(239, 168, 68, 0.95); }
 .sync-pill.stale .sync-text { color: rgba(251, 191, 36, 0.95); }
 
-.sync-pill.empty .sync-dot { background: rgba(239, 68, 68, 0.95); }
-.sync-pill.empty .sync-text { color: rgba(252, 165, 165, 0.95); }
+.sync-pill.empty .sync-dot, .proxy-pill.error .proxy-dot {
+  background: rgba(239, 68, 68, 0.95);
+}
+.sync-pill.empty .sync-text, .proxy-pill.error #proxy-text {
+  color: rgba(252, 165, 165, 0.95);
+}
 
 /* ============ CONTENT ============ */
 .content {
-  padding: 10px 14px 14px;
+  padding: 8px 14px 14px;
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   gap: 10px;
 }
 
-/* ============ ESTADOS ============ */
-.state {
-  text-align: center;
-  padding: 22px 14px 18px;
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 4px 2px;
+}
+
+.view { display: flex; flex-direction: column; gap: 10px; }
+
+/* ============ TOOL CARDS (Home) ============ */
+.tool-grid {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 6px;
 }
 
+.tool-card {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 11px;
+  cursor: pointer;
+  font: inherit; color: inherit;
+  text-align: left;
+  transition: all 160ms;
+}
+
+.tool-card:hover {
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.12), rgba(168, 85, 247, 0.04));
+  border-color: rgba(168, 85, 247, 0.35);
+  transform: translateX(2px);
+}
+
+.tool-card:active { transform: translateX(0) scale(0.98); }
+
+.tool-card-logo {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  background: #fff;
+  padding: 4px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.tool-card-name {
+  flex: 1;
+  font-size: 13.5px; font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.tool-card-arrow {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 160ms, transform 160ms;
+}
+
+.tool-card:hover .tool-card-arrow {
+  color: rgba(168, 85, 247, 0.9);
+  transform: translateX(3px);
+}
+
+/* ============ STATES ============ */
+.state {
+  text-align: center;
+  padding: 22px 14px 18px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+}
+
 .state-icon {
-  width: 38px;
-  height: 38px;
+  width: 38px; height: 38px;
   border-radius: 10px;
   background: rgba(168, 85, 247, 0.08);
   border: 1px solid rgba(168, 85, 247, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   font-size: 18px;
   color: rgba(168, 85, 247, 0.75);
   margin-bottom: 4px;
 }
 
 .state-title {
-  font-size: 13.5px;
-  font-weight: 600;
+  font-size: 13.5px; font-weight: 600;
   color: rgba(255, 255, 255, 0.86);
 }
 
 .state-text {
-  font-size: 11.5px;
+  font-size: 11.5px; line-height: 1.45;
   color: rgba(255, 255, 255, 0.5);
-  line-height: 1.45;
   max-width: 260px;
 }
 
@@ -168,24 +233,11 @@ h1 {
   background: rgba(168, 85, 247, 0.13);
   border: 1px solid rgba(168, 85, 247, 0.35);
   color: rgba(255, 255, 255, 0.95);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
   text-decoration: none;
-  transition: background 140ms;
 }
 .state-cta:hover { background: rgba(168, 85, 247, 0.22); }
-
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(168, 85, 247, 0.2);
-  border-top-color: rgba(168, 85, 247, 0.9);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  margin-bottom: 6px;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ============ CREDENTIAL CARD ============ */
 .cred-card {
@@ -193,52 +245,33 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   padding: 11px 12px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: flex; flex-direction: column; gap: 10px;
   transition: border-color 160ms;
 }
 
-.cred-card:hover {
-  border-color: rgba(168, 85, 247, 0.18);
-}
+.cred-card:hover { border-color: rgba(168, 85, 247, 0.18); }
 
-.cred-card-head {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
+.cred-card-head { display: flex; align-items: center; gap: 9px; }
 
 .cred-tool-logo {
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border-radius: 8px;
-  background: #fff;
-  padding: 3px;
-  object-fit: contain;
-  flex-shrink: 0;
+  background: #fff; padding: 3px;
+  object-fit: contain; flex-shrink: 0;
 }
 
 .cred-head-text {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
+  flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0;
 }
 
 .cred-tool-name {
-  font-size: 13.5px;
-  font-weight: 700;
+  font-size: 13.5px; font-weight: 700;
   color: rgba(255, 255, 255, 0.95);
-  letter-spacing: -0.01em;
 }
 
 .cred-badge {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
   background: rgba(34, 197, 94, 0.13);
   color: rgba(74, 222, 128, 0.95);
   border: 1px solid rgba(34, 197, 94, 0.3);
@@ -253,34 +286,24 @@ h1 {
   background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(139, 92, 246, 0.08));
   border: 1px solid rgba(168, 85, 247, 0.4);
   color: rgba(255, 255, 255, 0.96);
-  font-size: 11px;
-  font-weight: 600;
+  font: inherit; font-size: 11px; font-weight: 600;
   cursor: pointer;
-  transition: background 140ms, transform 80ms;
+  transition: all 140ms;
 }
 .cred-fill-btn:hover { background: rgba(168, 85, 247, 0.28); }
 .cred-fill-btn:active { transform: scale(0.96); }
 .cred-fill-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Field rows */
-.cred-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+.cred-field { display: flex; flex-direction: column; gap: 4px; }
 
 .cred-field label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
   color: rgba(255, 255, 255, 0.42);
 }
 
 .cred-field-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  display: flex; align-items: center; gap: 6px;
   padding: 7px 9px;
   background: rgba(0, 0, 0, 0.22);
   border: 1px solid rgba(255, 255, 255, 0.04);
@@ -292,30 +315,22 @@ h1 {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.93);
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   user-select: text;
 }
 
-.cred-value.cred-masked {
-  letter-spacing: 0.18em;
-}
+.cred-value.cred-masked { letter-spacing: 0.18em; }
 
 .cred-icon-btn {
   flex-shrink: 0;
-  width: 26px;
-  height: 26px;
+  width: 26px; height: 26px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.55);
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 140ms, color 140ms, border-color 140ms;
+  font-size: 13px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 140ms;
 }
 
 .cred-icon-btn:hover {
@@ -332,46 +347,266 @@ h1 {
 
 /* TOTP */
 .cred-totp-row .cred-value-totp {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 17px; font-weight: 700;
   letter-spacing: 0.16em;
   color: rgba(168, 85, 247, 0.95);
 }
 
 .cred-totp-progress {
   flex-shrink: 0;
-  width: 26px;
-  height: 26px;
+  width: 26px; height: 26px;
   border-radius: 50%;
   background: conic-gradient(rgba(168, 85, 247, 0.9) var(--pct, 0%), rgba(255, 255, 255, 0.07) 0);
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .cred-totp-progress::after {
   content: '';
-  position: absolute;
-  inset: 3px;
-  border-radius: 50%;
-  background: #14101e;
+  position: absolute; inset: 3px;
+  border-radius: 50%; background: #14101e;
 }
 
-/* Footer */
 .cred-card-foot {
-  display: flex;
-  justify-content: flex-end;
+  display: flex; justify-content: flex-end;
   font-size: 10px;
   color: rgba(255, 255, 255, 0.35);
   font-weight: 500;
   margin-top: 2px;
 }
 
-/* ============ FOOTER GERAL ============ */
+/* ============ PROXY VIEW ============ */
+.proxy-toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 13px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.06), rgba(168, 85, 247, 0.02));
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.proxy-toggle-text {
+  display: flex; flex-direction: column; gap: 2px;
+}
+
+.proxy-toggle-text strong {
+  font-size: 12.5px; font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.proxy-toggle-text span {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 38px; height: 22px;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  opacity: 0; width: 0; height: 0;
+}
+
+.slider {
+  position: absolute; cursor: pointer;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: 200ms;
+  border-radius: 22px;
+}
+
+.slider::before {
+  position: absolute; content: '';
+  height: 14px; width: 14px;
+  left: 3px; top: 3px;
+  background-color: #fff;
+  transition: 200ms;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.toggle input:checked + .slider {
+  background-color: rgba(168, 85, 247, 0.85);
+  border-color: rgba(168, 85, 247, 0.95);
+  box-shadow: inset 0 0 12px rgba(168, 85, 247, 0.4);
+}
+
+.toggle input:checked + .slider::before {
+  transform: translateX(16px);
+}
+
+.proxy-form {
+  display: flex; flex-direction: column;
+  gap: 9px;
+}
+
+.proxy-field {
+  display: flex; flex-direction: column;
+  gap: 4px;
+}
+
+.proxy-field label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.proxy-field label .muted {
+  font-size: 9px; color: rgba(255, 255, 255, 0.3);
+  text-transform: none; letter-spacing: 0;
+}
+
+.proxy-field input[type="text"],
+.proxy-field input[type="number"],
+.proxy-field input[type="password"] {
+  width: 100%;
+  padding: 9px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 12px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  outline: none;
+  transition: border-color 140ms;
+}
+
+.proxy-field input:focus {
+  border-color: rgba(168, 85, 247, 0.55);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
+}
+
+.proxy-type-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+}
+
+.proxy-type-tabs label {
+  position: relative;
+  cursor: pointer;
+}
+
+.proxy-type-tabs input {
+  position: absolute; opacity: 0; pointer-events: none;
+}
+
+.proxy-type-tabs span {
+  display: block;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+  border-radius: 6px;
+  transition: all 140ms;
+}
+
+.proxy-type-tabs label:hover span { color: rgba(255, 255, 255, 0.85); }
+
+.proxy-type-tabs input:checked + span {
+  background: rgba(168, 85, 247, 0.22);
+  color: rgba(255, 255, 255, 0.97);
+  box-shadow: inset 0 0 0 1px rgba(168, 85, 247, 0.4);
+}
+
+.proxy-save-btn {
+  margin-top: 4px;
+  padding: 10px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.95), rgba(139, 92, 246, 0.8));
+  border: 1px solid rgba(168, 85, 247, 0.6);
+  color: #fff;
+  font-size: 12.5px; font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 140ms;
+  font: inherit;
+}
+
+.proxy-save-btn:hover {
+  background: linear-gradient(135deg, rgba(178, 100, 255, 0.95), rgba(149, 102, 255, 0.85));
+}
+
+.proxy-save-btn:active { transform: scale(0.985); }
+
+.proxy-helper {
+  padding: 8px 11px;
+  border-radius: 8px;
+  font-size: 11px;
+  display: none;
+}
+
+.proxy-helper.show { display: block; }
+
+.proxy-helper.success {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: rgba(134, 239, 172, 0.95);
+}
+
+.proxy-helper.error {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: rgba(252, 165, 165, 0.95);
+}
+
+.proxy-test {
+  margin-top: 4px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 11.5px;
+}
+
+.proxy-test summary {
+  padding: 8px 11px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  user-select: none;
+}
+
+.proxy-test summary:hover { color: rgba(168, 85, 247, 0.9); }
+
+.proxy-test-body {
+  padding: 0 11px 10px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.proxy-test-btn {
+  padding: 6px 12px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
+  font: inherit; font-size: 11px; font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.proxy-test-btn:hover {
+  background: rgba(168, 85, 247, 0.12);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+#proxy-test-result {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============ FOOTER ============ */
 .footer {
-  display: flex;
-  justify-content: space-between;
+  display: flex; justify-content: space-between;
   padding: 10px 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 10px;
@@ -380,8 +615,7 @@ h1 {
 }
 
 .footer-link {
-  color: inherit;
-  text-decoration: none;
+  color: inherit; text-decoration: none;
   transition: color 140ms;
 }
 .footer-link:hover { color: rgba(168, 85, 247, 0.85); }
