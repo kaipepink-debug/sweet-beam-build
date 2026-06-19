@@ -121,7 +121,7 @@ export default function AcessarFerramentas() {
     (async () => {
       const { data, error } = await supabase
         .from("acessos")
-        .select("id, ferramenta, login, senha, email_cliente, data_expiracao")
+        .select("id, ferramenta, login, senha, email_cliente, data_expiracao, totp_secret")
         .in("ferramenta", MVP_TOOLS.map((t) => t.key))
         .gt("data_expiracao", new Date().toISOString())
         .order("data_expiracao", { ascending: false });
