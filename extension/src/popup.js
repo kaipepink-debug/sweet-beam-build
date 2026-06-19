@@ -18,8 +18,19 @@
   };
 
   const TOOL_META = {
-    chatgpt: { name: 'ChatGPT', logo: '../icons/tools/chatgpt.png' },
-    gemini: { name: 'Gemini', logo: '../icons/tools/gemini.png' },
+    chatgpt: {
+      name: 'ChatGPT',
+      logo: '../icons/tools/chatgpt.png',
+      openUrl: 'https://chatgpt.com/auth/login',
+    },
+    gemini: {
+      name: 'Gemini',
+      logo: '../icons/tools/gemini.png',
+      // Gemini abre via Logout pra forçar tela limpa
+      openUrl:
+        'https://accounts.google.com/Logout?continue=' +
+        encodeURIComponent('https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fgemini.google.com%2Fapp'),
+    },
   };
 
   function detectToolFromHost(host) {
@@ -289,6 +300,32 @@
     });
   }
 
+  // ===== Tool launcher =====
+  function renderToolLauncher(activeFerramenta) {
+    const nav = document.getElementById('tool-launcher');
+    nav.innerHTML = '';
+    for (const [key, meta] of Object.entries(TOOL_META)) {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'tool-chip' + (key === activeFerramenta ? ' active' : '');
+      chip.innerHTML = `
+        <img class="tool-chip-logo" src="${meta.logo}" alt="${meta.name}" />
+        <span class="tool-chip-name">${meta.name}</span>
+        ${key === activeFerramenta ? '<span class="tool-chip-active-dot" title="aba atual"></span>' : ''}
+      `;
+      chip.addEventListener('click', async () => {
+        // Se já tá na ferramenta, foca a aba ativa em vez de abrir nova
+        if (key === activeFerramenta) {
+          window.close();
+          return;
+        }
+        await chrome.tabs.create({ url: meta.openUrl });
+        window.close();
+      });
+      nav.appendChild(chip);
+    }
+  }
+
   // ===== Boot =====
   (async () => {
     const status = await loadStatus();
@@ -297,6 +334,8 @@
     const tab = await getActiveTab();
     const host = tab?.url ? new URL(tab.url).hostname : null;
     const ferramenta = detectToolFromHost(host);
+
+    renderToolLauncher(ferramenta);
 
     if (!ferramenta) {
       showNoTool();
