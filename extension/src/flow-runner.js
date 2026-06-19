@@ -124,41 +124,132 @@ window.__RatarIA.runner = (function () {
     }
   }
 
-  // Simula uma digitação real: foca, limpa, digita caractere por caractere
-  // disparando keydown/keypress/input/keyup. Funciona melhor em frameworks SPA.
-  async function typeHumanLike(input, value, { delayMs = 12, clearFirst = true } = {}) {
-    input.focus();
-    input.click();
-    await sleep(60);
-
-    if (clearFirst && input.value) {
-      // Seleciona tudo + delete
-      input.select?.();
-      setNativeValue(input, '');
-      input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'deleteContentBackward' }));
-    }
-
-    // Estratégia 1: setar via descriptor + disparar eventos sintéticos
+  // Estratégia A: nativa via descriptor + InputEvent.
+  // Funciona na maioria dos formulários React/Vue padrão.
+  function fillStrategyNative(input, value) {
     setNativeValue(input, value);
     input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: value }));
     input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
 
-    // Estratégia 2: também simula key events pra cada char (alguns sites detectam só assim)
+  // Estratégia B: execCommand insertText — simula digitação real do navegador.
+  // Funciona em forms que ignoram set programático (como o novo chatgpt.com/login).
+  function fillStrategyExecCommand(input, value) {
+    input.focus();
+    input.click();
+    // Seleciona o que tiver e substitui
+    if (input.setSelectionRange) {
+      try { input.setSelectionRange(0, input.value?.length || 0); } catch {}
+    }
+    document.execCommand('selectAll', false, null);
+    document.execCommand('insertText', false, value);
+  }
+
+  // Estratégia C: char-por-char com KeyboardEvent + InputEvent.
+  // Último recurso pra forms que escutam só keypress/keydown.
+  async function fillStrategyKeyboard(input, value, delayMs = 18) {
+    input.focus();
+    input.click();
     for (const ch of value) {
-      input.dispatchEvent(new KeyboardEvent('keydown', { key: ch, bubbles: true }));
-      input.dispatchEvent(new KeyboardEvent('keypress', { key: ch, bubbles: true }));
-      input.dispatchEvent(new KeyboardEvent('keyup', { key: ch, bubbles: true }));
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: ch, bubbles: true, cancelable: true }));
+      input.dispatchEvent(new KeyboardEvent('keypress', { key: ch, bubbles: true, cancelable: true }));
+      // Anexa o caractere no value via descriptor (cada char individual)
+      setNativeValue(input, (input.value || '') + ch);
+      input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: ch }));
+      input.dispatchEvent(new KeyboardEvent('keyup', { key: ch, bubbles: true, cancelable: true }));
       if (delayMs) await sleep(delayMs);
     }
+  }
 
-    // Garante que o blur dispare (alguns forms validam só no blur)
-    input.dispatchEvent(new Event('blur', { bubbles: true }));
-    input.focus(); // restaura foco
+  // Limpa o input antes de preencher
+  function clearInput(input) {
+    input.focus();
+    if (input.setSelectionRange) {
+      try { input.setSelectionRange(0, input.value?.length || 0); } catch {}
+    }
+    document.execCommand('selectAll', false, null);
+    document.execCommand('delete', false, null);
+    // Fallback: zera via descriptor
+    if (input.value) {
+      setNativeValue(input, '');
+      input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'deleteContentBackward' }));
+    }
+  }
+
+  // Digita com 3 estratégias em cascata + verificação que o valor REALMENTE
+  // ficou no input depois da operação.
+  async function typeHumanLike(input, value, { delayMs = 14, clearFirst = true } = {}) {
+    if (!input || !(input instanceof Element)) {
+      throw new Error('typeHumanLike: input inválido');
+    }
+
+    input.scrollIntoView({ block: 'center' });
+    input.focus();
+    input.click();
+    await sleep(80);
+
+    if (clearFirst) clearInput(input);
+
+    const verifyFilled = () => {
+      const got = (input.value || '').trim();
+      return got === value.trim();
+    };
+
+    // A — Native setter (mais rápido, funciona pra maioria)
+    try {
+      fillStrategyNative(input, value);
+      await sleep(100);
+      if (verifyFilled()) {
+        log(`Preenchimento OK via Strategy A (native setter). Valor: "${input.value}"`);
+        input.dispatchEvent(new Event('blur', { bubbles: true }));
+        input.focus();
+        return;
+      }
+      warn(`Strategy A não pegou. Valor atual: "${input.value}". Tentando B...`);
+    } catch (e) {
+      warn('Strategy A falhou:', e.message);
+    }
+
+    // B — execCommand insertText (resolve React modernos)
+    try {
+      clearInput(input);
+      await sleep(50);
+      fillStrategyExecCommand(input, value);
+      await sleep(150);
+      if (verifyFilled()) {
+        log(`Preenchimento OK via Strategy B (execCommand). Valor: "${input.value}"`);
+        input.dispatchEvent(new Event('blur', { bubbles: true }));
+        input.focus();
+        return;
+      }
+      warn(`Strategy B não pegou. Valor atual: "${input.value}". Tentando C...`);
+    } catch (e) {
+      warn('Strategy B falhou:', e.message);
+    }
+
+    // C — Char-por-char com KeyboardEvent
+    try {
+      clearInput(input);
+      await sleep(50);
+      await fillStrategyKeyboard(input, value, delayMs);
+      await sleep(100);
+      if (verifyFilled()) {
+        log(`Preenchimento OK via Strategy C (keyboard). Valor: "${input.value}"`);
+        input.dispatchEvent(new Event('blur', { bubbles: true }));
+        input.focus();
+        return;
+      }
+      err(`Strategy C também não pegou. Valor final: "${input.value}", esperado: "${value}"`);
+    } catch (e) {
+      err('Strategy C falhou:', e.message);
+    }
+
+    throw new Error(`Não consegui preencher o input. Valor atual: "${input.value}", esperado: "${value}". HTML do input: ${input.outerHTML.slice(0, 200)}`);
   }
 
   async function typeInto(selector, value, opts = {}) {
     const input = typeof selector === 'string' ? await waitFor(selector, opts) : selector;
-    log(`Preenchendo "${selector}" com valor de ${value.length} chars`);
+    log(`Preenchendo input (selector original: "${selector}", outerHTML: ${input.outerHTML.slice(0, 160)})`);
     await typeHumanLike(input, value, opts);
     return input;
   }

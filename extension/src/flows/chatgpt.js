@@ -43,24 +43,30 @@
       }
       steps.set('inicio', 'done');
 
-      // ETAPA 1 — E-mail (auth.openai.com / Auth0)
+      // ETAPA 1 — E-mail (auth.openai.com / Auth0 OU chatgpt.com/login nova)
       steps.set('email', 'active');
       const emailField = await waitForAny(
         [
-          'input[name="username"]',
           'input[type="email"]',
+          'input[name="username"]',
+          'input[name="email"]',
           'input#email-input',
           'input[autocomplete="email"]',
           'input[autocomplete="username"]',
-          'input[name="email"]',
+          'input[placeholder*="mail" i]',
         ],
         { timeout: 20000 }
       );
       log(`Campo e-mail encontrado via seletor: ${emailField.selector}`);
       await typeInto(emailField.el, creds.login, { delayMs: 18 });
-      await sleep(300);
+      await sleep(400);
 
-      // Botão "Continue" — várias variações
+      // Verifica visualmente que o valor ficou no input
+      if (!(emailField.el.value || '').includes(creds.login.split('@')[0])) {
+        throw new Error(`E-mail não foi preenchido. Valor no input: "${emailField.el.value}"`);
+      }
+
+      // Botão "Continue" — busca por texto também (nova UI usa "Continuar")
       let continueBtn = null;
       try {
         const found = await waitForAny(
@@ -71,16 +77,53 @@
             'button.continue-btn',
             'button[name="action"][value="default"]',
           ],
-          { timeout: 4000 }
+          { timeout: 3000 }
         );
         continueBtn = found.el;
         log(`Botão continuar encontrado via: ${found.selector}`);
-      } catch (e) {
-        warn('Botão continuar não localizado — vou tentar Enter');
+      } catch {
+        // Fallback: procura por texto "Continuar" / "Continue" / "Next"
+        const allButtons = Array.from(document.querySelectorAll('button, [role="button"]'));
+        continueBtn = allButtons.find((b) => {
+          const t = (b.textContent || '').trim().toLowerCase();
+          return ['continuar', 'continue', 'next', 'seguinte', 'avançar'].some((kw) => t === kw || t.includes(kw));
+        });
+        if (continueBtn) {
+          log(`Botão continuar encontrado por texto: "${continueBtn.textContent.trim()}"`);
+        } else {
+          warn('Botão continuar não localizado — vou tentar Enter');
+        }
       }
 
+      const urlBeforeSubmit = location.href;
       await submitForm(emailField.el, { button: continueBtn, name: 'email' });
       steps.set('email', 'done');
+
+      // Espera até 5s pra a página mudar OU pro campo de senha aparecer.
+      // Se nada mudar, é sinal que o submit do e-mail não foi aceito.
+      const submitStart = Date.now();
+      let advanced = false;
+      while (Date.now() - submitStart < 8000) {
+        if (location.href !== urlBeforeSubmit) {
+          advanced = true;
+          log('URL mudou após submit do e-mail:', location.href);
+          break;
+        }
+        if (document.querySelector('input[type="password"]')) {
+          advanced = true;
+          log('Campo de senha apareceu na mesma URL — avançou');
+          break;
+        }
+        // Detecta erro de validação visível
+        const validationErr = document.querySelector('[role="alert"], .error, [class*="error" i]');
+        if (validationErr && /e-?mail|required|obrigat/i.test(validationErr.textContent || '')) {
+          throw new Error(`Validação rejeitou o e-mail: "${validationErr.textContent.trim().slice(0, 80)}"`);
+        }
+        await sleep(200);
+      }
+      if (!advanced) {
+        warn('Página parece não ter avançado. Pode ser CAPTCHA invisível ou tela passwordless.');
+      }
 
       // ETAPA 2 — Senha
       steps.set('senha', 'active');
