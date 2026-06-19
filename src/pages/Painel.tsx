@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock, AlertTriangle, Bell, TrendingUp, ArrowUpCircle } from "lucide-react";
+import { Wrench, User, Power, MessageCircle, GraduationCap, Clock, Shield, ChevronRight, Sparkles, Lock, AlertTriangle, Bell, TrendingUp, ArrowUpCircle, Zap } from "lucide-react";
 import ratariaIcon from "@/assets/rataria-icon.png";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 import ratariaLogo from "@/assets/rataria-logo-full.png";
@@ -124,8 +124,9 @@ export default function Painel() {
   const showRenewalAlert = daysNum > 0 && daysNum <= 5;
 
   const menuItems = [
+    { icon: Zap, label: "Acesso Rápido (Beta)", desc: "Abrir ferramentas com 1 clique via extensão", id: "acesso-rapido", color: "168, 85, 247", locked: false },
     { icon: Wrench, label: "Acessar ferramentas de IA", desc: "Acesse todas as ferramentas", id: "ferramentas", color: "139, 92, 246", locked: false },
-    
+
     { icon: GraduationCap, label: "Faça R$2.500 há R$3000 por mês", desc: "Assistir método", id: "cursos", color: "16, 185, 129", locked: false },
     { icon: MessageCircle, label: "Fale conosco", desc: "Abrir WhatsApp", id: "suporte", color: "34, 197, 94", locked: false },
   ];
@@ -304,6 +305,7 @@ export default function Painel() {
                       boxShadow: isFerramentas ? "0 0 20px rgba(139, 92, 246, 0.25), 0 0 40px rgba(139, 92, 246, 0.1)" : "none",
                     }}
                     onClick={() => {
+                      if (!item.locked && item.id === "acesso-rapido") navigate("/acessar-ferramentas");
                       if (!item.locked && item.id === "ferramentas") navigate("/ferramentas");
                       if (!item.locked && item.id === "cursos") navigate("/cursos");
                       if (!item.locked && item.id === "suporte") window.open("https://wa.me/5511922926559?text=Ol%C3%A1%2C%20preciso%20de%20ajuda!", "_blank");

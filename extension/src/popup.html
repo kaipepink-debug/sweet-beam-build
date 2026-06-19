@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>RatarIA</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #14121f, #1c1830);
+      color: rgba(255, 255, 255, 0.92);
+    }
+    .container {
+      padding: 18px 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(139, 92, 246, 0.95);
+      margin-bottom: 10px;
+    }
+    .brand .dot {
+      width: 8px; height: 8px;
+      background: rgba(34, 197, 94, 0.95);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+    }
+    h1 {
+      font-size: 15px;
+      margin: 0 0 4px;
+    }
+    p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.45;
+      margin: 0 0 14px;
+    }
+    .cta {
+      display: block;
+      text-align: center;
+      padding: 9px 12px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 150ms;
+    }
+    .cta:hover { background: rgba(139, 92, 246, 0.25); }
+    .meta {
+      margin-top: 12px;
+      font-size: 10.5px;
+      color: rgba(255, 255, 255, 0.35);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>RatarIA</span>
+    </div>
+    <h1>Acesso Rápido ativo</h1>
+    <p>
+      Abra o painel da RatarIA e clique na ferramenta que quer usar.
+      A extensão faz o login automaticamente.
+    </p>
+    <a class="cta" href="https://rataria.io/painel" target="_blank">Abrir painel</a>
+    <div class="meta">
+      <span>v<span id="version">0.0.0</span></span>
+      <span>rataria.io</span>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+{
+  "manifest_version": 3,
+  "name": "RatarIA - Acesso Rápido",
+  "short_name": "RatarIA",
+  "version": "0.1.0",
+  "description": "Acesse as ferramentas de IA da RatarIA com um clique — login automático sem copiar e colar.",
+  "author": "RatarIA",
+
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "cookies"
+  ],
+
+  "host_permissions": [
+    "https://*.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://*.google.com/*",
+    "https://gemini.google.com/*",
+    "https://accounts.google.com/*"
+  ],
+
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "RatarIA - Acesso Rápido",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://rataria.io/*",
+        "https://*.rataria.io/*",
+        "http://localhost/*",
+        "https://*.lovable.app/*",
+        "https://*.lovableproject.com/*"
+      ],
+      "js": ["src/panel-bridge.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://auth.openai.com/*",
+        "https://chatgpt.com/auth/*",
+        "https://chatgpt.com/login*",
+        "https://chat.openai.com/auth/*"
+      ],
+      "js": ["src/flow-runner.js", "src/flows/chatgpt.js"],
+      "css": ["src/overlay.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://accounts.google.com/*"
+      ],
+      "js": ["src/flow-runner.js", "src/flows/gemini.js"],
+      "css": ["src/overlay.css"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*.png", "src/overlay.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
