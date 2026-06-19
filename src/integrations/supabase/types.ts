@@ -644,48 +644,6 @@ export type Database = {
         }
         Relationships: []
       }
-      proxies: {
-        Row: {
-          ativo: boolean
-          created_at: string
-          created_by: string
-          host: string
-          id: string
-          label: string | null
-          password: string | null
-          port: number
-          protocol: string
-          updated_at: string
-          username: string | null
-        }
-        Insert: {
-          ativo?: boolean
-          created_at?: string
-          created_by: string
-          host: string
-          id?: string
-          label?: string | null
-          password?: string | null
-          port: number
-          protocol?: string
-          updated_at?: string
-          username?: string | null
-        }
-        Update: {
-          ativo?: boolean
-          created_at?: string
-          created_by?: string
-          host?: string
-          id?: string
-          label?: string | null
-          password?: string | null
-          port?: number
-          protocol?: string
-          updated_at?: string
-          username?: string | null
-        }
-        Relationships: []
-      }
       pixels: {
         Row: {
           api_token: string
