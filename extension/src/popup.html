@@ -7,138 +7,69 @@
 </head>
 <body>
   <div class="app">
-    <!-- Topbar -->
-    <header class="topbar">
-      <div class="brand">
+    <!-- ============ SIDEBAR ESQUERDA ============ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
         <img src="../icons/icon-48.png" alt="RatarIA" class="brand-logo" />
         <div class="brand-text">
           <span class="brand-kicker">RatarIA</span>
-          <h1 id="title">Acesso Rápido</h1>
+          <strong>Acesso Rápido</strong>
         </div>
       </div>
-      <div class="topbar-nav">
-        <button class="tnav-btn" id="nav-home" data-view="home" title="Ferramentas">⌂</button>
-        <button class="tnav-btn" id="nav-creds" data-view="creds" title="Conta atual">⚷</button>
-        <button class="tnav-btn" id="nav-proxy" data-view="proxy" title="Proxy">⛬</button>
-      </div>
-    </header>
 
-    <!-- Status row: sync + proxy -->
-    <div class="status-row">
-      <div class="sync-pill" id="sync-pill">
+      <div class="sync-mini" id="sync-mini">
         <span class="sync-dot" id="sync-dot"></span>
-        <span class="sync-text" id="sync-text">Verificando...</span>
+        <span id="sync-text">verificando...</span>
       </div>
-      <div class="proxy-pill" id="proxy-pill" title="Status do proxy">
-        <span class="proxy-dot" id="proxy-dot"></span>
-        <span id="proxy-text">Proxy off</span>
-      </div>
-    </div>
 
-    <!-- Conteúdo principal (3 views) -->
-    <main class="content" id="content">
-      <!-- ============ VIEW: HOME (seleção de IAs) ============ -->
-      <section class="view" id="view-home" hidden>
-        <div class="section-label">Escolha uma IA</div>
-        <div class="tool-grid" id="tool-grid"></div>
-      </section>
+      <div class="sidebar-label">Ferramentas</div>
+      <nav class="tool-list" id="tool-list"></nav>
 
-      <!-- ============ VIEW: CREDENCIAIS ============ -->
-      <section class="view" id="view-creds" hidden>
-        <div id="creds-body"></div>
-      </section>
-
-      <!-- ============ VIEW: PROXY ============ -->
-      <section class="view" id="view-proxy" hidden>
-        <div class="section-label">Configurar proxy</div>
-
-        <div class="proxy-toggle-row">
-          <div class="proxy-toggle-text">
-            <strong>Roteamento por proxy</strong>
-            <span>Quando ativo, ChatGPT e Gemini passam pelo proxy</span>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" id="proxy-enabled" />
-            <span class="slider"></span>
-          </label>
+      <div class="proxy-banner" id="proxy-banner" hidden>
+        <div class="proxy-banner-icon">⛬</div>
+        <div class="proxy-banner-text">
+          <strong>Proxy ativo</strong>
+          <span id="proxy-banner-info">conectado</span>
         </div>
+      </div>
 
-        <form class="proxy-form" id="proxy-form">
-          <div class="proxy-field">
-            <label>Tipo</label>
-            <div class="proxy-type-tabs">
-              <label><input type="radio" name="protocol" value="http" checked /><span>HTTP</span></label>
-              <label><input type="radio" name="protocol" value="https" /><span>HTTPS</span></label>
-              <label><input type="radio" name="protocol" value="socks5" /><span>SOCKS5</span></label>
-            </div>
-          </div>
+      <div class="sidebar-foot">
+        <span>v<span id="version">0.0.0</span></span>
+      </div>
+    </aside>
 
-          <div class="proxy-field">
-            <label>Host</label>
-            <input type="text" name="host" placeholder="proxy.exemplo.com" autocomplete="off" />
-          </div>
+    <!-- ============ CONTENT DIREITA ============ -->
+    <main class="content" id="content">
+      <header class="content-head">
+        <div>
+          <h1 id="content-title">Seus logins</h1>
+          <p id="content-sub">Gerencie seus acessos da IA com segurança</p>
+        </div>
+        <a class="content-action" id="open-panel-btn" title="Abrir painel completo">↗</a>
+      </header>
 
-          <div class="proxy-field">
-            <label>Porta</label>
-            <input type="number" name="port" placeholder="8080" min="1" max="65535" autocomplete="off" />
-          </div>
-
-          <div class="proxy-field">
-            <label>Usuário <span class="muted">(opcional)</span></label>
-            <input type="text" name="username" placeholder="user" autocomplete="off" />
-          </div>
-
-          <div class="proxy-field">
-            <label>Senha <span class="muted">(opcional)</span></label>
-            <input type="password" name="password" placeholder="••••••••" autocomplete="off" />
-          </div>
-
-          <button type="submit" class="proxy-save-btn">Salvar e ativar</button>
-        </form>
-
-        <div class="proxy-helper" id="proxy-helper"></div>
-
-        <details class="proxy-test">
-          <summary>Testar IP atual</summary>
-          <div class="proxy-test-body">
-            <button type="button" class="proxy-test-btn" id="proxy-test-btn">Verificar IP</button>
-            <div id="proxy-test-result"></div>
-          </div>
-        </details>
-      </section>
+      <div class="content-body" id="content-body">
+        <div class="state state-loading">
+          <div class="spinner"></div>
+          <div class="state-text">Carregando...</div>
+        </div>
+      </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <span>v<span id="version">0.0.0</span></span>
-      <a href="https://rataria.io/acessar-ferramentas" target="_blank" class="footer-link">rataria.io</a>
-    </footer>
   </div>
 
-  <!-- Templates -->
-  <template id="tpl-tool-card">
-    <button type="button" class="tool-card">
-      <img class="tool-card-logo" />
-      <span class="tool-card-name"></span>
-      <span class="tool-card-arrow">›</span>
+  <!-- ============ TEMPLATES ============ -->
+  <template id="tpl-tool-item">
+    <button type="button" class="tool-item">
+      <img class="tool-item-logo" />
+      <span class="tool-item-name"></span>
     </button>
   </template>
 
-  <template id="tpl-no-tool">
+  <template id="tpl-empty">
     <div class="state state-empty">
       <div class="state-icon">⌕</div>
-      <div class="state-title">Você não está numa ferramenta</div>
-      <div class="state-text">Escolha uma na aba <strong>Ferramentas</strong> pra começar.</div>
-      <button type="button" class="state-cta" id="go-home-btn">Ver ferramentas</button>
-    </div>
-  </template>
-
-  <template id="tpl-no-creds">
-    <div class="state state-empty">
-      <div class="state-icon">!</div>
-      <div class="state-title">Sem contas pra <span id="no-creds-tool"></span></div>
-      <div class="state-text" id="no-creds-msg">Abra o painel da RatarIA pra sincronizar suas contas.</div>
-      <a class="state-cta" href="https://rataria.io/acessar-ferramentas" target="_blank">Abrir painel</a>
+      <div class="state-title" id="empty-title">Nenhuma conta</div>
+      <div class="state-text" id="empty-msg">Selecione uma ferramenta à esquerda.</div>
     </div>
   </template>
 
@@ -165,7 +96,7 @@
         <label>Senha</label>
         <div class="cred-field-row">
           <span class="cred-value cred-value-senha cred-masked"></span>
-          <button class="cred-icon-btn cred-reveal" title="Mostrar senha">○</button>
+          <button class="cred-icon-btn cred-reveal" title="Mostrar">○</button>
           <button class="cred-icon-btn cred-copy" title="Copiar">⎘</button>
         </div>
       </div>

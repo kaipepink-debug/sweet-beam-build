@@ -1,9 +1,15 @@
-// RatarIA Extension — Popup com 3 views: Home (ferramentas), Credenciais, Proxy.
+// RatarIA Extension — Popup com layout 2-colunas (sidebar + content).
+// Sidebar: lista de ferramentas + status de sync + banner do proxy.
+// Content: credenciais da ferramenta selecionada.
+// Proxy é controlado SÓ pelo painel admin (extensão recebe via sync).
 
 (function () {
   document.getElementById('version').textContent = chrome.runtime.getManifest().version;
+  document.getElementById('open-panel-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: 'https://rataria.io/acessar-ferramentas' });
+  });
 
-  // ===== Constantes =====
   const TOOL_BY_HOST = {
     'chatgpt.com': 'chatgpt',
     'auth.openai.com': 'chatgpt',
@@ -47,8 +53,7 @@
 
   function fmtTimeAgo(ts) {
     if (!ts) return 'nunca';
-    const diff = Date.now() - ts;
-    const m = Math.floor(diff / 60000);
+    const m = Math.floor((Date.now() - ts) / 60000);
     if (m < 1) return 'agora';
     if (m < 60) return `há ${m} min`;
     const h = Math.floor(m / 60);
@@ -118,84 +123,69 @@
       const offset = sig[sig.length - 1] & 0x0f;
       const code = ((sig[offset] & 0x7f) << 24) | ((sig[offset + 1] & 0xff) << 16) | ((sig[offset + 2] & 0xff) << 8) | (sig[offset + 3] & 0xff);
       return String(code % Math.pow(10, digits)).padStart(digits, '0');
-    } catch {
-      return null;
-    }
+    } catch { return null; }
   }
   function totpRemaining(period = 30) { return period - (Math.floor(Date.now() / 1000) % period); }
 
-  // ===== Navegação entre views =====
-  const VIEWS = ['home', 'creds', 'proxy'];
-
-  function setView(view) {
-    for (const v of VIEWS) {
-      document.getElementById(`view-${v}`).hidden = v !== view;
-      document.getElementById(`nav-${v}`).classList.toggle('active', v === view);
-    }
-    document.getElementById('title').textContent = {
-      home: 'Acesso Rápido',
-      creds: 'Conta atual',
-      proxy: 'Configuração de proxy',
-    }[view] || 'Acesso Rápido';
-  }
-
-  for (const v of VIEWS) {
-    document.getElementById(`nav-${v}`).addEventListener('click', () => setView(v));
-  }
-
-  // ===== Status pills =====
-  async function renderSyncPill() {
+  // ===== Render: sync mini-pill =====
+  async function renderSync() {
     const status = await send('rataria:status');
-    const pill = document.getElementById('sync-pill');
-    const text = document.getElementById('sync-text');
-    pill.classList.remove('synced', 'stale', 'empty');
+    const root = document.getElementById('sync-mini');
+    const txt = document.getElementById('sync-text');
+    root.classList.remove('synced', 'empty');
     if (!status?.ok || !status.syncedAt) {
-      pill.classList.add('empty');
-      text.textContent = 'Sem sincronização';
+      root.classList.add('empty');
+      txt.textContent = 'sem sync';
       return;
     }
-    const ageMs = Date.now() - status.syncedAt;
-    if (ageMs > 23 * 3600 * 1000) {
-      pill.classList.add('stale');
-      text.textContent = `Sync antigo (${fmtTimeAgo(status.syncedAt)})`;
-    } else {
-      pill.classList.add('synced');
-      text.textContent = `Sync ${fmtTimeAgo(status.syncedAt)}`;
-    }
+    root.classList.add('synced');
+    txt.textContent = `sincronizado ${fmtTimeAgo(status.syncedAt)}`;
   }
 
-  async function renderProxyPill() {
-    const pill = document.getElementById('proxy-pill');
-    const text = document.getElementById('proxy-text');
-    pill.classList.remove('on', 'error');
+  // ===== Render: proxy banner =====
+  async function renderProxyBanner() {
+    const banner = document.getElementById('proxy-banner');
+    const info = document.getElementById('proxy-banner-info');
     const proxy = await send('rataria:get-proxy');
-    if (proxy?.config && proxy.config.enabled) {
-      pill.classList.add('on');
-      text.textContent = `Proxy on · ${proxy.config.host || '?'}`;
+    if (proxy?.config && proxy.config.enabled && proxy.config.host) {
+      banner.hidden = false;
+      info.textContent = `${proxy.config.host}:${proxy.config.port}`;
     } else {
-      text.textContent = 'Proxy off';
+      banner.hidden = true;
     }
   }
 
-  // ===== Home view (lista de ferramentas) =====
-  function renderHome(currentTool) {
-    const grid = document.getElementById('tool-grid');
-    grid.innerHTML = '';
+  // ===== Sidebar: lista de ferramentas =====
+  let selectedTool = null;
+
+  function renderToolList(currentTabTool) {
+    const list = document.getElementById('tool-list');
+    list.innerHTML = '';
     for (const [key, meta] of Object.entries(TOOL_META)) {
-      const tpl = document.getElementById('tpl-tool-card').content.cloneNode(true);
-      const btn = tpl.querySelector('.tool-card');
-      tpl.querySelector('.tool-card-logo').src = meta.logo;
-      tpl.querySelector('.tool-card-logo').alt = meta.name;
-      tpl.querySelector('.tool-card-name').textContent = meta.name;
-      btn.addEventListener('click', () => {
-        chrome.tabs.create({ url: meta.openUrl });
-        window.close();
-      });
-      grid.appendChild(tpl);
+      const tpl = document.getElementById('tpl-tool-item').content.cloneNode(true);
+      const btn = tpl.querySelector('.tool-item');
+      tpl.querySelector('.tool-item-logo').src = meta.logo;
+      tpl.querySelector('.tool-item-logo').alt = meta.name;
+      tpl.querySelector('.tool-item-name').textContent = meta.name;
+      btn.dataset.tool = key;
+      btn.addEventListener('click', () => selectTool(key));
+      list.appendChild(tpl);
     }
+    // Marca tool inicial: tab atual ou primeiro da lista
+    const initial = currentTabTool || Object.keys(TOOL_META)[0];
+    selectTool(initial, { skipRefocus: true });
   }
 
-  // ===== Creds view =====
+  function selectTool(toolKey, opts = {}) {
+    selectedTool = toolKey;
+    // Atualiza highlights
+    document.querySelectorAll('.tool-item').forEach((el) => {
+      el.classList.toggle('active', el.dataset.tool === toolKey);
+    });
+    renderCredsView(toolKey);
+  }
+
+  // ===== Content: credenciais =====
   function buildCard(ferramenta, cred) {
     const tpl = document.getElementById('tpl-credential-card').content.cloneNode(true);
     const card = tpl.querySelector('.cred-card');
@@ -270,8 +260,8 @@
         });
         fillBtn.textContent = '✓ Preenchido';
         setTimeout(() => { fillBtn.textContent = 'Preencher'; fillBtn.disabled = false; }, 1400);
-      } catch (e) {
-        fillBtn.textContent = 'Erro — use o ícone';
+      } catch {
+        fillBtn.textContent = 'Abra a ferramenta primeiro';
         setTimeout(() => { fillBtn.textContent = 'Preencher'; fillBtn.disabled = false; }, 2200);
       }
     });
@@ -286,114 +276,72 @@
     return card;
   }
 
-  async function renderCredsView(currentTool) {
-    const body = document.getElementById('creds-body');
+  async function renderCredsView(ferramenta) {
+    const body = document.getElementById('content-body');
     body.innerHTML = '';
 
-    if (!currentTool) {
-      const tpl = document.getElementById('tpl-no-tool').content.cloneNode(true);
+    if (!ferramenta) {
+      const tpl = document.getElementById('tpl-empty').content.cloneNode(true);
       body.appendChild(tpl);
-      body.querySelector('#go-home-btn')?.addEventListener('click', () => setView('home'));
       return;
     }
 
-    const res = await send('rataria:get-credentials-for-tool', { ferramenta: currentTool });
+    const meta = TOOL_META[ferramenta];
+    document.getElementById('content-title').textContent = 'Seus logins';
+    document.getElementById('content-sub').textContent = `${meta?.name || ferramenta} — gerencie seus acessos`;
+
+    // Botão "Abrir ferramenta" na content head se ainda não tem credenciais? Não.
+    // Em vez disso, se não tem credenciais, mostra empty state com botão de abrir.
+
+    const res = await send('rataria:get-credentials-for-tool', { ferramenta });
     if (!res?.ok || !res.creds?.length) {
-      const tpl = document.getElementById('tpl-no-creds').content.cloneNode(true);
-      tpl.getElementById('no-creds-tool').textContent = TOOL_META[currentTool]?.name || currentTool;
-      if (res?.error) tpl.getElementById('no-creds-msg').textContent = res.error;
+      const tpl = document.getElementById('tpl-empty').content.cloneNode(true);
+      tpl.getElementById('empty-title').textContent = `Sem contas pra ${meta?.name || ferramenta}`;
+      tpl.getElementById('empty-msg').textContent = res?.error || 'Abra o painel da RatarIA pra sincronizar.';
       body.appendChild(tpl);
+
+      // Botão de abrir site direto da ferramenta
+      const btn = document.createElement('button');
+      btn.className = 'cred-fill-btn';
+      btn.style.marginTop = '10px';
+      btn.style.alignSelf = 'center';
+      btn.textContent = `Abrir ${meta?.name || ferramenta}`;
+      btn.addEventListener('click', () => {
+        if (meta?.openUrl) {
+          chrome.tabs.create({ url: meta.openUrl });
+          window.close();
+        }
+      });
+      body.appendChild(btn);
       return;
     }
 
-    res.creds.forEach((c) => body.appendChild(buildCard(currentTool, c)));
+    res.creds.forEach((c) => body.appendChild(buildCard(ferramenta, c)));
+
+    // Botão "Abrir [ferramenta]" no fim
+    const openBtn = document.createElement('button');
+    openBtn.className = 'cred-fill-btn';
+    openBtn.style.marginTop = '4px';
+    openBtn.style.alignSelf = 'center';
+    openBtn.textContent = `Abrir ${meta?.name || ferramenta}`;
+    openBtn.addEventListener('click', () => {
+      if (meta?.openUrl) {
+        chrome.tabs.create({ url: meta.openUrl });
+        window.close();
+      }
+    });
+    body.appendChild(openBtn);
   }
-
-  // ===== Proxy view =====
-  async function loadProxy() {
-    const res = await send('rataria:get-proxy');
-    const cfg = res?.config || {};
-    const form = document.getElementById('proxy-form');
-    if (cfg.host) form.host.value = cfg.host;
-    if (cfg.port) form.port.value = cfg.port;
-    if (cfg.username) form.username.value = cfg.username;
-    if (cfg.password) form.password.value = cfg.password;
-    if (cfg.protocol) {
-      const radio = form.querySelector(`input[name="protocol"][value="${cfg.protocol}"]`);
-      if (radio) radio.checked = true;
-    }
-    document.getElementById('proxy-enabled').checked = !!cfg.enabled;
-  }
-
-  function showProxyHelper(msg, kind) {
-    const el = document.getElementById('proxy-helper');
-    el.textContent = msg;
-    el.className = `proxy-helper show ${kind}`;
-    setTimeout(() => el.classList.remove('show'), 4500);
-  }
-
-  async function saveProxy(activate) {
-    const form = document.getElementById('proxy-form');
-    const data = new FormData(form);
-    const config = {
-      protocol: data.get('protocol') || 'http',
-      host: (data.get('host') || '').toString().trim(),
-      port: parseInt(data.get('port') || '0', 10) || 0,
-      username: (data.get('username') || '').toString().trim(),
-      password: (data.get('password') || '').toString(),
-      enabled: activate,
-    };
-    if (!config.host || !config.port) {
-      showProxyHelper('Preencha host e porta.', 'error');
-      return false;
-    }
-    const res = await send('rataria:set-proxy', { config });
-    if (res?.ok) {
-      showProxyHelper(activate ? 'Proxy ativado.' : 'Proxy salvo (desativado).', 'success');
-      renderProxyPill();
-      return true;
-    } else {
-      showProxyHelper(`Erro: ${res?.error || 'desconhecido'}`, 'error');
-      return false;
-    }
-  }
-
-  document.getElementById('proxy-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const enabled = document.getElementById('proxy-enabled').checked;
-    await saveProxy(enabled);
-  });
-
-  document.getElementById('proxy-enabled').addEventListener('change', async (e) => {
-    await saveProxy(e.target.checked);
-  });
-
-  document.getElementById('proxy-test-btn').addEventListener('click', async () => {
-    const out = document.getElementById('proxy-test-result');
-    out.textContent = 'Consultando...';
-    try {
-      const r = await fetch('https://api.ipify.org?format=json', { cache: 'no-store' });
-      const data = await r.json();
-      out.textContent = `IP visto: ${data.ip}`;
-    } catch (e) {
-      out.textContent = `Erro: ${e.message}`;
-    }
-  });
 
   // ===== Boot =====
   (async () => {
-    await renderSyncPill();
-    await renderProxyPill();
+    await renderSync();
+    await renderProxyBanner();
 
     const tab = await getActiveTab();
     const host = tab?.url ? (() => { try { return new URL(tab.url).hostname; } catch { return null; } })() : null;
     const currentTool = detectToolFromHost(host);
 
-    renderHome(currentTool);
-    await renderCredsView(currentTool);
-    await loadProxy();
-
-    // Se tá numa ferramenta conhecida, abre direto na view "creds". Senão, "home".
-    setView(currentTool ? 'creds' : 'home');
+    renderToolList(currentTool);
   })();
 })();
