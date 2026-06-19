@@ -10,7 +10,7 @@
   const LOG = '[RatarIA]';
   const ICON_URL = chrome.runtime.getURL('icons/icon-48.png');
 
-  // Mapeia hostname → ferramenta lógica
+  // Mapeia hostname → ferramenta lógica + metadados visuais
   const TOOL_BY_HOST = {
     'chatgpt.com': 'chatgpt',
     'auth.openai.com': 'chatgpt',
@@ -18,6 +18,21 @@
     'accounts.google.com': 'gemini',
     'gemini.google.com': 'gemini',
   };
+
+  const TOOL_META = {
+    chatgpt: { name: 'ChatGPT', logo: chrome.runtime.getURL('icons/tools/chatgpt.png'), accent: '#10a37f' },
+    gemini: { name: 'Gemini', logo: chrome.runtime.getURL('icons/tools/gemini.png'), accent: '#4285f4' },
+  };
+
+  // Escolhe o melhor "identificador" pra exibir/usar como login.
+  // Prioriza 'login' (campo do form admin) e cai pra 'email_cliente' se vazio.
+  function pickLogin(c) {
+    const candidates = [c?.login, c?.email_cliente, c?.email, c?.username];
+    for (const v of candidates) {
+      if (v && typeof v === 'string' && v.trim()) return v.trim();
+    }
+    return null;
+  }
 
   function detectTool() {
     const host = location.hostname;
@@ -329,24 +344,38 @@
     }
 
     body.innerHTML = '';
+    const meta = TOOL_META[ferramenta] || { name: ferramenta, logo: ICON_URL };
     res.creds.forEach((c, i) => {
       const item = document.createElement('button');
       item.type = 'button';
       item.className = 'rataria-dd-item';
+      const loginValue = pickLogin(c);
       const expiresIn = c.data_expiracao ? daysUntil(c.data_expiracao) : null;
+      const fallbackLetter = (loginValue || meta.name || '?').charAt(0).toUpperCase();
       item.innerHTML = `
         <div class="rataria-dd-item-avatar">
-          <span>${(c.login || '?').charAt(0).toUpperCase()}</span>
+          <img src="${meta.logo}" alt="${meta.name}" onerror="this.replaceWith(Object.assign(document.createElement('span'), {textContent:'${fallbackLetter}'}))" />
         </div>
         <div class="rataria-dd-item-content">
-          <div class="rataria-dd-item-login">${maskLogin(c.login)}</div>
-          <div class="rataria-dd-item-meta">${expiresIn != null ? `Expira em ${expiresIn} ${expiresIn === 1 ? 'dia' : 'dias'}` : 'Conta disponível'}</div>
+          <div class="rataria-dd-item-tool">${meta.name} <span class="rataria-dd-item-badge">ativo</span></div>
+          <div class="rataria-dd-item-login">${loginValue ? maskLogin(loginValue) : '<em style="color:rgba(255,255,255,0.4)">sem e-mail cadastrado</em>'}</div>
         </div>
         <div class="rataria-dd-item-arrow">›</div>
       `;
+      // Meta (expiração) na linha de baixo
+      if (expiresIn != null) {
+        const meta = document.createElement('div');
+        meta.className = 'rataria-dd-item-meta-row';
+        meta.textContent = `Expira em ${expiresIn} ${expiresIn === 1 ? 'dia' : 'dias'}`;
+        item.querySelector('.rataria-dd-item-content').appendChild(meta);
+      }
       item.addEventListener('click', async () => {
+        if (!loginValue) {
+          showToast('Essa conta está sem e-mail cadastrado no admin. Avise a equipe.', 'error');
+          return;
+        }
         item.classList.add('rataria-dd-item-loading');
-        await fillCredential(input, c);
+        await fillCredential(input, { ...c, _loginToUse: loginValue });
         closeDropdown();
       });
       body.appendChild(item);
@@ -369,8 +398,17 @@
   }
 
   async function fillCredential(emailInput, cred) {
-    console.log(LOG, `Preenchendo credencial: ${cred.login}`);
-    const ok1 = await fillInput(emailInput, cred.login);
+    const loginValue = cred._loginToUse || pickLogin(cred);
+    if (!loginValue) {
+      showToast('Conta sem e-mail cadastrado. Avise a equipe.', 'error');
+      return;
+    }
+    if (!cred.senha) {
+      showToast('Conta sem senha cadastrada. Avise a equipe.', 'error');
+      return;
+    }
+    console.log(LOG, `Preenchendo credencial: ${loginValue}`);
+    const ok1 = await fillInput(emailInput, loginValue);
     if (!ok1) {
       showToast('Falha ao preencher o e-mail. Tente clicar de novo.', 'error');
       return;
@@ -409,7 +447,7 @@
   function scanAndInject() {
     findEmailInputs().forEach(createIcon);
     findPasswordInputs().forEach((pwd) => {
-      // Se temos senha pendente do preenchimento de email anterior, autopreenche
+      // Se temos senha pendente, autopreenche
       if (window.__RatarIA_pendingPwd && !pwd.dataset.rataria) {
         pwd.dataset.rataria = '1';
         fillInput(pwd, window.__RatarIA_pendingPwd).then((ok) => {
@@ -422,7 +460,51 @@
         createIcon(pwd);
       }
     });
+    // TOTP pendente
+    if (window.__RatarIA_pendingTotp) {
+      const totp = document.querySelector('input[autocomplete="one-time-code"], input[name="code"], input[name="totp"], input[name="totpPin"]');
+      if (totp && isVisible(totp) && !totp.dataset.rataria) {
+        totp.dataset.rataria = '1';
+        fillInput(totp, window.__RatarIA_pendingTotp).then((ok) => {
+          if (ok) {
+            showToast('Código 2FA preenchido.', 'success');
+            window.__RatarIA_pendingTotp = null;
+          }
+        });
+      }
+    }
   }
+
+  // Listener pra mensagem vinda do popup: "preenche agora"
+  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg?.action !== 'rataria:fill-now') return;
+    (async () => {
+      const payload = msg.payload || {};
+      const emails = findEmailInputs();
+      const pwds = findPasswordInputs();
+      let filledAny = false;
+      if (emails[0] && payload.login) {
+        filledAny = (await fillInput(emails[0], payload.login)) || filledAny;
+      }
+      if (pwds[0] && payload.senha) {
+        filledAny = (await fillInput(pwds[0], payload.senha)) || filledAny;
+      } else if (payload.senha) {
+        // Senha vai ser preenchida quando aparecer
+        window.__RatarIA_pendingPwd = payload.senha;
+      }
+      // Se tiver código TOTP, tenta preencher input com autocomplete one-time-code
+      if (payload.totpCode) {
+        const totpInput = document.querySelector('input[autocomplete="one-time-code"], input[name="code"], input[name="totp"], input[name="totpPin"]');
+        if (totpInput && isVisible(totpInput)) {
+          await fillInput(totpInput, payload.totpCode);
+        } else {
+          window.__RatarIA_pendingTotp = payload.totpCode;
+        }
+      }
+      sendResponse({ ok: filledAny });
+    })();
+    return true;
+  });
 
   scanAndInject();
 
