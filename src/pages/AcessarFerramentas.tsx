@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Download, AlertTriangle, Sparkles, ExternalLink, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { getSubscriptionFromStorage, getActiveSubscription, isTemporarySubscription } from "@/lib/isTemporarySub";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
@@ -85,6 +86,25 @@ export default function AcessarFerramentas() {
   const [openingTool, setOpeningTool] = useState<string | null>(null);
   const [acessos, setAcessos] = useState<Acesso[]>([]);
   const [loadingAcessos, setLoadingAcessos] = useState(true);
+
+  // Auth gate: cliente precisa ter assinatura ativa no localStorage (Naut)
+  useEffect(() => {
+    const stored = localStorage.getItem("naut_subscription");
+    if (!stored) {
+      navigate("/usuario?redirect=/acessar-ferramentas", { replace: true });
+      return;
+    }
+    const subData = getSubscriptionFromStorage();
+    const activeSub = getActiveSubscription(subData);
+    if (!activeSub) {
+      navigate("/usuario?redirect=/acessar-ferramentas", { replace: true });
+      return;
+    }
+    if (isTemporarySubscription(activeSub)) {
+      // Assinaturas temporárias (logins de 30min) não podem usar a extensão
+      navigate("/painel-temp", { replace: true });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     let mounted = true;
