@@ -1,9 +1,9 @@
 // RatarIA Extension — Panel Bridge
-// Roda no painel da RatarIA (rataria.io, lovable preview, etc.).
-// Faz a ponte entre window.postMessage do painel e chrome.runtime do background.
+// Roda no painel da RatarIA. Faz a ponte entre window.postMessage do site
+// e chrome.runtime do background.
 
 (function () {
-  // Marca presença pra o painel detectar que a extensão tá instalada.
+  // Marcador pra o painel detectar a extensão
   const marker = document.createElement('div');
   marker.id = '__rataria_extension_installed__';
   marker.dataset.version = chrome.runtime.getManifest().version;
@@ -15,53 +15,58 @@
       document.documentElement.appendChild(marker);
     }
   }
-
   injectMarker();
-  // Re-injeta após navegação SPA caso o React limpe o DOM
-  const observer = new MutationObserver(injectMarker);
+  const moMarker = new MutationObserver(injectMarker);
   if (document.documentElement) {
-    observer.observe(document.documentElement, { childList: true, subtree: false });
+    moMarker.observe(document.documentElement, { childList: true, subtree: false });
   }
 
-  // Escuta mensagens do painel
-  window.addEventListener('message', (event) => {
+  function send(action, payload) {
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage({ action, ...payload }, (response) => {
+        resolve(response || { ok: false, error: chrome.runtime.lastError?.message });
+      });
+    });
+  }
+
+  function reply(requestId, action, response) {
+    window.postMessage(
+      { source: 'rataria-extension', action, requestId, response },
+      window.location.origin
+    );
+  }
+
+  window.addEventListener('message', async (event) => {
     if (event.source !== window) return;
     const data = event.data;
     if (!data || data.source !== 'rataria-panel') return;
 
-    if (data.action === 'open-tool') {
-      chrome.runtime.sendMessage(
-        {
-          action: 'rataria:open-tool',
-          ferramenta: data.ferramenta,
-          login: data.login,
-          senha: data.senha,
-          totpSecret: data.totpSecret,
-        },
-        (response) => {
-          window.postMessage(
-            {
-              source: 'rataria-extension',
-              action: 'open-tool-response',
-              requestId: data.requestId,
-              response: response || { ok: false, error: 'sem resposta' },
-            },
-            window.location.origin
-          );
-        }
-      );
-    }
+    const requestId = data.requestId;
 
     if (data.action === 'ping') {
-      window.postMessage(
-        {
-          source: 'rataria-extension',
-          action: 'pong',
-          version: chrome.runtime.getManifest().version,
-          requestId: data.requestId,
-        },
-        window.location.origin
-      );
+      reply(requestId, 'pong', { version: chrome.runtime.getManifest().version });
+      return;
+    }
+
+    if (data.action === 'sync-credentials') {
+      const res = await send('rataria:sync-credentials', { credentials: data.credentials });
+      reply(requestId, 'sync-response', res);
+      return;
+    }
+
+    if (data.action === 'open-tool') {
+      const res = await send('rataria:open-tool', {
+        ferramenta: data.ferramenta,
+        clearCookies: data.clearCookies,
+      });
+      reply(requestId, 'open-tool-response', res);
+      return;
+    }
+
+    if (data.action === 'status') {
+      const res = await send('rataria:status', {});
+      reply(requestId, 'status-response', res);
+      return;
     }
   });
 })();
