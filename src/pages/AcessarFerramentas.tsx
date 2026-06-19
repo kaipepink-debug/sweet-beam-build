@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Download, AlertTriangle, Sparkles, ExternalLink, Loader2 } from "lucide-react";
+import { ArrowLeft, Download, AlertTriangle, Sparkles, ExternalLink, Loader2, CheckCircle2, KeyRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { getSubscriptionFromStorage, getActiveSubscription, isTemporarySubscription } from "@/lib/isTemporarySub";
@@ -11,8 +11,8 @@ import chatgptLogo from "@/assets/tools/chatgpt.png";
 import geminiLogo from "@/assets/tools/gemini.png";
 
 const MVP_TOOLS = [
-  { key: "chatgpt", name: "ChatGPT", logo: chatgptLogo, accent: "139, 92, 246" },
-  { key: "gemini", name: "Gemini", logo: geminiLogo, accent: "59, 130, 246" },
+  { key: "chatgpt", name: "ChatGPT", logo: chatgptLogo, accent: "139, 92, 246", loginUrl: "https://chatgpt.com/auth/login" },
+  { key: "gemini", name: "Gemini", logo: geminiLogo, accent: "59, 130, 246", loginUrl: null /* abre via background com logout */ },
 ];
 
 type Acesso = {
@@ -23,71 +23,48 @@ type Acesso = {
   data_expiracao: string;
 };
 
-function detectExtension(timeoutMs = 600): Promise<boolean> {
-  return new Promise((resolve) => {
-    // Sinalizador injetado pelo panel-bridge da extensão
-    if (document.getElementById("__rataria_extension_installed__")) {
-      resolve(true);
-      return;
-    }
-    const requestId = `det-${Date.now()}`;
-    const onMessage = (e: MessageEvent) => {
-      if (e.source !== window) return;
-      const d = e.data as any;
-      if (d?.source === "rataria-extension" && d.action === "pong" && d.requestId === requestId) {
-        window.removeEventListener("message", onMessage);
-        resolve(true);
-      }
-    };
-    window.addEventListener("message", onMessage);
-    window.postMessage({ source: "rataria-panel", action: "ping", requestId }, window.location.origin);
-    setTimeout(() => {
-      window.removeEventListener("message", onMessage);
-      resolve(!!document.getElementById("__rataria_extension_installed__"));
-    }, timeoutMs);
-  });
-}
+type ExtensionStatus = {
+  ok: boolean;
+  version?: string;
+  syncedAt?: number | null;
+};
 
-function sendToExtension(payload: {
-  ferramenta: string;
-  login: string;
-  senha: string;
-  totpSecret?: string | null;
-}): Promise<{ ok: boolean; error?: string }> {
+function postToExtension<T = unknown>(action: string, payload: Record<string, unknown> = {}, expectedAction?: string): Promise<T | null> {
   return new Promise((resolve) => {
-    const requestId = `open-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const requestId = `${action}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const onMessage = (e: MessageEvent) => {
       if (e.source !== window) return;
       const d = e.data as any;
       if (
         d?.source === "rataria-extension" &&
-        d.action === "open-tool-response" &&
+        (!expectedAction || d.action === expectedAction) &&
         d.requestId === requestId
       ) {
         window.removeEventListener("message", onMessage);
-        resolve(d.response || { ok: false, error: "sem resposta" });
+        resolve(d.response as T);
       }
     };
     window.addEventListener("message", onMessage);
-    window.postMessage(
-      { source: "rataria-panel", action: "open-tool", requestId, ...payload },
-      window.location.origin
-    );
+    window.postMessage({ source: "rataria-panel", action, requestId, ...payload }, window.location.origin);
     setTimeout(() => {
       window.removeEventListener("message", onMessage);
-      resolve({ ok: false, error: "timeout" });
-    }, 5000);
+      resolve(null);
+    }, 4000);
   });
+}
+
+function detectExtensionMarker(): boolean {
+  return !!document.getElementById("__rataria_extension_installed__");
 }
 
 export default function AcessarFerramentas() {
   const navigate = useNavigate();
-  const [extInstalled, setExtInstalled] = useState<boolean | null>(null);
-  const [openingTool, setOpeningTool] = useState<string | null>(null);
+  const [extStatus, setExtStatus] = useState<ExtensionStatus | null>(null);
   const [acessos, setAcessos] = useState<Acesso[]>([]);
   const [loadingAcessos, setLoadingAcessos] = useState(true);
+  const [syncing, setSyncing] = useState(false);
 
-  // Auth gate: cliente precisa ter assinatura ativa no localStorage (Naut)
+  // Auth gate
   useEffect(() => {
     const stored = localStorage.getItem("naut_subscription");
     if (!stored) {
@@ -101,25 +78,42 @@ export default function AcessarFerramentas() {
       return;
     }
     if (isTemporarySubscription(activeSub)) {
-      // Assinaturas temporárias (logins de 30min) não podem usar a extensão
       navigate("/painel-temp", { replace: true });
     }
   }, [navigate]);
 
+  // Detecta extensão (poll a cada 1.5s até achar)
   useEffect(() => {
     let mounted = true;
-    detectExtension().then((ok) => mounted && setExtInstalled(ok));
-    // Re-checa a cada 2s — útil quando o usuário acabou de instalar
-    const interval = setInterval(async () => {
-      const ok = await detectExtension(300);
-      if (mounted) setExtInstalled(ok);
-    }, 2500);
+    let attempts = 0;
+
+    const probe = async () => {
+      if (!mounted) return;
+      attempts++;
+
+      if (detectExtensionMarker()) {
+        const res = await postToExtension<ExtensionStatus>("status", {}, "status-response");
+        if (mounted) setExtStatus(res || { ok: true });
+        return;
+      }
+
+      const pong = await postToExtension<{ version?: string }>("ping", {}, "pong");
+      if (pong) {
+        if (mounted) setExtStatus({ ok: true, version: pong.version });
+      } else if (attempts < 40) {
+        setTimeout(probe, 1500);
+      } else if (mounted) {
+        setExtStatus({ ok: false });
+      }
+    };
+
+    probe();
     return () => {
       mounted = false;
-      clearInterval(interval);
     };
   }, []);
 
+  // Carrega credenciais do Supabase
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -142,46 +136,85 @@ export default function AcessarFerramentas() {
     };
   }, []);
 
-  // Mapa: ferramenta → acesso mais distante de expirar (escolha mais "fresca")
-  const acessoByFerramenta = useMemo(() => {
-    const map: Record<string, Acesso> = {};
+  // Agrupa por ferramenta
+  const byFerramenta = useMemo(() => {
+    const map: Record<string, Acesso[]> = {};
     for (const a of acessos) {
-      if (!map[a.ferramenta]) map[a.ferramenta] = a;
+      (map[a.ferramenta] ||= []).push(a);
     }
     return map;
   }, [acessos]);
 
-  async function handleOpen(ferramenta: string) {
-    if (!extInstalled) {
-      toast({ title: "Extensão não detectada", description: "Instale a extensão da RatarIA primeiro." });
-      return;
+  // Sincroniza credenciais com a extensão (envia batch)
+  useEffect(() => {
+    if (!extStatus?.ok) return;
+    if (loadingAcessos) return;
+
+    const credentials: Record<string, Array<Pick<Acesso, "login" | "senha" | "data_expiracao">>> = {};
+    for (const tool of MVP_TOOLS) {
+      credentials[tool.key] = (byFerramenta[tool.key] || []).map((a) => ({
+        login: a.login,
+        senha: a.senha,
+        data_expiracao: a.data_expiracao,
+      }));
     }
-    const acesso = acessoByFerramenta[ferramenta];
-    if (!acesso) {
-      toast({
-        title: "Nenhum acesso disponível",
-        description: "Aguarde a equipe cadastrar uma nova conta para essa ferramenta.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setOpeningTool(ferramenta);
-    const res = await sendToExtension({
-      ferramenta,
-      login: acesso.login,
-      senha: acesso.senha,
+
+    setSyncing(true);
+    postToExtension<{ ok: boolean; totals?: string }>(
+      "sync-credentials",
+      { credentials },
+      "sync-response"
+    ).then((res) => {
+      setSyncing(false);
+      if (res?.ok) {
+        setExtStatus((s) => (s ? { ...s, syncedAt: Date.now() } : s));
+      } else {
+        toast({
+          title: "Não consegui sincronizar com a extensão",
+          description: "Recarregue a página ou reinstale a extensão.",
+          variant: "destructive",
+        });
+      }
     });
-    setOpeningTool(null);
-    if (!res.ok) {
+  }, [extStatus?.ok, loadingAcessos, byFerramenta]);
+
+  async function handleOpen(ferramenta: string) {
+    if (!extStatus?.ok) {
+      toast({ title: "Instale a extensão", description: "Você precisa instalar a extensão da RatarIA." });
+      return;
+    }
+    const tool = MVP_TOOLS.find((t) => t.key === ferramenta);
+    if (!tool) return;
+    if (!(byFerramenta[ferramenta] || []).length) {
       toast({
-        title: "Falha ao abrir ferramenta",
-        description: res.error || "Tente recarregar a página e tentar de novo.",
+        title: "Nenhuma conta disponível",
+        description: "Aguarde a equipe cadastrar uma conta nova.",
         variant: "destructive",
       });
-    } else {
-      toast({ title: "Abrindo ferramenta...", description: "Acompanhe o progresso na nova aba." });
+      return;
     }
+    if (tool.loginUrl) {
+      // Abre direto (mais rápido)
+      window.open(tool.loginUrl, "_blank", "noopener");
+    } else {
+      // Gemini precisa passar pelo background pra forçar logout antes
+      const res = await postToExtension<{ ok: boolean; error?: string }>(
+        "open-tool",
+        { ferramenta, clearCookies: true },
+        "open-tool-response"
+      );
+      if (!res?.ok) {
+        toast({ title: "Falha ao abrir", description: res?.error || "tente novamente", variant: "destructive" });
+        return;
+      }
+    }
+    toast({
+      title: `${tool.name} abrindo...`,
+      description: "Na página de login, clique no ícone da RatarIA dentro do campo de e-mail.",
+    });
   }
+
+  const extInstalled = extStatus?.ok === true;
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
@@ -197,18 +230,18 @@ export default function AcessarFerramentas() {
 
           <div className="text-center space-y-1.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold"
-              style={{ background: "rgba(139, 92, 246, 0.12)", border: "1px solid rgba(139, 92, 246, 0.3)", color: "rgba(139, 92, 246, 0.9)" }}>
+              style={{ background: "rgba(168, 85, 247, 0.12)", border: "1px solid rgba(168, 85, 247, 0.3)", color: "rgba(168, 85, 247, 0.92)" }}>
               <Sparkles className="w-3 h-3" /> Acesso Rápido
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-white">Acessar Ferramentas com 1 Clique</h1>
-            <p className="text-xs md:text-sm text-white/45">
-              Clique na ferramenta e a extensão da RatarIA loga sozinha pra você.
+            <h1 className="text-xl md:text-2xl font-bold text-white">Login automático nas ferramentas</h1>
+            <p className="text-xs md:text-sm text-white/45 max-w-md mx-auto">
+              Abra a ferramenta e clique no <strong className="text-white/70">ícone da RatarIA</strong> dentro do campo de e-mail pra escolher uma conta.
             </p>
           </div>
 
           {/* Status da extensão */}
           <AnimatePresence mode="wait">
-            {extInstalled === null && (
+            {extStatus === null && (
               <motion.div
                 key="checking"
                 initial={{ opacity: 0 }}
@@ -217,11 +250,11 @@ export default function AcessarFerramentas() {
                 className="flex items-center gap-3 rounded-2xl px-4 py-3.5 border border-white/10 bg-white/5"
               >
                 <Loader2 className="w-4 h-4 animate-spin text-white/60" />
-                <span className="text-xs text-white/60">Verificando se a extensão está instalada...</span>
+                <span className="text-xs text-white/60">Verificando extensão...</span>
               </motion.div>
             )}
 
-            {extInstalled === false && (
+            {extStatus && !extStatus.ok && (
               <motion.div
                 key="missing"
                 initial={{ opacity: 0, y: 10 }}
@@ -240,8 +273,7 @@ export default function AcessarFerramentas() {
                       Instale a extensão da RatarIA
                     </h3>
                     <p className="text-xs mt-1 text-white/55 leading-relaxed">
-                      Pra abrir as ferramentas com um clique, você precisa instalar nossa extensão no Chrome.
-                      Demora menos de 1 minuto.
+                      Sem ela o login automático não funciona. Demora menos de 1 minuto pra instalar.
                     </p>
                   </div>
                 </div>
@@ -262,12 +294,12 @@ export default function AcessarFerramentas() {
                   rel="noopener noreferrer"
                   className="block text-center text-[11px] text-white/50 hover:text-white/80 underline-offset-2 hover:underline"
                 >
-                  Precisa de ajuda na instalação? Falar com suporte
+                  Ajuda na instalação
                 </a>
               </motion.div>
             )}
 
-            {extInstalled === true && (
+            {extInstalled && (
               <motion.div
                 key="installed"
                 initial={{ opacity: 0, y: 10 }}
@@ -279,10 +311,19 @@ export default function AcessarFerramentas() {
                   border: "1px solid rgba(34, 197, 94, 0.22)",
                 }}
               >
-                <div className="w-2 h-2 rounded-full" style={{ background: "rgba(34, 197, 94, 0.95)", boxShadow: "0 0 8px rgba(34, 197, 94, 0.6)" }} />
-                <span className="text-xs font-medium" style={{ color: "rgba(34, 197, 94, 0.95)" }}>
-                  Extensão conectada. Pronto pra acessar.
-                </span>
+                {syncing ? (
+                  <Loader2 className="w-4 h-4 animate-spin" style={{ color: "rgba(34, 197, 94, 0.85)" }} />
+                ) : (
+                  <CheckCircle2 className="w-4 h-4" style={{ color: "rgba(34, 197, 94, 0.95)" }} />
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-semibold" style={{ color: "rgba(34, 197, 94, 0.95)" }}>
+                    {syncing ? "Sincronizando contas..." : "Extensão conectada e contas sincronizadas"}
+                  </div>
+                  {extStatus?.version && (
+                    <div className="text-[10.5px] text-white/35 font-mono">v{extStatus.version}</div>
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -290,10 +331,9 @@ export default function AcessarFerramentas() {
           {/* Grid de ferramentas */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
             {MVP_TOOLS.map((tool) => {
-              const acesso = acessoByFerramenta[tool.key];
-              const isOpening = openingTool === tool.key;
-              const disabled = !extInstalled || !acesso || isOpening;
-
+              const accounts = byFerramenta[tool.key] || [];
+              const has = accounts.length > 0;
+              const disabled = !extInstalled || !has;
               return (
                 <motion.button
                   key={tool.key}
@@ -319,28 +359,39 @@ export default function AcessarFerramentas() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm md:text-base font-bold text-white">{tool.name}</p>
                       <p className="text-[11px] md:text-xs mt-0.5 text-white/45">
-                        {isOpening
-                          ? "Abrindo..."
-                          : !acesso
-                          ? loadingAcessos
-                            ? "Carregando..."
-                            : "Sem conta disponível"
-                          : "Pronto pra abrir"}
+                        {!extInstalled
+                          ? "Instale a extensão"
+                          : loadingAcessos
+                          ? "Carregando..."
+                          : !has
+                          ? "Sem conta disponível"
+                          : `${accounts.length} ${accounts.length === 1 ? "conta" : "contas"} pra usar`}
                       </p>
                     </div>
-                    {isOpening ? (
-                      <Loader2 className="w-4 h-4 animate-spin" style={{ color: `rgba(${tool.accent}, 0.85)` }} />
-                    ) : (
-                      <ExternalLink className="w-4 h-4" style={{ color: `rgba(${tool.accent}, 0.65)` }} />
-                    )}
+                    <ExternalLink className="w-4 h-4" style={{ color: `rgba(${tool.accent}, 0.65)` }} />
                   </div>
                 </motion.button>
               );
             })}
           </div>
 
-          <p className="text-[11px] text-center text-white/30 pt-2">
-            Mais ferramentas vão aparecer aqui em breve.
+          {/* How-it-works mini-guia */}
+          <div className="rounded-2xl p-4 md:p-5 space-y-3"
+            style={{ background: "rgba(255, 255, 255, 0.025)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div className="flex items-center gap-2">
+              <KeyRound className="w-3.5 h-3.5 text-white/55" />
+              <span className="text-[10.5px] uppercase tracking-wider font-bold text-white/55">Como usar</span>
+            </div>
+            <ol className="space-y-2 text-[12px] text-white/65 leading-relaxed">
+              <li><strong className="text-white/85">1.</strong> Clica numa ferramenta acima — abre a página de login.</li>
+              <li><strong className="text-white/85">2.</strong> Dentro do campo de e-mail vai aparecer um ícone roxo da RatarIA.</li>
+              <li><strong className="text-white/85">3.</strong> Clica no ícone e escolhe a conta que quer usar.</li>
+              <li><strong className="text-white/85">4.</strong> E-mail e senha preenchem sozinhos. Clica "Continuar" pra entrar.</li>
+            </ol>
+          </div>
+
+          <p className="text-[11px] text-center text-white/30">
+            Mais ferramentas chegam em breve.
           </p>
         </div>
       </div>

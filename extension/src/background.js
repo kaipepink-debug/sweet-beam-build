@@ -1,85 +1,74 @@
 // RatarIA Extension — Background Service Worker
-// Recebe mensagens do painel (via panel-bridge) e orquestra a abertura
-// de novas abas com as credenciais que o flow-runner injetará.
+// Gerencia o sync de credenciais vindo do painel e responde aos content scripts
+// de páginas de login com a lista de contas disponíveis pra cada ferramenta.
 
-const ALLOWED_ORIGINS = [
-  'https://rataria.io',
-  'https://www.rataria.io',
-  'http://localhost',
-  'https://lovable.app',
-  'https://lovableproject.com',
+const STORAGE_KEY = 'rataria_credentials_v1';
+const SYNC_TS_KEY = 'rataria_synced_at';
+const SYNC_TTL_MS = 24 * 60 * 60 * 1000; // 24 horas
+
+const ALLOWED_ORIGIN_HOSTS = [
+  'rataria.io',
+  'www.rataria.io',
+  'localhost',
+  '127.0.0.1',
 ];
 
-// Pra Gemini, navegamos primeiro pelo /Logout do Google — ele desloga TODAS as contas
-// da sessão e em seguida redireciona pra tela de login limpa.
-const GEMINI_LOGIN = 'https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fgemini.google.com%2Fapp';
-const GEMINI_LOGOUT_THEN_LOGIN =
-  'https://accounts.google.com/Logout?continue=' + encodeURIComponent(GEMINI_LOGIN);
-
-const TOOLS = {
-  chatgpt: {
-    name: 'ChatGPT',
-    loginUrl: 'https://chatgpt.com/auth/login',
-    successUrl: 'https://chatgpt.com/',
-    flowKey: 'chatgpt',
-  },
-  gemini: {
-    name: 'Gemini',
-    loginUrl: GEMINI_LOGOUT_THEN_LOGIN,
-    successUrl: 'https://gemini.google.com/',
-    flowKey: 'gemini',
-  },
-};
-
 function isOriginAllowed(url) {
+  if (!url) return false;
   try {
-    const origin = new URL(url).origin;
-    return ALLOWED_ORIGINS.some((allowed) => origin === allowed || origin.endsWith(allowed.replace('https://', '.')));
+    const u = new URL(url);
+    if (ALLOWED_ORIGIN_HOSTS.includes(u.hostname)) return true;
+    if (u.hostname.endsWith('.lovable.app')) return true;
+    if (u.hostname.endsWith('.lovableproject.com')) return true;
+    if (u.hostname.endsWith('.lovable.dev')) return true;
+    return false;
   } catch {
     return false;
   }
 }
 
-async function openToolWithCredentials({ ferramenta, login, senha, totpSecret }) {
-  const tool = TOOLS[ferramenta];
-  if (!tool) {
-    throw new Error(`Ferramenta desconhecida: ${ferramenta}`);
-  }
+const TOOL_DOMAINS = {
+  chatgpt: ['chatgpt.com', 'openai.com', 'auth.openai.com', 'chat.openai.com'],
+  gemini: ['google.com', 'accounts.google.com', 'gemini.google.com', 'mail.google.com', 'myaccount.google.com'],
+};
 
-  // Guarda as credenciais em sessionStorage da extensão (não persistente entre reinícios)
-  // associadas à ferramenta, pra o content script pegar quando a página carregar.
-  await chrome.storage.session.set({
-    [`creds:${ferramenta}`]: {
-      login,
-      senha,
-      totpSecret: totpSecret || null,
-      timestamp: Date.now(),
-    },
+const TOOL_OPEN_URL = {
+  chatgpt: 'https://chatgpt.com/auth/login',
+  // Gemini: passa pelo Logout primeiro pra forçar tela limpa
+  gemini:
+    'https://accounts.google.com/Logout?continue=' +
+    encodeURIComponent('https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fgemini.google.com%2Fapp'),
+};
+
+async function syncCredentials(payload) {
+  // payload = { credentials: { chatgpt: [...], gemini: [...] } }
+  const credentials = payload?.credentials || {};
+  await chrome.storage.local.set({
+    [STORAGE_KEY]: credentials,
+    [SYNC_TS_KEY]: Date.now(),
   });
+  const totals = Object.entries(credentials).map(([k, v]) => `${k}=${v?.length || 0}`).join(' ');
+  console.log(`[RatarIA] Credenciais sincronizadas (${totals})`);
+  return { ok: true, totals };
+}
 
-  // Limpa cookies da ferramenta antes de abrir (garante login limpo da conta de hoje)
-  await clearToolCookies(ferramenta);
-
-  // Abre a nova aba
-  const tab = await chrome.tabs.create({ url: tool.loginUrl, active: true });
-
-  // Limpa as credenciais depois de 5 minutos por segurança
-  setTimeout(() => {
-    chrome.storage.session.remove(`creds:${ferramenta}`);
-  }, 5 * 60 * 1000);
-
-  return { ok: true, tabId: tab.id };
+async function getCredentialsForTool(ferramenta) {
+  const data = await chrome.storage.local.get([STORAGE_KEY, SYNC_TS_KEY]);
+  const syncedAt = data[SYNC_TS_KEY] || 0;
+  if (!syncedAt) {
+    return { ok: false, error: 'Abra o painel da RatarIA pra sincronizar suas contas.', creds: [] };
+  }
+  if (Date.now() - syncedAt > SYNC_TTL_MS) {
+    return { ok: false, error: 'Suas contas expiraram. Abra o painel pra sincronizar.', creds: [] };
+  }
+  const all = data[STORAGE_KEY] || {};
+  const creds = all[ferramenta] || [];
+  return { ok: true, creds };
 }
 
 async function clearToolCookies(ferramenta) {
-  const domains = {
-    chatgpt: ['chatgpt.com', 'openai.com', 'auth.openai.com'],
-    gemini: ['google.com', 'accounts.google.com', 'gemini.google.com', 'mail.google.com', 'myaccount.google.com'],
-  };
-  const targets = domains[ferramenta] || [];
+  const targets = TOOL_DOMAINS[ferramenta] || [];
   let removed = 0;
-  let failed = 0;
-
   for (const domain of targets) {
     try {
       const cookies = await chrome.cookies.getAll({ domain });
@@ -89,62 +78,80 @@ async function clearToolCookies(ferramenta) {
         try {
           await chrome.cookies.remove({ url, name: cookie.name, storeId: cookie.storeId });
           removed++;
-        } catch (e) {
-          failed++;
-        }
+        } catch {}
       }
-    } catch (e) {
-      console.warn(`[RatarIA] Falha ao listar cookies de ${domain}:`, e);
-    }
+    } catch {}
   }
-  console.log(`[RatarIA] Cookies limpos pra ${ferramenta}: ${removed} removidos, ${failed} falharam`);
+  console.log(`[RatarIA] ${removed} cookies removidos pra ${ferramenta}`);
 }
 
-// Mensagens vindas dos content scripts (panel-bridge ou flow-runner)
+async function openTool(ferramenta, { clearCookies = false } = {}) {
+  const url = TOOL_OPEN_URL[ferramenta];
+  if (!url) throw new Error(`Ferramenta desconhecida: ${ferramenta}`);
+  if (clearCookies) await clearToolCookies(ferramenta);
+  const tab = await chrome.tabs.create({ url, active: true });
+  return { ok: true, tabId: tab.id };
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   (async () => {
     try {
-      // Validação de origem: só aceita do nosso painel
-      if (msg?.action === 'rataria:open-tool') {
+      // SYNC vindo do painel
+      if (msg?.action === 'rataria:sync-credentials') {
         if (sender.tab && !isOriginAllowed(sender.tab.url)) {
-          throw new Error('Origem não autorizada');
+          sendResponse({ ok: false, error: 'origem não autorizada' });
+          return;
         }
-        const result = await openToolWithCredentials({
-          ferramenta: msg.ferramenta,
-          login: msg.login,
-          senha: msg.senha,
-          totpSecret: msg.totpSecret,
-        });
+        const result = await syncCredentials(msg);
         sendResponse(result);
         return;
       }
 
-      // Content script da ferramenta pedindo credenciais
-      if (msg?.action === 'rataria:get-credentials') {
-        const data = await chrome.storage.session.get(`creds:${msg.ferramenta}`);
-        const creds = data[`creds:${msg.ferramenta}`];
-        if (!creds) {
-          sendResponse({ ok: false, error: 'sem credenciais armazenadas' });
-          return;
-        }
-        sendResponse({ ok: true, creds });
-        return;
-      }
-
-      // Ping pra detectar extensão instalada
+      // PING (painel detecta a extensão)
       if (msg?.action === 'rataria:ping') {
         sendResponse({ ok: true, version: chrome.runtime.getManifest().version });
         return;
       }
 
-      sendResponse({ ok: false, error: 'ação desconhecida' });
+      // OPEN tool vindo do painel
+      if (msg?.action === 'rataria:open-tool') {
+        if (sender.tab && !isOriginAllowed(sender.tab.url)) {
+          sendResponse({ ok: false, error: 'origem não autorizada' });
+          return;
+        }
+        const result = await openTool(msg.ferramenta, { clearCookies: msg.clearCookies !== false });
+        sendResponse(result);
+        return;
+      }
+
+      // GET vindo do content script de login pages
+      if (msg?.action === 'rataria:get-credentials-for-tool') {
+        const result = await getCredentialsForTool(msg.ferramenta);
+        sendResponse(result);
+        return;
+      }
+
+      // Last sync info (debug)
+      if (msg?.action === 'rataria:status') {
+        const data = await chrome.storage.local.get([STORAGE_KEY, SYNC_TS_KEY]);
+        sendResponse({
+          ok: true,
+          version: chrome.runtime.getManifest().version,
+          syncedAt: data[SYNC_TS_KEY] || null,
+          tools: Object.keys(data[STORAGE_KEY] || {}),
+        });
+        return;
+      }
+
+      sendResponse({ ok: false, error: 'ação desconhecida: ' + msg?.action });
     } catch (e) {
+      console.error('[RatarIA] erro no background:', e);
       sendResponse({ ok: false, error: e.message });
     }
   })();
-  return true; // resposta assíncrona
+  return true;
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('[RatarIA] Extensão instalada/atualizada.');
+  console.log('[RatarIA] Extensão instalada/atualizada');
 });

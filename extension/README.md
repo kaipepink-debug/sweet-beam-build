@@ -1,8 +1,18 @@
-# RatarIA — Extensão Chrome (MVP)
+# RatarIA — Extensão Chrome (modelo Proton Pass)
 
-Extensão que loga automaticamente nas ferramentas de IA da RatarIA quando o cliente clica em **"Abrir"** no painel.
+Quando o cliente entra numa página de login (ChatGPT, Gemini, etc.), aparece um ícone roxo da RatarIA dentro do campo de e-mail. Ele clica, escolhe a conta que quer usar, e os campos preenchem sozinhos.
 
-> **Status:** MVP. Suporta **ChatGPT** e **Gemini**. Outras ferramentas chegam em breve.
+> **Status:** v0.3.0. Suporta **ChatGPT** e **Gemini**. Outras ferramentas chegam em breve.
+
+## Como funciona (visão técnica)
+
+1. Cliente abre `/acessar-ferramentas` no painel — a página puxa todas as credenciais ativas do Supabase e **sincroniza** com a extensão via `postMessage`
+2. Extensão guarda as credenciais em `chrome.storage.local` com **TTL de 24h**
+3. Cliente clica em "ChatGPT" no painel → abre `chatgpt.com/auth/login` em nova aba
+4. Content script `login-injector.js` detecta o campo de e-mail e injeta um ícone flutuante
+5. Cliente clica no ícone → dropdown abre com as contas disponíveis pra essa ferramenta
+6. Cliente seleciona uma conta → e-mail e senha preenchem via `execCommand('insertText')` (executa dentro do gesture do usuário, então o React captura corretamente)
+7. Cliente clica "Continuar" manualmente
 
 ---
 
@@ -89,17 +99,14 @@ Isso evita conflito de sessão (ex.: você fica logado na Canva pessoal e na com
 
 ```
 extension/
-├── manifest.json           Manifest V3
-├── icons/                  Ícones do navegador
+├── manifest.json              Manifest V3
+├── icons/                     Ícones do navegador (16/48/128)
 └── src/
-    ├── background.js       Service worker — orquestra abertura + guarda credenciais
-    ├── panel-bridge.js     Content script no painel (rataria.io)
-    ├── flow-runner.js      Engine genérica de execução de fluxo
-    ├── overlay.css         Estilo do overlay de progresso
-    ├── popup.html / .js    Popup do ícone da extensão
-    └── flows/
-        ├── chatgpt.js      Fluxo de login do ChatGPT
-        └── gemini.js       Fluxo de login do Gemini
+    ├── background.js          Service worker — sync de credenciais + storage
+    ├── panel-bridge.js        Content script no painel da RatarIA
+    ├── login-injector.js      Content script nas páginas de login (ChatGPT/Google)
+    ├── login-injector.css     Estilo do ícone + dropdown (modelo Proton Pass)
+    ├── popup.html / .css/ .js Popup do ícone da extensão (status + atalho)
 ```
 
 ### Como rodar localmente
@@ -123,22 +130,23 @@ O arquivo gerado é o que o cliente baixa pelo botão "Baixar extensão" no pain
 
 ### Adicionando uma ferramenta nova
 
-1. Crie `src/flows/<nome>.js` seguindo o modelo do `chatgpt.js`
-2. Adicione a entrada em `TOOLS` no `background.js` (loginUrl, successUrl, etc.)
-3. Adicione um `content_scripts` block no `manifest.json` apontando pro novo flow + matches dos domínios da ferramenta
-4. Adicione a chave em `MVP_TOOLS` no `src/pages/AcessarFerramentas.tsx`
-5. Regenerar o `.zip`
+1. No `login-injector.js`, adiciona o domínio → ferramenta em `TOOL_BY_HOST`
+2. No `manifest.json`, adiciona o(s) domínio(s) em `content_scripts[1].matches` + `host_permissions`
+3. Adiciona a entrada em `TOOL_OPEN_URL` e `TOOL_DOMAINS` no `background.js`
+4. Adiciona em `MVP_TOOLS` no `src/pages/AcessarFerramentas.tsx`
+5. Regenera o `.zip`
 
 ### Segurança
 
-- Credenciais ficam em `chrome.storage.session` (limpa ao fechar o navegador)
-- TTL adicional de 5 minutos após criar — depois disso some
-- Cookies da ferramenta são limpos antes de cada abertura (evita misturar sessões)
-- O `panel-bridge` só responde mensagens de origens autorizadas (rataria.io e ambientes de dev/preview)
+- Credenciais ficam em `chrome.storage.local` (isolado por extensão; outras páginas não acessam)
+- TTL de **24 horas** — se passar disso, o cliente precisa reabrir o painel pra sincronizar
+- Cookies do Gemini são limpos antes da abertura (force logout)
+- O `panel-bridge` só responde mensagens de origens autorizadas (rataria.io, localhost, ambientes Lovable)
+- O `login-injector` só roda nos domínios listados no `manifest.json`
 
-### Limitações conhecidas do MVP
+### Limitações conhecidas
 
-- **Sem 2FA:** se a conta-mãe pedir código de e-mail, o fluxo para. Próximo passo: edge function lendo IMAP.
-- **Sem rotação automática de contas:** pega o `acessos` com expiração mais distante. Se múltiplos clientes abrirem ao mesmo tempo, todos vão pro mesmo login.
-- **Fluxo quebra se a ferramenta mudar de tela:** os seletores CSS são frágeis. Quando o ChatGPT/Google muda layout, precisa atualizar `flows/`.
-- **Distribuição manual:** não passa pelo review do Google, mas o cliente vê alerta de "extensão em modo desenvolvedor". Migrar pra Chrome/Edge Store quando estabilizar.
+- **Sem 2FA automático:** se a ferramenta pedir código por e-mail/SMS, cliente resolve manualmente. Próximo passo: edge function lendo IMAP.
+- **Cliente escolhe a conta:** ainda não há rotação inteligente. Se quiser priorizar a menos usada, precisa de coluna `uso_count` em `acessos` + RPC pra incrementar.
+- **Distribuição manual:** não passa pelo review do Google, mas o cliente vê alerta de "modo desenvolvedor". Migrar pra Edge Add-ons Store quando estabilizar.
+- **Sync precisa ser refeito após 24h:** TTL existe pra forçar credenciais frescas. Cliente só precisa abrir o painel pra resincronizar.
