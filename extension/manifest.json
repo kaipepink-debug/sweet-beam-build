@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "RatarIA - Acesso Rápido",
   "short_name": "RatarIA",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Acesse as ferramentas de IA da RatarIA com um clique — login automático sem copiar e colar.",
   "author": "RatarIA",
 

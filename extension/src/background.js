@@ -255,15 +255,20 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return;
       }
 
-      // Proxy: ler
+      // Proxy: ler (uso interno do popup pra mostrar status)
       if (msg?.action === 'rataria:get-proxy') {
         const config = await getProxyConfig();
         sendResponse({ ok: true, config });
         return;
       }
 
-      // Proxy: salvar e aplicar
+      // Proxy: aplicar — restrito ao sync vindo do painel admin (origem checada).
+      // Não exposto pra UI do popup. Mantido aqui pra evolução futura.
       if (msg?.action === 'rataria:set-proxy') {
+        if (sender.tab && !isOriginAllowed(sender.tab.url)) {
+          sendResponse({ ok: false, error: 'proxy só pode ser configurado via painel admin' });
+          return;
+        }
         const result = await applyProxy(msg.config);
         sendResponse(result);
         return;

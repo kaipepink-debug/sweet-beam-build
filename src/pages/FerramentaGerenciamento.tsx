@@ -106,6 +106,7 @@ type Acesso = {
   data_expiracao: string;
   video_url: string | null;
   gmail_id: string | null;
+  totp_secret: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;
@@ -116,6 +117,7 @@ type AcessoForm = {
   login: string;
   senha: string;
   video_url: string;
+  totp_secret: string;
 };
 
 type Gmail = {
@@ -130,7 +132,19 @@ const emptyForm: AcessoForm = {
   login: "",
   senha: "",
   video_url: "",
+  totp_secret: "",
 };
+
+// Limpa e valida seed Base32 (TOTP). Retorna null se vazio, throw se inválido.
+function normalizeTotpSeed(value: string): string | null {
+  if (!value) return null;
+  const cleaned = value.replace(/\s|-/g, "").toUpperCase();
+  if (!cleaned) return null;
+  if (!/^[A-Z2-7]+=*$/.test(cleaned)) {
+    throw new Error("Chave 2FA inválida — use só letras A-Z e dígitos 2-7 (Base32)");
+  }
+  return cleaned;
+}
 
 function getStatus(dataExpiracao: string) {
   const exp = new Date(dataExpiracao);
@@ -254,6 +268,8 @@ export default function FerramentaGerenciamento() {
       // Find the gmail_id from the selected email (only for gmail mode)
       const matchedGmail = gmailsList.find(g => g.gmail === payload.email_cliente.trim());
 
+      const totpClean = normalizeTotpSeed(payload.totp_secret);
+
       if (payload.id) {
         const { error } = await supabase.from("acessos").update({
           ferramenta: toolId!,
@@ -262,6 +278,7 @@ export default function FerramentaGerenciamento() {
           senha: payload.senha,
           video_url: payload.video_url.trim() || null,
           gmail_id: matchedGmail?.id || null,
+          totp_secret: totpClean,
           created_by: user.id,
         }).eq("id", payload.id);
         if (error) throw error;
@@ -273,6 +290,7 @@ export default function FerramentaGerenciamento() {
           senha: payload.senha,
           video_url: payload.video_url.trim() || null,
           gmail_id: matchedGmail?.id || null,
+          totp_secret: totpClean,
           created_by: user.id,
           data_criacao: baseDate.toISOString(),
           data_expiracao: expDate.toISOString(),
@@ -309,6 +327,7 @@ export default function FerramentaGerenciamento() {
               senha: payload.senha,
               video_url: payload.video_url.trim() || null,
               gmail_id: matchedGmail?.id || null,
+              totp_secret: totpClean,
               created_by: user.id,
               data_criacao: baseDate.toISOString(),
               data_expiracao: linkedExpDate.toISOString(),
@@ -388,6 +407,7 @@ export default function FerramentaGerenciamento() {
       login: a.login,
       senha: a.senha,
       video_url: a.video_url || "",
+      totp_secret: a.totp_secret || "",
     });
     // Detect mode: if has gmail_id it's gmail, otherwise fornecedor
     setAcessoMode(a.gmail_id ? "gmail" : "fornecedor");
@@ -739,6 +759,23 @@ export default function FerramentaGerenciamento() {
             <div className="grid gap-2">
               <Label>Senha</Label>
               <Input placeholder="••••••••" value={form.senha} onChange={e => setForm(f => ({ ...f, senha: e.target.value }))} className="rounded-xl" />
+            </div>
+
+            <div className="grid gap-2">
+              <Label className="flex items-center gap-2">
+                Chave 2 Fatores <span className="text-muted-foreground text-xs">(Authenticator — opcional)</span>
+              </Label>
+              <Input
+                placeholder="ex: JBSWY3DPEHPK3PXP"
+                value={form.totp_secret}
+                onChange={e => setForm(f => ({ ...f, totp_secret: e.target.value }))}
+                className="rounded-xl font-mono uppercase tracking-wider"
+                autoComplete="off"
+              />
+              <p className="text-xs text-muted-foreground leading-snug">
+                Cole o <strong className="text-foreground">seed Base32</strong> (string longa abaixo do QR code do Google Authenticator).
+                A extensão gera o código de 6 dígitos a cada 30s. Letras A-Z e dígitos 2-7.
+              </p>
             </div>
 
             {/* Custom expiration days */}
