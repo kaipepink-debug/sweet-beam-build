@@ -22,6 +22,14 @@
         <span id="sync-text">verificando...</span>
       </div>
 
+      <button type="button" class="sidebar-home" id="home-btn" title="Ir pro painel da RatarIA">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9.5L12 3l9 6.5V21H3z" />
+          <path d="M9 21V12h6v9" />
+        </svg>
+        Início
+      </button>
+
       <div class="sidebar-label">Ferramentas</div>
       <nav class="tool-list" id="tool-list"></nav>
 
@@ -43,9 +51,8 @@
       <header class="content-head">
         <div>
           <h1 id="content-title">Seus logins</h1>
-          <p id="content-sub">Gerencie seus acessos da IA com segurança</p>
+          <p id="content-sub">Selecione uma ferramenta à esquerda</p>
         </div>
-        <a class="content-action" id="open-panel-btn" title="Abrir painel completo">↗</a>
       </header>
 
       <div class="content-body" id="content-body">
@@ -73,6 +80,20 @@
     </div>
   </template>
 
+  <template id="tpl-access-btn">
+    <button type="button" class="access-btn">
+      <img class="access-btn-logo" />
+      <div class="access-btn-content">
+        <strong>Acessar <span class="access-btn-tool"></span></strong>
+        <span>Abre a tela de login numa nova aba</span>
+      </div>
+      <svg class="access-btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14" />
+        <path d="M13 5l7 7-7 7" />
+      </svg>
+    </button>
+  </template>
+
   <template id="tpl-credential-card">
     <article class="cred-card">
       <header class="cred-card-head">
@@ -81,7 +102,6 @@
           <h2 class="cred-tool-name"></h2>
           <span class="cred-badge">ativo</span>
         </div>
-        <button class="cred-fill-btn" title="Preencher na aba ativa">Preencher</button>
       </header>
 
       <div class="cred-field" data-field="login">

@@ -1,13 +1,13 @@
-// RatarIA Extension — Popup com layout 2-colunas (sidebar + content).
-// Sidebar: lista de ferramentas + status de sync + banner do proxy.
-// Content: credenciais da ferramenta selecionada.
-// Proxy é controlado SÓ pelo painel admin (extensão recebe via sync).
+// RatarIA Extension — Popup (cofre de credenciais)
+// Sidebar: lista de ferramentas + status sync + status proxy + botão Início.
+// Content: botão "Acessar [Ferramenta]" + cards de credenciais (copiar-colar).
 
 (function () {
   document.getElementById('version').textContent = chrome.runtime.getManifest().version;
-  document.getElementById('open-panel-btn').addEventListener('click', (e) => {
-    e.preventDefault();
-    chrome.tabs.create({ url: 'https://rataria.io/acessar-ferramentas' });
+
+  document.getElementById('home-btn').addEventListener('click', () => {
+    chrome.tabs.create({ url: 'https://rataria.io/usuario' });
+    window.close();
   });
 
   const TOOL_BY_HOST = {
@@ -171,21 +171,34 @@
       btn.addEventListener('click', () => selectTool(key));
       list.appendChild(tpl);
     }
-    // Marca tool inicial: tab atual ou primeiro da lista
     const initial = currentTabTool || Object.keys(TOOL_META)[0];
-    selectTool(initial, { skipRefocus: true });
+    selectTool(initial);
   }
 
-  function selectTool(toolKey, opts = {}) {
+  function selectTool(toolKey) {
     selectedTool = toolKey;
-    // Atualiza highlights
     document.querySelectorAll('.tool-item').forEach((el) => {
       el.classList.toggle('active', el.dataset.tool === toolKey);
     });
     renderCredsView(toolKey);
   }
 
-  // ===== Content: credenciais =====
+  // ===== Content: botão Acessar + credenciais =====
+  function buildAccessButton(ferramenta) {
+    const meta = TOOL_META[ferramenta];
+    if (!meta) return null;
+    const tpl = document.getElementById('tpl-access-btn').content.cloneNode(true);
+    const btn = tpl.querySelector('.access-btn');
+    tpl.querySelector('.access-btn-logo').src = meta.logo;
+    tpl.querySelector('.access-btn-logo').alt = meta.name;
+    tpl.querySelector('.access-btn-tool').textContent = meta.name;
+    btn.addEventListener('click', () => {
+      chrome.tabs.create({ url: meta.openUrl });
+      window.close();
+    });
+    return btn;
+  }
+
   function buildCard(ferramenta, cred) {
     const tpl = document.getElementById('tpl-credential-card').content.cloneNode(true);
     const card = tpl.querySelector('.cred-card');
@@ -243,29 +256,6 @@
       });
     }
 
-    const fillBtn = card.querySelector('.cred-fill-btn');
-    fillBtn.addEventListener('click', async () => {
-      fillBtn.disabled = true;
-      fillBtn.textContent = 'Preenchendo...';
-      try {
-        const tab = await getActiveTab();
-        if (!tab?.id) throw new Error('sem aba');
-        await chrome.tabs.sendMessage(tab.id, {
-          action: 'rataria:fill-now',
-          payload: {
-            login: loginValue,
-            senha,
-            totpCode: totpSecret ? await totp(totpSecret) : null,
-          },
-        });
-        fillBtn.textContent = '✓ Preenchido';
-        setTimeout(() => { fillBtn.textContent = 'Preencher'; fillBtn.disabled = false; }, 1400);
-      } catch {
-        fillBtn.textContent = 'Abra a ferramenta primeiro';
-        setTimeout(() => { fillBtn.textContent = 'Preencher'; fillBtn.disabled = false; }, 2200);
-      }
-    });
-
     const expiresIn = daysUntil(cred.data_expiracao);
     if (expiresIn != null) {
       const foot = card.querySelector('.cred-foot-expiry');
@@ -287,11 +277,12 @@
     }
 
     const meta = TOOL_META[ferramenta];
-    document.getElementById('content-title').textContent = 'Seus logins';
-    document.getElementById('content-sub').textContent = `${meta?.name || ferramenta} — gerencie seus acessos`;
+    document.getElementById('content-title').textContent = meta?.name || 'Seus logins';
+    document.getElementById('content-sub').textContent = 'Copie suas credenciais e cole na ferramenta';
 
-    // Botão "Abrir ferramenta" na content head se ainda não tem credenciais? Não.
-    // Em vez disso, se não tem credenciais, mostra empty state com botão de abrir.
+    // SEMPRE mostra o botão "Acessar" no topo
+    const accessBtn = buildAccessButton(ferramenta);
+    if (accessBtn) body.appendChild(accessBtn);
 
     const res = await send('rataria:get-credentials-for-tool', { ferramenta });
     if (!res?.ok || !res.creds?.length) {
@@ -299,38 +290,10 @@
       tpl.getElementById('empty-title').textContent = `Sem contas pra ${meta?.name || ferramenta}`;
       tpl.getElementById('empty-msg').textContent = res?.error || 'Abra o painel da RatarIA pra sincronizar.';
       body.appendChild(tpl);
-
-      // Botão de abrir site direto da ferramenta
-      const btn = document.createElement('button');
-      btn.className = 'cred-fill-btn';
-      btn.style.marginTop = '10px';
-      btn.style.alignSelf = 'center';
-      btn.textContent = `Abrir ${meta?.name || ferramenta}`;
-      btn.addEventListener('click', () => {
-        if (meta?.openUrl) {
-          chrome.tabs.create({ url: meta.openUrl });
-          window.close();
-        }
-      });
-      body.appendChild(btn);
       return;
     }
 
     res.creds.forEach((c) => body.appendChild(buildCard(ferramenta, c)));
-
-    // Botão "Abrir [ferramenta]" no fim
-    const openBtn = document.createElement('button');
-    openBtn.className = 'cred-fill-btn';
-    openBtn.style.marginTop = '4px';
-    openBtn.style.alignSelf = 'center';
-    openBtn.textContent = `Abrir ${meta?.name || ferramenta}`;
-    openBtn.addEventListener('click', () => {
-      if (meta?.openUrl) {
-        chrome.tabs.create({ url: meta.openUrl });
-        window.close();
-      }
-    });
-    body.appendChild(openBtn);
   }
 
   // ===== Boot =====

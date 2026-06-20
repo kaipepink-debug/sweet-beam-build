@@ -2,14 +2,13 @@
   "manifest_version": 3,
   "name": "RatarIA - Acesso Rápido",
   "short_name": "RatarIA",
-  "version": "0.7.0",
-  "description": "Acesse as ferramentas de IA da RatarIA com um clique — login automático sem copiar e colar.",
+  "version": "0.8.0",
+  "description": "Cofre de contas das ferramentas de IA da RatarIA — copia e cola seguro pelo popup.",
   "author": "RatarIA",
 
   "permissions": [
     "storage",
     "tabs",
-    "scripting",
     "cookies",
     "proxy",
     "webRequest",
@@ -58,18 +57,6 @@
       ],
       "js": ["src/panel-bridge.js"],
       "run_at": "document_start"
-    },
-    {
-      "matches": [
-        "https://chatgpt.com/*",
-        "https://chat.openai.com/*",
-        "https://auth.openai.com/*",
-        "https://accounts.google.com/*",
-        "https://gemini.google.com/*"
-      ],
-      "js": ["src/login-injector.js"],
-      "css": ["src/login-injector.css"],
-      "run_at": "document_idle"
     }
   ],
 
