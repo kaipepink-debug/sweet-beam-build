@@ -5,6 +5,7 @@ import { ArrowLeft, Download, AlertTriangle, Sparkles, ExternalLink, Loader2, Ch
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { getSubscriptionFromStorage, getActiveSubscription, isTemporarySubscription } from "@/lib/isTemporarySub";
+import { syncExtension } from "@/lib/syncExtension";
 import NeuralBackground from "@/components/sales/NeuralBackground";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
@@ -248,6 +249,24 @@ export default function AcessarFerramentas() {
       });
       return;
     }
+
+    // Sync fresh com a extensão ANTES de abrir a ferramenta. Garante que
+    // novas credenciais (incluindo 2FA recém-cadastrado pelo admin) chegam
+    // antes do cliente clicar no ícone de preencher.
+    setSyncing(true);
+    try {
+      // Timeout curto pra não travar o cliente caso algo dê errado
+      await Promise.race([
+        syncExtension(),
+        new Promise((resolve) => setTimeout(resolve, 2500)),
+      ]);
+      setExtStatus((s) => (s ? { ...s, syncedAt: Date.now() } : s));
+    } catch (e) {
+      console.warn("[RatarIA] sync no abrir falhou:", e);
+    } finally {
+      setSyncing(false);
+    }
+
     if (tool.loginUrl) {
       // Abre direto (mais rápido)
       window.open(tool.loginUrl, "_blank", "noopener");
