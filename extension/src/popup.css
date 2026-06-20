@@ -91,6 +91,32 @@ body {
 .sync-mini.synced #sync-text { color: rgba(74, 222, 128, 0.95); }
 .sync-mini.empty .sync-dot { background: rgba(239, 68, 68, 0.95); }
 
+.sidebar-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(139, 92, 246, 0.06));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: rgba(255, 255, 255, 0.96);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 140ms;
+}
+
+.sidebar-home:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.28), rgba(139, 92, 246, 0.12));
+  border-color: rgba(168, 85, 247, 0.6);
+  box-shadow: 0 0 12px -3px rgba(168, 85, 247, 0.4);
+}
+
+.sidebar-home:active { transform: scale(0.97); }
+
 .sidebar-label {
   font-size: 10px;
   font-weight: 700;
@@ -337,6 +363,71 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ====================== CREDENTIAL CARD ====================== */
+/* ====================== BOTÃO ACESSAR ====================== */
+.access-btn {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 13px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(139, 92, 246, 0.08));
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: rgba(255, 255, 255, 0.97);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: all 160ms;
+  width: 100%;
+  box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+}
+
+.access-btn:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.32), rgba(139, 92, 246, 0.14));
+  border-color: rgba(168, 85, 247, 0.7);
+  box-shadow: 0 0 18px -4px rgba(168, 85, 247, 0.5);
+}
+
+.access-btn:active { transform: scale(0.985); }
+
+.access-btn-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 3.5px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.access-btn-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.access-btn-content strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.97);
+  letter-spacing: -0.01em;
+}
+
+.access-btn-content span {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.access-btn-arrow {
+  color: rgba(168, 85, 247, 0.85);
+  flex-shrink: 0;
+  transition: transform 160ms;
+}
+
+.access-btn:hover .access-btn-arrow { transform: translateX(3px); }
+
+/* ====================== CREDENTIAL CARD ====================== */
 .cred-card {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015));
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -393,21 +484,6 @@ body {
   line-height: 1.4;
 }
 
-.cred-fill-btn {
-  padding: 6px 12px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.08));
-  border: 1px solid rgba(168, 85, 247, 0.42);
-  color: rgba(255, 255, 255, 0.96);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 140ms;
-}
-.cred-fill-btn:hover { background: rgba(168, 85, 247, 0.3); }
-.cred-fill-btn:active { transform: scale(0.96); }
-.cred-fill-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .cred-field {
   display: flex;
