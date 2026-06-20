@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Settings, Clock, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { differenceInDays, differenceInHours, isPast } from "date-fns";
+import SyncExtensionButton from "@/components/dashboard/SyncExtensionButton";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
@@ -124,11 +125,14 @@ export default function DashboardFerramentas() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-foreground">Ferramentas de IA</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Gerencie os acessos de cada ferramenta. O tempo de expiração é exibido automaticamente.
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-xl font-bold text-foreground">Ferramentas de IA</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Gerencie os acessos de cada ferramenta. O tempo de expiração é exibido automaticamente.
+          </p>
+        </div>
+        <SyncExtensionButton />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

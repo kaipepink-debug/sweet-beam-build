@@ -15,8 +15,9 @@ import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import {
   Plus, Search, Copy, Pencil, Trash2,
-  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon, Video, CalendarIcon, KeyRound
+  ArrowUpDown, Check, Eye, EyeOff, ArrowLeft, Mail, Link as LinkIcon, Video, CalendarIcon, KeyRound, RefreshCcw
 } from "lucide-react";
+import { syncExtension, isExtensionInstalled, SUPPORTED_TOOLS } from "@/lib/syncExtension";
 
 import chatgptLogo from "@/assets/tools/chatgpt.png";
 import midjourneyLogo from "@/assets/tools/midjourney.png";
@@ -182,6 +183,37 @@ export default function FerramentaGerenciamento() {
   const [customDate, setCustomDate] = useState("");
   const [customDiasEnabled, setCustomDiasEnabled] = useState(false);
   const [customDias, setCustomDias] = useState<string>("");
+  const [syncingExt, setSyncingExt] = useState(false);
+
+  async function handleSyncExtension() {
+    if (syncingExt) return;
+    setSyncingExt(true);
+    try {
+      const installed = await isExtensionInstalled();
+      if (!installed) {
+        toast.error("Extensão não detectada", {
+          description: "Instale a extensão da RatarIA no navegador.",
+        });
+        return;
+      }
+      const result = await syncExtension();
+      if (!result.ok) {
+        toast.error("Falha na sincronização", { description: result.error });
+        return;
+      }
+      const total = Object.values(result.credentialsCount || {}).reduce((s, n) => s + n, 0);
+      const isCurrentToolSupported = SUPPORTED_TOOLS.includes(toolId as (typeof SUPPORTED_TOOLS)[number]);
+      toast.success("Sincronizado com a extensão", {
+        description: !isCurrentToolSupported
+          ? `${toolId} ainda não está na extensão (suportadas: ${SUPPORTED_TOOLS.join(", ")}). Outras ferramentas: ${total} contas.`
+          : `${total} ${total === 1 ? "conta" : "contas"} enviadas${result.proxyApplied ? " · proxy ativo" : ""}`,
+      });
+    } catch (e) {
+      toast.error("Erro ao sincronizar", { description: (e as Error).message });
+    } finally {
+      setSyncingExt(false);
+    }
+  }
   const [fornecedorDialogOpen, setFornecedorDialogOpen] = useState(false);
   const [fornecedorUrl, setFornecedorUrl] = useState("");
 
@@ -515,6 +547,16 @@ export default function FerramentaGerenciamento() {
                   Vídeo de criação
                 </Button>
               )}
+              <Button
+                variant="outline"
+                onClick={handleSyncExtension}
+                disabled={syncingExt}
+                className="rounded-2xl gap-2 border-violet-500/30 text-violet-300 hover:bg-violet-500/10 hover:text-violet-200"
+                title="Envia credenciais e 2FA pra extensão instalada nesse navegador"
+              >
+                <RefreshCcw className={`w-4 h-4 ${syncingExt ? "animate-spin" : ""}`} />
+                {syncingExt ? "Sincronizando..." : "Sincronizar extensão"}
+              </Button>
               <Button onClick={openNew} className="rounded-2xl gap-2 shadow-lg">
                 <Plus className="w-4 h-4" />
                 Adicionar acesso
