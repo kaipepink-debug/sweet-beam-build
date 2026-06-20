@@ -151,6 +151,45 @@ export default function AcessarFerramentas() {
     return () => document.removeEventListener("visibilitychange", handler);
   }, []);
 
+  // Realtime: escuta mudanças em acessos e proxies. Quando admin altera
+  // qualquer linha, esse painel re-busca + re-sincroniza com a extensão.
+  // Debounce de 500ms pra agrupar bursts de updates.
+  useEffect(() => {
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+    const fire = (source: string) => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        console.log(`[RatarIA] realtime: mudança em ${source}, re-sincronizando`);
+        setReloadKey(k => k + 1);
+      }, 500);
+    };
+
+    const channel = supabase
+      .channel("rataria-painel-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "acessos" },
+        () => fire("acessos")
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "proxies" },
+        () => fire("proxies")
+      )
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          console.log("[RatarIA] realtime: conectado");
+        } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          console.warn("[RatarIA] realtime: erro na conexão", status);
+        }
+      });
+
+    return () => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   // Agrupa por ferramenta
   const byFerramenta = useMemo(() => {
     const map: Record<string, Acesso[]> = {};
